@@ -1,0 +1,77 @@
+<?php
+
+declare(strict_types=1);
+
+namespace XTwitterScraper\ServiceContracts;
+
+use XTwitterScraper\Core\Contracts\BaseResponse;
+use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\RequestOptions;
+use XTwitterScraper\X\XGetArticleResponse;
+use XTwitterScraper\X\XGetHomeTimelineParams;
+use XTwitterScraper\X\XGetHomeTimelineResponse;
+use XTwitterScraper\X\XGetNotificationsParams;
+use XTwitterScraper\X\XGetNotificationsResponse;
+
+/**
+ * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ */
+interface XRawContract
+{
+    /**
+     * @api
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<XGetArticleResponse>
+     *
+     * @throws APIException
+     */
+    public function getArticle(
+        string $tweetID,
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|XGetHomeTimelineParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<XGetHomeTimelineResponse>
+     *
+     * @throws APIException
+     */
+    public function getHomeTimeline(
+        array|XGetHomeTimelineParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|XGetNotificationsParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<XGetNotificationsResponse>
+     *
+     * @throws APIException
+     */
+    public function getNotifications(
+        array|XGetNotificationsParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<mixed>
+     *
+     * @throws APIException
+     */
+    public function getTrends(
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse;
+}

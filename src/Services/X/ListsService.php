@@ -1,0 +1,117 @@
+<?php
+
+declare(strict_types=1);
+
+namespace XTwitterScraper\Services\X;
+
+use XTwitterScraper\Client;
+use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\Util;
+use XTwitterScraper\RequestOptions;
+use XTwitterScraper\ServiceContracts\X\ListsContract;
+
+/**
+ * X data lookups (subscription required).
+ *
+ * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ */
+final class ListsService implements ListsContract
+{
+    /**
+     * @api
+     */
+    public ListsRawService $raw;
+
+    /**
+     * @internal
+     */
+    public function __construct(private Client $client)
+    {
+        $this->raw = new ListsRawService($client);
+    }
+
+    /**
+     * @api
+     *
+     * Get list followers
+     *
+     * @param string $id List ID
+     * @param string $cursor Pagination cursor
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function retrieveFollowers(
+        string $id,
+        ?string $cursor = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): mixed {
+        $params = Util::removeNulls(['cursor' => $cursor]);
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->retrieveFollowers($id, params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Get list members
+     *
+     * @param string $id List ID
+     * @param string $cursor Pagination cursor
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function retrieveMembers(
+        string $id,
+        ?string $cursor = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): mixed {
+        $params = Util::removeNulls(['cursor' => $cursor]);
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->retrieveMembers($id, params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Get list tweets
+     *
+     * @param string $id List ID
+     * @param string $cursor Pagination cursor
+     * @param bool $includeReplies Include replies (default false)
+     * @param string $sinceTime Unix timestamp - filter after
+     * @param string $untilTime Unix timestamp - filter before
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function retrieveTweets(
+        string $id,
+        ?string $cursor = null,
+        ?bool $includeReplies = null,
+        ?string $sinceTime = null,
+        ?string $untilTime = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): mixed {
+        $params = Util::removeNulls(
+            [
+                'cursor' => $cursor,
+                'includeReplies' => $includeReplies,
+                'sinceTime' => $sinceTime,
+                'untilTime' => $untilTime,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->retrieveTweets($id, params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+}
