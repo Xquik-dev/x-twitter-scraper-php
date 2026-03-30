@@ -6,13 +6,11 @@ namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
-use XTwitterScraper\Styles\StyleAnalyzeResponse;
 use XTwitterScraper\Styles\StyleCompareResponse;
 use XTwitterScraper\Styles\StyleGetPerformanceResponse;
-use XTwitterScraper\Styles\StyleGetResponse;
 use XTwitterScraper\Styles\StyleListResponse;
+use XTwitterScraper\Styles\StyleProfile;
 use XTwitterScraper\Styles\StyleUpdateParams\Tweet;
-use XTwitterScraper\Styles\StyleUpdateResponse;
 
 /**
  * @phpstan-import-type TweetShape from \XTwitterScraper\Styles\StyleUpdateParams\Tweet
@@ -31,7 +29,7 @@ interface StylesContract
     public function retrieve(
         string $username,
         RequestOptions|array|null $requestOptions = null
-    ): StyleGetResponse;
+    ): StyleProfile;
 
     /**
      * @api
@@ -48,7 +46,7 @@ interface StylesContract
         string $label,
         array $tweets,
         RequestOptions|array|null $requestOptions = null,
-    ): StyleUpdateResponse;
+    ): StyleProfile;
 
     /**
      * @api
@@ -85,7 +83,7 @@ interface StylesContract
     public function analyze(
         string $username,
         RequestOptions|array|null $requestOptions = null
-    ): StyleAnalyzeResponse;
+    ): StyleProfile;
 
     /**
      * @api

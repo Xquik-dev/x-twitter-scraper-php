@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\Events\EventGetResponse;
+use XTwitterScraper\Events\EventDetail;
 use XTwitterScraper\Events\EventListResponse;
 
 /**
@@ -43,7 +43,7 @@ final class EventsTest extends TestCase
         $result = $this->client->events->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(EventGetResponse::class, $result);
+        $this->assertInstanceOf(EventDetail::class, $result);
     }
 
     #[Test]

@@ -7,9 +7,9 @@ namespace XTwitterScraper\Services;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\Events\EventGetResponse;
-use XTwitterScraper\Events\EventListParams\EventType;
+use XTwitterScraper\Events\EventDetail;
 use XTwitterScraper\Events\EventListResponse;
+use XTwitterScraper\EventType;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\EventsContract;
 
@@ -46,7 +46,7 @@ final class EventsService implements EventsContract
     public function retrieve(
         string $id,
         RequestOptions|array|null $requestOptions = null
-    ): EventGetResponse {
+    ): EventDetail {
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieve($id, requestOptions: $requestOptions);
 

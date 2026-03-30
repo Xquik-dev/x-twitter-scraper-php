@@ -9,31 +9,14 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Dm\DmGetHistoryResponse;
 use XTwitterScraper\X\Dm\DmRetrieveHistoryParams;
-use XTwitterScraper\X\Dm\DmUpdateParams;
-use XTwitterScraper\X\Dm\DmUpdateResponse;
+use XTwitterScraper\X\Dm\DmSendParams;
+use XTwitterScraper\X\Dm\DmSendResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
 interface DmRawContract
 {
-    /**
-     * @api
-     *
-     * @param string $userID Recipient user ID
-     * @param array<string,mixed>|DmUpdateParams $params
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<DmUpdateResponse>
-     *
-     * @throws APIException
-     */
-    public function update(
-        string $userID,
-        array|DmUpdateParams $params,
-        RequestOptions|array|null $requestOptions = null,
-    ): BaseResponse;
-
     /**
      * @api
      *
@@ -48,6 +31,23 @@ interface DmRawContract
     public function retrieveHistory(
         string $userID,
         array|DmRetrieveHistoryParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param string $userID Recipient user ID
+     * @param array<string,mixed>|DmSendParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<DmSendResponse>
+     *
+     * @throws APIException
+     */
+    public function send(
+        string $userID,
+        array|DmSendParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 }

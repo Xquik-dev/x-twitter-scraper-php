@@ -33,7 +33,7 @@ class ClientTest extends TestCase
             requestOptions: ['transporter' => $transporter],
         );
 
-        $client->account->retrieve();
+        $client->x->tweets->search(q: 'q');
 
         $this->assertNotFalse($requested = $transporter->getRequests()[0] ?? false);
 

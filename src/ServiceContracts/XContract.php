@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\XGetArticleResponse;
-use XTwitterScraper\X\XGetHomeTimelineResponse;
 use XTwitterScraper\X\XGetNotificationsParams\Type;
 use XTwitterScraper\X\XGetNotificationsResponse;
 
@@ -41,7 +41,7 @@ interface XContract
         ?string $cursor = null,
         ?string $seenTweetIDs = null,
         RequestOptions|array|null $requestOptions = null,
-    ): XGetHomeTimelineResponse;
+    ): PaginatedTweets;
 
     /**
      * @api

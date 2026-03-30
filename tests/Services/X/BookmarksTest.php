@@ -8,8 +8,8 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\X\Bookmarks\BookmarkGetFoldersResponse;
-use XTwitterScraper\X\Bookmarks\BookmarkListResponse;
 
 /**
  * @internal
@@ -43,7 +43,7 @@ final class BookmarksTest extends TestCase
         $result = $this->client->x->bookmarks->list();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(BookmarkListResponse::class, $result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]

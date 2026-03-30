@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\DmContract;
 use XTwitterScraper\X\Dm\DmGetHistoryResponse;
-use XTwitterScraper\X\Dm\DmUpdateResponse;
+use XTwitterScraper\X\Dm\DmSendResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -28,41 +28,6 @@ final class DmService implements DmContract
     public function __construct(private Client $client)
     {
         $this->raw = new DmRawService($client);
-    }
-
-    /**
-     * @api
-     *
-     * Send direct message
-     *
-     * @param string $userID Recipient user ID
-     * @param string $account X account (@username or account ID)
-     * @param list<string> $mediaIDs
-     * @param RequestOpts|null $requestOptions
-     *
-     * @throws APIException
-     */
-    public function update(
-        string $userID,
-        string $account,
-        string $text,
-        ?array $mediaIDs = null,
-        ?string $replyToMessageID = null,
-        RequestOptions|array|null $requestOptions = null,
-    ): DmUpdateResponse {
-        $params = Util::removeNulls(
-            [
-                'account' => $account,
-                'text' => $text,
-                'mediaIDs' => $mediaIDs,
-                'replyToMessageID' => $replyToMessageID,
-            ],
-        );
-
-        // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->update($userID, params: $params, requestOptions: $requestOptions);
-
-        return $response->parse();
     }
 
     /**
@@ -87,6 +52,41 @@ final class DmService implements DmContract
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieveHistory($userID, params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Send direct message
+     *
+     * @param string $userID Recipient user ID
+     * @param string $account X account (@username or account ID)
+     * @param list<string> $mediaIDs
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function send(
+        string $userID,
+        string $account,
+        string $text,
+        ?array $mediaIDs = null,
+        ?string $replyToMessageID = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): DmSendResponse {
+        $params = Util::removeNulls(
+            [
+                'account' => $account,
+                'text' => $text,
+                'mediaIDs' => $mediaIDs,
+                'replyToMessageID' => $replyToMessageID,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->send($userID, params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

@@ -9,7 +9,7 @@ use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\Media\MediaDownloadResponse;
-use XTwitterScraper\X\Media\MediaNewResponse;
+use XTwitterScraper\X\Media\MediaUploadResponse;
 
 /**
  * @internal
@@ -34,36 +34,6 @@ final class MediaTest extends TestCase
     }
 
     #[Test]
-    public function testCreate(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->x->media->create(account: 'account', file: 'file');
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(MediaNewResponse::class, $result);
-    }
-
-    #[Test]
-    public function testCreateWithOptionalParams(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->x->media->create(
-            account: 'account',
-            file: 'file',
-            isLongVideo: true
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(MediaNewResponse::class, $result);
-    }
-
-    #[Test]
     public function testDownload(): void
     {
         if (UnsupportedMockTests::$skip) {
@@ -74,5 +44,35 @@ final class MediaTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(MediaDownloadResponse::class, $result);
+    }
+
+    #[Test]
+    public function testUpload(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->x->media->upload(account: 'account', file: 'file');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(MediaUploadResponse::class, $result);
+    }
+
+    #[Test]
+    public function testUploadWithOptionalParams(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->x->media->upload(
+            account: 'account',
+            file: 'file',
+            isLongVideo: true
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(MediaUploadResponse::class, $result);
     }
 }

@@ -7,12 +7,12 @@ namespace XTwitterScraper\ServiceContracts\X;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
-use XTwitterScraper\X\Profile\ProfilePatchAllParams;
-use XTwitterScraper\X\Profile\ProfilePatchAllResponse;
 use XTwitterScraper\X\Profile\ProfileUpdateAvatarParams;
 use XTwitterScraper\X\Profile\ProfileUpdateAvatarResponse;
 use XTwitterScraper\X\Profile\ProfileUpdateBannerParams;
 use XTwitterScraper\X\Profile\ProfileUpdateBannerResponse;
+use XTwitterScraper\X\Profile\ProfileUpdateParams;
+use XTwitterScraper\X\Profile\ProfileUpdateResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -22,15 +22,15 @@ interface ProfileRawContract
     /**
      * @api
      *
-     * @param array<string,mixed>|ProfilePatchAllParams $params
+     * @param array<string,mixed>|ProfileUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<ProfilePatchAllResponse>
+     * @return BaseResponse<ProfileUpdateResponse>
      *
      * @throws APIException
      */
-    public function patchAll(
-        array|ProfilePatchAllParams $params,
+    public function update(
+        array|ProfileUpdateParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 

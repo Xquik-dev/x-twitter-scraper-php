@@ -7,32 +7,13 @@ namespace XTwitterScraper\ServiceContracts\X;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Dm\DmGetHistoryResponse;
-use XTwitterScraper\X\Dm\DmUpdateResponse;
+use XTwitterScraper\X\Dm\DmSendResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
 interface DmContract
 {
-    /**
-     * @api
-     *
-     * @param string $userID Recipient user ID
-     * @param string $account X account (@username or account ID)
-     * @param list<string> $mediaIDs
-     * @param RequestOpts|null $requestOptions
-     *
-     * @throws APIException
-     */
-    public function update(
-        string $userID,
-        string $account,
-        string $text,
-        ?array $mediaIDs = null,
-        ?string $replyToMessageID = null,
-        RequestOptions|array|null $requestOptions = null,
-    ): DmUpdateResponse;
-
     /**
      * @api
      *
@@ -49,4 +30,23 @@ interface DmContract
         ?string $maxID = null,
         RequestOptions|array|null $requestOptions = null,
     ): DmGetHistoryResponse;
+
+    /**
+     * @api
+     *
+     * @param string $userID Recipient user ID
+     * @param string $account X account (@username or account ID)
+     * @param list<string> $mediaIDs
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function send(
+        string $userID,
+        string $account,
+        string $text,
+        ?array $mediaIDs = null,
+        ?string $replyToMessageID = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): DmSendResponse;
 }

@@ -6,7 +6,7 @@ namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\Events\EventGetResponse;
+use XTwitterScraper\Events\EventDetail;
 use XTwitterScraper\Events\EventListParams;
 use XTwitterScraper\Events\EventListResponse;
 use XTwitterScraper\RequestOptions;
@@ -22,7 +22,7 @@ interface EventsRawContract
      * @param string $id Resource ID (stringified bigint)
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<EventGetResponse>
+     * @return BaseResponse<EventDetail>
      *
      * @throws APIException
      */

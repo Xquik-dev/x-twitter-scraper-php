@@ -9,12 +9,12 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\ProfileRawContract;
-use XTwitterScraper\X\Profile\ProfilePatchAllParams;
-use XTwitterScraper\X\Profile\ProfilePatchAllResponse;
 use XTwitterScraper\X\Profile\ProfileUpdateAvatarParams;
 use XTwitterScraper\X\Profile\ProfileUpdateAvatarResponse;
 use XTwitterScraper\X\Profile\ProfileUpdateBannerParams;
 use XTwitterScraper\X\Profile\ProfileUpdateBannerResponse;
+use XTwitterScraper\X\Profile\ProfileUpdateParams;
+use XTwitterScraper\X\Profile\ProfileUpdateResponse;
 
 /**
  * X write actions (tweets, likes, follows, DMs).
@@ -40,18 +40,18 @@ final class ProfileRawService implements ProfileRawContract
      *   location?: string,
      *   name?: string,
      *   url?: string,
-     * }|ProfilePatchAllParams $params
+     * }|ProfileUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<ProfilePatchAllResponse>
+     * @return BaseResponse<ProfileUpdateResponse>
      *
      * @throws APIException
      */
-    public function patchAll(
-        array|ProfilePatchAllParams $params,
+    public function update(
+        array|ProfileUpdateParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse {
-        [$parsed, $options] = ProfilePatchAllParams::parseRequest(
+        [$parsed, $options] = ProfileUpdateParams::parseRequest(
             $params,
             $requestOptions,
         );
@@ -62,7 +62,7 @@ final class ProfileRawService implements ProfileRawContract
             path: 'x/profile',
             body: (object) $parsed,
             options: $options,
-            convert: ProfilePatchAllResponse::class,
+            convert: ProfileUpdateResponse::class,
         );
     }
 

@@ -7,15 +7,13 @@ namespace XTwitterScraper\Draws;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Draws\DrawGetResponse\Draw;
-use XTwitterScraper\Draws\DrawGetResponse\Winner;
 
 /**
- * @phpstan-import-type DrawShape from \XTwitterScraper\Draws\DrawGetResponse\Draw
- * @phpstan-import-type WinnerShape from \XTwitterScraper\Draws\DrawGetResponse\Winner
+ * @phpstan-import-type DrawDetailShape from \XTwitterScraper\Draws\DrawDetail
+ * @phpstan-import-type WinnerShape from \XTwitterScraper\Draws\Winner
  *
  * @phpstan-type DrawGetResponseShape = array{
- *   draw: Draw|DrawShape, winners: list<Winner|WinnerShape>
+ *   draw: DrawDetail|DrawDetailShape, winners: list<Winner|WinnerShape>
  * }
  */
 final class DrawGetResponse implements BaseModel
@@ -24,7 +22,7 @@ final class DrawGetResponse implements BaseModel
     use SdkModel;
 
     #[Required]
-    public Draw $draw;
+    public DrawDetail $draw;
 
     /** @var list<Winner> $winners */
     #[Required(list: Winner::class)]
@@ -54,10 +52,10 @@ final class DrawGetResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param Draw|DrawShape $draw
+     * @param DrawDetail|DrawDetailShape $draw
      * @param list<Winner|WinnerShape> $winners
      */
-    public static function with(Draw|array $draw, array $winners): self
+    public static function with(DrawDetail|array $draw, array $winners): self
     {
         $self = new self;
 
@@ -68,9 +66,9 @@ final class DrawGetResponse implements BaseModel
     }
 
     /**
-     * @param Draw|DrawShape $draw
+     * @param DrawDetail|DrawDetailShape $draw
      */
-    public function withDraw(Draw|array $draw): self
+    public function withDraw(DrawDetail|array $draw): self
     {
         $self = clone $this;
         $self['draw'] = $draw;

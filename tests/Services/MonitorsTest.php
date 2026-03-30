@@ -8,11 +8,11 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\EventType;
+use XTwitterScraper\Monitors\Monitor;
 use XTwitterScraper\Monitors\MonitorDeactivateResponse;
-use XTwitterScraper\Monitors\MonitorGetResponse;
 use XTwitterScraper\Monitors\MonitorListResponse;
 use XTwitterScraper\Monitors\MonitorNewResponse;
-use XTwitterScraper\Monitors\MonitorUpdateResponse;
 
 /**
  * @internal
@@ -44,7 +44,7 @@ final class MonitorsTest extends TestCase
         }
 
         $result = $this->client->monitors->create(
-            eventTypes: ['tweet.new'],
+            eventTypes: [EventType::TWEET_NEW],
             username: 'username'
         );
 
@@ -60,7 +60,7 @@ final class MonitorsTest extends TestCase
         }
 
         $result = $this->client->monitors->create(
-            eventTypes: ['tweet.new'],
+            eventTypes: [EventType::TWEET_NEW],
             username: 'username'
         );
 
@@ -78,7 +78,7 @@ final class MonitorsTest extends TestCase
         $result = $this->client->monitors->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(MonitorGetResponse::class, $result);
+        $this->assertInstanceOf(Monitor::class, $result);
     }
 
     #[Test]
@@ -91,7 +91,7 @@ final class MonitorsTest extends TestCase
         $result = $this->client->monitors->update('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(MonitorUpdateResponse::class, $result);
+        $this->assertInstanceOf(Monitor::class, $result);
     }
 
     #[Test]

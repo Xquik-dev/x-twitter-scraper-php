@@ -6,16 +6,14 @@ namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Integrations\Integration;
 use XTwitterScraper\Integrations\IntegrationCreateParams;
 use XTwitterScraper\Integrations\IntegrationDeleteResponse;
-use XTwitterScraper\Integrations\IntegrationGetResponse;
 use XTwitterScraper\Integrations\IntegrationListDeliveriesParams;
 use XTwitterScraper\Integrations\IntegrationListDeliveriesResponse;
 use XTwitterScraper\Integrations\IntegrationListResponse;
-use XTwitterScraper\Integrations\IntegrationNewResponse;
 use XTwitterScraper\Integrations\IntegrationSendTestResponse;
 use XTwitterScraper\Integrations\IntegrationUpdateParams;
-use XTwitterScraper\Integrations\IntegrationUpdateResponse;
 use XTwitterScraper\RequestOptions;
 
 /**
@@ -29,7 +27,7 @@ interface IntegrationsRawContract
      * @param array<string,mixed>|IntegrationCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<IntegrationNewResponse>
+     * @return BaseResponse<Integration>
      *
      * @throws APIException
      */
@@ -44,7 +42,7 @@ interface IntegrationsRawContract
      * @param string $id Resource ID (stringified bigint)
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<IntegrationGetResponse>
+     * @return BaseResponse<Integration>
      *
      * @throws APIException
      */
@@ -60,7 +58,7 @@ interface IntegrationsRawContract
      * @param array<string,mixed>|IntegrationUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<IntegrationUpdateResponse>
+     * @return BaseResponse<Integration>
      *
      * @throws APIException
      */

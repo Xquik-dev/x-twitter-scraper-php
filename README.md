@@ -21,7 +21,7 @@ To use this package, install via Composer by adding the following to your applic
     }
   ],
   "require": {
-    "org-placeholder/x-twitter-scraper": "dev-main"
+    "xquik/x-twitter-scraper": "dev-main"
   }
 }
 ```
@@ -40,9 +40,9 @@ $client = new Client(
   apiKey: getenv('X_TWITTER_SCRAPER_API_KEY') ?: 'My API Key'
 );
 
-$account = $client->account->retrieve();
+$paginatedTweets = $client->x->tweets->search(q: 'from:elonmusk', limit: 10);
 
-var_dump($account->monitorsAllowed);
+var_dump($paginatedTweets->has_next_page);
 ```
 
 ### Value Objects
@@ -64,7 +64,7 @@ use XTwitterScraper\Core\Exceptions\RateLimitException;
 use XTwitterScraper\Core\Exceptions\APIStatusException;
 
 try {
-  $account = $client->account->retrieve();
+  $paginatedTweets = $client->x->tweets->search(q: 'from:elonmusk');
 } catch (APIConnectionException $e) {
   echo "The server could not be reached", PHP_EOL;
   var_dump($e->getPrevious());
@@ -109,7 +109,9 @@ use XTwitterScraper\Client;
 $client = new Client(requestOptions: ['maxRetries' => 0]);
 
 // Or, configure per-request:
-$result = $client->account->retrieve(requestOptions: ['maxRetries' => 5]);
+$result = $client->x->tweets->search(
+  q: 'from:elonmusk', limit: 10, requestOptions: ['maxRetries' => 5]
+);
 ```
 
 ## Advanced concepts
@@ -125,7 +127,9 @@ Note: the `extra*` parameters of the same name overrides the documented paramete
 ```php
 <?php
 
-$account = $client->account->retrieve(
+$paginatedTweets = $client->x->tweets->search(
+  q: 'from:elonmusk',
+  limit: 10,
   requestOptions: [
     'extraQueryParams' => ['my_query_parameter' => 'value'],
     'extraBodyParams' => ['my_body_parameter' => 'value'],

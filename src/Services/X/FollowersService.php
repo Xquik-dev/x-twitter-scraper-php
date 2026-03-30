@@ -9,7 +9,7 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\FollowersContract;
-use XTwitterScraper\X\Followers\FollowerGetCheckResponse;
+use XTwitterScraper\X\Followers\FollowerCheckResponse;
 
 /**
  * X data lookups (subscription required).
@@ -42,15 +42,15 @@ final class FollowersService implements FollowersContract
      *
      * @throws APIException
      */
-    public function retrieveCheck(
+    public function check(
         string $source,
         string $target,
         RequestOptions|array|null $requestOptions = null,
-    ): FollowerGetCheckResponse {
+    ): FollowerCheckResponse {
         $params = Util::removeNulls(['source' => $source, 'target' => $target]);
 
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->retrieveCheck(params: $params, requestOptions: $requestOptions);
+        $response = $this->raw->check(params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

@@ -6,7 +6,7 @@ namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
-use XTwitterScraper\X\Followers\FollowerGetCheckResponse;
+use XTwitterScraper\X\Followers\FollowerCheckResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -22,9 +22,9 @@ interface FollowersContract
      *
      * @throws APIException
      */
-    public function retrieveCheck(
+    public function check(
         string $source,
         string $target,
         RequestOptions|array|null $requestOptions = null,
-    ): FollowerGetCheckResponse;
+    ): FollowerCheckResponse;
 }

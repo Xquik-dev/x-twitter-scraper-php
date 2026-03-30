@@ -6,12 +6,10 @@ namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
-use XTwitterScraper\X\Users\UserGetFollowersYouKnowResponse;
-use XTwitterScraper\X\Users\UserGetLikesResponse;
-use XTwitterScraper\X\Users\UserGetMediaResponse;
-use XTwitterScraper\X\Users\UserGetResponse;
-use XTwitterScraper\X\Users\UserGetTweetsResponse;
+use XTwitterScraper\X\Users\UserProfile;
 use XTwitterScraper\X\Users\UserRetrieveBatchParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersYouKnowParams;
@@ -34,7 +32,7 @@ interface UsersRawContract
      * @param string $username X username (without @)
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserGetResponse>
+     * @return BaseResponse<UserProfile>
      *
      * @throws APIException
      */
@@ -82,7 +80,7 @@ interface UsersRawContract
      * @param array<string,mixed>|UserRetrieveFollowersYouKnowParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserGetFollowersYouKnowResponse>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -116,7 +114,7 @@ interface UsersRawContract
      * @param array<string,mixed>|UserRetrieveLikesParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserGetLikesResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -133,7 +131,7 @@ interface UsersRawContract
      * @param array<string,mixed>|UserRetrieveMediaParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserGetMediaResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -181,7 +179,7 @@ interface UsersRawContract
      * @param array<string,mixed>|UserRetrieveTweetsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserGetTweetsResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */

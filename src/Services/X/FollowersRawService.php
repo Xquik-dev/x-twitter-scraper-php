@@ -9,8 +9,8 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\FollowersRawContract;
-use XTwitterScraper\X\Followers\FollowerGetCheckResponse;
-use XTwitterScraper\X\Followers\FollowerRetrieveCheckParams;
+use XTwitterScraper\X\Followers\FollowerCheckParams;
+use XTwitterScraper\X\Followers\FollowerCheckResponse;
 
 /**
  * X data lookups (subscription required).
@@ -30,18 +30,18 @@ final class FollowersRawService implements FollowersRawContract
      *
      * Check follow relationship
      *
-     * @param array{source: string, target: string}|FollowerRetrieveCheckParams $params
+     * @param array{source: string, target: string}|FollowerCheckParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<FollowerGetCheckResponse>
+     * @return BaseResponse<FollowerCheckResponse>
      *
      * @throws APIException
      */
-    public function retrieveCheck(
-        array|FollowerRetrieveCheckParams $params,
+    public function check(
+        array|FollowerCheckParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse {
-        [$parsed, $options] = FollowerRetrieveCheckParams::parseRequest(
+        [$parsed, $options] = FollowerCheckParams::parseRequest(
             $params,
             $requestOptions,
         );
@@ -52,7 +52,7 @@ final class FollowersRawService implements FollowersRawContract
             path: 'x/followers/check',
             query: $parsed,
             options: $options,
-            convert: FollowerGetCheckResponse::class,
+            convert: FollowerCheckResponse::class,
         );
     }
 }

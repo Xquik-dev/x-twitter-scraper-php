@@ -8,14 +8,12 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\Styles\StyleAnalyzeParams;
-use XTwitterScraper\Styles\StyleAnalyzeResponse;
 use XTwitterScraper\Styles\StyleCompareParams;
 use XTwitterScraper\Styles\StyleCompareResponse;
 use XTwitterScraper\Styles\StyleGetPerformanceResponse;
-use XTwitterScraper\Styles\StyleGetResponse;
 use XTwitterScraper\Styles\StyleListResponse;
+use XTwitterScraper\Styles\StyleProfile;
 use XTwitterScraper\Styles\StyleUpdateParams;
-use XTwitterScraper\Styles\StyleUpdateResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -28,7 +26,7 @@ interface StylesRawContract
      * @param string $username X username of cached style
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<StyleGetResponse>
+     * @return BaseResponse<StyleProfile>
      *
      * @throws APIException
      */
@@ -44,7 +42,7 @@ interface StylesRawContract
      * @param array<string,mixed>|StyleUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<StyleUpdateResponse>
+     * @return BaseResponse<StyleProfile>
      *
      * @throws APIException
      */
@@ -88,7 +86,7 @@ interface StylesRawContract
      * @param array<string,mixed>|StyleAnalyzeParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<StyleAnalyzeResponse>
+     * @return BaseResponse<StyleProfile>
      *
      * @throws APIException
      */
