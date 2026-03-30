@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\X\Followers\FollowerGetCheckResponse;
+use XTwitterScraper\X\Followers\FollowerCheckResponse;
 
 /**
  * @internal
@@ -33,34 +33,34 @@ final class FollowersTest extends TestCase
     }
 
     #[Test]
-    public function testRetrieveCheck(): void
+    public function testCheck(): void
     {
         if (UnsupportedMockTests::$skip) {
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->followers->retrieveCheck(
+        $result = $this->client->x->followers->check(
             source: 'source',
             target: 'target'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(FollowerGetCheckResponse::class, $result);
+        $this->assertInstanceOf(FollowerCheckResponse::class, $result);
     }
 
     #[Test]
-    public function testRetrieveCheckWithOptionalParams(): void
+    public function testCheckWithOptionalParams(): void
     {
         if (UnsupportedMockTests::$skip) {
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->followers->retrieveCheck(
+        $result = $this->client->x->followers->check(
             source: 'source',
             target: 'target'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(FollowerGetCheckResponse::class, $result);
+        $this->assertInstanceOf(FollowerCheckResponse::class, $result);
     }
 }

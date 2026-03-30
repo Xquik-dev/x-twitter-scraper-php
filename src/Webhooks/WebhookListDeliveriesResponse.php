@@ -7,10 +7,9 @@ namespace XTwitterScraper\Webhooks;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse\Delivery;
 
 /**
- * @phpstan-import-type DeliveryShape from \XTwitterScraper\Webhooks\WebhookListDeliveriesResponse\Delivery
+ * @phpstan-import-type DeliveryShape from \XTwitterScraper\Webhooks\Delivery
  *
  * @phpstan-type WebhookListDeliveriesResponseShape = array{
  *   deliveries: list<Delivery|DeliveryShape>

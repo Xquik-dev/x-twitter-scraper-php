@@ -7,19 +7,17 @@ namespace XTwitterScraper\Services;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\EventType;
+use XTwitterScraper\Integrations\Integration;
 use XTwitterScraper\Integrations\IntegrationCreateParams;
 use XTwitterScraper\Integrations\IntegrationCreateParams\Config;
-use XTwitterScraper\Integrations\IntegrationCreateParams\EventType;
 use XTwitterScraper\Integrations\IntegrationCreateParams\Type;
 use XTwitterScraper\Integrations\IntegrationDeleteResponse;
-use XTwitterScraper\Integrations\IntegrationGetResponse;
 use XTwitterScraper\Integrations\IntegrationListDeliveriesParams;
 use XTwitterScraper\Integrations\IntegrationListDeliveriesResponse;
 use XTwitterScraper\Integrations\IntegrationListResponse;
-use XTwitterScraper\Integrations\IntegrationNewResponse;
 use XTwitterScraper\Integrations\IntegrationSendTestResponse;
 use XTwitterScraper\Integrations\IntegrationUpdateParams;
-use XTwitterScraper\Integrations\IntegrationUpdateResponse;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\IntegrationsRawContract;
 
@@ -50,7 +48,7 @@ final class IntegrationsRawService implements IntegrationsRawContract
      * }|IntegrationCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<IntegrationNewResponse>
+     * @return BaseResponse<Integration>
      *
      * @throws APIException
      */
@@ -69,7 +67,7 @@ final class IntegrationsRawService implements IntegrationsRawContract
             path: 'integrations',
             body: (object) $parsed,
             options: $options,
-            convert: IntegrationNewResponse::class,
+            convert: Integration::class,
         );
     }
 
@@ -81,7 +79,7 @@ final class IntegrationsRawService implements IntegrationsRawContract
      * @param string $id Resource ID (stringified bigint)
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<IntegrationGetResponse>
+     * @return BaseResponse<Integration>
      *
      * @throws APIException
      */
@@ -94,7 +92,7 @@ final class IntegrationsRawService implements IntegrationsRawContract
             method: 'get',
             path: ['integrations/%1$s', $id],
             options: $requestOptions,
-            convert: IntegrationGetResponse::class,
+            convert: Integration::class,
         );
     }
 
@@ -105,7 +103,7 @@ final class IntegrationsRawService implements IntegrationsRawContract
      *
      * @param string $id Resource ID (stringified bigint)
      * @param array{
-     *   eventTypes?: list<IntegrationUpdateParams\EventType|value-of<IntegrationUpdateParams\EventType>>,
+     *   eventTypes?: list<EventType|value-of<EventType>>,
      *   filters?: array<string,mixed>,
      *   isActive?: bool,
      *   messageTemplate?: array<string,mixed>,
@@ -115,7 +113,7 @@ final class IntegrationsRawService implements IntegrationsRawContract
      * }|IntegrationUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<IntegrationUpdateResponse>
+     * @return BaseResponse<Integration>
      *
      * @throws APIException
      */
@@ -135,7 +133,7 @@ final class IntegrationsRawService implements IntegrationsRawContract
             path: ['integrations/%1$s', $id],
             body: (object) $parsed,
             options: $options,
-            convert: IntegrationUpdateResponse::class,
+            convert: Integration::class,
         );
     }
 

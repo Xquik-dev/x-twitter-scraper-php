@@ -27,7 +27,7 @@
     "sort-packages": true
   },
   "description": "X Twitter Scraper PHP SDK",
-  "name": "org-placeholder/x-twitter-scraper",
+  "name": "xquik/x-twitter-scraper",
   "require": {
     "php": "^8.1",
     "php-http/discovery": "^1",

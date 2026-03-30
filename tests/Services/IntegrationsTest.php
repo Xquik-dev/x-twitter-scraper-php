@@ -8,13 +8,12 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\EventType;
+use XTwitterScraper\Integrations\Integration;
 use XTwitterScraper\Integrations\IntegrationDeleteResponse;
-use XTwitterScraper\Integrations\IntegrationGetResponse;
 use XTwitterScraper\Integrations\IntegrationListDeliveriesResponse;
 use XTwitterScraper\Integrations\IntegrationListResponse;
-use XTwitterScraper\Integrations\IntegrationNewResponse;
 use XTwitterScraper\Integrations\IntegrationSendTestResponse;
-use XTwitterScraper\Integrations\IntegrationUpdateResponse;
 
 /**
  * @internal
@@ -47,13 +46,13 @@ final class IntegrationsTest extends TestCase
 
         $result = $this->client->integrations->create(
             config: ['chatID' => 'chatId'],
-            eventTypes: ['tweet.new'],
+            eventTypes: [EventType::TWEET_NEW],
             name: 'name',
             type: 'telegram',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(IntegrationNewResponse::class, $result);
+        $this->assertInstanceOf(Integration::class, $result);
     }
 
     #[Test]
@@ -65,13 +64,13 @@ final class IntegrationsTest extends TestCase
 
         $result = $this->client->integrations->create(
             config: ['chatID' => 'chatId'],
-            eventTypes: ['tweet.new'],
+            eventTypes: [EventType::TWEET_NEW],
             name: 'name',
             type: 'telegram',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(IntegrationNewResponse::class, $result);
+        $this->assertInstanceOf(Integration::class, $result);
     }
 
     #[Test]
@@ -84,7 +83,7 @@ final class IntegrationsTest extends TestCase
         $result = $this->client->integrations->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(IntegrationGetResponse::class, $result);
+        $this->assertInstanceOf(Integration::class, $result);
     }
 
     #[Test]
@@ -97,7 +96,7 @@ final class IntegrationsTest extends TestCase
         $result = $this->client->integrations->update('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(IntegrationUpdateResponse::class, $result);
+        $this->assertInstanceOf(Integration::class, $result);
     }
 
     #[Test]

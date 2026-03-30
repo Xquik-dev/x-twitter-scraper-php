@@ -7,10 +7,10 @@ namespace XTwitterScraper\ServiceContracts\X;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Accounts\AccountDeleteResponse;
-use XTwitterScraper\X\Accounts\AccountGetResponse;
 use XTwitterScraper\X\Accounts\AccountListResponse;
 use XTwitterScraper\X\Accounts\AccountNewResponse;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
+use XTwitterScraper\X\Accounts\XAccountDetail;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -49,7 +49,7 @@ interface AccountsContract
     public function retrieve(
         string $id,
         RequestOptions|array|null $requestOptions = null
-    ): AccountGetResponse;
+    ): XAccountDetail;
 
     /**
      * @api

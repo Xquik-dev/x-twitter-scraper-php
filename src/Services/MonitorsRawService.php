@@ -7,14 +7,13 @@ namespace XTwitterScraper\Services;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\EventType;
+use XTwitterScraper\Monitors\Monitor;
 use XTwitterScraper\Monitors\MonitorCreateParams;
-use XTwitterScraper\Monitors\MonitorCreateParams\EventType;
 use XTwitterScraper\Monitors\MonitorDeactivateResponse;
-use XTwitterScraper\Monitors\MonitorGetResponse;
 use XTwitterScraper\Monitors\MonitorListResponse;
 use XTwitterScraper\Monitors\MonitorNewResponse;
 use XTwitterScraper\Monitors\MonitorUpdateParams;
-use XTwitterScraper\Monitors\MonitorUpdateResponse;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\MonitorsRawContract;
 
@@ -72,7 +71,7 @@ final class MonitorsRawService implements MonitorsRawContract
      * @param string $id Resource ID (stringified bigint)
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<MonitorGetResponse>
+     * @return BaseResponse<Monitor>
      *
      * @throws APIException
      */
@@ -85,7 +84,7 @@ final class MonitorsRawService implements MonitorsRawContract
             method: 'get',
             path: ['monitors/%1$s', $id],
             options: $requestOptions,
-            convert: MonitorGetResponse::class,
+            convert: Monitor::class,
         );
     }
 
@@ -96,12 +95,11 @@ final class MonitorsRawService implements MonitorsRawContract
      *
      * @param string $id Resource ID (stringified bigint)
      * @param array{
-     *   eventTypes?: list<MonitorUpdateParams\EventType|value-of<MonitorUpdateParams\EventType>>,
-     *   isActive?: bool,
+     *   eventTypes?: list<EventType|value-of<EventType>>, isActive?: bool
      * }|MonitorUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<MonitorUpdateResponse>
+     * @return BaseResponse<Monitor>
      *
      * @throws APIException
      */
@@ -121,7 +119,7 @@ final class MonitorsRawService implements MonitorsRawContract
             path: ['monitors/%1$s', $id],
             body: (object) $parsed,
             options: $options,
-            convert: MonitorUpdateResponse::class,
+            convert: Monitor::class,
         );
     }
 

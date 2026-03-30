@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
-use XTwitterScraper\X\Users\UserGetFollowersYouKnowResponse;
-use XTwitterScraper\X\Users\UserGetLikesResponse;
-use XTwitterScraper\X\Users\UserGetMediaResponse;
-use XTwitterScraper\X\Users\UserGetResponse;
-use XTwitterScraper\X\Users\UserGetTweetsResponse;
+use XTwitterScraper\X\Users\UserProfile;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -28,7 +26,7 @@ interface UsersContract
     public function retrieve(
         string $username,
         RequestOptions|array|null $requestOptions = null
-    ): UserGetResponse;
+    ): UserProfile;
 
     /**
      * @api
@@ -73,7 +71,7 @@ interface UsersContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetFollowersYouKnowResponse;
+    ): PaginatedUsers;
 
     /**
      * @api
@@ -105,7 +103,7 @@ interface UsersContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetLikesResponse;
+    ): PaginatedTweets;
 
     /**
      * @api
@@ -120,7 +118,7 @@ interface UsersContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetMediaResponse;
+    ): PaginatedTweets;
 
     /**
      * @api
@@ -172,7 +170,7 @@ interface UsersContract
         bool $includeParentTweet = false,
         bool $includeReplies = false,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetTweetsResponse;
+    ): PaginatedTweets;
 
     /**
      * @api

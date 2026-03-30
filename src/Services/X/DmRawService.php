@@ -12,8 +12,8 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\DmRawContract;
 use XTwitterScraper\X\Dm\DmGetHistoryResponse;
 use XTwitterScraper\X\Dm\DmRetrieveHistoryParams;
-use XTwitterScraper\X\Dm\DmUpdateParams;
-use XTwitterScraper\X\Dm\DmUpdateResponse;
+use XTwitterScraper\X\Dm\DmSendParams;
+use XTwitterScraper\X\Dm\DmSendResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -25,44 +25,6 @@ final class DmRawService implements DmRawContract
      * @internal
      */
     public function __construct(private Client $client) {}
-
-    /**
-     * @api
-     *
-     * Send direct message
-     *
-     * @param string $userID Recipient user ID
-     * @param array{
-     *   account: string,
-     *   text: string,
-     *   mediaIDs?: list<string>,
-     *   replyToMessageID?: string,
-     * }|DmUpdateParams $params
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<DmUpdateResponse>
-     *
-     * @throws APIException
-     */
-    public function update(
-        string $userID,
-        array|DmUpdateParams $params,
-        RequestOptions|array|null $requestOptions = null,
-    ): BaseResponse {
-        [$parsed, $options] = DmUpdateParams::parseRequest(
-            $params,
-            $requestOptions,
-        );
-
-        // @phpstan-ignore-next-line return.type
-        return $this->client->request(
-            method: 'post',
-            path: ['x/dm/%1$s', $userID],
-            body: (object) $parsed,
-            options: $options,
-            convert: DmUpdateResponse::class,
-        );
-    }
 
     /**
      * @api
@@ -94,6 +56,44 @@ final class DmRawService implements DmRawContract
             query: Util::array_transform_keys($parsed, ['maxID' => 'maxId']),
             options: $options,
             convert: DmGetHistoryResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Send direct message
+     *
+     * @param string $userID Recipient user ID
+     * @param array{
+     *   account: string,
+     *   text: string,
+     *   mediaIDs?: list<string>,
+     *   replyToMessageID?: string,
+     * }|DmSendParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<DmSendResponse>
+     *
+     * @throws APIException
+     */
+    public function send(
+        string $userID,
+        array|DmSendParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = DmSendParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'post',
+            path: ['x/dm/%1$s', $userID],
+            body: (object) $parsed,
+            options: $options,
+            convert: DmSendResponse::class,
         );
     }
 }

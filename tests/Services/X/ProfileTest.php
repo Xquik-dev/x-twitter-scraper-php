@@ -8,9 +8,9 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\X\Profile\ProfilePatchAllResponse;
 use XTwitterScraper\X\Profile\ProfileUpdateAvatarResponse;
 use XTwitterScraper\X\Profile\ProfileUpdateBannerResponse;
+use XTwitterScraper\X\Profile\ProfileUpdateResponse;
 
 /**
  * @internal
@@ -35,26 +35,26 @@ final class ProfileTest extends TestCase
     }
 
     #[Test]
-    public function testPatchAll(): void
+    public function testUpdate(): void
     {
         if (UnsupportedMockTests::$skip) {
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->profile->patchAll(account: 'account');
+        $result = $this->client->x->profile->update(account: 'account');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(ProfilePatchAllResponse::class, $result);
+        $this->assertInstanceOf(ProfileUpdateResponse::class, $result);
     }
 
     #[Test]
-    public function testPatchAllWithOptionalParams(): void
+    public function testUpdateWithOptionalParams(): void
     {
         if (UnsupportedMockTests::$skip) {
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->profile->patchAll(
+        $result = $this->client->x->profile->update(
             account: 'account',
             description: 'description',
             location: 'location',
@@ -63,7 +63,7 @@ final class ProfileTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(ProfilePatchAllResponse::class, $result);
+        $this->assertInstanceOf(ProfileUpdateResponse::class, $result);
     }
 
     #[Test]

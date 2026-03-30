@@ -7,10 +7,9 @@ namespace XTwitterScraper\Monitors;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Monitors\MonitorListResponse\Monitor;
 
 /**
- * @phpstan-import-type MonitorShape from \XTwitterScraper\Monitors\MonitorListResponse\Monitor
+ * @phpstan-import-type MonitorShape from \XTwitterScraper\Monitors\Monitor
  *
  * @phpstan-type MonitorListResponseShape = array{
  *   monitors: list<Monitor|MonitorShape>, total: int

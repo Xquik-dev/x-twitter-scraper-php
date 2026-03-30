@@ -9,9 +9,9 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\ProfileContract;
-use XTwitterScraper\X\Profile\ProfilePatchAllResponse;
 use XTwitterScraper\X\Profile\ProfileUpdateAvatarResponse;
 use XTwitterScraper\X\Profile\ProfileUpdateBannerResponse;
+use XTwitterScraper\X\Profile\ProfileUpdateResponse;
 
 /**
  * X write actions (tweets, likes, follows, DMs).
@@ -46,14 +46,14 @@ final class ProfileService implements ProfileContract
      *
      * @throws APIException
      */
-    public function patchAll(
+    public function update(
         string $account,
         ?string $description = null,
         ?string $location = null,
         ?string $name = null,
         ?string $url = null,
         RequestOptions|array|null $requestOptions = null,
-    ): ProfilePatchAllResponse {
+    ): ProfileUpdateResponse {
         $params = Util::removeNulls(
             [
                 'account' => $account,
@@ -65,7 +65,7 @@ final class ProfileService implements ProfileContract
         );
 
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->patchAll(params: $params, requestOptions: $requestOptions);
+        $response = $this->raw->update(params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

@@ -6,9 +6,9 @@ namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
-use XTwitterScraper\X\Profile\ProfilePatchAllResponse;
 use XTwitterScraper\X\Profile\ProfileUpdateAvatarResponse;
 use XTwitterScraper\X\Profile\ProfileUpdateBannerResponse;
+use XTwitterScraper\X\Profile\ProfileUpdateResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -26,14 +26,14 @@ interface ProfileContract
      *
      * @throws APIException
      */
-    public function patchAll(
+    public function update(
         string $account,
         ?string $description = null,
         ?string $location = null,
         ?string $name = null,
         ?string $url = null,
         RequestOptions|array|null $requestOptions = null,
-    ): ProfilePatchAllResponse;
+    ): ProfileUpdateResponse;
 
     /**
      * @api

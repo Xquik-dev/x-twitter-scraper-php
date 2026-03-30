@@ -8,15 +8,15 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\X\Tweets\TweetAuthor;
 use XTwitterScraper\X\XGetArticleResponse\Article;
-use XTwitterScraper\X\XGetArticleResponse\Author;
 
 /**
  * @phpstan-import-type ArticleShape from \XTwitterScraper\X\XGetArticleResponse\Article
- * @phpstan-import-type AuthorShape from \XTwitterScraper\X\XGetArticleResponse\Author
+ * @phpstan-import-type TweetAuthorShape from \XTwitterScraper\X\Tweets\TweetAuthor
  *
  * @phpstan-type XGetArticleResponseShape = array{
- *   article: Article|ArticleShape, author?: null|Author|AuthorShape
+ *   article: Article|ArticleShape, author?: null|TweetAuthor|TweetAuthorShape
  * }
  */
 final class XGetArticleResponse implements BaseModel
@@ -28,7 +28,7 @@ final class XGetArticleResponse implements BaseModel
     public Article $article;
 
     #[Optional]
-    public ?Author $author;
+    public ?TweetAuthor $author;
 
     /**
      * `new XGetArticleResponse()` is missing required properties by the API.
@@ -55,11 +55,11 @@ final class XGetArticleResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Article|ArticleShape $article
-     * @param Author|AuthorShape|null $author
+     * @param TweetAuthor|TweetAuthorShape|null $author
      */
     public static function with(
         Article|array $article,
-        Author|array|null $author = null
+        TweetAuthor|array|null $author = null
     ): self {
         $self = new self;
 
@@ -82,9 +82,9 @@ final class XGetArticleResponse implements BaseModel
     }
 
     /**
-     * @param Author|AuthorShape $author
+     * @param TweetAuthor|TweetAuthorShape $author
      */
-    public function withAuthor(Author|array $author): self
+    public function withAuthor(TweetAuthor|array $author): self
     {
         $self = clone $this;
         $self['author'] = $author;

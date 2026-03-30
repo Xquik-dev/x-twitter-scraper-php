@@ -7,13 +7,12 @@ namespace XTwitterScraper\X\Accounts;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\X\Accounts\AccountListResponse\Account;
 
 /**
- * @phpstan-import-type AccountShape from \XTwitterScraper\X\Accounts\AccountListResponse\Account
+ * @phpstan-import-type XAccountShape from \XTwitterScraper\X\Accounts\XAccount
  *
  * @phpstan-type AccountListResponseShape = array{
- *   accounts: list<Account|AccountShape>
+ *   accounts: list<XAccount|XAccountShape>
  * }
  */
 final class AccountListResponse implements BaseModel
@@ -21,8 +20,8 @@ final class AccountListResponse implements BaseModel
     /** @use SdkModel<AccountListResponseShape> */
     use SdkModel;
 
-    /** @var list<Account> $accounts */
-    #[Required(list: Account::class)]
+    /** @var list<XAccount> $accounts */
+    #[Required(list: XAccount::class)]
     public array $accounts;
 
     /**
@@ -49,7 +48,7 @@ final class AccountListResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param list<Account|AccountShape> $accounts
+     * @param list<XAccount|XAccountShape> $accounts
      */
     public static function with(array $accounts): self
     {
@@ -61,7 +60,7 @@ final class AccountListResponse implements BaseModel
     }
 
     /**
-     * @param list<Account|AccountShape> $accounts
+     * @param list<XAccount|XAccountShape> $accounts
      */
     public function withAccounts(array $accounts): self
     {
