@@ -29,7 +29,11 @@ final class EventDetail implements BaseModel
     #[Required]
     public string $id;
 
-    /** @var array<string,mixed> $data */
+    /**
+     * Event payload — shape varies by event type (JSON).
+     *
+     * @var array<string,mixed> $data
+     */
     #[Required(map: 'mixed')]
     public array $data;
 
@@ -116,6 +120,8 @@ final class EventDetail implements BaseModel
     }
 
     /**
+     * Event payload — shape varies by event type (JSON).
+     *
      * @param array<string,mixed> $data
      */
     public function withData(array $data): self

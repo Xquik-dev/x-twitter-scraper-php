@@ -26,7 +26,11 @@ final class ExtractionGetResponse implements BaseModel
     #[Required]
     public bool $hasMore;
 
-    /** @var array<string,mixed> $job */
+    /**
+     * Extraction job metadata — shape varies by tool type (JSON).
+     *
+     * @var array<string,mixed> $job
+     */
     #[Required(map: 'mixed')]
     public array $job;
 
@@ -90,6 +94,8 @@ final class ExtractionGetResponse implements BaseModel
     }
 
     /**
+     * Extraction job metadata — shape varies by tool type (JSON).
+     *
      * @param array<string,mixed> $job
      */
     public function withJob(array $job): self

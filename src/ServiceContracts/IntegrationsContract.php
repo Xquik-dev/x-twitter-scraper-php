@@ -59,8 +59,8 @@ interface IntegrationsContract
      *
      * @param string $id Resource ID (stringified bigint)
      * @param list<\XTwitterScraper\Integrations\IntegrationUpdateParams\EventType|value-of<\XTwitterScraper\Integrations\IntegrationUpdateParams\EventType>> $eventTypes
-     * @param array<string,mixed> $filters
-     * @param array<string,mixed> $messageTemplate
+     * @param array<string,mixed> $filters Event filter rules (JSON)
+     * @param array<string,mixed> $messageTemplate Custom message template (JSON)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

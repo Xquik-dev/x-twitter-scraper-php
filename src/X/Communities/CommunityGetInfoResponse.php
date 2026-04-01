@@ -7,9 +7,14 @@ namespace XTwitterScraper\X\Communities;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community;
 
 /**
- * @phpstan-type CommunityGetInfoResponseShape = array{community: mixed}
+ * @phpstan-import-type CommunityShape from \XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community
+ *
+ * @phpstan-type CommunityGetInfoResponseShape = array{
+ *   community: Community|CommunityShape
+ * }
  */
 final class CommunityGetInfoResponse implements BaseModel
 {
@@ -20,7 +25,7 @@ final class CommunityGetInfoResponse implements BaseModel
      * Community info object.
      */
     #[Required]
-    public mixed $community;
+    public Community $community;
 
     /**
      * `new CommunityGetInfoResponse()` is missing required properties by the API.
@@ -45,8 +50,10 @@ final class CommunityGetInfoResponse implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param Community|CommunityShape $community
      */
-    public static function with(mixed $community): self
+    public static function with(Community|array $community): self
     {
         $self = new self;
 
@@ -57,8 +64,10 @@ final class CommunityGetInfoResponse implements BaseModel
 
     /**
      * Community info object.
+     *
+     * @param Community|CommunityShape $community
      */
-    public function withCommunity(mixed $community): self
+    public function withCommunity(Community|array $community): self
     {
         $self = clone $this;
         $self['community'] = $community;
