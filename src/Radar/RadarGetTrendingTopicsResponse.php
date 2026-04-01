@@ -7,12 +7,13 @@ namespace XTwitterScraper\Radar;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Radar\RadarGetTrendingTopicsResponse\Item;
 
 /**
- * @phpstan-import-type RadarItemShape from \XTwitterScraper\Radar\RadarItem
+ * @phpstan-import-type ItemShape from \XTwitterScraper\Radar\RadarGetTrendingTopicsResponse\Item
  *
  * @phpstan-type RadarGetTrendingTopicsResponseShape = array{
- *   items: list<RadarItem|RadarItemShape>, total: int
+ *   items: list<Item|ItemShape>, total: int
  * }
  */
 final class RadarGetTrendingTopicsResponse implements BaseModel
@@ -20,8 +21,8 @@ final class RadarGetTrendingTopicsResponse implements BaseModel
     /** @use SdkModel<RadarGetTrendingTopicsResponseShape> */
     use SdkModel;
 
-    /** @var list<RadarItem> $items */
-    #[Required(list: RadarItem::class)]
+    /** @var list<Item> $items */
+    #[Required(list: Item::class)]
     public array $items;
 
     #[Required]
@@ -51,7 +52,7 @@ final class RadarGetTrendingTopicsResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param list<RadarItem|RadarItemShape> $items
+     * @param list<Item|ItemShape> $items
      */
     public static function with(array $items, int $total): self
     {
@@ -64,7 +65,7 @@ final class RadarGetTrendingTopicsResponse implements BaseModel
     }
 
     /**
-     * @param list<RadarItem|RadarItemShape> $items
+     * @param list<Item|ItemShape> $items
      */
     public function withItems(array $items): self
     {

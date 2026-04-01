@@ -8,8 +8,9 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Drafts\DraftCreateParams\Goal;
-use XTwitterScraper\Drafts\DraftDetail;
+use XTwitterScraper\Drafts\DraftGetResponse;
 use XTwitterScraper\Drafts\DraftListResponse;
+use XTwitterScraper\Drafts\DraftNewResponse;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\DraftsContract;
 
@@ -48,7 +49,7 @@ final class DraftsService implements DraftsContract
         Goal|string|null $goal = null,
         ?string $topic = null,
         RequestOptions|array|null $requestOptions = null,
-    ): DraftDetail {
+    ): DraftNewResponse {
         $params = Util::removeNulls(
             ['text' => $text, 'goal' => $goal, 'topic' => $topic]
         );
@@ -72,7 +73,7 @@ final class DraftsService implements DraftsContract
     public function retrieve(
         string $id,
         RequestOptions|array|null $requestOptions = null
-    ): DraftDetail {
+    ): DraftGetResponse {
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieve($id, requestOptions: $requestOptions);
 

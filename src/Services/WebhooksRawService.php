@@ -7,17 +7,17 @@ namespace XTwitterScraper\Services;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\EventType;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\WebhooksRawContract;
-use XTwitterScraper\Webhooks\Webhook;
 use XTwitterScraper\Webhooks\WebhookCreateParams;
+use XTwitterScraper\Webhooks\WebhookCreateParams\EventType;
 use XTwitterScraper\Webhooks\WebhookDeactivateResponse;
 use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse;
 use XTwitterScraper\Webhooks\WebhookListResponse;
 use XTwitterScraper\Webhooks\WebhookNewResponse;
 use XTwitterScraper\Webhooks\WebhookTestResponse;
 use XTwitterScraper\Webhooks\WebhookUpdateParams;
+use XTwitterScraper\Webhooks\WebhookUpdateResponse;
 
 /**
  * Webhook endpoint management & delivery.
@@ -72,13 +72,13 @@ final class WebhooksRawService implements WebhooksRawContract
      *
      * @param string $id Resource ID (stringified bigint)
      * @param array{
-     *   eventTypes?: list<EventType|value-of<EventType>>,
+     *   eventTypes?: list<WebhookUpdateParams\EventType|value-of<WebhookUpdateParams\EventType>>,
      *   isActive?: bool,
      *   url?: string,
      * }|WebhookUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<Webhook>
+     * @return BaseResponse<WebhookUpdateResponse>
      *
      * @throws APIException
      */
@@ -98,7 +98,7 @@ final class WebhooksRawService implements WebhooksRawContract
             path: ['webhooks/%1$s', $id],
             body: (object) $parsed,
             options: $options,
-            convert: Webhook::class,
+            convert: WebhookUpdateResponse::class,
         );
     }
 

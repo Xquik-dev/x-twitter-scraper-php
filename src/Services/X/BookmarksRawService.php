@@ -8,11 +8,11 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\BookmarksRawContract;
 use XTwitterScraper\X\Bookmarks\BookmarkGetFoldersResponse;
 use XTwitterScraper\X\Bookmarks\BookmarkListParams;
+use XTwitterScraper\X\Bookmarks\BookmarkListResponse;
 
 /**
  * X data lookups (subscription required).
@@ -35,7 +35,7 @@ final class BookmarksRawService implements BookmarksRawContract
      * @param array{cursor?: string, folderID?: string}|BookmarkListParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<BookmarkListResponse>
      *
      * @throws APIException
      */
@@ -54,7 +54,7 @@ final class BookmarksRawService implements BookmarksRawContract
             path: 'x/bookmarks',
             query: Util::array_transform_keys($parsed, ['folderID' => 'folderId']),
             options: $options,
-            convert: PaginatedTweets::class,
+            convert: BookmarkListResponse::class,
         );
     }
 

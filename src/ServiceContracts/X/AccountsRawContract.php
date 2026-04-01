@@ -9,11 +9,11 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Accounts\AccountCreateParams;
 use XTwitterScraper\X\Accounts\AccountDeleteResponse;
+use XTwitterScraper\X\Accounts\AccountGetResponse;
 use XTwitterScraper\X\Accounts\AccountListResponse;
 use XTwitterScraper\X\Accounts\AccountNewResponse;
 use XTwitterScraper\X\Accounts\AccountReauthParams;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
-use XTwitterScraper\X\Accounts\XAccountDetail;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -41,7 +41,7 @@ interface AccountsRawContract
      * @param string $id Resource ID (stringified bigint)
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<XAccountDetail>
+     * @return BaseResponse<AccountGetResponse>
      *
      * @throws APIException
      */

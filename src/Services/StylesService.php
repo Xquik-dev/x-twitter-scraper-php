@@ -9,11 +9,13 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\StylesContract;
+use XTwitterScraper\Styles\StyleAnalyzeResponse;
 use XTwitterScraper\Styles\StyleCompareResponse;
 use XTwitterScraper\Styles\StyleGetPerformanceResponse;
+use XTwitterScraper\Styles\StyleGetResponse;
 use XTwitterScraper\Styles\StyleListResponse;
-use XTwitterScraper\Styles\StyleProfile;
 use XTwitterScraper\Styles\StyleUpdateParams\Tweet;
+use XTwitterScraper\Styles\StyleUpdateResponse;
 
 /**
  * Tweet composition, drafts, writing styles & radar.
@@ -49,7 +51,7 @@ final class StylesService implements StylesContract
     public function retrieve(
         string $username,
         RequestOptions|array|null $requestOptions = null
-    ): StyleProfile {
+    ): StyleGetResponse {
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieve($username, requestOptions: $requestOptions);
 
@@ -73,7 +75,7 @@ final class StylesService implements StylesContract
         string $label,
         array $tweets,
         RequestOptions|array|null $requestOptions = null,
-    ): StyleProfile {
+    ): StyleUpdateResponse {
         $params = Util::removeNulls(['label' => $label, 'tweets' => $tweets]);
 
         // @phpstan-ignore-next-line argument.type
@@ -133,7 +135,7 @@ final class StylesService implements StylesContract
     public function analyze(
         string $username,
         RequestOptions|array|null $requestOptions = null
-    ): StyleProfile {
+    ): StyleAnalyzeResponse {
         $params = Util::removeNulls(['username' => $username]);
 
         // @phpstan-ignore-next-line argument.type

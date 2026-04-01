@@ -6,12 +6,13 @@ namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\Monitors\Monitor;
 use XTwitterScraper\Monitors\MonitorCreateParams;
 use XTwitterScraper\Monitors\MonitorDeactivateResponse;
+use XTwitterScraper\Monitors\MonitorGetResponse;
 use XTwitterScraper\Monitors\MonitorListResponse;
 use XTwitterScraper\Monitors\MonitorNewResponse;
 use XTwitterScraper\Monitors\MonitorUpdateParams;
+use XTwitterScraper\Monitors\MonitorUpdateResponse;
 use XTwitterScraper\RequestOptions;
 
 /**
@@ -40,7 +41,7 @@ interface MonitorsRawContract
      * @param string $id Resource ID (stringified bigint)
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<Monitor>
+     * @return BaseResponse<MonitorGetResponse>
      *
      * @throws APIException
      */
@@ -56,7 +57,7 @@ interface MonitorsRawContract
      * @param array<string,mixed>|MonitorUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<Monitor>
+     * @return BaseResponse<MonitorUpdateResponse>
      *
      * @throws APIException
      */

@@ -7,16 +7,17 @@ namespace XTwitterScraper\Draws;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Draws\DrawRunResponse\Winner;
 
 /**
- * @phpstan-import-type WinnerShape from \XTwitterScraper\Draws\Winner
+ * @phpstan-import-type WinnerShape from \XTwitterScraper\Draws\DrawRunResponse\Winner
  *
  * @phpstan-type DrawRunResponseShape = array{
  *   id: string,
  *   totalEntries: int,
  *   tweetID: string,
  *   validEntries: int,
- *   winners: list<Winner|WinnerShape>,
+ *   winners: list<\XTwitterScraper\Draws\DrawRunResponse\Winner|WinnerShape>,
  * }
  */
 final class DrawRunResponse implements BaseModel

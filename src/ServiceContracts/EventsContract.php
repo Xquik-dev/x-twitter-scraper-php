@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\Events\EventDetail;
+use XTwitterScraper\Events\EventGetResponse;
+use XTwitterScraper\Events\EventListParams\EventType;
 use XTwitterScraper\Events\EventListResponse;
-use XTwitterScraper\EventType;
 use XTwitterScraper\RequestOptions;
 
 /**
@@ -26,7 +26,7 @@ interface EventsContract
     public function retrieve(
         string $id,
         RequestOptions|array|null $requestOptions = null
-    ): EventDetail;
+    ): EventGetResponse;
 
     /**
      * @api
