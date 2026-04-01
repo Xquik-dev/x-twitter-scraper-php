@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
+use XTwitterScraper\Compose\ComposeNewResponse;
 use XTwitterScraper\Core\Util;
 
 /**
@@ -41,7 +42,7 @@ final class ComposeTest extends TestCase
         $result = $this->client->compose->create(step: 'compose');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertIsArray($result);
+        $this->assertInstanceOf(ComposeNewResponse::class, $result);
     }
 
     #[Test]
@@ -66,6 +67,6 @@ final class ComposeTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertIsArray($result);
+        $this->assertInstanceOf(ComposeNewResponse::class, $result);
     }
 }

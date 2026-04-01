@@ -55,7 +55,7 @@ final class APIKeysRawService implements APIKeysRawContract
             body: (object) $parsed,
             options: $options,
             convert: APIKeyNewResponse::class,
-            security: [],
+            security: ['apiKey' => true],
         );
     }
 
@@ -79,7 +79,7 @@ final class APIKeysRawService implements APIKeysRawContract
             path: 'api-keys',
             options: $requestOptions,
             convert: APIKeyListResponse::class,
-            security: [],
+            security: ['apiKey' => true],
         );
     }
 
@@ -105,7 +105,7 @@ final class APIKeysRawService implements APIKeysRawContract
             path: ['api-keys/%1$s', $id],
             options: $requestOptions,
             convert: APIKeyRevokeResponse::class,
-            security: [],
+            security: ['apiKey' => true],
         );
     }
 }

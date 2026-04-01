@@ -34,7 +34,11 @@ final class IntegrationUpdateResponse implements BaseModel
     #[Required]
     public string $id;
 
-    /** @var array<string,mixed> $config */
+    /**
+     * Integration config — shape varies by type (JSON).
+     *
+     * @var array<string,mixed> $config
+     */
     #[Required(map: 'mixed')]
     public array $config;
 
@@ -55,7 +59,11 @@ final class IntegrationUpdateResponse implements BaseModel
     #[Required(enum: Type::class)]
     public string $type;
 
-    /** @var array<string,mixed>|null $filters */
+    /**
+     * Event filter rules (JSON).
+     *
+     * @var array<string,mixed>|null $filters
+     */
     #[Optional(map: 'mixed')]
     public ?array $filters;
 
@@ -152,6 +160,8 @@ final class IntegrationUpdateResponse implements BaseModel
     }
 
     /**
+     * Integration config — shape varies by type (JSON).
+     *
      * @param array<string,mixed> $config
      */
     public function withConfig(array $config): self
@@ -209,6 +219,8 @@ final class IntegrationUpdateResponse implements BaseModel
     }
 
     /**
+     * Event filter rules (JSON).
+     *
      * @param array<string,mixed> $filters
      */
     public function withFilters(array $filters): self

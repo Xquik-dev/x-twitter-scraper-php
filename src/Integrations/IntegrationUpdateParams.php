@@ -35,14 +35,22 @@ final class IntegrationUpdateParams implements BaseModel
     #[Optional(list: EventType::class)]
     public ?array $eventTypes;
 
-    /** @var array<string,mixed>|null $filters */
+    /**
+     * Event filter rules (JSON).
+     *
+     * @var array<string,mixed>|null $filters
+     */
     #[Optional(map: 'mixed')]
     public ?array $filters;
 
     #[Optional]
     public ?bool $isActive;
 
-    /** @var array<string,mixed>|null $messageTemplate */
+    /**
+     * Custom message template (JSON).
+     *
+     * @var array<string,mixed>|null $messageTemplate
+     */
     #[Optional(map: 'mixed')]
     public ?array $messageTemplate;
 
@@ -103,6 +111,8 @@ final class IntegrationUpdateParams implements BaseModel
     }
 
     /**
+     * Event filter rules (JSON).
+     *
      * @param array<string,mixed> $filters
      */
     public function withFilters(array $filters): self
@@ -122,6 +132,8 @@ final class IntegrationUpdateParams implements BaseModel
     }
 
     /**
+     * Custom message template (JSON).
+     *
      * @param array<string,mixed> $messageTemplate
      */
     public function withMessageTemplate(array $messageTemplate): self

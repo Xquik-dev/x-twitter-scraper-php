@@ -9,8 +9,8 @@ use XTwitterScraper\Compose\ComposeCreateParams;
 use XTwitterScraper\Compose\ComposeCreateParams\Goal;
 use XTwitterScraper\Compose\ComposeCreateParams\MediaType;
 use XTwitterScraper\Compose\ComposeCreateParams\Step;
+use XTwitterScraper\Compose\ComposeNewResponse;
 use XTwitterScraper\Core\Contracts\BaseResponse;
-use XTwitterScraper\Core\Conversion\MapOf;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\ComposeRawContract;
@@ -48,7 +48,7 @@ final class ComposeRawService implements ComposeRawContract
      * }|ComposeCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<array<string,mixed>>
+     * @return BaseResponse<ComposeNewResponse>
      *
      * @throws APIException
      */
@@ -67,7 +67,7 @@ final class ComposeRawService implements ComposeRawContract
             path: 'compose',
             body: (object) $parsed,
             options: $options,
-            convert: new MapOf('mixed'),
+            convert: ComposeNewResponse::class,
         );
     }
 }
