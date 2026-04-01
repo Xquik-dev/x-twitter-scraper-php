@@ -10,10 +10,10 @@ use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\AccountsContract;
 use XTwitterScraper\X\Accounts\AccountDeleteResponse;
+use XTwitterScraper\X\Accounts\AccountGetResponse;
 use XTwitterScraper\X\Accounts\AccountListResponse;
 use XTwitterScraper\X\Accounts\AccountNewResponse;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
-use XTwitterScraper\X\Accounts\XAccountDetail;
 
 /**
  * Connected X account management.
@@ -86,7 +86,7 @@ final class AccountsService implements AccountsContract
     public function retrieve(
         string $id,
         RequestOptions|array|null $requestOptions = null
-    ): XAccountDetail {
+    ): AccountGetResponse {
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieve($id, requestOptions: $requestOptions);
 

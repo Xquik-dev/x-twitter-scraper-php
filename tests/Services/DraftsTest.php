@@ -8,8 +8,9 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\Drafts\DraftDetail;
+use XTwitterScraper\Drafts\DraftGetResponse;
 use XTwitterScraper\Drafts\DraftListResponse;
+use XTwitterScraper\Drafts\DraftNewResponse;
 
 /**
  * @internal
@@ -43,7 +44,7 @@ final class DraftsTest extends TestCase
         $result = $this->client->drafts->create(text: 'text');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(DraftDetail::class, $result);
+        $this->assertInstanceOf(DraftNewResponse::class, $result);
     }
 
     #[Test]
@@ -60,7 +61,7 @@ final class DraftsTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(DraftDetail::class, $result);
+        $this->assertInstanceOf(DraftNewResponse::class, $result);
     }
 
     #[Test]
@@ -73,7 +74,7 @@ final class DraftsTest extends TestCase
         $result = $this->client->drafts->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(DraftDetail::class, $result);
+        $this->assertInstanceOf(DraftGetResponse::class, $result);
     }
 
     #[Test]

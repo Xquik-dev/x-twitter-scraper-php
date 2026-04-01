@@ -7,11 +7,13 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\PaginatedTweets;
-use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\UsersRawContract;
-use XTwitterScraper\X\Users\UserProfile;
+use XTwitterScraper\X\Users\UserGetFollowersYouKnowResponse;
+use XTwitterScraper\X\Users\UserGetLikesResponse;
+use XTwitterScraper\X\Users\UserGetMediaResponse;
+use XTwitterScraper\X\Users\UserGetResponse;
+use XTwitterScraper\X\Users\UserGetTweetsResponse;
 use XTwitterScraper\X\Users\UserRetrieveBatchParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersYouKnowParams;
@@ -44,7 +46,7 @@ final class UsersRawService implements UsersRawContract
      * @param string $username X username (without @)
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserProfile>
+     * @return BaseResponse<UserGetResponse>
      *
      * @throws APIException
      */
@@ -57,7 +59,7 @@ final class UsersRawService implements UsersRawContract
             method: 'get',
             path: ['x/users/%1$s', $username],
             options: $requestOptions,
-            convert: UserProfile::class,
+            convert: UserGetResponse::class,
         );
     }
 
@@ -136,7 +138,7 @@ final class UsersRawService implements UsersRawContract
      * @param array{cursor?: string}|UserRetrieveFollowersYouKnowParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedUsers>
+     * @return BaseResponse<UserGetFollowersYouKnowResponse>
      *
      * @throws APIException
      */
@@ -156,7 +158,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/followers-you-know', $id],
             query: $parsed,
             options: $options,
-            convert: PaginatedUsers::class,
+            convert: UserGetFollowersYouKnowResponse::class,
         );
     }
 
@@ -204,7 +206,7 @@ final class UsersRawService implements UsersRawContract
      * @param array{cursor?: string}|UserRetrieveLikesParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<UserGetLikesResponse>
      *
      * @throws APIException
      */
@@ -224,7 +226,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/likes', $id],
             query: $parsed,
             options: $options,
-            convert: PaginatedTweets::class,
+            convert: UserGetLikesResponse::class,
         );
     }
 
@@ -237,7 +239,7 @@ final class UsersRawService implements UsersRawContract
      * @param array{cursor?: string}|UserRetrieveMediaParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<UserGetMediaResponse>
      *
      * @throws APIException
      */
@@ -257,7 +259,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/media', $id],
             query: $parsed,
             options: $options,
-            convert: PaginatedTweets::class,
+            convert: UserGetMediaResponse::class,
         );
     }
 
@@ -337,7 +339,7 @@ final class UsersRawService implements UsersRawContract
      * }|UserRetrieveTweetsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<UserGetTweetsResponse>
      *
      * @throws APIException
      */
@@ -357,7 +359,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/tweets', $id],
             query: $parsed,
             options: $options,
-            convert: PaginatedTweets::class,
+            convert: UserGetTweetsResponse::class,
         );
     }
 

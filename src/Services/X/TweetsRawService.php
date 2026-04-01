@@ -7,23 +7,27 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\PaginatedTweets;
-use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\TweetsRawContract;
 use XTwitterScraper\X\Tweets\TweetCreateParams;
 use XTwitterScraper\X\Tweets\TweetDeleteParams;
 use XTwitterScraper\X\Tweets\TweetDeleteResponse;
 use XTwitterScraper\X\Tweets\TweetGetFavoritersParams;
+use XTwitterScraper\X\Tweets\TweetGetFavoritersResponse;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams;
+use XTwitterScraper\X\Tweets\TweetGetQuotesResponse;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams;
+use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
 use XTwitterScraper\X\Tweets\TweetGetResponse;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersParams;
+use XTwitterScraper\X\Tweets\TweetGetRetweetersResponse;
 use XTwitterScraper\X\Tweets\TweetGetThreadParams;
+use XTwitterScraper\X\Tweets\TweetGetThreadResponse;
 use XTwitterScraper\X\Tweets\TweetListParams;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
 use XTwitterScraper\X\Tweets\TweetSearchParams;
 use XTwitterScraper\X\Tweets\TweetSearchParams\QueryType;
+use XTwitterScraper\X\Tweets\TweetSearchResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -171,7 +175,7 @@ final class TweetsRawService implements TweetsRawContract
      * @param array{cursor?: string}|TweetGetFavoritersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedUsers>
+     * @return BaseResponse<TweetGetFavoritersResponse>
      *
      * @throws APIException
      */
@@ -191,7 +195,7 @@ final class TweetsRawService implements TweetsRawContract
             path: ['x/tweets/%1$s/favoriters', $id],
             query: $parsed,
             options: $options,
-            convert: PaginatedUsers::class,
+            convert: TweetGetFavoritersResponse::class,
         );
     }
 
@@ -206,7 +210,7 @@ final class TweetsRawService implements TweetsRawContract
      * }|TweetGetQuotesParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<TweetGetQuotesResponse>
      *
      * @throws APIException
      */
@@ -226,7 +230,7 @@ final class TweetsRawService implements TweetsRawContract
             path: ['x/tweets/%1$s/quotes', $id],
             query: $parsed,
             options: $options,
-            convert: PaginatedTweets::class,
+            convert: TweetGetQuotesResponse::class,
         );
     }
 
@@ -241,7 +245,7 @@ final class TweetsRawService implements TweetsRawContract
      * }|TweetGetRepliesParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<TweetGetRepliesResponse>
      *
      * @throws APIException
      */
@@ -261,7 +265,7 @@ final class TweetsRawService implements TweetsRawContract
             path: ['x/tweets/%1$s/replies', $id],
             query: $parsed,
             options: $options,
-            convert: PaginatedTweets::class,
+            convert: TweetGetRepliesResponse::class,
         );
     }
 
@@ -274,7 +278,7 @@ final class TweetsRawService implements TweetsRawContract
      * @param array{cursor?: string}|TweetGetRetweetersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedUsers>
+     * @return BaseResponse<TweetGetRetweetersResponse>
      *
      * @throws APIException
      */
@@ -294,7 +298,7 @@ final class TweetsRawService implements TweetsRawContract
             path: ['x/tweets/%1$s/retweeters', $id],
             query: $parsed,
             options: $options,
-            convert: PaginatedUsers::class,
+            convert: TweetGetRetweetersResponse::class,
         );
     }
 
@@ -307,7 +311,7 @@ final class TweetsRawService implements TweetsRawContract
      * @param array{cursor?: string}|TweetGetThreadParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<TweetGetThreadResponse>
      *
      * @throws APIException
      */
@@ -327,7 +331,7 @@ final class TweetsRawService implements TweetsRawContract
             path: ['x/tweets/%1$s/thread', $id],
             query: $parsed,
             options: $options,
-            convert: PaginatedTweets::class,
+            convert: TweetGetThreadResponse::class,
         );
     }
 
@@ -346,7 +350,7 @@ final class TweetsRawService implements TweetsRawContract
      * }|TweetSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<TweetSearchResponse>
      *
      * @throws APIException
      */
@@ -365,7 +369,7 @@ final class TweetsRawService implements TweetsRawContract
             path: 'x/tweets/search',
             query: $parsed,
             options: $options,
-            convert: PaginatedTweets::class,
+            convert: TweetSearchResponse::class,
         );
     }
 }

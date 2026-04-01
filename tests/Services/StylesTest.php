@@ -8,10 +8,12 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\Styles\StyleAnalyzeResponse;
 use XTwitterScraper\Styles\StyleCompareResponse;
 use XTwitterScraper\Styles\StyleGetPerformanceResponse;
+use XTwitterScraper\Styles\StyleGetResponse;
 use XTwitterScraper\Styles\StyleListResponse;
-use XTwitterScraper\Styles\StyleProfile;
+use XTwitterScraper\Styles\StyleUpdateResponse;
 
 /**
  * @internal
@@ -45,7 +47,7 @@ final class StylesTest extends TestCase
         $result = $this->client->styles->retrieve('username');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(StyleProfile::class, $result);
+        $this->assertInstanceOf(StyleGetResponse::class, $result);
     }
 
     #[Test]
@@ -62,7 +64,7 @@ final class StylesTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(StyleProfile::class, $result);
+        $this->assertInstanceOf(StyleUpdateResponse::class, $result);
     }
 
     #[Test]
@@ -79,7 +81,7 @@ final class StylesTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(StyleProfile::class, $result);
+        $this->assertInstanceOf(StyleUpdateResponse::class, $result);
     }
 
     #[Test]
@@ -118,7 +120,7 @@ final class StylesTest extends TestCase
         $result = $this->client->styles->analyze(username: 'username');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(StyleProfile::class, $result);
+        $this->assertInstanceOf(StyleAnalyzeResponse::class, $result);
     }
 
     #[Test]
@@ -131,7 +133,7 @@ final class StylesTest extends TestCase
         $result = $this->client->styles->analyze(username: 'username');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(StyleProfile::class, $result);
+        $this->assertInstanceOf(StyleAnalyzeResponse::class, $result);
     }
 
     #[Test]

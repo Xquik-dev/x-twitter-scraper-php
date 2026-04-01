@@ -7,21 +7,20 @@ namespace XTwitterScraper\Styles;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Styles\StyleListResponse\Style;
 
 /**
- * @phpstan-import-type StyleProfileSummaryShape from \XTwitterScraper\Styles\StyleProfileSummary
+ * @phpstan-import-type StyleShape from \XTwitterScraper\Styles\StyleListResponse\Style
  *
- * @phpstan-type StyleListResponseShape = array{
- *   styles: list<StyleProfileSummary|StyleProfileSummaryShape>
- * }
+ * @phpstan-type StyleListResponseShape = array{styles: list<Style|StyleShape>}
  */
 final class StyleListResponse implements BaseModel
 {
     /** @use SdkModel<StyleListResponseShape> */
     use SdkModel;
 
-    /** @var list<StyleProfileSummary> $styles */
-    #[Required(list: StyleProfileSummary::class)]
+    /** @var list<Style> $styles */
+    #[Required(list: Style::class)]
     public array $styles;
 
     /**
@@ -48,7 +47,7 @@ final class StyleListResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param list<StyleProfileSummary|StyleProfileSummaryShape> $styles
+     * @param list<Style|StyleShape> $styles
      */
     public static function with(array $styles): self
     {
@@ -60,7 +59,7 @@ final class StyleListResponse implements BaseModel
     }
 
     /**
-     * @param list<StyleProfileSummary|StyleProfileSummaryShape> $styles
+     * @param list<Style|StyleShape> $styles
      */
     public function withStyles(array $styles): self
     {

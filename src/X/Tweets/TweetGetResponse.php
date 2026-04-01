@@ -8,14 +8,15 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\X\Tweets\TweetGetResponse\Author;
+use XTwitterScraper\X\Tweets\TweetGetResponse\Tweet;
 
 /**
- * @phpstan-import-type TweetDetailShape from \XTwitterScraper\X\Tweets\TweetDetail
- * @phpstan-import-type TweetAuthorShape from \XTwitterScraper\X\Tweets\TweetAuthor
+ * @phpstan-import-type TweetShape from \XTwitterScraper\X\Tweets\TweetGetResponse\Tweet
+ * @phpstan-import-type AuthorShape from \XTwitterScraper\X\Tweets\TweetGetResponse\Author
  *
  * @phpstan-type TweetGetResponseShape = array{
- *   tweet: TweetDetail|TweetDetailShape,
- *   author?: null|TweetAuthor|TweetAuthorShape,
+ *   tweet: Tweet|TweetShape, author?: null|Author|AuthorShape
  * }
  */
 final class TweetGetResponse implements BaseModel
@@ -24,10 +25,10 @@ final class TweetGetResponse implements BaseModel
     use SdkModel;
 
     #[Required]
-    public TweetDetail $tweet;
+    public Tweet $tweet;
 
     #[Optional]
-    public ?TweetAuthor $author;
+    public ?Author $author;
 
     /**
      * `new TweetGetResponse()` is missing required properties by the API.
@@ -53,12 +54,12 @@ final class TweetGetResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param TweetDetail|TweetDetailShape $tweet
-     * @param TweetAuthor|TweetAuthorShape|null $author
+     * @param Tweet|TweetShape $tweet
+     * @param Author|AuthorShape|null $author
      */
     public static function with(
-        TweetDetail|array $tweet,
-        TweetAuthor|array|null $author = null
+        Tweet|array $tweet,
+        Author|array|null $author = null
     ): self {
         $self = new self;
 
@@ -70,9 +71,9 @@ final class TweetGetResponse implements BaseModel
     }
 
     /**
-     * @param TweetDetail|TweetDetailShape $tweet
+     * @param Tweet|TweetShape $tweet
      */
-    public function withTweet(TweetDetail|array $tweet): self
+    public function withTweet(Tweet|array $tweet): self
     {
         $self = clone $this;
         $self['tweet'] = $tweet;
@@ -81,9 +82,9 @@ final class TweetGetResponse implements BaseModel
     }
 
     /**
-     * @param TweetAuthor|TweetAuthorShape $author
+     * @param Author|AuthorShape $author
      */
-    public function withAuthor(TweetAuthor|array $author): self
+    public function withAuthor(Author|array $author): self
     {
         $self = clone $this;
         $self['author'] = $author;

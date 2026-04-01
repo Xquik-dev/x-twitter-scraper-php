@@ -8,13 +8,12 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\EventType;
-use XTwitterScraper\Webhooks\Webhook;
 use XTwitterScraper\Webhooks\WebhookDeactivateResponse;
 use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse;
 use XTwitterScraper\Webhooks\WebhookListResponse;
 use XTwitterScraper\Webhooks\WebhookNewResponse;
 use XTwitterScraper\Webhooks\WebhookTestResponse;
+use XTwitterScraper\Webhooks\WebhookUpdateResponse;
 
 /**
  * @internal
@@ -46,7 +45,7 @@ final class WebhooksTest extends TestCase
         }
 
         $result = $this->client->webhooks->create(
-            eventTypes: [EventType::TWEET_NEW],
+            eventTypes: ['tweet.new'],
             url: 'https://example.com'
         );
 
@@ -62,7 +61,7 @@ final class WebhooksTest extends TestCase
         }
 
         $result = $this->client->webhooks->create(
-            eventTypes: [EventType::TWEET_NEW],
+            eventTypes: ['tweet.new'],
             url: 'https://example.com'
         );
 
@@ -80,7 +79,7 @@ final class WebhooksTest extends TestCase
         $result = $this->client->webhooks->update('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(Webhook::class, $result);
+        $this->assertInstanceOf(WebhookUpdateResponse::class, $result);
     }
 
     #[Test]

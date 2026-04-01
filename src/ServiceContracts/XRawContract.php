@@ -6,10 +6,10 @@ namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\XGetArticleResponse;
 use XTwitterScraper\X\XGetHomeTimelineParams;
+use XTwitterScraper\X\XGetHomeTimelineResponse;
 use XTwitterScraper\X\XGetNotificationsParams;
 use XTwitterScraper\X\XGetNotificationsResponse;
 
@@ -38,7 +38,7 @@ interface XRawContract
      * @param array<string,mixed>|XGetHomeTimelineParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<XGetHomeTimelineResponse>
      *
      * @throws APIException
      */

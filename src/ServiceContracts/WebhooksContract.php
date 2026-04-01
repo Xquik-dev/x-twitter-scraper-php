@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\EventType;
 use XTwitterScraper\RequestOptions;
-use XTwitterScraper\Webhooks\Webhook;
+use XTwitterScraper\Webhooks\WebhookCreateParams\EventType;
 use XTwitterScraper\Webhooks\WebhookDeactivateResponse;
 use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse;
 use XTwitterScraper\Webhooks\WebhookListResponse;
 use XTwitterScraper\Webhooks\WebhookNewResponse;
 use XTwitterScraper\Webhooks\WebhookTestResponse;
+use XTwitterScraper\Webhooks\WebhookUpdateResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -38,7 +38,7 @@ interface WebhooksContract
      * @api
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param list<EventType|value-of<EventType>> $eventTypes
+     * @param list<\XTwitterScraper\Webhooks\WebhookUpdateParams\EventType|value-of<\XTwitterScraper\Webhooks\WebhookUpdateParams\EventType>> $eventTypes
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -49,7 +49,7 @@ interface WebhooksContract
         ?bool $isActive = null,
         ?string $url = null,
         RequestOptions|array|null $requestOptions = null,
-    ): Webhook;
+    ): WebhookUpdateResponse;
 
     /**
      * @api

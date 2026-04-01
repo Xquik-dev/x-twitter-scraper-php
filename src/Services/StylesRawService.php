@@ -10,13 +10,15 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\StylesRawContract;
 use XTwitterScraper\Styles\StyleAnalyzeParams;
+use XTwitterScraper\Styles\StyleAnalyzeResponse;
 use XTwitterScraper\Styles\StyleCompareParams;
 use XTwitterScraper\Styles\StyleCompareResponse;
 use XTwitterScraper\Styles\StyleGetPerformanceResponse;
+use XTwitterScraper\Styles\StyleGetResponse;
 use XTwitterScraper\Styles\StyleListResponse;
-use XTwitterScraper\Styles\StyleProfile;
 use XTwitterScraper\Styles\StyleUpdateParams;
 use XTwitterScraper\Styles\StyleUpdateParams\Tweet;
+use XTwitterScraper\Styles\StyleUpdateResponse;
 
 /**
  * Tweet composition, drafts, writing styles & radar.
@@ -40,7 +42,7 @@ final class StylesRawService implements StylesRawContract
      * @param string $username X username of cached style
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<StyleProfile>
+     * @return BaseResponse<StyleGetResponse>
      *
      * @throws APIException
      */
@@ -53,7 +55,7 @@ final class StylesRawService implements StylesRawContract
             method: 'get',
             path: ['styles/%1$s', $username],
             options: $requestOptions,
-            convert: StyleProfile::class,
+            convert: StyleGetResponse::class,
         );
     }
 
@@ -68,7 +70,7 @@ final class StylesRawService implements StylesRawContract
      * }|StyleUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<StyleProfile>
+     * @return BaseResponse<StyleUpdateResponse>
      *
      * @throws APIException
      */
@@ -88,7 +90,7 @@ final class StylesRawService implements StylesRawContract
             path: ['styles/%1$s', $username],
             body: (object) $parsed,
             options: $options,
-            convert: StyleProfile::class,
+            convert: StyleUpdateResponse::class,
         );
     }
 
@@ -148,7 +150,7 @@ final class StylesRawService implements StylesRawContract
      * @param array{username: string}|StyleAnalyzeParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<StyleProfile>
+     * @return BaseResponse<StyleAnalyzeResponse>
      *
      * @throws APIException
      */
@@ -167,7 +169,7 @@ final class StylesRawService implements StylesRawContract
             path: 'styles',
             body: (object) $parsed,
             options: $options,
-            convert: StyleProfile::class,
+            convert: StyleAnalyzeResponse::class,
         );
     }
 

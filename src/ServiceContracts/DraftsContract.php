@@ -6,8 +6,9 @@ namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Drafts\DraftCreateParams\Goal;
-use XTwitterScraper\Drafts\DraftDetail;
+use XTwitterScraper\Drafts\DraftGetResponse;
 use XTwitterScraper\Drafts\DraftListResponse;
+use XTwitterScraper\Drafts\DraftNewResponse;
 use XTwitterScraper\RequestOptions;
 
 /**
@@ -28,7 +29,7 @@ interface DraftsContract
         Goal|string|null $goal = null,
         ?string $topic = null,
         RequestOptions|array|null $requestOptions = null,
-    ): DraftDetail;
+    ): DraftNewResponse;
 
     /**
      * @api
@@ -41,7 +42,7 @@ interface DraftsContract
     public function retrieve(
         string $id,
         RequestOptions|array|null $requestOptions = null
-    ): DraftDetail;
+    ): DraftGetResponse;
 
     /**
      * @api

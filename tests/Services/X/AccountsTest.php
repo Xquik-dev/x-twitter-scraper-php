@@ -9,10 +9,10 @@ use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\Accounts\AccountDeleteResponse;
+use XTwitterScraper\X\Accounts\AccountGetResponse;
 use XTwitterScraper\X\Accounts\AccountListResponse;
 use XTwitterScraper\X\Accounts\AccountNewResponse;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
-use XTwitterScraper\X\Accounts\XAccountDetail;
 
 /**
  * @internal
@@ -82,7 +82,7 @@ final class AccountsTest extends TestCase
         $result = $this->client->x->accounts->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(XAccountDetail::class, $result);
+        $this->assertInstanceOf(AccountGetResponse::class, $result);
     }
 
     #[Test]
