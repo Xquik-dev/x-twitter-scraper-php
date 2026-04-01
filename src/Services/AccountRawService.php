@@ -112,7 +112,7 @@ final class AccountRawService implements AccountRawContract
             body: (object) $parsed,
             options: $options,
             convert: AccountUpdateLocaleResponse::class,
-            security: [],
+            security: ['apiKey' => true],
         );
     }
 }

@@ -8,6 +8,7 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Compose\ComposeCreateParams\Goal;
 use XTwitterScraper\Compose\ComposeCreateParams\MediaType;
 use XTwitterScraper\Compose\ComposeCreateParams\Step;
+use XTwitterScraper\Compose\ComposeNewResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
@@ -51,8 +52,6 @@ final class ComposeService implements ComposeContract
      * @param string $topic Tweet topic (compose, refine)
      * @param RequestOpts|null $requestOptions
      *
-     * @return array<string,mixed>
-     *
      * @throws APIException
      */
     public function create(
@@ -68,7 +67,7 @@ final class ComposeService implements ComposeContract
         ?string $tone = null,
         ?string $topic = null,
         RequestOptions|array|null $requestOptions = null,
-    ): array {
+    ): ComposeNewResponse {
         $params = Util::removeNulls(
             [
                 'step' => $step,

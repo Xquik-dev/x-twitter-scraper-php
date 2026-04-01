@@ -7,6 +7,7 @@ namespace XTwitterScraper\ServiceContracts;
 use XTwitterScraper\Compose\ComposeCreateParams\Goal;
 use XTwitterScraper\Compose\ComposeCreateParams\MediaType;
 use XTwitterScraper\Compose\ComposeCreateParams\Step;
+use XTwitterScraper\Compose\ComposeNewResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 
@@ -31,8 +32,6 @@ interface ComposeContract
      * @param string $topic Tweet topic (compose, refine)
      * @param RequestOpts|null $requestOptions
      *
-     * @return array<string,mixed>
-     *
      * @throws APIException
      */
     public function create(
@@ -48,5 +47,5 @@ interface ComposeContract
         ?string $tone = null,
         ?string $topic = null,
         RequestOptions|array|null $requestOptions = null,
-    ): array;
+    ): ComposeNewResponse;
 }
