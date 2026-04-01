@@ -6,21 +6,25 @@ namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\PaginatedTweets;
-use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Tweets\TweetCreateParams;
 use XTwitterScraper\X\Tweets\TweetDeleteParams;
 use XTwitterScraper\X\Tweets\TweetDeleteResponse;
 use XTwitterScraper\X\Tweets\TweetGetFavoritersParams;
+use XTwitterScraper\X\Tweets\TweetGetFavoritersResponse;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams;
+use XTwitterScraper\X\Tweets\TweetGetQuotesResponse;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams;
+use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
 use XTwitterScraper\X\Tweets\TweetGetResponse;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersParams;
+use XTwitterScraper\X\Tweets\TweetGetRetweetersResponse;
 use XTwitterScraper\X\Tweets\TweetGetThreadParams;
+use XTwitterScraper\X\Tweets\TweetGetThreadResponse;
 use XTwitterScraper\X\Tweets\TweetListParams;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
 use XTwitterScraper\X\Tweets\TweetSearchParams;
+use XTwitterScraper\X\Tweets\TweetSearchResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -94,7 +98,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetGetFavoritersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedUsers>
+     * @return BaseResponse<TweetGetFavoritersResponse>
      *
      * @throws APIException
      */
@@ -111,7 +115,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetGetQuotesParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<TweetGetQuotesResponse>
      *
      * @throws APIException
      */
@@ -128,7 +132,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetGetRepliesParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<TweetGetRepliesResponse>
      *
      * @throws APIException
      */
@@ -145,7 +149,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetGetRetweetersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedUsers>
+     * @return BaseResponse<TweetGetRetweetersResponse>
      *
      * @throws APIException
      */
@@ -162,7 +166,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetGetThreadParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<TweetGetThreadResponse>
      *
      * @throws APIException
      */
@@ -178,7 +182,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<TweetSearchResponse>
      *
      * @throws APIException
      */

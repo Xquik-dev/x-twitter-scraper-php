@@ -7,15 +7,13 @@ namespace XTwitterScraper;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\X\Tweets\SearchTweet;
+use XTwitterScraper\PaginatedTweets\Tweet;
 
 /**
- * @phpstan-import-type SearchTweetShape from \XTwitterScraper\X\Tweets\SearchTweet
+ * @phpstan-import-type TweetShape from \XTwitterScraper\PaginatedTweets\Tweet
  *
  * @phpstan-type PaginatedTweetsShape = array{
- *   hasNextPage: bool,
- *   nextCursor: string,
- *   tweets: list<SearchTweet|SearchTweetShape>,
+ *   hasNextPage: bool, nextCursor: string, tweets: list<Tweet|TweetShape>
  * }
  */
 final class PaginatedTweets implements BaseModel
@@ -29,8 +27,8 @@ final class PaginatedTweets implements BaseModel
     #[Required('next_cursor')]
     public string $nextCursor;
 
-    /** @var list<SearchTweet> $tweets */
-    #[Required(list: SearchTweet::class)]
+    /** @var list<Tweet> $tweets */
+    #[Required(list: Tweet::class)]
     public array $tweets;
 
     /**
@@ -60,7 +58,7 @@ final class PaginatedTweets implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param list<SearchTweet|SearchTweetShape> $tweets
+     * @param list<Tweet|TweetShape> $tweets
      */
     public static function with(
         bool $hasNextPage,
@@ -93,7 +91,7 @@ final class PaginatedTweets implements BaseModel
     }
 
     /**
-     * @param list<SearchTweet|SearchTweetShape> $tweets
+     * @param list<Tweet|TweetShape> $tweets
      */
     public function withTweets(array $tweets): self
     {

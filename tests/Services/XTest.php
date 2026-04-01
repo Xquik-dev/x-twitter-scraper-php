@@ -8,8 +8,8 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\X\XGetArticleResponse;
+use XTwitterScraper\X\XGetHomeTimelineResponse;
 use XTwitterScraper\X\XGetNotificationsResponse;
 
 /**
@@ -57,7 +57,7 @@ final class XTest extends TestCase
         $result = $this->client->x->getHomeTimeline();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(PaginatedTweets::class, $result);
+        $this->assertInstanceOf(XGetHomeTimelineResponse::class, $result);
     }
 
     #[Test]

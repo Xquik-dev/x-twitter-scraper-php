@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\EventType;
-use XTwitterScraper\Monitors\Monitor;
+use XTwitterScraper\Monitors\MonitorCreateParams\EventType;
 use XTwitterScraper\Monitors\MonitorDeactivateResponse;
+use XTwitterScraper\Monitors\MonitorGetResponse;
 use XTwitterScraper\Monitors\MonitorListResponse;
 use XTwitterScraper\Monitors\MonitorNewResponse;
+use XTwitterScraper\Monitors\MonitorUpdateResponse;
 use XTwitterScraper\RequestOptions;
 
 /**
@@ -43,13 +44,13 @@ interface MonitorsContract
     public function retrieve(
         string $id,
         RequestOptions|array|null $requestOptions = null
-    ): Monitor;
+    ): MonitorGetResponse;
 
     /**
      * @api
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param list<EventType|value-of<EventType>> $eventTypes
+     * @param list<\XTwitterScraper\Monitors\MonitorUpdateParams\EventType|value-of<\XTwitterScraper\Monitors\MonitorUpdateParams\EventType>> $eventTypes
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -59,7 +60,7 @@ interface MonitorsContract
         ?array $eventTypes = null,
         ?bool $isActive = null,
         RequestOptions|array|null $requestOptions = null,
-    ): Monitor;
+    ): MonitorUpdateResponse;
 
     /**
      * @api

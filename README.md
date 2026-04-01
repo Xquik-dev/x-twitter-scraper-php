@@ -40,9 +40,9 @@ $client = new Client(
   apiKey: getenv('X_TWITTER_SCRAPER_API_KEY') ?: 'My API Key'
 );
 
-$paginatedTweets = $client->x->tweets->search(q: 'from:elonmusk', limit: 10);
+$response = $client->x->tweets->search(q: 'from:elonmusk', limit: 10);
 
-var_dump($paginatedTweets->has_next_page);
+var_dump($response->has_next_page);
 ```
 
 ### Value Objects
@@ -64,7 +64,7 @@ use XTwitterScraper\Core\Exceptions\RateLimitException;
 use XTwitterScraper\Core\Exceptions\APIStatusException;
 
 try {
-  $paginatedTweets = $client->x->tweets->search(q: 'from:elonmusk');
+  $response = $client->x->tweets->search(q: 'from:elonmusk');
 } catch (APIConnectionException $e) {
   echo "The server could not be reached", PHP_EOL;
   var_dump($e->getPrevious());
@@ -127,7 +127,7 @@ Note: the `extra*` parameters of the same name overrides the documented paramete
 ```php
 <?php
 
-$paginatedTweets = $client->x->tweets->search(
+$response = $client->x->tweets->search(
   q: 'from:elonmusk',
   limit: 10,
   requestOptions: [

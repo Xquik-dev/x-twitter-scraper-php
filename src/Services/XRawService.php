@@ -8,11 +8,11 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\XRawContract;
 use XTwitterScraper\X\XGetArticleResponse;
 use XTwitterScraper\X\XGetHomeTimelineParams;
+use XTwitterScraper\X\XGetHomeTimelineResponse;
 use XTwitterScraper\X\XGetNotificationsParams;
 use XTwitterScraper\X\XGetNotificationsParams\Type;
 use XTwitterScraper\X\XGetNotificationsResponse;
@@ -64,7 +64,7 @@ final class XRawService implements XRawContract
      * }|XGetHomeTimelineParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<XGetHomeTimelineResponse>
      *
      * @throws APIException
      */
@@ -86,7 +86,7 @@ final class XRawService implements XRawContract
                 ['seenTweetIDs' => 'seenTweetIds']
             ),
             options: $options,
-            convert: PaginatedTweets::class,
+            convert: XGetHomeTimelineResponse::class,
         );
     }
 

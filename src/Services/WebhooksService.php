@@ -7,15 +7,15 @@ namespace XTwitterScraper\Services;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\EventType;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\WebhooksContract;
-use XTwitterScraper\Webhooks\Webhook;
+use XTwitterScraper\Webhooks\WebhookCreateParams\EventType;
 use XTwitterScraper\Webhooks\WebhookDeactivateResponse;
 use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse;
 use XTwitterScraper\Webhooks\WebhookListResponse;
 use XTwitterScraper\Webhooks\WebhookNewResponse;
 use XTwitterScraper\Webhooks\WebhookTestResponse;
+use XTwitterScraper\Webhooks\WebhookUpdateResponse;
 
 /**
  * Webhook endpoint management & delivery.
@@ -67,7 +67,7 @@ final class WebhooksService implements WebhooksContract
      * Update webhook
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param list<EventType|value-of<EventType>> $eventTypes
+     * @param list<\XTwitterScraper\Webhooks\WebhookUpdateParams\EventType|value-of<\XTwitterScraper\Webhooks\WebhookUpdateParams\EventType>> $eventTypes
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -78,7 +78,7 @@ final class WebhooksService implements WebhooksContract
         ?bool $isActive = null,
         ?string $url = null,
         RequestOptions|array|null $requestOptions = null,
-    ): Webhook {
+    ): WebhookUpdateResponse {
         $params = Util::removeNulls(
             ['eventTypes' => $eventTypes, 'isActive' => $isActive, 'url' => $url]
         );
