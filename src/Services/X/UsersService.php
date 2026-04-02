@@ -13,7 +13,6 @@ use XTwitterScraper\Services\X\Users\FollowService;
 use XTwitterScraper\X\Users\UserGetFollowersYouKnowResponse;
 use XTwitterScraper\X\Users\UserGetLikesResponse;
 use XTwitterScraper\X\Users\UserGetMediaResponse;
-use XTwitterScraper\X\Users\UserGetResponse;
 use XTwitterScraper\X\Users\UserGetTweetsResponse;
 
 /**
@@ -40,26 +39,6 @@ final class UsersService implements UsersContract
     {
         $this->raw = new UsersRawService($client);
         $this->follow = new FollowService($client);
-    }
-
-    /**
-     * @api
-     *
-     * Look up X user
-     *
-     * @param string $username X username (without @)
-     * @param RequestOpts|null $requestOptions
-     *
-     * @throws APIException
-     */
-    public function retrieve(
-        string $username,
-        RequestOptions|array|null $requestOptions = null
-    ): UserGetResponse {
-        // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->retrieve($username, requestOptions: $requestOptions);
-
-        return $response->parse();
     }
 
     /**

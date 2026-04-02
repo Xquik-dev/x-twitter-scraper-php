@@ -9,6 +9,7 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Radar\RadarGetTrendingTopicsResponse;
 use XTwitterScraper\Radar\RadarRetrieveTrendingTopicsParams;
+use XTwitterScraper\Radar\RadarRetrieveTrendingTopicsParams\Source;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\RadarRawContract;
 
@@ -31,7 +32,11 @@ final class RadarRawService implements RadarRawContract
      * Get trending topics from curated sources
      *
      * @param array{
-     *   category?: string, count?: int, hours?: int, region?: string, source?: string
+     *   category?: string,
+     *   count?: int,
+     *   hours?: int,
+     *   region?: string,
+     *   source?: value-of<Source>,
      * }|RadarRetrieveTrendingTopicsParams $params
      * @param RequestOpts|null $requestOptions
      *

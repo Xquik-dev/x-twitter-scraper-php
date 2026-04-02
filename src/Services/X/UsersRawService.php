@@ -12,7 +12,6 @@ use XTwitterScraper\ServiceContracts\X\UsersRawContract;
 use XTwitterScraper\X\Users\UserGetFollowersYouKnowResponse;
 use XTwitterScraper\X\Users\UserGetLikesResponse;
 use XTwitterScraper\X\Users\UserGetMediaResponse;
-use XTwitterScraper\X\Users\UserGetResponse;
 use XTwitterScraper\X\Users\UserGetTweetsResponse;
 use XTwitterScraper\X\Users\UserRetrieveBatchParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersParams;
@@ -37,31 +36,6 @@ final class UsersRawService implements UsersRawContract
      * @internal
      */
     public function __construct(private Client $client) {}
-
-    /**
-     * @api
-     *
-     * Look up X user
-     *
-     * @param string $username X username (without @)
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<UserGetResponse>
-     *
-     * @throws APIException
-     */
-    public function retrieve(
-        string $username,
-        RequestOptions|array|null $requestOptions = null
-    ): BaseResponse {
-        // @phpstan-ignore-next-line return.type
-        return $this->client->request(
-            method: 'get',
-            path: ['x/users/%1$s', $username],
-            options: $requestOptions,
-            convert: UserGetResponse::class,
-        );
-    }
 
     /**
      * @api

@@ -10,10 +10,7 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Styles\StyleAnalyzeResponse;
 use XTwitterScraper\Styles\StyleCompareResponse;
-use XTwitterScraper\Styles\StyleGetPerformanceResponse;
-use XTwitterScraper\Styles\StyleGetResponse;
 use XTwitterScraper\Styles\StyleListResponse;
-use XTwitterScraper\Styles\StyleUpdateResponse;
 
 /**
  * @internal
@@ -38,53 +35,6 @@ final class StylesTest extends TestCase
     }
 
     #[Test]
-    public function testRetrieve(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->styles->retrieve('username');
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(StyleGetResponse::class, $result);
-    }
-
-    #[Test]
-    public function testUpdate(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->styles->update(
-            'username',
-            label: 'label',
-            tweets: [['text' => 'text']]
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(StyleUpdateResponse::class, $result);
-    }
-
-    #[Test]
-    public function testUpdateWithOptionalParams(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->styles->update(
-            'username',
-            label: 'label',
-            tweets: [['text' => 'text']]
-        );
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(StyleUpdateResponse::class, $result);
-    }
-
-    #[Test]
     public function testList(): void
     {
         if (UnsupportedMockTests::$skip) {
@@ -95,19 +45,6 @@ final class StylesTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(StyleListResponse::class, $result);
-    }
-
-    #[Test]
-    public function testDelete(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->styles->delete('username');
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
     }
 
     #[Test]
@@ -166,18 +103,5 @@ final class StylesTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(StyleCompareResponse::class, $result);
-    }
-
-    #[Test]
-    public function testGetPerformance(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->styles->getPerformance('username');
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(StyleGetPerformanceResponse::class, $result);
     }
 }

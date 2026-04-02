@@ -11,16 +11,11 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\StylesContract;
 use XTwitterScraper\Styles\StyleAnalyzeResponse;
 use XTwitterScraper\Styles\StyleCompareResponse;
-use XTwitterScraper\Styles\StyleGetPerformanceResponse;
-use XTwitterScraper\Styles\StyleGetResponse;
 use XTwitterScraper\Styles\StyleListResponse;
-use XTwitterScraper\Styles\StyleUpdateParams\Tweet;
-use XTwitterScraper\Styles\StyleUpdateResponse;
 
 /**
  * Tweet composition, drafts, writing styles & radar.
  *
- * @phpstan-import-type TweetShape from \XTwitterScraper\Styles\StyleUpdateParams\Tweet
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
 final class StylesService implements StylesContract
@@ -41,52 +36,6 @@ final class StylesService implements StylesContract
     /**
      * @api
      *
-     * Get cached style profile
-     *
-     * @param string $username X username of cached style
-     * @param RequestOpts|null $requestOptions
-     *
-     * @throws APIException
-     */
-    public function retrieve(
-        string $username,
-        RequestOptions|array|null $requestOptions = null
-    ): StyleGetResponse {
-        // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->retrieve($username, requestOptions: $requestOptions);
-
-        return $response->parse();
-    }
-
-    /**
-     * @api
-     *
-     * Save style profile with custom tweets
-     *
-     * @param string $username X username of cached style
-     * @param string $label Display label for the style
-     * @param list<Tweet|TweetShape> $tweets Array of tweet objects
-     * @param RequestOpts|null $requestOptions
-     *
-     * @throws APIException
-     */
-    public function update(
-        string $username,
-        string $label,
-        array $tweets,
-        RequestOptions|array|null $requestOptions = null,
-    ): StyleUpdateResponse {
-        $params = Util::removeNulls(['label' => $label, 'tweets' => $tweets]);
-
-        // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->update($username, params: $params, requestOptions: $requestOptions);
-
-        return $response->parse();
-    }
-
-    /**
-     * @api
-     *
      * List cached style profiles
      *
      * @param RequestOpts|null $requestOptions
@@ -98,26 +47,6 @@ final class StylesService implements StylesContract
     ): StyleListResponse {
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->list(requestOptions: $requestOptions);
-
-        return $response->parse();
-    }
-
-    /**
-     * @api
-     *
-     * Delete a style profile
-     *
-     * @param string $username X username of cached style
-     * @param RequestOpts|null $requestOptions
-     *
-     * @throws APIException
-     */
-    public function delete(
-        string $username,
-        RequestOptions|array|null $requestOptions = null
-    ): mixed {
-        // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->delete($username, requestOptions: $requestOptions);
 
         return $response->parse();
     }
@@ -166,26 +95,6 @@ final class StylesService implements StylesContract
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->compare(params: $params, requestOptions: $requestOptions);
-
-        return $response->parse();
-    }
-
-    /**
-     * @api
-     *
-     * Get engagement metrics for style tweets
-     *
-     * @param string $username X username of cached style
-     * @param RequestOpts|null $requestOptions
-     *
-     * @throws APIException
-     */
-    public function getPerformance(
-        string $username,
-        RequestOptions|array|null $requestOptions = null
-    ): StyleGetPerformanceResponse {
-        // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->getPerformance($username, requestOptions: $requestOptions);
 
         return $response->parse();
     }

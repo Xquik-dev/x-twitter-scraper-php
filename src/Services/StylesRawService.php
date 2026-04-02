@@ -13,17 +13,11 @@ use XTwitterScraper\Styles\StyleAnalyzeParams;
 use XTwitterScraper\Styles\StyleAnalyzeResponse;
 use XTwitterScraper\Styles\StyleCompareParams;
 use XTwitterScraper\Styles\StyleCompareResponse;
-use XTwitterScraper\Styles\StyleGetPerformanceResponse;
-use XTwitterScraper\Styles\StyleGetResponse;
 use XTwitterScraper\Styles\StyleListResponse;
-use XTwitterScraper\Styles\StyleUpdateParams;
-use XTwitterScraper\Styles\StyleUpdateParams\Tweet;
-use XTwitterScraper\Styles\StyleUpdateResponse;
 
 /**
  * Tweet composition, drafts, writing styles & radar.
  *
- * @phpstan-import-type TweetShape from \XTwitterScraper\Styles\StyleUpdateParams\Tweet
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
 final class StylesRawService implements StylesRawContract
@@ -33,66 +27,6 @@ final class StylesRawService implements StylesRawContract
      * @internal
      */
     public function __construct(private Client $client) {}
-
-    /**
-     * @api
-     *
-     * Get cached style profile
-     *
-     * @param string $username X username of cached style
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<StyleGetResponse>
-     *
-     * @throws APIException
-     */
-    public function retrieve(
-        string $username,
-        RequestOptions|array|null $requestOptions = null
-    ): BaseResponse {
-        // @phpstan-ignore-next-line return.type
-        return $this->client->request(
-            method: 'get',
-            path: ['styles/%1$s', $username],
-            options: $requestOptions,
-            convert: StyleGetResponse::class,
-        );
-    }
-
-    /**
-     * @api
-     *
-     * Save style profile with custom tweets
-     *
-     * @param string $username X username of cached style
-     * @param array{
-     *   label: string, tweets: list<Tweet|TweetShape>
-     * }|StyleUpdateParams $params
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<StyleUpdateResponse>
-     *
-     * @throws APIException
-     */
-    public function update(
-        string $username,
-        array|StyleUpdateParams $params,
-        RequestOptions|array|null $requestOptions = null,
-    ): BaseResponse {
-        [$parsed, $options] = StyleUpdateParams::parseRequest(
-            $params,
-            $requestOptions,
-        );
-
-        // @phpstan-ignore-next-line return.type
-        return $this->client->request(
-            method: 'put',
-            path: ['styles/%1$s', $username],
-            body: (object) $parsed,
-            options: $options,
-            convert: StyleUpdateResponse::class,
-        );
-    }
 
     /**
      * @api
@@ -114,31 +48,6 @@ final class StylesRawService implements StylesRawContract
             path: 'styles',
             options: $requestOptions,
             convert: StyleListResponse::class,
-        );
-    }
-
-    /**
-     * @api
-     *
-     * Delete a style profile
-     *
-     * @param string $username X username of cached style
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<mixed>
-     *
-     * @throws APIException
-     */
-    public function delete(
-        string $username,
-        RequestOptions|array|null $requestOptions = null
-    ): BaseResponse {
-        // @phpstan-ignore-next-line return.type
-        return $this->client->request(
-            method: 'delete',
-            path: ['styles/%1$s', $username],
-            options: $requestOptions,
-            convert: null,
         );
     }
 
@@ -201,31 +110,6 @@ final class StylesRawService implements StylesRawContract
             query: $parsed,
             options: $options,
             convert: StyleCompareResponse::class,
-        );
-    }
-
-    /**
-     * @api
-     *
-     * Get engagement metrics for style tweets
-     *
-     * @param string $username X username of cached style
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<StyleGetPerformanceResponse>
-     *
-     * @throws APIException
-     */
-    public function getPerformance(
-        string $username,
-        RequestOptions|array|null $requestOptions = null
-    ): BaseResponse {
-        // @phpstan-ignore-next-line return.type
-        return $this->client->request(
-            method: 'get',
-            path: ['styles/%1$s/performance', $username],
-            options: $requestOptions,
-            convert: StyleGetPerformanceResponse::class,
         );
     }
 }
