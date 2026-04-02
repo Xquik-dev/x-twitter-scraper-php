@@ -8,6 +8,7 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Radar\RadarGetTrendingTopicsResponse;
+use XTwitterScraper\Radar\RadarRetrieveTrendingTopicsParams\Source;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\RadarContract;
 
@@ -40,7 +41,7 @@ final class RadarService implements RadarContract
      * @param int $count Number of items to return
      * @param int $hours Lookback window in hours
      * @param string $region Region filter (us, global, etc.)
-     * @param string $source Source filter. One of: github, google_trends, hacker_news, polymarket, reddit, trustmrr, wikipedia
+     * @param Source|value-of<Source> $source Source filter. One of: github, google_trends, hacker_news, polymarket, reddit, trustmrr, wikipedia
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -50,7 +51,7 @@ final class RadarService implements RadarContract
         ?int $count = null,
         ?int $hours = null,
         ?string $region = null,
-        ?string $source = null,
+        Source|string|null $source = null,
         RequestOptions|array|null $requestOptions = null,
     ): RadarGetTrendingTopicsResponse {
         $params = Util::removeNulls(

@@ -8,15 +8,12 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Tweets\TweetCreateParams;
-use XTwitterScraper\X\Tweets\TweetDeleteParams;
-use XTwitterScraper\X\Tweets\TweetDeleteResponse;
 use XTwitterScraper\X\Tweets\TweetGetFavoritersParams;
 use XTwitterScraper\X\Tweets\TweetGetFavoritersResponse;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams;
 use XTwitterScraper\X\Tweets\TweetGetQuotesResponse;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams;
 use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
-use XTwitterScraper\X\Tweets\TweetGetResponse;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersParams;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersResponse;
 use XTwitterScraper\X\Tweets\TweetGetThreadParams;
@@ -49,20 +46,6 @@ interface TweetsRawContract
     /**
      * @api
      *
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<TweetGetResponse>
-     *
-     * @throws APIException
-     */
-    public function retrieve(
-        string $tweetID,
-        RequestOptions|array|null $requestOptions = null
-    ): BaseResponse;
-
-    /**
-     * @api
-     *
      * @param array<string,mixed>|TweetListParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -72,22 +55,6 @@ interface TweetsRawContract
      */
     public function list(
         array|TweetListParams $params,
-        RequestOptions|array|null $requestOptions = null,
-    ): BaseResponse;
-
-    /**
-     * @api
-     *
-     * @param array<string,mixed>|TweetDeleteParams $params
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<TweetDeleteResponse>
-     *
-     * @throws APIException
-     */
-    public function delete(
-        string $tweetID,
-        array|TweetDeleteParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 

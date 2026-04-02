@@ -8,6 +8,7 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Radar\RadarRetrieveTrendingTopicsParams\Source;
 
 /**
  * Get trending topics from curated sources.
@@ -19,7 +20,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   count?: int|null,
  *   hours?: int|null,
  *   region?: string|null,
- *   source?: string|null,
+ *   source?: null|Source|value-of<Source>,
  * }
  */
 final class RadarRetrieveTrendingTopicsParams implements BaseModel
@@ -54,8 +55,10 @@ final class RadarRetrieveTrendingTopicsParams implements BaseModel
 
     /**
      * Source filter. One of: github, google_trends, hacker_news, polymarket, reddit, trustmrr, wikipedia.
+     *
+     * @var value-of<Source>|null $source
      */
-    #[Optional]
+    #[Optional(enum: Source::class)]
     public ?string $source;
 
     public function __construct()
@@ -67,13 +70,15 @@ final class RadarRetrieveTrendingTopicsParams implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param Source|value-of<Source>|null $source
      */
     public static function with(
         ?string $category = null,
         ?int $count = null,
         ?int $hours = null,
         ?string $region = null,
-        ?string $source = null,
+        Source|string|null $source = null,
     ): self {
         $self = new self;
 
@@ -132,8 +137,10 @@ final class RadarRetrieveTrendingTopicsParams implements BaseModel
 
     /**
      * Source filter. One of: github, google_trends, hacker_news, polymarket, reddit, trustmrr, wikipedia.
+     *
+     * @param Source|value-of<Source> $source
      */
-    public function withSource(string $source): self
+    public function withSource(Source|string $source): self
     {
         $self = clone $this;
         $self['source'] = $source;
