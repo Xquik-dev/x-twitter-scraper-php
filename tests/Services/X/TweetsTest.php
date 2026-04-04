@@ -8,11 +8,9 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\X\Tweets\TweetDeleteResponse;
 use XTwitterScraper\X\Tweets\TweetGetFavoritersResponse;
 use XTwitterScraper\X\Tweets\TweetGetQuotesResponse;
 use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
-use XTwitterScraper\X\Tweets\TweetGetResponse;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersResponse;
 use XTwitterScraper\X\Tweets\TweetGetThreadResponse;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
@@ -78,19 +76,6 @@ final class TweetsTest extends TestCase
     }
 
     #[Test]
-    public function testRetrieve(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->x->tweets->retrieve('tweetId');
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(TweetGetResponse::class, $result);
-    }
-
-    #[Test]
     public function testList(): void
     {
         if (UnsupportedMockTests::$skip) {
@@ -114,32 +99,6 @@ final class TweetsTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertNull($result);
-    }
-
-    #[Test]
-    public function testDelete(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->x->tweets->delete('tweetId', account: 'account');
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(TweetDeleteResponse::class, $result);
-    }
-
-    #[Test]
-    public function testDeleteWithOptionalParams(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->x->tweets->delete('tweetId', account: 'account');
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(TweetDeleteResponse::class, $result);
     }
 
     #[Test]

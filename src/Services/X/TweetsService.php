@@ -11,11 +11,9 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\TweetsContract;
 use XTwitterScraper\Services\X\Tweets\LikeService;
 use XTwitterScraper\Services\X\Tweets\RetweetService;
-use XTwitterScraper\X\Tweets\TweetDeleteResponse;
 use XTwitterScraper\X\Tweets\TweetGetFavoritersResponse;
 use XTwitterScraper\X\Tweets\TweetGetQuotesResponse;
 use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
-use XTwitterScraper\X\Tweets\TweetGetResponse;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersResponse;
 use XTwitterScraper\X\Tweets\TweetGetThreadResponse;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
@@ -94,25 +92,6 @@ final class TweetsService implements TweetsContract
     /**
      * @api
      *
-     * Look up tweet
-     *
-     * @param RequestOpts|null $requestOptions
-     *
-     * @throws APIException
-     */
-    public function retrieve(
-        string $tweetID,
-        RequestOptions|array|null $requestOptions = null
-    ): TweetGetResponse {
-        // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->retrieve($tweetID, requestOptions: $requestOptions);
-
-        return $response->parse();
-    }
-
-    /**
-     * @api
-     *
      * Get multiple tweets by IDs
      *
      * @param string $ids Comma-separated tweet IDs (max 100)
@@ -128,29 +107,6 @@ final class TweetsService implements TweetsContract
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->list(params: $params, requestOptions: $requestOptions);
-
-        return $response->parse();
-    }
-
-    /**
-     * @api
-     *
-     * Delete tweet
-     *
-     * @param string $account X account (@username or account ID)
-     * @param RequestOpts|null $requestOptions
-     *
-     * @throws APIException
-     */
-    public function delete(
-        string $tweetID,
-        string $account,
-        RequestOptions|array|null $requestOptions = null,
-    ): TweetDeleteResponse {
-        $params = Util::removeNulls(['account' => $account]);
-
-        // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->delete($tweetID, params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }
@@ -305,7 +261,7 @@ final class TweetsService implements TweetsContract
      *
      * @param string $q Search query (keywords,
      * @param string $cursor Pagination cursor from previous response
-     * @param int $limit Deprecated — use cursor-based pagination instead
+     * @param int $limit Max tweets to return (server paginates internally). Omit for single page (~20).
      * @param QueryType|value-of<QueryType> $queryType Sort order — Latest (chronological) or Top (engagement-ranked)
      * @param string $sinceTime ISO 8601 timestamp — only return tweets after this time
      * @param string $untilTime ISO 8601 timestamp — only return tweets before this time

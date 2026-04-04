@@ -9,7 +9,6 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Users\UserGetFollowersYouKnowResponse;
 use XTwitterScraper\X\Users\UserGetLikesResponse;
 use XTwitterScraper\X\Users\UserGetMediaResponse;
-use XTwitterScraper\X\Users\UserGetResponse;
 use XTwitterScraper\X\Users\UserGetTweetsResponse;
 
 /**
@@ -17,19 +16,6 @@ use XTwitterScraper\X\Users\UserGetTweetsResponse;
  */
 interface UsersContract
 {
-    /**
-     * @api
-     *
-     * @param string $username X username (without @)
-     * @param RequestOpts|null $requestOptions
-     *
-     * @throws APIException
-     */
-    public function retrieve(
-        string $username,
-        RequestOptions|array|null $requestOptions = null
-    ): UserGetResponse;
-
     /**
      * @api
      *

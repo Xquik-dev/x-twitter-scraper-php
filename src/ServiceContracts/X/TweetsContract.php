@@ -6,11 +6,9 @@ namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
-use XTwitterScraper\X\Tweets\TweetDeleteResponse;
 use XTwitterScraper\X\Tweets\TweetGetFavoritersResponse;
 use XTwitterScraper\X\Tweets\TweetGetQuotesResponse;
 use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
-use XTwitterScraper\X\Tweets\TweetGetResponse;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersResponse;
 use XTwitterScraper\X\Tweets\TweetGetThreadResponse;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
@@ -45,18 +43,6 @@ interface TweetsContract
     /**
      * @api
      *
-     * @param RequestOpts|null $requestOptions
-     *
-     * @throws APIException
-     */
-    public function retrieve(
-        string $tweetID,
-        RequestOptions|array|null $requestOptions = null
-    ): TweetGetResponse;
-
-    /**
-     * @api
-     *
      * @param string $ids Comma-separated tweet IDs (max 100)
      * @param RequestOpts|null $requestOptions
      *
@@ -66,20 +52,6 @@ interface TweetsContract
         string $ids,
         RequestOptions|array|null $requestOptions = null
     ): mixed;
-
-    /**
-     * @api
-     *
-     * @param string $account X account (@username or account ID)
-     * @param RequestOpts|null $requestOptions
-     *
-     * @throws APIException
-     */
-    public function delete(
-        string $tweetID,
-        string $account,
-        RequestOptions|array|null $requestOptions = null,
-    ): TweetDeleteResponse;
 
     /**
      * @api
@@ -171,7 +143,7 @@ interface TweetsContract
      *
      * @param string $q Search query (keywords,
      * @param string $cursor Pagination cursor from previous response
-     * @param int $limit Deprecated — use cursor-based pagination instead
+     * @param int $limit Max tweets to return (server paginates internally). Omit for single page (~20).
      * @param QueryType|value-of<QueryType> $queryType Sort order — Latest (chronological) or Top (engagement-ranked)
      * @param string $sinceTime ISO 8601 timestamp — only return tweets after this time
      * @param string $untilTime ISO 8601 timestamp — only return tweets before this time

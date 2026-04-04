@@ -10,15 +10,12 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\TweetsRawContract;
 use XTwitterScraper\X\Tweets\TweetCreateParams;
-use XTwitterScraper\X\Tweets\TweetDeleteParams;
-use XTwitterScraper\X\Tweets\TweetDeleteResponse;
 use XTwitterScraper\X\Tweets\TweetGetFavoritersParams;
 use XTwitterScraper\X\Tweets\TweetGetFavoritersResponse;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams;
 use XTwitterScraper\X\Tweets\TweetGetQuotesResponse;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams;
 use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
-use XTwitterScraper\X\Tweets\TweetGetResponse;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersParams;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersResponse;
 use XTwitterScraper\X\Tweets\TweetGetThreadParams;
@@ -82,30 +79,6 @@ final class TweetsRawService implements TweetsRawContract
     /**
      * @api
      *
-     * Look up tweet
-     *
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<TweetGetResponse>
-     *
-     * @throws APIException
-     */
-    public function retrieve(
-        string $tweetID,
-        RequestOptions|array|null $requestOptions = null
-    ): BaseResponse {
-        // @phpstan-ignore-next-line return.type
-        return $this->client->request(
-            method: 'get',
-            path: ['x/tweets/%1$s', $tweetID],
-            options: $requestOptions,
-            convert: TweetGetResponse::class,
-        );
-    }
-
-    /**
-     * @api
-     *
      * Get multiple tweets by IDs
      *
      * @param array{ids: string}|TweetListParams $params
@@ -131,38 +104,6 @@ final class TweetsRawService implements TweetsRawContract
             query: $parsed,
             options: $options,
             convert: null,
-        );
-    }
-
-    /**
-     * @api
-     *
-     * Delete tweet
-     *
-     * @param array{account: string}|TweetDeleteParams $params
-     * @param RequestOpts|null $requestOptions
-     *
-     * @return BaseResponse<TweetDeleteResponse>
-     *
-     * @throws APIException
-     */
-    public function delete(
-        string $tweetID,
-        array|TweetDeleteParams $params,
-        RequestOptions|array|null $requestOptions = null,
-    ): BaseResponse {
-        [$parsed, $options] = TweetDeleteParams::parseRequest(
-            $params,
-            $requestOptions,
-        );
-
-        // @phpstan-ignore-next-line return.type
-        return $this->client->request(
-            method: 'delete',
-            path: ['x/tweets/%1$s', $tweetID],
-            body: (object) $parsed,
-            options: $options,
-            convert: TweetDeleteResponse::class,
         );
     }
 

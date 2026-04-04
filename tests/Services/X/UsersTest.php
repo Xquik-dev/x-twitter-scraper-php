@@ -11,7 +11,6 @@ use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\Users\UserGetFollowersYouKnowResponse;
 use XTwitterScraper\X\Users\UserGetLikesResponse;
 use XTwitterScraper\X\Users\UserGetMediaResponse;
-use XTwitterScraper\X\Users\UserGetResponse;
 use XTwitterScraper\X\Users\UserGetTweetsResponse;
 
 /**
@@ -34,19 +33,6 @@ final class UsersTest extends TestCase
         );
 
         $this->client = $client;
-    }
-
-    #[Test]
-    public function testRetrieve(): void
-    {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
-        $result = $this->client->x->users->retrieve('username');
-
-        // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(UserGetResponse::class, $result);
     }
 
     #[Test]
