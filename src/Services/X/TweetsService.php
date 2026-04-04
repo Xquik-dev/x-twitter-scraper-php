@@ -261,7 +261,7 @@ final class TweetsService implements TweetsContract
      *
      * @param string $q Search query (keywords,
      * @param string $cursor Pagination cursor from previous response
-     * @param int $limit Deprecated — use cursor-based pagination instead
+     * @param int $limit Max tweets to return (server paginates internally). Omit for single page (~20).
      * @param QueryType|value-of<QueryType> $queryType Sort order — Latest (chronological) or Top (engagement-ranked)
      * @param string $sinceTime ISO 8601 timestamp — only return tweets after this time
      * @param string $untilTime ISO 8601 timestamp — only return tweets before this time
