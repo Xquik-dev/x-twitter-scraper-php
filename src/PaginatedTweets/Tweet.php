@@ -19,6 +19,7 @@ use XTwitterScraper\PaginatedTweets\Tweet\Author;
  *   author?: null|Author|AuthorShape,
  *   bookmarkCount?: int|null,
  *   createdAt?: string|null,
+ *   isNoteTweet?: bool|null,
  *   likeCount?: int|null,
  *   quoteCount?: int|null,
  *   replyCount?: int|null,
@@ -45,6 +46,12 @@ final class Tweet implements BaseModel
 
     #[Optional]
     public ?string $createdAt;
+
+    /**
+     * Whether this is a Note Tweet (long-form post, up to 25,000 characters).
+     */
+    #[Optional]
+    public ?bool $isNoteTweet;
 
     #[Optional]
     public ?int $likeCount;
@@ -93,6 +100,7 @@ final class Tweet implements BaseModel
         Author|array|null $author = null,
         ?int $bookmarkCount = null,
         ?string $createdAt = null,
+        ?bool $isNoteTweet = null,
         ?int $likeCount = null,
         ?int $quoteCount = null,
         ?int $replyCount = null,
@@ -107,6 +115,7 @@ final class Tweet implements BaseModel
         null !== $author && $self['author'] = $author;
         null !== $bookmarkCount && $self['bookmarkCount'] = $bookmarkCount;
         null !== $createdAt && $self['createdAt'] = $createdAt;
+        null !== $isNoteTweet && $self['isNoteTweet'] = $isNoteTweet;
         null !== $likeCount && $self['likeCount'] = $likeCount;
         null !== $quoteCount && $self['quoteCount'] = $quoteCount;
         null !== $replyCount && $self['replyCount'] = $replyCount;
@@ -155,6 +164,17 @@ final class Tweet implements BaseModel
     {
         $self = clone $this;
         $self['createdAt'] = $createdAt;
+
+        return $self;
+    }
+
+    /**
+     * Whether this is a Note Tweet (long-form post, up to 25,000 characters).
+     */
+    public function withIsNoteTweet(bool $isNoteTweet): self
+    {
+        $self = clone $this;
+        $self['isNoteTweet'] = $isNoteTweet;
 
         return $self;
     }
