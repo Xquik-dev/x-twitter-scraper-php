@@ -9,7 +9,6 @@ use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\EventType;
-use XTwitterScraper\Integrations\Integration\Type;
 
 /**
  * Third-party integration (e.g. Telegram) subscribed to monitor events.
@@ -21,7 +20,7 @@ use XTwitterScraper\Integrations\Integration\Type;
  *   eventTypes: list<EventType|value-of<EventType>>,
  *   isActive: bool,
  *   name: string,
- *   type: Type|value-of<Type>,
+ *   type: 'telegram',
  *   filters?: array<string,mixed>|null,
  *   messageTemplate?: string|null,
  *   scopeAllMonitors?: bool|null,
@@ -32,6 +31,10 @@ final class Integration implements BaseModel
 {
     /** @use SdkModel<IntegrationShape> */
     use SdkModel;
+
+    /** @var 'telegram' $type */
+    #[Required]
+    public string $type = 'telegram';
 
     #[Required]
     public string $id;
@@ -60,10 +63,6 @@ final class Integration implements BaseModel
 
     #[Required]
     public string $name;
-
-    /** @var value-of<Type> $type */
-    #[Required(enum: Type::class)]
-    public string $type;
 
     /**
      * Event filter rules (JSON).
@@ -94,7 +93,6 @@ final class Integration implements BaseModel
      *   eventTypes: ...,
      *   isActive: ...,
      *   name: ...,
-     *   type: ...,
      * )
      * ```
      *
@@ -108,7 +106,6 @@ final class Integration implements BaseModel
      *   ->withEventTypes(...)
      *   ->withIsActive(...)
      *   ->withName(...)
-     *   ->withType(...)
      * ```
      */
     public function __construct()
@@ -123,7 +120,6 @@ final class Integration implements BaseModel
      *
      * @param array<string,mixed> $config
      * @param list<EventType|value-of<EventType>> $eventTypes
-     * @param Type|value-of<Type> $type
      * @param array<string,mixed>|null $filters
      */
     public static function with(
@@ -133,7 +129,6 @@ final class Integration implements BaseModel
         array $eventTypes,
         bool $isActive,
         string $name,
-        Type|string $type,
         ?array $filters = null,
         ?string $messageTemplate = null,
         ?bool $scopeAllMonitors = null,
@@ -147,7 +142,6 @@ final class Integration implements BaseModel
         $self['eventTypes'] = $eventTypes;
         $self['isActive'] = $isActive;
         $self['name'] = $name;
-        $self['type'] = $type;
 
         null !== $filters && $self['filters'] = $filters;
         null !== $messageTemplate && $self['messageTemplate'] = $messageTemplate;
@@ -216,9 +210,9 @@ final class Integration implements BaseModel
     }
 
     /**
-     * @param Type|value-of<Type> $type
+     * @param 'telegram' $type
      */
-    public function withType(Type|string $type): self
+    public function withType(string $type): self
     {
         $self = clone $this;
         $self['type'] = $type;

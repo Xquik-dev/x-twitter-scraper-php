@@ -10,7 +10,6 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\EventType;
 use XTwitterScraper\Integrations\IntegrationCreateParams\Config;
-use XTwitterScraper\Integrations\IntegrationCreateParams\Type;
 
 /**
  * Create integration.
@@ -20,10 +19,10 @@ use XTwitterScraper\Integrations\IntegrationCreateParams\Type;
  * @phpstan-import-type ConfigShape from \XTwitterScraper\Integrations\IntegrationCreateParams\Config
  *
  * @phpstan-type IntegrationCreateParamsShape = array{
+ *   type: 'telegram',
  *   config: Config|ConfigShape,
  *   eventTypes: list<EventType|value-of<EventType>>,
  *   name: string,
- *   type: Type|value-of<Type>,
  * }
  */
 final class IntegrationCreateParams implements BaseModel
@@ -31,6 +30,10 @@ final class IntegrationCreateParams implements BaseModel
     /** @use SdkModel<IntegrationCreateParamsShape> */
     use SdkModel;
     use SdkParams;
+
+    /** @var 'telegram' $type */
+    #[Required]
+    public string $type = 'telegram';
 
     /**
      * Integration config (e.g. Telegram chatId).
@@ -49,18 +52,12 @@ final class IntegrationCreateParams implements BaseModel
     #[Required]
     public string $name;
 
-    /** @var value-of<Type> $type */
-    #[Required(enum: Type::class)]
-    public string $type;
-
     /**
      * `new IntegrationCreateParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * IntegrationCreateParams::with(
-     *   config: ..., eventTypes: ..., name: ..., type: ...
-     * )
+     * IntegrationCreateParams::with(config: ..., eventTypes: ..., name: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
@@ -70,7 +67,6 @@ final class IntegrationCreateParams implements BaseModel
      *   ->withConfig(...)
      *   ->withEventTypes(...)
      *   ->withName(...)
-     *   ->withType(...)
      * ```
      */
     public function __construct()
@@ -85,19 +81,27 @@ final class IntegrationCreateParams implements BaseModel
      *
      * @param Config|ConfigShape $config
      * @param list<EventType|value-of<EventType>> $eventTypes
-     * @param Type|value-of<Type> $type
      */
     public static function with(
         Config|array $config,
         array $eventTypes,
-        string $name,
-        Type|string $type
+        string $name
     ): self {
         $self = new self;
 
         $self['config'] = $config;
         $self['eventTypes'] = $eventTypes;
         $self['name'] = $name;
+
+        return $self;
+    }
+
+    /**
+     * @param 'telegram' $type
+     */
+    public function withType(string $type): self
+    {
+        $self = clone $this;
         $self['type'] = $type;
 
         return $self;
@@ -133,17 +137,6 @@ final class IntegrationCreateParams implements BaseModel
     {
         $self = clone $this;
         $self['name'] = $name;
-
-        return $self;
-    }
-
-    /**
-     * @param Type|value-of<Type> $type
-     */
-    public function withType(Type|string $type): self
-    {
-        $self = clone $this;
-        $self['type'] = $type;
 
         return $self;
     }

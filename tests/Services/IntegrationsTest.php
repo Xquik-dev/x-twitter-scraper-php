@@ -48,7 +48,6 @@ final class IntegrationsTest extends TestCase
             config: ['chatID' => '-1001234567890'],
             eventTypes: [EventType::TWEET_NEW, EventType::FOLLOWER_GAINED],
             name: 'My Telegram Bot',
-            type: 'telegram',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
