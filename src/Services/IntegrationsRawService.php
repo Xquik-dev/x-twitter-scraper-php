@@ -11,7 +11,6 @@ use XTwitterScraper\EventType;
 use XTwitterScraper\Integrations\Integration;
 use XTwitterScraper\Integrations\IntegrationCreateParams;
 use XTwitterScraper\Integrations\IntegrationCreateParams\Config;
-use XTwitterScraper\Integrations\IntegrationCreateParams\Type;
 use XTwitterScraper\Integrations\IntegrationDeleteResponse;
 use XTwitterScraper\Integrations\IntegrationListDeliveriesParams;
 use XTwitterScraper\Integrations\IntegrationListDeliveriesResponse;
@@ -44,7 +43,7 @@ final class IntegrationsRawService implements IntegrationsRawContract
      *   config: Config|ConfigShape,
      *   eventTypes: list<EventType|value-of<EventType>>,
      *   name: string,
-     *   type: Type|value-of<Type>,
+     *   type?: 'telegram',
      * }|IntegrationCreateParams $params
      * @param RequestOpts|null $requestOptions
      *

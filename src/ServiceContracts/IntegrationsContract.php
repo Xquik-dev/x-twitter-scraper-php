@@ -8,7 +8,6 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\EventType;
 use XTwitterScraper\Integrations\Integration;
 use XTwitterScraper\Integrations\IntegrationCreateParams\Config;
-use XTwitterScraper\Integrations\IntegrationCreateParams\Type;
 use XTwitterScraper\Integrations\IntegrationDeleteResponse;
 use XTwitterScraper\Integrations\IntegrationListDeliveriesResponse;
 use XTwitterScraper\Integrations\IntegrationListResponse;
@@ -26,7 +25,7 @@ interface IntegrationsContract
      *
      * @param Config|ConfigShape $config Integration config (e.g. Telegram chatId)
      * @param list<EventType|value-of<EventType>> $eventTypes array of event types to subscribe to
-     * @param Type|value-of<Type> $type
+     * @param 'telegram' $type
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -35,7 +34,7 @@ interface IntegrationsContract
         Config|array $config,
         array $eventTypes,
         string $name,
-        Type|string $type,
+        string $type = 'telegram',
         RequestOptions|array|null $requestOptions = null,
     ): Integration;
 
