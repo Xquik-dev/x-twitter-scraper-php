@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\CursorPage;
 use XTwitterScraper\PaginatedTweets;
 
 /**
@@ -40,15 +39,10 @@ final class TweetsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $page = $this->client->x->communities->tweets->list(q: 'q');
+        $result = $this->client->x->communities->tweets->list(q: 'q');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(CursorPage::class, $page);
-
-        if ($item = $page->getItems()[0] ?? null) {
-            // @phpstan-ignore-next-line method.alreadyNarrowedType
-            $this->assertInstanceOf(PaginatedTweets::class, $item);
-        }
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -58,19 +52,14 @@ final class TweetsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $page = $this->client->x->communities->tweets->list(
+        $result = $this->client->x->communities->tweets->list(
             q: 'q',
             cursor: 'cursor',
             queryType: 'queryType'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(CursorPage::class, $page);
-
-        if ($item = $page->getItems()[0] ?? null) {
-            // @phpstan-ignore-next-line method.alreadyNarrowedType
-            $this->assertInstanceOf(PaginatedTweets::class, $item);
-        }
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -80,14 +69,9 @@ final class TweetsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $page = $this->client->x->communities->tweets->listByCommunity('id');
+        $result = $this->client->x->communities->tweets->listByCommunity('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(CursorPage::class, $page);
-
-        if ($item = $page->getItems()[0] ?? null) {
-            // @phpstan-ignore-next-line method.alreadyNarrowedType
-            $this->assertInstanceOf(PaginatedTweets::class, $item);
-        }
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 }

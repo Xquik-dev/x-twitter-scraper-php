@@ -6,7 +6,6 @@ namespace XTwitterScraper\ServiceContracts\X\Communities;
 
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\CursorPage;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Communities\Tweets\TweetListByCommunityParams;
@@ -23,7 +22,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetListParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<CursorPage<PaginatedTweets>>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -39,7 +38,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetListByCommunityParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<CursorPage<PaginatedTweets>>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */

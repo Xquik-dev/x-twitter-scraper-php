@@ -7,7 +7,6 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\CursorPage;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\BookmarksContract;
@@ -42,15 +41,13 @@ final class BookmarksService implements BookmarksContract
      * @param string $folderID Optional bookmark folder ID
      * @param RequestOpts|null $requestOptions
      *
-     * @return CursorPage<PaginatedTweets>
-     *
      * @throws APIException
      */
     public function list(
         ?string $cursor = null,
         ?string $folderID = null,
         RequestOptions|array|null $requestOptions = null,
-    ): CursorPage {
+    ): PaginatedTweets {
         $params = Util::removeNulls(['cursor' => $cursor, 'folderID' => $folderID]);
 
         // @phpstan-ignore-next-line argument.type
