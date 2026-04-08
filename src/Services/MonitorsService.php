@@ -7,12 +7,11 @@ namespace XTwitterScraper\Services;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\Monitors\MonitorCreateParams\EventType;
+use XTwitterScraper\EventType;
+use XTwitterScraper\Monitors\Monitor;
 use XTwitterScraper\Monitors\MonitorDeactivateResponse;
-use XTwitterScraper\Monitors\MonitorGetResponse;
 use XTwitterScraper\Monitors\MonitorListResponse;
 use XTwitterScraper\Monitors\MonitorNewResponse;
-use XTwitterScraper\Monitors\MonitorUpdateResponse;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\MonitorsContract;
 
@@ -75,7 +74,7 @@ final class MonitorsService implements MonitorsContract
     public function retrieve(
         string $id,
         RequestOptions|array|null $requestOptions = null
-    ): MonitorGetResponse {
+    ): Monitor {
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieve($id, requestOptions: $requestOptions);
 
@@ -88,7 +87,7 @@ final class MonitorsService implements MonitorsContract
      * Update monitor
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param list<\XTwitterScraper\Monitors\MonitorUpdateParams\EventType|value-of<\XTwitterScraper\Monitors\MonitorUpdateParams\EventType>> $eventTypes array of event types to subscribe to
+     * @param list<EventType|value-of<EventType>> $eventTypes array of event types to subscribe to
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -98,7 +97,7 @@ final class MonitorsService implements MonitorsContract
         ?array $eventTypes = null,
         ?bool $isActive = null,
         RequestOptions|array|null $requestOptions = null,
-    ): MonitorUpdateResponse {
+    ): Monitor {
         $params = Util::removeNulls(
             ['eventTypes' => $eventTypes, 'isActive' => $isActive]
         );

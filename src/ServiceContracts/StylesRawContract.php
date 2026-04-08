@@ -8,16 +8,50 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\Styles\StyleAnalyzeParams;
-use XTwitterScraper\Styles\StyleAnalyzeResponse;
 use XTwitterScraper\Styles\StyleCompareParams;
 use XTwitterScraper\Styles\StyleCompareResponse;
+use XTwitterScraper\Styles\StyleGetPerformanceResponse;
 use XTwitterScraper\Styles\StyleListResponse;
+use XTwitterScraper\Styles\StyleProfile;
+use XTwitterScraper\Styles\StyleUpdateParams;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
 interface StylesRawContract
 {
+    /**
+     * @api
+     *
+     * @param string $id Style profile ID or X username
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<StyleProfile>
+     *
+     * @throws APIException
+     */
+    public function retrieve(
+        string $id,
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param string $id Style profile ID or X username
+     * @param array<string,mixed>|StyleUpdateParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<StyleProfile>
+     *
+     * @throws APIException
+     */
+    public function update(
+        string $id,
+        array|StyleUpdateParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
     /**
      * @api
      *
@@ -34,10 +68,25 @@ interface StylesRawContract
     /**
      * @api
      *
+     * @param string $id Style profile ID or X username
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<mixed>
+     *
+     * @throws APIException
+     */
+    public function delete(
+        string $id,
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
      * @param array<string,mixed>|StyleAnalyzeParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<StyleAnalyzeResponse>
+     * @return BaseResponse<StyleProfile>
      *
      * @throws APIException
      */
@@ -59,5 +108,20 @@ interface StylesRawContract
     public function compare(
         array|StyleCompareParams $params,
         RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param string $id Style profile ID or X username
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<StyleGetPerformanceResponse>
+     *
+     * @throws APIException
+     */
+    public function getPerformance(
+        string $id,
+        RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 }

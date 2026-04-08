@@ -6,8 +6,7 @@ namespace XTwitterScraper\ServiceContracts\X\Communities;
 
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
-use XTwitterScraper\X\Communities\Join\JoinDeleteAllResponse;
-use XTwitterScraper\X\Communities\Join\JoinNewResponse;
+use XTwitterScraper\X\Communities\CommunityActionResult;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -27,7 +26,7 @@ interface JoinContract
         string $id,
         string $account,
         RequestOptions|array|null $requestOptions = null,
-    ): JoinNewResponse;
+    ): CommunityActionResult;
 
     /**
      * @api
@@ -42,5 +41,5 @@ interface JoinContract
         string $id,
         string $account,
         RequestOptions|array|null $requestOptions = null,
-    ): JoinDeleteAllResponse;
+    ): CommunityActionResult;
 }

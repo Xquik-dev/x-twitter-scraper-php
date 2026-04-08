@@ -7,18 +7,11 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\UsersRawContract;
-use XTwitterScraper\X\Users\UserGetBatchResponse;
-use XTwitterScraper\X\Users\UserGetFollowersResponse;
-use XTwitterScraper\X\Users\UserGetFollowersYouKnowResponse;
-use XTwitterScraper\X\Users\UserGetFollowingResponse;
-use XTwitterScraper\X\Users\UserGetLikesResponse;
-use XTwitterScraper\X\Users\UserGetMediaResponse;
-use XTwitterScraper\X\Users\UserGetMentionsResponse;
-use XTwitterScraper\X\Users\UserGetSearchResponse;
-use XTwitterScraper\X\Users\UserGetTweetsResponse;
-use XTwitterScraper\X\Users\UserGetVerifiedFollowersResponse;
+use XTwitterScraper\X\Users\UserProfile;
 use XTwitterScraper\X\Users\UserRetrieveBatchParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersYouKnowParams;
@@ -46,12 +39,37 @@ final class UsersRawService implements UsersRawContract
     /**
      * @api
      *
+     * Look up X user
+     *
+     * @param string $id X username (without @) or user ID
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<UserProfile>
+     *
+     * @throws APIException
+     */
+    public function retrieve(
+        string $id,
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse {
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: ['x/users/%1$s', $id],
+            options: $requestOptions,
+            convert: UserProfile::class,
+        );
+    }
+
+    /**
+     * @api
+     *
      * Get multiple users by IDs
      *
      * @param array{ids: string}|UserRetrieveBatchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserGetBatchResponse>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -70,7 +88,7 @@ final class UsersRawService implements UsersRawContract
             path: 'x/users/batch',
             query: $parsed,
             options: $options,
-            convert: UserGetBatchResponse::class,
+            convert: PaginatedUsers::class,
         );
     }
 
@@ -85,7 +103,7 @@ final class UsersRawService implements UsersRawContract
      * }|UserRetrieveFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserGetFollowersResponse>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -105,7 +123,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/followers', $id],
             query: $parsed,
             options: $options,
-            convert: UserGetFollowersResponse::class,
+            convert: PaginatedUsers::class,
         );
     }
 
@@ -118,7 +136,7 @@ final class UsersRawService implements UsersRawContract
      * @param array{cursor?: string}|UserRetrieveFollowersYouKnowParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserGetFollowersYouKnowResponse>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -138,7 +156,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/followers-you-know', $id],
             query: $parsed,
             options: $options,
-            convert: UserGetFollowersYouKnowResponse::class,
+            convert: PaginatedUsers::class,
         );
     }
 
@@ -153,7 +171,7 @@ final class UsersRawService implements UsersRawContract
      * }|UserRetrieveFollowingParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserGetFollowingResponse>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -173,7 +191,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/following', $id],
             query: $parsed,
             options: $options,
-            convert: UserGetFollowingResponse::class,
+            convert: PaginatedUsers::class,
         );
     }
 
@@ -186,7 +204,7 @@ final class UsersRawService implements UsersRawContract
      * @param array{cursor?: string}|UserRetrieveLikesParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserGetLikesResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -206,7 +224,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/likes', $id],
             query: $parsed,
             options: $options,
-            convert: UserGetLikesResponse::class,
+            convert: PaginatedTweets::class,
         );
     }
 
@@ -219,7 +237,7 @@ final class UsersRawService implements UsersRawContract
      * @param array{cursor?: string}|UserRetrieveMediaParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserGetMediaResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -239,7 +257,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/media', $id],
             query: $parsed,
             options: $options,
-            convert: UserGetMediaResponse::class,
+            convert: PaginatedTweets::class,
         );
     }
 
@@ -254,7 +272,7 @@ final class UsersRawService implements UsersRawContract
      * }|UserRetrieveMentionsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserGetMentionsResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -274,7 +292,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/mentions', $id],
             query: $parsed,
             options: $options,
-            convert: UserGetMentionsResponse::class,
+            convert: PaginatedTweets::class,
         );
     }
 
@@ -286,7 +304,7 @@ final class UsersRawService implements UsersRawContract
      * @param array{q: string, cursor?: string}|UserRetrieveSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserGetSearchResponse>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -305,7 +323,7 @@ final class UsersRawService implements UsersRawContract
             path: 'x/users/search',
             query: $parsed,
             options: $options,
-            convert: UserGetSearchResponse::class,
+            convert: PaginatedUsers::class,
         );
     }
 
@@ -320,7 +338,7 @@ final class UsersRawService implements UsersRawContract
      * }|UserRetrieveTweetsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserGetTweetsResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -340,7 +358,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/tweets', $id],
             query: $parsed,
             options: $options,
-            convert: UserGetTweetsResponse::class,
+            convert: PaginatedTweets::class,
         );
     }
 
@@ -353,7 +371,7 @@ final class UsersRawService implements UsersRawContract
      * @param array{cursor?: string}|UserRetrieveVerifiedFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<UserGetVerifiedFollowersResponse>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -373,7 +391,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/verified-followers', $id],
             query: $parsed,
             options: $options,
-            convert: UserGetVerifiedFollowersResponse::class,
+            convert: PaginatedUsers::class,
         );
     }
 }

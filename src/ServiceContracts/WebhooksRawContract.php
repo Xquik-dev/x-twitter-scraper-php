@@ -7,6 +7,7 @@ namespace XTwitterScraper\ServiceContracts;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
+use XTwitterScraper\Webhooks\Webhook;
 use XTwitterScraper\Webhooks\WebhookCreateParams;
 use XTwitterScraper\Webhooks\WebhookDeactivateResponse;
 use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse;
@@ -14,7 +15,6 @@ use XTwitterScraper\Webhooks\WebhookListResponse;
 use XTwitterScraper\Webhooks\WebhookNewResponse;
 use XTwitterScraper\Webhooks\WebhookTestResponse;
 use XTwitterScraper\Webhooks\WebhookUpdateParams;
-use XTwitterScraper\Webhooks\WebhookUpdateResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -43,7 +43,7 @@ interface WebhooksRawContract
      * @param array<string,mixed>|WebhookUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<WebhookUpdateResponse>
+     * @return BaseResponse<Webhook>
      *
      * @throws APIException
      */

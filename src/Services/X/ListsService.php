@@ -7,11 +7,10 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\ListsContract;
-use XTwitterScraper\X\Lists\ListGetFollowersResponse;
-use XTwitterScraper\X\Lists\ListGetMembersResponse;
-use XTwitterScraper\X\Lists\ListGetTweetsResponse;
 
 /**
  * X data lookups (subscription required).
@@ -48,7 +47,7 @@ final class ListsService implements ListsContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): ListGetFollowersResponse {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -72,7 +71,7 @@ final class ListsService implements ListsContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): ListGetMembersResponse {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -102,7 +101,7 @@ final class ListsService implements ListsContract
         ?string $sinceTime = null,
         ?string $untilTime = null,
         RequestOptions|array|null $requestOptions = null,
-    ): ListGetTweetsResponse {
+    ): PaginatedTweets {
         $params = Util::removeNulls(
             [
                 'cursor' => $cursor,

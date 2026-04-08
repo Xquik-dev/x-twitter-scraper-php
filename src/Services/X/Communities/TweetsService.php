@@ -7,9 +7,10 @@ namespace XTwitterScraper\Services\X\Communities;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\CursorPage;
+use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\Communities\TweetsContract;
-use XTwitterScraper\X\Communities\Tweets\TweetListResponse;
 
 /**
  * X data lookups (subscription required).
@@ -41,6 +42,8 @@ final class TweetsService implements TweetsContract
      * @param string $queryType Sort order for cross-community results (Latest or Top)
      * @param RequestOpts|null $requestOptions
      *
+     * @return CursorPage<PaginatedTweets>
+     *
      * @throws APIException
      */
     public function list(
@@ -48,13 +51,39 @@ final class TweetsService implements TweetsContract
         ?string $cursor = null,
         ?string $queryType = null,
         RequestOptions|array|null $requestOptions = null,
-    ): TweetListResponse {
+    ): CursorPage {
         $params = Util::removeNulls(
             ['q' => $q, 'cursor' => $cursor, 'queryType' => $queryType]
         );
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->list(params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Get community tweets
+     *
+     * @param string $id Community ID for tweet lookup
+     * @param string $cursor Pagination cursor for community tweets
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return CursorPage<PaginatedTweets>
+     *
+     * @throws APIException
+     */
+    public function listByCommunity(
+        string $id,
+        ?string $cursor = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): CursorPage {
+        $params = Util::removeNulls(['cursor' => $cursor]);
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->listByCommunity($id, params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

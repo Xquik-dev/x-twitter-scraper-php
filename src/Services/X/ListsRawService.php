@@ -7,11 +7,10 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\ListsRawContract;
-use XTwitterScraper\X\Lists\ListGetFollowersResponse;
-use XTwitterScraper\X\Lists\ListGetMembersResponse;
-use XTwitterScraper\X\Lists\ListGetTweetsResponse;
 use XTwitterScraper\X\Lists\ListRetrieveFollowersParams;
 use XTwitterScraper\X\Lists\ListRetrieveMembersParams;
 use XTwitterScraper\X\Lists\ListRetrieveTweetsParams;
@@ -38,7 +37,7 @@ final class ListsRawService implements ListsRawContract
      * @param array{cursor?: string}|ListRetrieveFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<ListGetFollowersResponse>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -58,7 +57,7 @@ final class ListsRawService implements ListsRawContract
             path: ['x/lists/%1$s/followers', $id],
             query: $parsed,
             options: $options,
-            convert: ListGetFollowersResponse::class,
+            convert: PaginatedUsers::class,
         );
     }
 
@@ -71,7 +70,7 @@ final class ListsRawService implements ListsRawContract
      * @param array{cursor?: string}|ListRetrieveMembersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<ListGetMembersResponse>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -91,7 +90,7 @@ final class ListsRawService implements ListsRawContract
             path: ['x/lists/%1$s/members', $id],
             query: $parsed,
             options: $options,
-            convert: ListGetMembersResponse::class,
+            convert: PaginatedUsers::class,
         );
     }
 
@@ -106,7 +105,7 @@ final class ListsRawService implements ListsRawContract
      * }|ListRetrieveTweetsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<ListGetTweetsResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -126,7 +125,7 @@ final class ListsRawService implements ListsRawContract
             path: ['x/lists/%1$s/tweets', $id],
             query: $parsed,
             options: $options,
-            convert: ListGetTweetsResponse::class,
+            convert: PaginatedTweets::class,
         );
     }
 }

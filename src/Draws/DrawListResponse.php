@@ -8,13 +8,14 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Draws\DrawListResponse\Draw;
 
 /**
- * @phpstan-import-type DrawShape from \XTwitterScraper\Draws\DrawListResponse\Draw
+ * @phpstan-import-type DrawListItemShape from \XTwitterScraper\Draws\DrawListItem
  *
  * @phpstan-type DrawListResponseShape = array{
- *   draws: list<Draw|DrawShape>, hasMore: bool, nextCursor?: string|null
+ *   draws: list<DrawListItem|DrawListItemShape>,
+ *   hasMore: bool,
+ *   nextCursor?: string|null,
  * }
  */
 final class DrawListResponse implements BaseModel
@@ -22,8 +23,8 @@ final class DrawListResponse implements BaseModel
     /** @use SdkModel<DrawListResponseShape> */
     use SdkModel;
 
-    /** @var list<Draw> $draws */
-    #[Required(list: Draw::class)]
+    /** @var list<DrawListItem> $draws */
+    #[Required(list: DrawListItem::class)]
     public array $draws;
 
     #[Required]
@@ -56,7 +57,7 @@ final class DrawListResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param list<Draw|DrawShape> $draws
+     * @param list<DrawListItem|DrawListItemShape> $draws
      */
     public static function with(
         array $draws,
@@ -74,7 +75,7 @@ final class DrawListResponse implements BaseModel
     }
 
     /**
-     * @param list<Draw|DrawShape> $draws
+     * @param list<DrawListItem|DrawListItemShape> $draws
      */
     public function withDraws(array $draws): self
     {

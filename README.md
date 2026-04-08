@@ -12,14 +12,12 @@ The REST API documentation can be found on [xquik.com](https://xquik.com).
 
 To use this package, install via Composer by adding the following to your application's `composer.json`:
 
-<!-- x-release-please-start-version -->
-
 ```json
 {
   "repositories": [
     {
       "type": "vcs",
-      "url": "git@github.com:Xquik-dev/x-twitter-scraper-php.git"
+      "url": "git@github.com:stainless-sdks/x-twitter-scraper-php.git"
     }
   ],
   "require": {
@@ -27,8 +25,6 @@ To use this package, install via Composer by adding the following to your applic
   }
 }
 ```
-
-<!-- x-release-please-end -->
 
 ## Usage
 
@@ -44,9 +40,9 @@ $client = new Client(
   apiKey: getenv('X_TWITTER_SCRAPER_API_KEY') ?: 'My API Key'
 );
 
-$response = $client->x->tweets->search(q: 'from:elonmusk', limit: 10);
+$paginatedTweets = $client->x->tweets->search(q: 'from:elonmusk', limit: 10);
 
-var_dump($response->has_next_page);
+var_dump($paginatedTweets->has_next_page);
 ```
 
 ### Value Objects
@@ -55,6 +51,35 @@ It is recommended to use the static `with` constructor `Dog::with(name: "Joey")`
 and named parameters to initialize value objects.
 
 However, builders are also provided `(new Dog)->withName("Joey")`.
+
+### Pagination
+
+List methods in the X Twitter Scraper API are paginated.
+
+This library provides auto-paginating iterators with each list response, so you do not have to request successive pages manually:
+
+```php
+<?php
+
+use XTwitterScraper\Client;
+
+$client = new Client(
+  apiKey: getenv('X_TWITTER_SCRAPER_API_KEY') ?: 'My API Key'
+);
+
+$page = $client->x->communities->tweets->list();
+
+var_dump($page);
+
+// fetch items from the current page
+foreach ($page->getItems() as $item) {
+  var_dump($item->has_next_page);
+}
+// make additional network requests to fetch items from all pages, including and after the current page
+foreach ($page->pagingEachItem() as $item) {
+  var_dump($item->has_next_page);
+}
+```
 
 ### Handling errors
 
@@ -68,7 +93,7 @@ use XTwitterScraper\Core\Exceptions\RateLimitException;
 use XTwitterScraper\Core\Exceptions\APIStatusException;
 
 try {
-  $response = $client->x->tweets->search(q: 'from:elonmusk');
+  $paginatedTweets = $client->x->tweets->search(q: 'from:elonmusk');
 } catch (APIConnectionException $e) {
   echo "The server could not be reached", PHP_EOL;
   var_dump($e->getPrevious());
@@ -131,7 +156,7 @@ Note: the `extra*` parameters of the same name overrides the documented paramete
 ```php
 <?php
 
-$response = $client->x->tweets->search(
+$paginatedTweets = $client->x->tweets->search(
   q: 'from:elonmusk',
   limit: 10,
   requestOptions: [
@@ -174,4 +199,4 @@ PHP 8.1.0 or higher.
 
 ## Contributing
 
-See [the contributing documentation](https://github.com/Xquik-dev/x-twitter-scraper-php/tree/main/CONTRIBUTING.md).
+See [the contributing documentation](https://github.com/stainless-sdks/x-twitter-scraper-php/tree/main/CONTRIBUTING.md).

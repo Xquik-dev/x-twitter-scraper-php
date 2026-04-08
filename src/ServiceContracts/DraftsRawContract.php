@@ -7,10 +7,9 @@ namespace XTwitterScraper\ServiceContracts;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Drafts\DraftCreateParams;
-use XTwitterScraper\Drafts\DraftGetResponse;
+use XTwitterScraper\Drafts\DraftDetail;
 use XTwitterScraper\Drafts\DraftListParams;
 use XTwitterScraper\Drafts\DraftListResponse;
-use XTwitterScraper\Drafts\DraftNewResponse;
 use XTwitterScraper\RequestOptions;
 
 /**
@@ -24,7 +23,7 @@ interface DraftsRawContract
      * @param array<string,mixed>|DraftCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<DraftNewResponse>
+     * @return BaseResponse<DraftDetail>
      *
      * @throws APIException
      */
@@ -39,7 +38,7 @@ interface DraftsRawContract
      * @param string $id Resource ID (stringified bigint)
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<DraftGetResponse>
+     * @return BaseResponse<DraftDetail>
      *
      * @throws APIException
      */

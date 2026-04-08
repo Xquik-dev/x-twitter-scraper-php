@@ -7,6 +7,7 @@ namespace XTwitterScraper\Services;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\XContract;
 use XTwitterScraper\Services\X\AccountsService;
@@ -20,7 +21,6 @@ use XTwitterScraper\Services\X\ProfileService;
 use XTwitterScraper\Services\X\TweetsService;
 use XTwitterScraper\Services\X\UsersService;
 use XTwitterScraper\X\XGetArticleResponse;
-use XTwitterScraper\X\XGetHomeTimelineResponse;
 use XTwitterScraper\X\XGetNotificationsParams\Type;
 use XTwitterScraper\X\XGetNotificationsResponse;
 use XTwitterScraper\X\XGetTrendsResponse;
@@ -140,7 +140,7 @@ final class XService implements XContract
         ?string $cursor = null,
         ?string $seenTweetIDs = null,
         RequestOptions|array|null $requestOptions = null,
-    ): XGetHomeTimelineResponse {
+    ): PaginatedTweets {
         $params = Util::removeNulls(
             ['cursor' => $cursor, 'seenTweetIDs' => $seenTweetIDs]
         );

@@ -8,7 +8,7 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Events\EventDetail\Type;
+use XTwitterScraper\EventType;
 
 /**
  * Full monitor event including payload data and optional X event ID.
@@ -18,7 +18,7 @@ use XTwitterScraper\Events\EventDetail\Type;
  *   data: array<string,mixed>,
  *   monitorID: string,
  *   occurredAt: \DateTimeInterface,
- *   type: Type|value-of<Type>,
+ *   type: EventType|value-of<EventType>,
  *   username: string,
  *   xEventID?: string|null,
  * }
@@ -48,9 +48,9 @@ final class EventDetail implements BaseModel
     /**
      * Type of monitor event fired when account activity occurs.
      *
-     * @var value-of<Type> $type
+     * @var value-of<EventType> $type
      */
-    #[Required(enum: Type::class)]
+    #[Required(enum: EventType::class)]
     public string $type;
 
     #[Required]
@@ -92,14 +92,14 @@ final class EventDetail implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param array<string,mixed> $data
-     * @param Type|value-of<Type> $type
+     * @param EventType|value-of<EventType> $type
      */
     public static function with(
         string $id,
         array $data,
         string $monitorID,
         \DateTimeInterface $occurredAt,
-        Type|string $type,
+        EventType|string $type,
         string $username,
         ?string $xEventID = null,
     ): self {
@@ -157,9 +157,9 @@ final class EventDetail implements BaseModel
     /**
      * Type of monitor event fired when account activity occurs.
      *
-     * @param Type|value-of<Type> $type
+     * @param EventType|value-of<EventType> $type
      */
-    public function withType(Type|string $type): self
+    public function withType(EventType|string $type): self
     {
         $self = clone $this;
         $self['type'] = $type;

@@ -7,15 +7,12 @@ namespace XTwitterScraper\Styles;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Styles\StyleCompareResponse\Style1;
-use XTwitterScraper\Styles\StyleCompareResponse\Style2;
 
 /**
- * @phpstan-import-type Style1Shape from \XTwitterScraper\Styles\StyleCompareResponse\Style1
- * @phpstan-import-type Style2Shape from \XTwitterScraper\Styles\StyleCompareResponse\Style2
+ * @phpstan-import-type StyleProfileShape from \XTwitterScraper\Styles\StyleProfile
  *
  * @phpstan-type StyleCompareResponseShape = array{
- *   style1: Style1|Style1Shape, style2: Style2|Style2Shape
+ *   style1: StyleProfile|StyleProfileShape, style2: StyleProfile|StyleProfileShape
  * }
  */
 final class StyleCompareResponse implements BaseModel
@@ -27,13 +24,13 @@ final class StyleCompareResponse implements BaseModel
      * Full style profile with sampled tweets used for tone analysis.
      */
     #[Required]
-    public Style1 $style1;
+    public StyleProfile $style1;
 
     /**
      * Full style profile with sampled tweets used for tone analysis.
      */
     #[Required]
-    public Style2 $style2;
+    public StyleProfile $style2;
 
     /**
      * `new StyleCompareResponse()` is missing required properties by the API.
@@ -59,12 +56,12 @@ final class StyleCompareResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param Style1|Style1Shape $style1
-     * @param Style2|Style2Shape $style2
+     * @param StyleProfile|StyleProfileShape $style1
+     * @param StyleProfile|StyleProfileShape $style2
      */
     public static function with(
-        Style1|array $style1,
-        Style2|array $style2
+        StyleProfile|array $style1,
+        StyleProfile|array $style2
     ): self {
         $self = new self;
 
@@ -77,9 +74,9 @@ final class StyleCompareResponse implements BaseModel
     /**
      * Full style profile with sampled tweets used for tone analysis.
      *
-     * @param Style1|Style1Shape $style1
+     * @param StyleProfile|StyleProfileShape $style1
      */
-    public function withStyle1(Style1|array $style1): self
+    public function withStyle1(StyleProfile|array $style1): self
     {
         $self = clone $this;
         $self['style1'] = $style1;
@@ -90,9 +87,9 @@ final class StyleCompareResponse implements BaseModel
     /**
      * Full style profile with sampled tweets used for tone analysis.
      *
-     * @param Style2|Style2Shape $style2
+     * @param StyleProfile|StyleProfileShape $style2
      */
-    public function withStyle2(Style2|array $style2): self
+    public function withStyle2(StyleProfile|array $style2): self
     {
         $self = clone $this;
         $self['style2'] = $style2;

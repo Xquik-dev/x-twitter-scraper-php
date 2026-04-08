@@ -8,9 +8,8 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\X\Lists\ListGetFollowersResponse;
-use XTwitterScraper\X\Lists\ListGetMembersResponse;
-use XTwitterScraper\X\Lists\ListGetTweetsResponse;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 
 /**
  * @internal
@@ -44,7 +43,7 @@ final class ListsTest extends TestCase
         $result = $this->client->x->lists->retrieveFollowers('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(ListGetFollowersResponse::class, $result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 
     #[Test]
@@ -57,7 +56,7 @@ final class ListsTest extends TestCase
         $result = $this->client->x->lists->retrieveMembers('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(ListGetMembersResponse::class, $result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 
     #[Test]
@@ -70,6 +69,6 @@ final class ListsTest extends TestCase
         $result = $this->client->x->lists->retrieveTweets('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(ListGetTweetsResponse::class, $result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 }
