@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * Webhook delivery attempt record with status and retry count.
+ *
  * @phpstan-type DeliveryShape = array{
  *   id: string,
  *   attempts: int,

@@ -13,6 +13,9 @@ use XTwitterScraper\X\Communities\CommunityCreateParams;
 use XTwitterScraper\X\Communities\CommunityDeleteParams;
 use XTwitterScraper\X\Communities\CommunityDeleteResponse;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse;
+use XTwitterScraper\X\Communities\CommunityGetMembersResponse;
+use XTwitterScraper\X\Communities\CommunityGetModeratorsResponse;
+use XTwitterScraper\X\Communities\CommunityGetSearchResponse;
 use XTwitterScraper\X\Communities\CommunityNewResponse;
 use XTwitterScraper\X\Communities\CommunityRetrieveMembersParams;
 use XTwitterScraper\X\Communities\CommunityRetrieveModeratorsParams;
@@ -127,11 +130,11 @@ final class CommunitiesRawService implements CommunitiesRawContract
      *
      * Get community members
      *
-     * @param string $id Community ID
+     * @param string $id Community ID for member lookup
      * @param array{cursor?: string}|CommunityRetrieveMembersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<CommunityGetMembersResponse>
      *
      * @throws APIException
      */
@@ -151,7 +154,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
             path: ['x/communities/%1$s/members', $id],
             query: $parsed,
             options: $options,
-            convert: null,
+            convert: CommunityGetMembersResponse::class,
         );
     }
 
@@ -160,11 +163,11 @@ final class CommunitiesRawService implements CommunitiesRawContract
      *
      * Get community moderators
      *
-     * @param string $id Community ID
+     * @param string $id Community ID for moderator lookup
      * @param array{cursor?: string}|CommunityRetrieveModeratorsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<CommunityGetModeratorsResponse>
      *
      * @throws APIException
      */
@@ -184,7 +187,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
             path: ['x/communities/%1$s/moderators', $id],
             query: $parsed,
             options: $options,
-            convert: null,
+            convert: CommunityGetModeratorsResponse::class,
         );
     }
 
@@ -198,7 +201,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
      * }|CommunityRetrieveSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<CommunityGetSearchResponse>
      *
      * @throws APIException
      */
@@ -217,7 +220,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
             path: 'x/communities/search',
             query: $parsed,
             options: $options,
-            convert: null,
+            convert: CommunityGetSearchResponse::class,
         );
     }
 }

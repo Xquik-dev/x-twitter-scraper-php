@@ -26,7 +26,7 @@ final class MediaUploadParams implements BaseModel
     use SdkParams;
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) uploading media.
      */
     #[Required]
     public string $account;
@@ -80,7 +80,7 @@ final class MediaUploadParams implements BaseModel
     }
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) uploading media.
      */
     public function withAccount(string $account): self
     {

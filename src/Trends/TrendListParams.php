@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get trending topics.
+ * Get regional trending topics.
  *
  * @see XTwitterScraper\Services\TrendsService::list()
  *
@@ -22,6 +22,9 @@ final class TrendListParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
+    /**
+     * Number of trending topics to return (1-50, default 30).
+     */
     #[Optional]
     public ?int $count;
 
@@ -51,6 +54,9 @@ final class TrendListParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Number of trending topics to return (1-50, default 30).
+     */
     public function withCount(int $count): self
     {
         $self = clone $this;

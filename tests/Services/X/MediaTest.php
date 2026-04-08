@@ -53,7 +53,10 @@ final class MediaTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->media->upload(account: 'account', file: 'file');
+        $result = $this->client->x->media->upload(
+            account: '@elonmusk',
+            file: 'file'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(MediaUploadResponse::class, $result);
@@ -67,7 +70,7 @@ final class MediaTest extends TestCase
         }
 
         $result = $this->client->x->media->upload(
-            account: 'account',
+            account: '@elonmusk',
             file: 'file',
             isLongVideo: true
         );

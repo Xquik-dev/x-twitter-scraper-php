@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\PaginatedTweets\Tweet;
 
 /**
+ * Paginated list of tweets with cursor-based navigation.
+ *
  * @phpstan-import-type TweetShape from \XTwitterScraper\PaginatedTweets\Tweet
  *
  * @phpstan-type PaginatedTweetsShape = array{

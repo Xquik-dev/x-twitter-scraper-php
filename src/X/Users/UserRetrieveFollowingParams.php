@@ -25,13 +25,13 @@ final class UserRetrieveFollowingParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for following list.
      */
     #[Optional]
     public ?string $cursor;
 
     /**
-     * Items per page (20-200, default 200).
+     * Results per page (20-200, default 200).
      */
     #[Optional]
     public ?int $pageSize;
@@ -59,7 +59,7 @@ final class UserRetrieveFollowingParams implements BaseModel
     }
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for following list.
      */
     public function withCursor(string $cursor): self
     {
@@ -70,7 +70,7 @@ final class UserRetrieveFollowingParams implements BaseModel
     }
 
     /**
-     * Items per page (20-200, default 200).
+     * Results per page (20-200, default 200).
      */
     public function withPageSize(int $pageSize): self
     {

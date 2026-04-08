@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Events\Event;
 
+/**
+ * Type of monitor event fired when account activity occurs.
+ */
 enum Type: string
 {
     case TWEET_NEW = 'tweet.new';

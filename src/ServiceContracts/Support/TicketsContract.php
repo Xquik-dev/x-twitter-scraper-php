@@ -34,6 +34,7 @@ interface TicketsContract
     /**
      * @api
      *
+     * @param string $id Support ticket ID
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -46,6 +47,7 @@ interface TicketsContract
     /**
      * @api
      *
+     * @param string $id Support ticket ID to update
      * @param Status|value-of<Status> $status
      * @param RequestOpts|null $requestOptions
      *
@@ -71,6 +73,7 @@ interface TicketsContract
     /**
      * @api
      *
+     * @param string $id Support ticket ID for the reply
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

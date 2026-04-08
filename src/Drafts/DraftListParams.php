@@ -30,6 +30,9 @@ final class DraftListParams implements BaseModel
     #[Optional]
     public ?string $afterCursor;
 
+    /**
+     * Maximum number of items to return (1-100, default 50).
+     */
     #[Optional]
     public ?int $limit;
 
@@ -66,6 +69,9 @@ final class DraftListParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Maximum number of items to return (1-100, default 50).
+     */
     public function withLimit(int $limit): self
     {
         $self = clone $this;

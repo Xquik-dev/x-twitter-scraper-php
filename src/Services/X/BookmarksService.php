@@ -37,7 +37,7 @@ final class BookmarksService implements BookmarksContract
      *
      * Get bookmarked tweets
      *
-     * @param string $cursor Pagination cursor from previous response
+     * @param string $cursor Pagination cursor for bookmarks
      * @param string $folderID Optional bookmark folder ID
      * @param RequestOpts|null $requestOptions
      *

@@ -47,7 +47,7 @@ final class IntegrationsService implements IntegrationsContract
      * Create integration
      *
      * @param Config|ConfigShape $config Integration config (e.g. Telegram chatId)
-     * @param list<EventType|value-of<EventType>> $eventTypes
+     * @param list<EventType|value-of<EventType>> $eventTypes array of event types to subscribe to
      * @param Type|value-of<Type> $type
      * @param RequestOpts|null $requestOptions
      *
@@ -101,7 +101,7 @@ final class IntegrationsService implements IntegrationsContract
      * Update integration
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param list<\XTwitterScraper\Integrations\IntegrationUpdateParams\EventType|value-of<\XTwitterScraper\Integrations\IntegrationUpdateParams\EventType>> $eventTypes
+     * @param list<\XTwitterScraper\Integrations\IntegrationUpdateParams\EventType|value-of<\XTwitterScraper\Integrations\IntegrationUpdateParams\EventType>> $eventTypes array of event types to subscribe to
      * @param array<string,mixed> $filters Event filter rules (JSON)
      * @param array<string,mixed> $messageTemplate Custom message template (JSON)
      * @param RequestOpts|null $requestOptions
@@ -181,6 +181,7 @@ final class IntegrationsService implements IntegrationsContract
      * List integration delivery history
      *
      * @param string $id Resource ID (stringified bigint)
+     * @param int $limit Maximum number of items to return (1-100, default 50)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

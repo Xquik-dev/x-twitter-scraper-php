@@ -22,6 +22,9 @@ final class IntegrationListDeliveriesParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
+    /**
+     * Maximum number of items to return (1-100, default 50).
+     */
     #[Optional]
     public ?int $limit;
 
@@ -44,6 +47,9 @@ final class IntegrationListDeliveriesParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Maximum number of items to return (1-100, default 50).
+     */
     public function withLimit(int $limit): self
     {
         $self = clone $this;

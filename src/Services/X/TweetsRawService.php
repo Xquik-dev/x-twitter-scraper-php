@@ -21,6 +21,7 @@ use XTwitterScraper\X\Tweets\TweetGetRetweetersResponse;
 use XTwitterScraper\X\Tweets\TweetGetThreadParams;
 use XTwitterScraper\X\Tweets\TweetGetThreadResponse;
 use XTwitterScraper\X\Tweets\TweetListParams;
+use XTwitterScraper\X\Tweets\TweetListResponse;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
 use XTwitterScraper\X\Tweets\TweetSearchParams;
 use XTwitterScraper\X\Tweets\TweetSearchParams\QueryType;
@@ -84,7 +85,7 @@ final class TweetsRawService implements TweetsRawContract
      * @param array{ids: string}|TweetListParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<TweetListResponse>
      *
      * @throws APIException
      */
@@ -103,7 +104,7 @@ final class TweetsRawService implements TweetsRawContract
             path: 'x/tweets',
             query: $parsed,
             options: $options,
-            convert: null,
+            convert: TweetListResponse::class,
         );
     }
 
@@ -112,7 +113,7 @@ final class TweetsRawService implements TweetsRawContract
      *
      * Get users who liked a tweet
      *
-     * @param string $id Tweet ID
+     * @param string $id Tweet ID to get favoriters
      * @param array{cursor?: string}|TweetGetFavoritersParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -145,7 +146,7 @@ final class TweetsRawService implements TweetsRawContract
      *
      * Get quote tweets of a tweet
      *
-     * @param string $id Tweet ID
+     * @param string $id Tweet ID to get quotes
      * @param array{
      *   cursor?: string, includeReplies?: bool, sinceTime?: string, untilTime?: string
      * }|TweetGetQuotesParams $params
@@ -180,7 +181,7 @@ final class TweetsRawService implements TweetsRawContract
      *
      * Get replies to a tweet
      *
-     * @param string $id Tweet ID
+     * @param string $id Tweet ID to get replies
      * @param array{
      *   cursor?: string, sinceTime?: string, untilTime?: string
      * }|TweetGetRepliesParams $params
@@ -215,7 +216,7 @@ final class TweetsRawService implements TweetsRawContract
      *
      * Get users who retweeted a tweet
      *
-     * @param string $id Tweet ID
+     * @param string $id Tweet ID to get retweeters
      * @param array{cursor?: string}|TweetGetRetweetersParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -248,7 +249,7 @@ final class TweetsRawService implements TweetsRawContract
      *
      * Get thread context for a tweet
      *
-     * @param string $id Tweet ID
+     * @param string $id Tweet ID to get thread context
      * @param array{cursor?: string}|TweetGetThreadParams $params
      * @param RequestOpts|null $requestOptions
      *

@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\Users\UserGetFollowersYouKnowResponse\User;
 
 /**
+ * Paginated list of user profiles with cursor-based navigation.
+ *
  * @phpstan-import-type UserShape from \XTwitterScraper\X\Users\UserGetFollowersYouKnowResponse\User
  *
  * @phpstan-type UserGetFollowersYouKnowResponseShape = array{

@@ -22,7 +22,7 @@ interface WebhooksContract
     /**
      * @api
      *
-     * @param list<EventType|value-of<EventType>> $eventTypes
+     * @param list<EventType|value-of<EventType>> $eventTypes array of event types to subscribe to
      * @param string $url HTTPS URL
      * @param RequestOpts|null $requestOptions
      *
@@ -38,7 +38,7 @@ interface WebhooksContract
      * @api
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param list<\XTwitterScraper\Webhooks\WebhookUpdateParams\EventType|value-of<\XTwitterScraper\Webhooks\WebhookUpdateParams\EventType>> $eventTypes
+     * @param list<\XTwitterScraper\Webhooks\WebhookUpdateParams\EventType|value-of<\XTwitterScraper\Webhooks\WebhookUpdateParams\EventType>> $eventTypes array of event types to subscribe to
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

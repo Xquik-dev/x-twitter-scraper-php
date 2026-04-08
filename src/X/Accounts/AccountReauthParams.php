@@ -26,13 +26,13 @@ final class AccountReauthParams implements BaseModel
     use SdkParams;
 
     /**
-     * Account password.
+     * Updated account password.
      */
     #[Required]
     public string $password;
 
     /**
-     * TOTP secret for 2FA.
+     * TOTP secret for 2FA re-authentication.
      */
     #[Optional('totp_secret')]
     public ?string $totpSecret;
@@ -75,7 +75,7 @@ final class AccountReauthParams implements BaseModel
     }
 
     /**
-     * Account password.
+     * Updated account password.
      */
     public function withPassword(string $password): self
     {
@@ -86,7 +86,7 @@ final class AccountReauthParams implements BaseModel
     }
 
     /**
-     * TOTP secret for 2FA.
+     * TOTP secret for 2FA re-authentication.
      */
     public function withTotpSecret(string $totpSecret): self
     {

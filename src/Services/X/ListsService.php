@@ -9,6 +9,9 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\ListsContract;
+use XTwitterScraper\X\Lists\ListGetFollowersResponse;
+use XTwitterScraper\X\Lists\ListGetMembersResponse;
+use XTwitterScraper\X\Lists\ListGetTweetsResponse;
 
 /**
  * X data lookups (subscription required).
@@ -36,7 +39,7 @@ final class ListsService implements ListsContract
      * Get list followers
      *
      * @param string $id List ID
-     * @param string $cursor Pagination cursor
+     * @param string $cursor Pagination cursor for list followers
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -45,7 +48,7 @@ final class ListsService implements ListsContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): mixed {
+    ): ListGetFollowersResponse {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -59,8 +62,8 @@ final class ListsService implements ListsContract
      *
      * Get list members
      *
-     * @param string $id List ID
-     * @param string $cursor Pagination cursor
+     * @param string $id List ID for member lookup
+     * @param string $cursor Pagination cursor for list members
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -69,7 +72,7 @@ final class ListsService implements ListsContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): mixed {
+    ): ListGetMembersResponse {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -83,8 +86,8 @@ final class ListsService implements ListsContract
      *
      * Get list tweets
      *
-     * @param string $id List ID
-     * @param string $cursor Pagination cursor
+     * @param string $id List ID for tweet lookup
+     * @param string $cursor Pagination cursor for list tweets
      * @param bool $includeReplies Include replies (default false)
      * @param string $sinceTime Unix timestamp - filter after
      * @param string $untilTime Unix timestamp - filter before
@@ -99,7 +102,7 @@ final class ListsService implements ListsContract
         ?string $sinceTime = null,
         ?string $untilTime = null,
         RequestOptions|array|null $requestOptions = null,
-    ): mixed {
+    ): ListGetTweetsResponse {
         $params = Util::removeNulls(
             [
                 'cursor' => $cursor,

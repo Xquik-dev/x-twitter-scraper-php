@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\Events\Event\Type;
 
 /**
+ * Monitor event summary with type, username, and occurrence time.
+ *
  * @phpstan-type EventShape = array{
  *   id: string,
  *   data: array<string,mixed>,
@@ -37,7 +39,11 @@ final class Event implements BaseModel
     #[Required]
     public \DateTimeInterface $occurredAt;
 
-    /** @var value-of<Type> $type */
+    /**
+     * Type of monitor event fired when account activity occurs.
+     *
+     * @var value-of<Type> $type
+     */
     #[Required(enum: Type::class)]
     public string $type;
 
@@ -135,6 +141,8 @@ final class Event implements BaseModel
     }
 
     /**
+     * Type of monitor event fired when account activity occurs.
+     *
      * @param Type|value-of<Type> $type
      */
     public function withType(Type|string $type): self

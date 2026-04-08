@@ -25,7 +25,7 @@ final class ProfileUpdateBannerParams implements BaseModel
     use SdkParams;
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) for banner update.
      */
     #[Required]
     public string $account;
@@ -71,7 +71,7 @@ final class ProfileUpdateBannerParams implements BaseModel
     }
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) for banner update.
      */
     public function withAccount(string $account): self
     {

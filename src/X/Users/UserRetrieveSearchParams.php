@@ -26,13 +26,13 @@ final class UserRetrieveSearchParams implements BaseModel
     use SdkParams;
 
     /**
-     * Search query.
+     * User search query.
      */
     #[Required]
     public string $q;
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for user search.
      */
     #[Optional]
     public ?string $cursor;
@@ -73,7 +73,7 @@ final class UserRetrieveSearchParams implements BaseModel
     }
 
     /**
-     * Search query.
+     * User search query.
      */
     public function withQ(string $q): self
     {
@@ -84,7 +84,7 @@ final class UserRetrieveSearchParams implements BaseModel
     }
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for user search.
      */
     public function withCursor(string $cursor): self
     {

@@ -137,8 +137,8 @@ final class AccountsService implements AccountsContract
      * Re-authenticate X account
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param string $password Account password
-     * @param string $totpSecret TOTP secret for 2FA
+     * @param string $password Updated account password
+     * @param string $totpSecret TOTP secret for 2FA re-authentication
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

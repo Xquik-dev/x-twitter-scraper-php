@@ -36,7 +36,7 @@ final class Community implements BaseModel
     use SdkModel;
 
     /**
-     * Community ID.
+     * Unique community identifier.
      */
     #[Required]
     public string $id;
@@ -54,7 +54,7 @@ final class Community implements BaseModel
     public ?string $createdAt;
 
     /**
-     * Community description.
+     * About text for the community.
      */
     #[Optional]
     public ?string $description;
@@ -78,7 +78,7 @@ final class Community implements BaseModel
     public ?int $moderatorCount;
 
     /**
-     * Community name.
+     * Display name of the community.
      */
     #[Optional]
     public ?string $name;
@@ -154,7 +154,7 @@ final class Community implements BaseModel
     }
 
     /**
-     * Community ID.
+     * Unique community identifier.
      */
     public function withID(string $id): self
     {
@@ -187,7 +187,7 @@ final class Community implements BaseModel
     }
 
     /**
-     * Community description.
+     * About text for the community.
      */
     public function withDescription(string $description): self
     {
@@ -231,7 +231,7 @@ final class Community implements BaseModel
     }
 
     /**
-     * Community name.
+     * Display name of the community.
      */
     public function withName(string $name): self
     {

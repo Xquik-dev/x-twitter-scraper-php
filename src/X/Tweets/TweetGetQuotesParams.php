@@ -28,25 +28,25 @@ final class TweetGetQuotesParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for quote tweets.
      */
     #[Optional]
     public ?string $cursor;
 
     /**
-     * Include replies (default false).
+     * Include reply quotes (default false).
      */
     #[Optional]
     public ?bool $includeReplies;
 
     /**
-     * Unix timestamp - filter after.
+     * Unix timestamp - return quotes posted after this time.
      */
     #[Optional]
     public ?string $sinceTime;
 
     /**
-     * Unix timestamp - filter before.
+     * Unix timestamp - return quotes posted before this time.
      */
     #[Optional]
     public ?string $untilTime;
@@ -78,7 +78,7 @@ final class TweetGetQuotesParams implements BaseModel
     }
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for quote tweets.
      */
     public function withCursor(string $cursor): self
     {
@@ -89,7 +89,7 @@ final class TweetGetQuotesParams implements BaseModel
     }
 
     /**
-     * Include replies (default false).
+     * Include reply quotes (default false).
      */
     public function withIncludeReplies(bool $includeReplies): self
     {
@@ -100,7 +100,7 @@ final class TweetGetQuotesParams implements BaseModel
     }
 
     /**
-     * Unix timestamp - filter after.
+     * Unix timestamp - return quotes posted after this time.
      */
     public function withSinceTime(string $sinceTime): self
     {
@@ -111,7 +111,7 @@ final class TweetGetQuotesParams implements BaseModel
     }
 
     /**
-     * Unix timestamp - filter before.
+     * Unix timestamp - return quotes posted before this time.
      */
     public function withUntilTime(string $untilTime): self
     {

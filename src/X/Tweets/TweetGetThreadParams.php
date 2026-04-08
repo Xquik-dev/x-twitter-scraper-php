@@ -23,7 +23,7 @@ final class TweetGetThreadParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for thread tweets.
      */
     #[Optional]
     public ?string $cursor;
@@ -48,7 +48,7 @@ final class TweetGetThreadParams implements BaseModel
     }
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for thread tweets.
      */
     public function withCursor(string $cursor): self
     {

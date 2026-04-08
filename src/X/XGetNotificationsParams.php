@@ -26,7 +26,7 @@ final class XGetNotificationsParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for notifications.
      */
     #[Optional]
     public ?string $cursor;
@@ -64,7 +64,7 @@ final class XGetNotificationsParams implements BaseModel
     }
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for notifications.
      */
     public function withCursor(string $cursor): self
     {

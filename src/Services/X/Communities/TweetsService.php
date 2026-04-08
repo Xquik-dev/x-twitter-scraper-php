@@ -9,6 +9,7 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\Communities\TweetsContract;
+use XTwitterScraper\X\Communities\Tweets\TweetListResponse;
 
 /**
  * X data lookups (subscription required).
@@ -35,9 +36,9 @@ final class TweetsService implements TweetsContract
      *
      * Search tweets across all communities
      *
-     * @param string $q Search query
-     * @param string $cursor Pagination cursor
-     * @param string $queryType Sort order (Latest or Top)
+     * @param string $q Search query for cross-community tweets
+     * @param string $cursor Pagination cursor for cross-community results
+     * @param string $queryType Sort order for cross-community results (Latest or Top)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -47,7 +48,7 @@ final class TweetsService implements TweetsContract
         ?string $cursor = null,
         ?string $queryType = null,
         RequestOptions|array|null $requestOptions = null,
-    ): mixed {
+    ): TweetListResponse {
         $params = Util::removeNulls(
             ['q' => $q, 'cursor' => $cursor, 'queryType' => $queryType]
         );

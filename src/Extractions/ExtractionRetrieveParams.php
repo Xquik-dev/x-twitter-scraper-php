@@ -25,11 +25,14 @@ final class ExtractionRetrieveParams implements BaseModel
     use SdkParams;
 
     /**
-     * Cursor for pagination.
+     * Cursor for keyset pagination.
      */
     #[Optional]
     public ?string $after;
 
+    /**
+     * Maximum number of results to return (1-1000, default 100).
+     */
     #[Optional]
     public ?int $limit;
 
@@ -54,7 +57,7 @@ final class ExtractionRetrieveParams implements BaseModel
     }
 
     /**
-     * Cursor for pagination.
+     * Cursor for keyset pagination.
      */
     public function withAfter(string $after): self
     {
@@ -64,6 +67,9 @@ final class ExtractionRetrieveParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Maximum number of results to return (1-1000, default 100).
+     */
     public function withLimit(int $limit): self
     {
         $self = clone $this;

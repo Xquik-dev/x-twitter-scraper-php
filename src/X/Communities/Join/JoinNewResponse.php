@@ -9,6 +9,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * Result of a community join or leave action.
+ *
  * @phpstan-type JoinNewResponseShape = array{
  *   communityID: string, communityName: string, success: bool
  * }

@@ -38,7 +38,7 @@ final class JoinService implements JoinContract
      * Join community
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param string $account X account (@username or account ID)
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -62,7 +62,7 @@ final class JoinService implements JoinContract
      * Leave community
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param string $account X account (@username or account ID)
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

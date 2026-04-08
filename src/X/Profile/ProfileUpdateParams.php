@@ -30,7 +30,7 @@ final class ProfileUpdateParams implements BaseModel
     use SdkParams;
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) to update profile.
      */
     #[Required]
     public string $account;
@@ -100,7 +100,7 @@ final class ProfileUpdateParams implements BaseModel
     }
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) to update profile.
      */
     public function withAccount(string $account): self
     {

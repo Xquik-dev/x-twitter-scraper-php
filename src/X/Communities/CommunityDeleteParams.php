@@ -25,7 +25,7 @@ final class CommunityDeleteParams implements BaseModel
     use SdkParams;
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) deleting the community.
      */
     #[Required]
     public string $account;
@@ -71,7 +71,7 @@ final class CommunityDeleteParams implements BaseModel
     }
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) deleting the community.
      */
     public function withAccount(string $account): self
     {

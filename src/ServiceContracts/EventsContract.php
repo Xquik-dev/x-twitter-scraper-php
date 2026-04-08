@@ -31,8 +31,10 @@ interface EventsContract
     /**
      * @api
      *
-     * @param string $after Cursor for pagination
-     * @param EventType|value-of<EventType> $eventType
+     * @param string $after Cursor for keyset pagination
+     * @param EventType|value-of<EventType> $eventType Filter events by type
+     * @param int $limit Maximum number of items to return (1-100, default 50)
+     * @param string $monitorID Filter events by monitor ID
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

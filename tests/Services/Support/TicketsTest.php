@@ -44,8 +44,8 @@ final class TicketsTest extends TestCase
         }
 
         $result = $this->client->support->tickets->create(
-            body: 'body',
-            subject: 'subject'
+            body: 'I am unable to connect my X account. Please help.',
+            subject: 'Cannot connect X account',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -60,8 +60,8 @@ final class TicketsTest extends TestCase
         }
 
         $result = $this->client->support->tickets->create(
-            body: 'body',
-            subject: 'subject'
+            body: 'I am unable to connect my X account. Please help.',
+            subject: 'Cannot connect X account',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -75,7 +75,7 @@ final class TicketsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->support->tickets->retrieve('id');
+        $result = $this->client->support->tickets->retrieve('messages_value');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TicketGetResponse::class, $result);
@@ -88,7 +88,7 @@ final class TicketsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->support->tickets->update('id', status: 'open');
+        $result = $this->client->support->tickets->update('id', status: 'resolved');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TicketUpdateResponse::class, $result);
@@ -101,7 +101,7 @@ final class TicketsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->support->tickets->update('id', status: 'open');
+        $result = $this->client->support->tickets->update('id', status: 'resolved');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TicketUpdateResponse::class, $result);
@@ -127,7 +127,10 @@ final class TicketsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->support->tickets->reply('id', body: 'body');
+        $result = $this->client->support->tickets->reply(
+            'id',
+            body: 'Thank you for the update.'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TicketReplyResponse::class, $result);
@@ -140,7 +143,10 @@ final class TicketsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->support->tickets->reply('id', body: 'body');
+        $result = $this->client->support->tickets->reply(
+            'id',
+            body: 'Thank you for the update.'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TicketReplyResponse::class, $result);

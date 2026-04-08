@@ -23,7 +23,7 @@ final class TweetGetFavoritersParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for favoriters.
      */
     #[Optional]
     public ?string $cursor;
@@ -48,7 +48,7 @@ final class TweetGetFavoritersParams implements BaseModel
     }
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for favoriters.
      */
     public function withCursor(string $cursor): self
     {

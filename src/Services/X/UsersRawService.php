@@ -9,10 +9,16 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\UsersRawContract;
+use XTwitterScraper\X\Users\UserGetBatchResponse;
+use XTwitterScraper\X\Users\UserGetFollowersResponse;
 use XTwitterScraper\X\Users\UserGetFollowersYouKnowResponse;
+use XTwitterScraper\X\Users\UserGetFollowingResponse;
 use XTwitterScraper\X\Users\UserGetLikesResponse;
 use XTwitterScraper\X\Users\UserGetMediaResponse;
+use XTwitterScraper\X\Users\UserGetMentionsResponse;
+use XTwitterScraper\X\Users\UserGetSearchResponse;
 use XTwitterScraper\X\Users\UserGetTweetsResponse;
+use XTwitterScraper\X\Users\UserGetVerifiedFollowersResponse;
 use XTwitterScraper\X\Users\UserRetrieveBatchParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersYouKnowParams;
@@ -45,7 +51,7 @@ final class UsersRawService implements UsersRawContract
      * @param array{ids: string}|UserRetrieveBatchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<UserGetBatchResponse>
      *
      * @throws APIException
      */
@@ -64,7 +70,7 @@ final class UsersRawService implements UsersRawContract
             path: 'x/users/batch',
             query: $parsed,
             options: $options,
-            convert: null,
+            convert: UserGetBatchResponse::class,
         );
     }
 
@@ -79,7 +85,7 @@ final class UsersRawService implements UsersRawContract
      * }|UserRetrieveFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<UserGetFollowersResponse>
      *
      * @throws APIException
      */
@@ -99,7 +105,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/followers', $id],
             query: $parsed,
             options: $options,
-            convert: null,
+            convert: UserGetFollowersResponse::class,
         );
     }
 
@@ -108,7 +114,7 @@ final class UsersRawService implements UsersRawContract
      *
      * Get followers you know for a user
      *
-     * @param string $id User ID
+     * @param string $id User ID for followers-you-know lookup
      * @param array{cursor?: string}|UserRetrieveFollowersYouKnowParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -141,13 +147,13 @@ final class UsersRawService implements UsersRawContract
      *
      * Get users this user follows
      *
-     * @param string $id User ID or username
+     * @param string $id User ID or username for following lookup
      * @param array{
      *   cursor?: string, pageSize?: int
      * }|UserRetrieveFollowingParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<UserGetFollowingResponse>
      *
      * @throws APIException
      */
@@ -167,7 +173,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/following', $id],
             query: $parsed,
             options: $options,
-            convert: null,
+            convert: UserGetFollowingResponse::class,
         );
     }
 
@@ -209,7 +215,7 @@ final class UsersRawService implements UsersRawContract
      *
      * Get media tweets by a user
      *
-     * @param string $id User ID
+     * @param string $id User ID for media lookup
      * @param array{cursor?: string}|UserRetrieveMediaParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -242,13 +248,13 @@ final class UsersRawService implements UsersRawContract
      *
      * Get tweets mentioning a user
      *
-     * @param string $id User ID or username
+     * @param string $id User ID or username for mentions lookup
      * @param array{
      *   cursor?: string, sinceTime?: string, untilTime?: string
      * }|UserRetrieveMentionsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<UserGetMentionsResponse>
      *
      * @throws APIException
      */
@@ -268,7 +274,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/mentions', $id],
             query: $parsed,
             options: $options,
-            convert: null,
+            convert: UserGetMentionsResponse::class,
         );
     }
 
@@ -280,7 +286,7 @@ final class UsersRawService implements UsersRawContract
      * @param array{q: string, cursor?: string}|UserRetrieveSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<UserGetSearchResponse>
      *
      * @throws APIException
      */
@@ -299,7 +305,7 @@ final class UsersRawService implements UsersRawContract
             path: 'x/users/search',
             query: $parsed,
             options: $options,
-            convert: null,
+            convert: UserGetSearchResponse::class,
         );
     }
 
@@ -308,6 +314,7 @@ final class UsersRawService implements UsersRawContract
      *
      * Get recent tweets by a user
      *
+     * @param string $id X user ID or username
      * @param array{
      *   cursor?: string, includeParentTweet?: bool, includeReplies?: bool
      * }|UserRetrieveTweetsParams $params
@@ -342,11 +349,11 @@ final class UsersRawService implements UsersRawContract
      *
      * Get verified followers
      *
-     * @param string $id User ID or username
+     * @param string $id User ID or username for verified followers
      * @param array{cursor?: string}|UserRetrieveVerifiedFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<UserGetVerifiedFollowersResponse>
      *
      * @throws APIException
      */
@@ -366,7 +373,7 @@ final class UsersRawService implements UsersRawContract
             path: ['x/users/%1$s/verified-followers', $id],
             query: $parsed,
             options: $options,
-            convert: null,
+            convert: UserGetVerifiedFollowersResponse::class,
         );
     }
 }

@@ -18,7 +18,7 @@ interface JoinContract
      * @api
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param string $account X account (@username or account ID)
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -33,7 +33,7 @@ interface JoinContract
      * @api
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param string $account X account (@username or account ID)
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

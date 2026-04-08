@@ -41,7 +41,9 @@ final class DraftsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->drafts->create(text: 'text');
+        $result = $this->client->drafts->create(
+            text: 'AI is the future of productivity'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(DraftNewResponse::class, $result);
@@ -55,9 +57,9 @@ final class DraftsTest extends TestCase
         }
 
         $result = $this->client->drafts->create(
-            text: 'text',
+            text: 'AI is the future of productivity',
             goal: 'engagement',
-            topic: 'topic'
+            topic: 'AI trends',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

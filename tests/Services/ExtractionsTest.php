@@ -69,7 +69,7 @@ final class ExtractionsTest extends TestCase
         }
 
         $result = $this->client->extractions->estimateCost(
-            toolType: 'article_extractor'
+            toolType: 'follower_explorer'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -84,16 +84,16 @@ final class ExtractionsTest extends TestCase
         }
 
         $result = $this->client->extractions->estimateCost(
-            toolType: 'article_extractor',
-            advancedQuery: 'advancedQuery',
-            exactPhrase: 'exactPhrase',
-            excludeWords: 'excludeWords',
-            searchQuery: 'searchQuery',
-            targetCommunityID: 'targetCommunityId',
-            targetListID: 'targetListId',
-            targetSpaceID: 'targetSpaceId',
-            targetTweetID: 'targetTweetId',
-            targetUsername: 'targetUsername',
+            toolType: 'follower_explorer',
+            advancedQuery: 'min_faves:100',
+            exactPhrase: 'artificial intelligence',
+            excludeWords: 'spam',
+            searchQuery: 'AI trends 2025',
+            targetCommunityID: '1500000000000000000',
+            targetListID: '1234567890',
+            targetSpaceID: '1vOGwMdBqpwGB',
+            targetTweetID: '1234567890',
+            targetUsername: 'elonmusk',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -120,7 +120,7 @@ final class ExtractionsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->extractions->run(toolType: 'article_extractor');
+        $result = $this->client->extractions->run(toolType: 'follower_explorer');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(ExtractionRunResponse::class, $result);
@@ -134,16 +134,16 @@ final class ExtractionsTest extends TestCase
         }
 
         $result = $this->client->extractions->run(
-            toolType: 'article_extractor',
-            advancedQuery: 'advancedQuery',
-            exactPhrase: 'exactPhrase',
-            excludeWords: 'excludeWords',
-            searchQuery: 'searchQuery',
-            targetCommunityID: 'targetCommunityId',
-            targetListID: 'targetListId',
-            targetSpaceID: 'targetSpaceId',
-            targetTweetID: 'targetTweetId',
-            targetUsername: 'targetUsername',
+            toolType: 'follower_explorer',
+            advancedQuery: 'min_faves:100',
+            exactPhrase: 'artificial intelligence',
+            excludeWords: 'spam',
+            searchQuery: 'AI trends 2025',
+            targetCommunityID: '1500000000000000000',
+            targetListID: '1234567890',
+            targetSpaceID: '1vOGwMdBqpwGB',
+            targetTweetID: '1234567890',
+            targetUsername: 'elonmusk',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

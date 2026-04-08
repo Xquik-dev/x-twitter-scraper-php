@@ -44,8 +44,8 @@ final class MonitorsTest extends TestCase
         }
 
         $result = $this->client->monitors->create(
-            eventTypes: ['tweet.new'],
-            username: 'username'
+            eventTypes: ['tweet.new', 'follower.gained'],
+            username: 'elonmusk'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -60,8 +60,8 @@ final class MonitorsTest extends TestCase
         }
 
         $result = $this->client->monitors->create(
-            eventTypes: ['tweet.new'],
-            username: 'username'
+            eventTypes: ['tweet.new', 'follower.gained'],
+            username: 'elonmusk'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

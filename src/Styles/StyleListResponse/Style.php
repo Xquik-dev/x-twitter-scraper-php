@@ -9,6 +9,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * Style profile summary with tweet count and ownership flag.
+ *
  * @phpstan-type StyleShape = array{
  *   fetchedAt: \DateTimeInterface,
  *   isOwnAccount: bool,

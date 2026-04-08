@@ -23,7 +23,7 @@ final class TweetGetRetweetersParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for retweeters.
      */
     #[Optional]
     public ?string $cursor;
@@ -48,7 +48,7 @@ final class TweetGetRetweetersParams implements BaseModel
     }
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for retweeters.
      */
     public function withCursor(string $cursor): self
     {

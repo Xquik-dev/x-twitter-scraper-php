@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\X\Communities\Tweets\TweetListResponse;
 
 /**
  * @internal
@@ -41,7 +42,7 @@ final class TweetsTest extends TestCase
         $result = $this->client->x->communities->tweets->list(q: 'q');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(TweetListResponse::class, $result);
     }
 
     #[Test]
@@ -58,6 +59,6 @@ final class TweetsTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(TweetListResponse::class, $result);
     }
 }

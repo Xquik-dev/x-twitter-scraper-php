@@ -55,8 +55,8 @@ final class DmTest extends TestCase
 
         $result = $this->client->x->dm->send(
             'userId',
-            account: 'account',
-            text: 'text'
+            account: '@elonmusk',
+            text: 'Example text content'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -72,10 +72,10 @@ final class DmTest extends TestCase
 
         $result = $this->client->x->dm->send(
             'userId',
-            account: 'account',
-            text: 'text',
-            mediaIDs: ['string'],
-            replyToMessageID: 'reply_to_message_id',
+            account: '@elonmusk',
+            text: 'Example text content',
+            mediaIDs: ['1234567890123456789'],
+            replyToMessageID: '1234567890123456789',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

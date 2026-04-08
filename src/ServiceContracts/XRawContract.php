@@ -12,6 +12,7 @@ use XTwitterScraper\X\XGetHomeTimelineParams;
 use XTwitterScraper\X\XGetHomeTimelineResponse;
 use XTwitterScraper\X\XGetNotificationsParams;
 use XTwitterScraper\X\XGetNotificationsResponse;
+use XTwitterScraper\X\XGetTrendsResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -21,6 +22,7 @@ interface XRawContract
     /**
      * @api
      *
+     * @param string $tweetID Tweet ID of the article
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<XGetArticleResponse>
@@ -67,7 +69,7 @@ interface XRawContract
      *
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<XGetTrendsResponse>
      *
      * @throws APIException
      */

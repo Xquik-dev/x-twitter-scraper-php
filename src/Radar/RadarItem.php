@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * Trending topic with score, category, source, and region.
+ *
  * @phpstan-type RadarItemShape = array{
  *   category: string,
  *   publishedAt: \DateTimeInterface,

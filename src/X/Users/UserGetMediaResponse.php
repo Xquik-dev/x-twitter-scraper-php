@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\Users\UserGetMediaResponse\Tweet;
 
 /**
+ * Paginated list of tweets with cursor-based navigation.
+ *
  * @phpstan-import-type TweetShape from \XTwitterScraper\X\Users\UserGetMediaResponse\Tweet
  *
  * @phpstan-type UserGetMediaResponseShape = array{

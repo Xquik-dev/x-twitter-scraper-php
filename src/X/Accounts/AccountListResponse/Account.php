@@ -9,6 +9,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * Linked X account summary with username and connection status.
+ *
  * @phpstan-type AccountShape = array{
  *   id: string,
  *   createdAt: \DateTimeInterface,

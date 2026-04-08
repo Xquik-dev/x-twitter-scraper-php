@@ -23,9 +23,15 @@ final class StyleCompareResponse implements BaseModel
     /** @use SdkModel<StyleCompareResponseShape> */
     use SdkModel;
 
+    /**
+     * Full style profile with sampled tweets used for tone analysis.
+     */
     #[Required]
     public Style1 $style1;
 
+    /**
+     * Full style profile with sampled tweets used for tone analysis.
+     */
     #[Required]
     public Style2 $style2;
 
@@ -69,6 +75,8 @@ final class StyleCompareResponse implements BaseModel
     }
 
     /**
+     * Full style profile with sampled tweets used for tone analysis.
+     *
      * @param Style1|Style1Shape $style1
      */
     public function withStyle1(Style1|array $style1): self
@@ -80,6 +88,8 @@ final class StyleCompareResponse implements BaseModel
     }
 
     /**
+     * Full style profile with sampled tweets used for tone analysis.
+     *
      * @param Style2|Style2Shape $style2
      */
     public function withStyle2(Style2|array $style2): self

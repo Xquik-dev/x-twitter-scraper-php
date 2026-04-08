@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * Saved tweet draft with optional topic and goal.
+ *
  * @phpstan-type DraftShape = array{
  *   id: string,
  *   createdAt: \DateTimeInterface,

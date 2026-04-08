@@ -7,10 +7,16 @@ namespace XTwitterScraper\ServiceContracts\X;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
+use XTwitterScraper\X\Users\UserGetBatchResponse;
+use XTwitterScraper\X\Users\UserGetFollowersResponse;
 use XTwitterScraper\X\Users\UserGetFollowersYouKnowResponse;
+use XTwitterScraper\X\Users\UserGetFollowingResponse;
 use XTwitterScraper\X\Users\UserGetLikesResponse;
 use XTwitterScraper\X\Users\UserGetMediaResponse;
+use XTwitterScraper\X\Users\UserGetMentionsResponse;
+use XTwitterScraper\X\Users\UserGetSearchResponse;
 use XTwitterScraper\X\Users\UserGetTweetsResponse;
+use XTwitterScraper\X\Users\UserGetVerifiedFollowersResponse;
 use XTwitterScraper\X\Users\UserRetrieveBatchParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersYouKnowParams;
@@ -33,7 +39,7 @@ interface UsersRawContract
      * @param array<string,mixed>|UserRetrieveBatchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<UserGetBatchResponse>
      *
      * @throws APIException
      */
@@ -49,7 +55,7 @@ interface UsersRawContract
      * @param array<string,mixed>|UserRetrieveFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<UserGetFollowersResponse>
      *
      * @throws APIException
      */
@@ -62,7 +68,7 @@ interface UsersRawContract
     /**
      * @api
      *
-     * @param string $id User ID
+     * @param string $id User ID for followers-you-know lookup
      * @param array<string,mixed>|UserRetrieveFollowersYouKnowParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -79,11 +85,11 @@ interface UsersRawContract
     /**
      * @api
      *
-     * @param string $id User ID or username
+     * @param string $id User ID or username for following lookup
      * @param array<string,mixed>|UserRetrieveFollowingParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<UserGetFollowingResponse>
      *
      * @throws APIException
      */
@@ -113,7 +119,7 @@ interface UsersRawContract
     /**
      * @api
      *
-     * @param string $id User ID
+     * @param string $id User ID for media lookup
      * @param array<string,mixed>|UserRetrieveMediaParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -130,11 +136,11 @@ interface UsersRawContract
     /**
      * @api
      *
-     * @param string $id User ID or username
+     * @param string $id User ID or username for mentions lookup
      * @param array<string,mixed>|UserRetrieveMentionsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<UserGetMentionsResponse>
      *
      * @throws APIException
      */
@@ -150,7 +156,7 @@ interface UsersRawContract
      * @param array<string,mixed>|UserRetrieveSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<UserGetSearchResponse>
      *
      * @throws APIException
      */
@@ -162,6 +168,7 @@ interface UsersRawContract
     /**
      * @api
      *
+     * @param string $id X user ID or username
      * @param array<string,mixed>|UserRetrieveTweetsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -178,11 +185,11 @@ interface UsersRawContract
     /**
      * @api
      *
-     * @param string $id User ID or username
+     * @param string $id User ID or username for verified followers
      * @param array<string,mixed>|UserRetrieveVerifiedFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<UserGetVerifiedFollowersResponse>
      *
      * @throws APIException
      */

@@ -18,7 +18,7 @@ interface DmContract
      * @api
      *
      * @param string $userID Target user ID
-     * @param string $cursor Pagination cursor from previous response
+     * @param string $cursor Pagination cursor for DM history
      * @param string $maxID Legacy pagination cursor (backward compat)
      * @param RequestOpts|null $requestOptions
      *
@@ -35,7 +35,7 @@ interface DmContract
      * @api
      *
      * @param string $userID Recipient user ID
-     * @param string $account X account (@username or account ID)
+     * @param string $account X account (@username or ID) sending the DM
      * @param list<string> $mediaIDs
      * @param RequestOpts|null $requestOptions
      *

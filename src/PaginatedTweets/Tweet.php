@@ -11,6 +11,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\PaginatedTweets\Tweet\Author;
 
 /**
+ * Tweet returned from search results with inline author info.
+ *
  * @phpstan-import-type AuthorShape from \XTwitterScraper\PaginatedTweets\Tweet\Author
  *
  * @phpstan-type TweetShape = array{
@@ -48,7 +50,7 @@ final class Tweet implements BaseModel
     public ?string $createdAt;
 
     /**
-     * Whether this is a Note Tweet (long-form post, up to 25,000 characters).
+     * True for Note Tweets (long-form content, up to 25,000 characters).
      */
     #[Optional]
     public ?bool $isNoteTweet;
@@ -169,7 +171,7 @@ final class Tweet implements BaseModel
     }
 
     /**
-     * Whether this is a Note Tweet (long-form post, up to 25,000 characters).
+     * True for Note Tweets (long-form content, up to 25,000 characters).
      */
     public function withIsNoteTweet(bool $isNoteTweet): self
     {

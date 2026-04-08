@@ -13,6 +13,7 @@ use XTwitterScraper\X\Tweets\TweetGetQuotesResponse;
 use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersResponse;
 use XTwitterScraper\X\Tweets\TweetGetThreadResponse;
+use XTwitterScraper\X\Tweets\TweetListResponse;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
 use XTwitterScraper\X\Tweets\TweetSearchResponse;
 
@@ -46,8 +47,8 @@ final class TweetsTest extends TestCase
         }
 
         $result = $this->client->x->tweets->create(
-            account: 'account',
-            text: 'text'
+            account: '@elonmusk',
+            text: 'Just launched our new feature!'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -62,13 +63,13 @@ final class TweetsTest extends TestCase
         }
 
         $result = $this->client->x->tweets->create(
-            account: 'account',
-            text: 'text',
-            attachmentURL: 'attachment_url',
-            communityID: 'community_id',
-            isNoteTweet: true,
-            mediaIDs: ['string'],
-            replyToTweetID: 'reply_to_tweet_id',
+            account: '@elonmusk',
+            text: 'Just launched our new feature!',
+            attachmentURL: 'https://x.com/elonmusk/status/1234567890',
+            communityID: '1500000000000000000',
+            isNoteTweet: false,
+            mediaIDs: ['1234567890123456789'],
+            replyToTweetID: '1234567890',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -85,7 +86,7 @@ final class TweetsTest extends TestCase
         $result = $this->client->x->tweets->list(ids: 'ids');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(TweetListResponse::class, $result);
     }
 
     #[Test]
@@ -98,7 +99,7 @@ final class TweetsTest extends TestCase
         $result = $this->client->x->tweets->list(ids: 'ids');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(TweetListResponse::class, $result);
     }
 
     #[Test]

@@ -54,7 +54,7 @@ final class StylesTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->styles->analyze(username: 'username');
+        $result = $this->client->styles->analyze(username: 'elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(StyleAnalyzeResponse::class, $result);
@@ -67,7 +67,7 @@ final class StylesTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->styles->analyze(username: 'username');
+        $result = $this->client->styles->analyze(username: 'elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(StyleAnalyzeResponse::class, $result);

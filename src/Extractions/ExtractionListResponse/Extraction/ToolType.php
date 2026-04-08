@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Extractions\ExtractionListResponse\Extraction;
 
+/**
+ * Identifier for the extraction tool used to run a job.
+ */
 enum ToolType: string
 {
     case ARTICLE_EXTRACTOR = 'article_extractor';

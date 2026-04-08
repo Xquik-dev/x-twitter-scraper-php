@@ -9,6 +9,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * Giveaway draw winner with position and backup flag.
+ *
  * @phpstan-type WinnerShape = array{
  *   authorUsername: string, isBackup: bool, position: int, tweetID: string
  * }
