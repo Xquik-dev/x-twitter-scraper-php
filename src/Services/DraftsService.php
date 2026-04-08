@@ -86,6 +86,7 @@ final class DraftsService implements DraftsContract
      * List saved drafts
      *
      * @param string $afterCursor Cursor for pagination
+     * @param int $limit Maximum number of items to return (1-100, default 50)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

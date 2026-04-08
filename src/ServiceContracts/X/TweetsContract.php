@@ -11,6 +11,7 @@ use XTwitterScraper\X\Tweets\TweetGetQuotesResponse;
 use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersResponse;
 use XTwitterScraper\X\Tweets\TweetGetThreadResponse;
+use XTwitterScraper\X\Tweets\TweetListResponse;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
 use XTwitterScraper\X\Tweets\TweetSearchParams\QueryType;
 use XTwitterScraper\X\Tweets\TweetSearchResponse;
@@ -51,13 +52,13 @@ interface TweetsContract
     public function list(
         string $ids,
         RequestOptions|array|null $requestOptions = null
-    ): mixed;
+    ): TweetListResponse;
 
     /**
      * @api
      *
-     * @param string $id Tweet ID
-     * @param string $cursor Pagination cursor from previous response
+     * @param string $id Tweet ID to get favoriters
+     * @param string $cursor Pagination cursor for favoriters
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -71,11 +72,11 @@ interface TweetsContract
     /**
      * @api
      *
-     * @param string $id Tweet ID
-     * @param string $cursor Pagination cursor
-     * @param bool $includeReplies Include replies (default false)
-     * @param string $sinceTime Unix timestamp - filter after
-     * @param string $untilTime Unix timestamp - filter before
+     * @param string $id Tweet ID to get quotes
+     * @param string $cursor Pagination cursor for quote tweets
+     * @param bool $includeReplies Include reply quotes (default false)
+     * @param string $sinceTime Unix timestamp - return quotes posted after this time
+     * @param string $untilTime Unix timestamp - return quotes posted before this time
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -92,10 +93,10 @@ interface TweetsContract
     /**
      * @api
      *
-     * @param string $id Tweet ID
-     * @param string $cursor Pagination cursor
-     * @param string $sinceTime Unix timestamp - filter after
-     * @param string $untilTime Unix timestamp - filter before
+     * @param string $id Tweet ID to get replies
+     * @param string $cursor Pagination cursor for tweet replies
+     * @param string $sinceTime Unix timestamp - return replies posted after this time
+     * @param string $untilTime Unix timestamp - return replies posted before this time
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -111,8 +112,8 @@ interface TweetsContract
     /**
      * @api
      *
-     * @param string $id Tweet ID
-     * @param string $cursor Pagination cursor
+     * @param string $id Tweet ID to get retweeters
+     * @param string $cursor Pagination cursor for retweeters
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -126,8 +127,8 @@ interface TweetsContract
     /**
      * @api
      *
-     * @param string $id Tweet ID
-     * @param string $cursor Pagination cursor
+     * @param string $id Tweet ID to get thread context
+     * @param string $cursor Pagination cursor for thread tweets
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

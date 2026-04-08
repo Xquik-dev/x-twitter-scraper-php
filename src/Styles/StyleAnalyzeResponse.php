@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\Styles\StyleAnalyzeResponse\Tweet;
 
 /**
+ * Full style profile with sampled tweets used for tone analysis.
+ *
  * @phpstan-import-type TweetShape from \XTwitterScraper\Styles\StyleAnalyzeResponse\Tweet
  *
  * @phpstan-type StyleAnalyzeResponseShape = array{

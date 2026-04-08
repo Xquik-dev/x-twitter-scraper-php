@@ -19,6 +19,7 @@ use XTwitterScraper\X\Tweets\TweetGetRetweetersResponse;
 use XTwitterScraper\X\Tweets\TweetGetThreadParams;
 use XTwitterScraper\X\Tweets\TweetGetThreadResponse;
 use XTwitterScraper\X\Tweets\TweetListParams;
+use XTwitterScraper\X\Tweets\TweetListResponse;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
 use XTwitterScraper\X\Tweets\TweetSearchParams;
 use XTwitterScraper\X\Tweets\TweetSearchResponse;
@@ -49,7 +50,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetListParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<TweetListResponse>
      *
      * @throws APIException
      */
@@ -61,7 +62,7 @@ interface TweetsRawContract
     /**
      * @api
      *
-     * @param string $id Tweet ID
+     * @param string $id Tweet ID to get favoriters
      * @param array<string,mixed>|TweetGetFavoritersParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -78,7 +79,7 @@ interface TweetsRawContract
     /**
      * @api
      *
-     * @param string $id Tweet ID
+     * @param string $id Tweet ID to get quotes
      * @param array<string,mixed>|TweetGetQuotesParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -95,7 +96,7 @@ interface TweetsRawContract
     /**
      * @api
      *
-     * @param string $id Tweet ID
+     * @param string $id Tweet ID to get replies
      * @param array<string,mixed>|TweetGetRepliesParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -112,7 +113,7 @@ interface TweetsRawContract
     /**
      * @api
      *
-     * @param string $id Tweet ID
+     * @param string $id Tweet ID to get retweeters
      * @param array<string,mixed>|TweetGetRetweetersParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -129,7 +130,7 @@ interface TweetsRawContract
     /**
      * @api
      *
-     * @param string $id Tweet ID
+     * @param string $id Tweet ID to get thread context
      * @param array<string,mixed>|TweetGetThreadParams $params
      * @param RequestOpts|null $requestOptions
      *

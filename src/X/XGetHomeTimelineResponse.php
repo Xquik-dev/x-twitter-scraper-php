@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\XGetHomeTimelineResponse\Tweet;
 
 /**
+ * Paginated list of tweets with cursor-based navigation.
+ *
  * @phpstan-import-type TweetShape from \XTwitterScraper\X\XGetHomeTimelineResponse\Tweet
  *
  * @phpstan-type XGetHomeTimelineResponseShape = array{

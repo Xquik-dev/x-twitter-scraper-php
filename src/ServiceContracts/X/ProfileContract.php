@@ -18,7 +18,7 @@ interface ProfileContract
     /**
      * @api
      *
-     * @param string $account X account (@username or account ID)
+     * @param string $account X account (@username or ID) to update profile
      * @param string $description Bio description
      * @param string $name Display name
      * @param string $url Website URL
@@ -38,7 +38,7 @@ interface ProfileContract
     /**
      * @api
      *
-     * @param string $account X account (@username or account ID)
+     * @param string $account X account (@username or ID) for avatar update
      * @param string $file Avatar image (max 716KB)
      * @param RequestOpts|null $requestOptions
      *
@@ -53,7 +53,7 @@ interface ProfileContract
     /**
      * @api
      *
-     * @param string $account X account (@username or account ID)
+     * @param string $account X account (@username or ID) for banner update
      * @param string $file Banner image (max 2MB)
      * @param RequestOpts|null $requestOptions
      *

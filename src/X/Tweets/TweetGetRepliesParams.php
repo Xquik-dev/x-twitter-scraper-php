@@ -25,19 +25,19 @@ final class TweetGetRepliesParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for tweet replies.
      */
     #[Optional]
     public ?string $cursor;
 
     /**
-     * Unix timestamp - filter after.
+     * Unix timestamp - return replies posted after this time.
      */
     #[Optional]
     public ?string $sinceTime;
 
     /**
-     * Unix timestamp - filter before.
+     * Unix timestamp - return replies posted before this time.
      */
     #[Optional]
     public ?string $untilTime;
@@ -67,7 +67,7 @@ final class TweetGetRepliesParams implements BaseModel
     }
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for tweet replies.
      */
     public function withCursor(string $cursor): self
     {
@@ -78,7 +78,7 @@ final class TweetGetRepliesParams implements BaseModel
     }
 
     /**
-     * Unix timestamp - filter after.
+     * Unix timestamp - return replies posted after this time.
      */
     public function withSinceTime(string $sinceTime): self
     {
@@ -89,7 +89,7 @@ final class TweetGetRepliesParams implements BaseModel
     }
 
     /**
-     * Unix timestamp - filter before.
+     * Unix timestamp - return replies posted before this time.
      */
     public function withUntilTime(string $untilTime): self
     {

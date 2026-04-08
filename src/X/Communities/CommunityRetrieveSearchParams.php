@@ -32,7 +32,7 @@ final class CommunityRetrieveSearchParams implements BaseModel
     public string $q;
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for community search.
      */
     #[Optional]
     public ?string $cursor;
@@ -94,7 +94,7 @@ final class CommunityRetrieveSearchParams implements BaseModel
     }
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for community search.
      */
     public function withCursor(string $cursor): self
     {

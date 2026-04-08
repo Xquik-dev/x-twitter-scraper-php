@@ -63,7 +63,7 @@ final class MediaService implements MediaContract
      *
      * Upload media
      *
-     * @param string $account X account (@username or account ID)
+     * @param string $account X account (@username or ID) uploading media
      * @param string $file Media file to upload
      * @param RequestOpts|null $requestOptions
      *

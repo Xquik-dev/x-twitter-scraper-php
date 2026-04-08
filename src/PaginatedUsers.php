@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\PaginatedUsers\User;
 
 /**
+ * Paginated list of user profiles with cursor-based navigation.
+ *
  * @phpstan-import-type UserShape from \XTwitterScraper\PaginatedUsers\User
  *
  * @phpstan-type PaginatedUsersShape = array{

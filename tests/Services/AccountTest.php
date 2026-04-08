@@ -54,7 +54,7 @@ final class AccountTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->account->setXUsername(username: 'username');
+        $result = $this->client->account->setXUsername(username: 'elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(AccountSetXUsernameResponse::class, $result);
@@ -67,7 +67,7 @@ final class AccountTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->account->setXUsername(username: 'username');
+        $result = $this->client->account->setXUsername(username: 'elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(AccountSetXUsernameResponse::class, $result);

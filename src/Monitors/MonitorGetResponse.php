@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\Monitors\MonitorGetResponse\EventType;
 
 /**
+ * Account monitor that tracks activity for a given X user.
+ *
  * @phpstan-type MonitorGetResponseShape = array{
  *   id: string,
  *   createdAt: \DateTimeInterface,
@@ -30,7 +32,11 @@ final class MonitorGetResponse implements BaseModel
     #[Required]
     public \DateTimeInterface $createdAt;
 
-    /** @var list<value-of<EventType>> $eventTypes */
+    /**
+     * Array of event types to subscribe to.
+     *
+     * @var list<value-of<EventType>> $eventTypes
+     */
     #[Required(list: EventType::class)]
     public array $eventTypes;
 
@@ -119,6 +125,8 @@ final class MonitorGetResponse implements BaseModel
     }
 
     /**
+     * Array of event types to subscribe to.
+     *
      * @param list<EventType|value-of<EventType>> $eventTypes
      */
     public function withEventTypes(array $eventTypes): self

@@ -30,19 +30,30 @@ final class ExtractionListParams implements BaseModel
     use SdkParams;
 
     /**
-     * Cursor for pagination.
+     * Cursor for keyset pagination.
      */
     #[Optional]
     public ?string $after;
 
+    /**
+     * Maximum number of items to return (1-100, default 50).
+     */
     #[Optional]
     public ?int $limit;
 
-    /** @var value-of<Status>|null $status */
+    /**
+     * Filter by job status.
+     *
+     * @var value-of<Status>|null $status
+     */
     #[Optional(enum: Status::class)]
     public ?string $status;
 
-    /** @var value-of<ToolType>|null $toolType */
+    /**
+     * Filter by extraction tool type.
+     *
+     * @var value-of<ToolType>|null $toolType
+     */
     #[Optional(enum: ToolType::class)]
     public ?string $toolType;
 
@@ -76,7 +87,7 @@ final class ExtractionListParams implements BaseModel
     }
 
     /**
-     * Cursor for pagination.
+     * Cursor for keyset pagination.
      */
     public function withAfter(string $after): self
     {
@@ -86,6 +97,9 @@ final class ExtractionListParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Maximum number of items to return (1-100, default 50).
+     */
     public function withLimit(int $limit): self
     {
         $self = clone $this;
@@ -95,6 +109,8 @@ final class ExtractionListParams implements BaseModel
     }
 
     /**
+     * Filter by job status.
+     *
      * @param Status|value-of<Status> $status
      */
     public function withStatus(Status|string $status): self
@@ -106,6 +122,8 @@ final class ExtractionListParams implements BaseModel
     }
 
     /**
+     * Filter by extraction tool type.
+     *
      * @param ToolType|value-of<ToolType> $toolType
      */
     public function withToolType(ToolType|string $toolType): self

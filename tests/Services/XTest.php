@@ -11,6 +11,7 @@ use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\XGetArticleResponse;
 use XTwitterScraper\X\XGetHomeTimelineResponse;
 use XTwitterScraper\X\XGetNotificationsResponse;
+use XTwitterScraper\X\XGetTrendsResponse;
 
 /**
  * @internal
@@ -83,6 +84,6 @@ final class XTest extends TestCase
         $result = $this->client->x->getTrends();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(XGetTrendsResponse::class, $result);
     }
 }

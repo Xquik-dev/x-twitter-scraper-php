@@ -12,6 +12,8 @@ use XTwitterScraper\Integrations\IntegrationNewResponse\EventType;
 use XTwitterScraper\Integrations\IntegrationNewResponse\Type;
 
 /**
+ * Third-party integration (e.g. Telegram) subscribed to monitor events.
+ *
  * @phpstan-type IntegrationNewResponseShape = array{
  *   id: string,
  *   config: array<string,mixed>,
@@ -45,7 +47,11 @@ final class IntegrationNewResponse implements BaseModel
     #[Required]
     public \DateTimeInterface $createdAt;
 
-    /** @var list<value-of<EventType>> $eventTypes */
+    /**
+     * Array of event types to subscribe to.
+     *
+     * @var list<value-of<EventType>> $eventTypes
+     */
     #[Required(list: EventType::class)]
     public array $eventTypes;
 
@@ -181,6 +187,8 @@ final class IntegrationNewResponse implements BaseModel
     }
 
     /**
+     * Array of event types to subscribe to.
+     *
      * @param list<EventType|value-of<EventType>> $eventTypes
      */
     public function withEventTypes(array $eventTypes): self

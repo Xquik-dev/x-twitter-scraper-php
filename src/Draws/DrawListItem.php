@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * Giveaway draw summary with entry counts and status.
+ *
  * @phpstan-type DrawListItemShape = array{
  *   id: string,
  *   createdAt: \DateTimeInterface,

@@ -24,6 +24,9 @@ final class DrawGetResponse implements BaseModel
     /** @use SdkModel<DrawGetResponseShape> */
     use SdkModel;
 
+    /**
+     * Full giveaway draw with tweet metrics, entries, and timing.
+     */
     #[Required]
     public Draw $draw;
 
@@ -69,6 +72,8 @@ final class DrawGetResponse implements BaseModel
     }
 
     /**
+     * Full giveaway draw with tweet metrics, entries, and timing.
+     *
      * @param Draw|DrawShape $draw
      */
     public function withDraw(Draw|array $draw): self

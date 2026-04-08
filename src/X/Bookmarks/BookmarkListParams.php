@@ -25,7 +25,7 @@ final class BookmarkListParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for bookmarks.
      */
     #[Optional]
     public ?string $cursor;
@@ -59,7 +59,7 @@ final class BookmarkListParams implements BaseModel
     }
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for bookmarks.
      */
     public function withCursor(string $cursor): self
     {

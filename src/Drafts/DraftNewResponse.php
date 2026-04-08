@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * Full tweet draft including update timestamp.
+ *
  * @phpstan-type DraftNewResponseShape = array{
  *   id: string,
  *   createdAt: \DateTimeInterface,

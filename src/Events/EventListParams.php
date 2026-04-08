@@ -29,18 +29,28 @@ final class EventListParams implements BaseModel
     use SdkParams;
 
     /**
-     * Cursor for pagination.
+     * Cursor for keyset pagination.
      */
     #[Optional]
     public ?string $after;
 
-    /** @var value-of<EventType>|null $eventType */
+    /**
+     * Filter events by type.
+     *
+     * @var value-of<EventType>|null $eventType
+     */
     #[Optional(enum: EventType::class)]
     public ?string $eventType;
 
+    /**
+     * Maximum number of items to return (1-100, default 50).
+     */
     #[Optional]
     public ?int $limit;
 
+    /**
+     * Filter events by monitor ID.
+     */
     #[Optional]
     public ?string $monitorID;
 
@@ -73,7 +83,7 @@ final class EventListParams implements BaseModel
     }
 
     /**
-     * Cursor for pagination.
+     * Cursor for keyset pagination.
      */
     public function withAfter(string $after): self
     {
@@ -84,6 +94,8 @@ final class EventListParams implements BaseModel
     }
 
     /**
+     * Filter events by type.
+     *
      * @param EventType|value-of<EventType> $eventType
      */
     public function withEventType(EventType|string $eventType): self
@@ -94,6 +106,9 @@ final class EventListParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Maximum number of items to return (1-100, default 50).
+     */
     public function withLimit(int $limit): self
     {
         $self = clone $this;
@@ -102,6 +117,9 @@ final class EventListParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Filter events by monitor ID.
+     */
     public function withMonitorID(string $monitorID): self
     {
         $self = clone $this;

@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * Full X account details including proxy, cookies, and update timestamp.
+ *
  * @phpstan-type AccountGetResponseShape = array{
  *   id: string,
  *   createdAt: \DateTimeInterface,

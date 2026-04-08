@@ -11,6 +11,9 @@ use XTwitterScraper\X\Communities\CommunityCreateParams;
 use XTwitterScraper\X\Communities\CommunityDeleteParams;
 use XTwitterScraper\X\Communities\CommunityDeleteResponse;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse;
+use XTwitterScraper\X\Communities\CommunityGetMembersResponse;
+use XTwitterScraper\X\Communities\CommunityGetModeratorsResponse;
+use XTwitterScraper\X\Communities\CommunityGetSearchResponse;
 use XTwitterScraper\X\Communities\CommunityNewResponse;
 use XTwitterScraper\X\Communities\CommunityRetrieveMembersParams;
 use XTwitterScraper\X\Communities\CommunityRetrieveModeratorsParams;
@@ -71,11 +74,11 @@ interface CommunitiesRawContract
     /**
      * @api
      *
-     * @param string $id Community ID
+     * @param string $id Community ID for member lookup
      * @param array<string,mixed>|CommunityRetrieveMembersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<CommunityGetMembersResponse>
      *
      * @throws APIException
      */
@@ -88,11 +91,11 @@ interface CommunitiesRawContract
     /**
      * @api
      *
-     * @param string $id Community ID
+     * @param string $id Community ID for moderator lookup
      * @param array<string,mixed>|CommunityRetrieveModeratorsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<CommunityGetModeratorsResponse>
      *
      * @throws APIException
      */
@@ -108,7 +111,7 @@ interface CommunitiesRawContract
      * @param array<string,mixed>|CommunityRetrieveSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<CommunityGetSearchResponse>
      *
      * @throws APIException
      */

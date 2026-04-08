@@ -27,6 +27,9 @@ final class XGetArticleResponse implements BaseModel
     #[Required]
     public Article $article;
 
+    /**
+     * Author of a tweet with follower count and verification status.
+     */
     #[Optional]
     public ?Author $author;
 
@@ -82,6 +85,8 @@ final class XGetArticleResponse implements BaseModel
     }
 
     /**
+     * Author of a tweet with follower count and verification status.
+     *
      * @param Author|AuthorShape $author
      */
     public function withAuthor(Author|array $author): self

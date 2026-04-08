@@ -38,7 +38,11 @@ final class IntegrationCreateParams implements BaseModel
     #[Required]
     public Config $config;
 
-    /** @var list<value-of<EventType>> $eventTypes */
+    /**
+     * Array of event types to subscribe to.
+     *
+     * @var list<value-of<EventType>> $eventTypes
+     */
     #[Required(list: EventType::class)]
     public array $eventTypes;
 
@@ -113,6 +117,8 @@ final class IntegrationCreateParams implements BaseModel
     }
 
     /**
+     * Array of event types to subscribe to.
+     *
      * @param list<EventType|value-of<EventType>> $eventTypes
      */
     public function withEventTypes(array $eventTypes): self

@@ -27,7 +27,7 @@ final class UserRetrieveTweetsParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for user tweets.
      */
     #[Optional]
     public ?string $cursor;
@@ -69,7 +69,7 @@ final class UserRetrieveTweetsParams implements BaseModel
     }
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for user tweets.
      */
     public function withCursor(string $cursor): self
     {

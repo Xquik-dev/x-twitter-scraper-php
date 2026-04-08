@@ -53,7 +53,7 @@ final class CreditsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->credits->topupBalance(amount: 0);
+        $result = $this->client->credits->topupBalance(amount: 10000);
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(CreditTopupBalanceResponse::class, $result);
@@ -66,7 +66,7 @@ final class CreditsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->credits->topupBalance(amount: 0);
+        $result = $this->client->credits->topupBalance(amount: 10000);
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(CreditTopupBalanceResponse::class, $result);

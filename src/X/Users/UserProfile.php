@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * X user profile with bio, follower counts, and verification status.
+ *
  * @phpstan-type UserProfileShape = array{
  *   id: string,
  *   name: string,

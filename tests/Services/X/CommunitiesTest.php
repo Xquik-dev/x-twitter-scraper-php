@@ -10,6 +10,9 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\Communities\CommunityDeleteResponse;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse;
+use XTwitterScraper\X\Communities\CommunityGetMembersResponse;
+use XTwitterScraper\X\Communities\CommunityGetModeratorsResponse;
+use XTwitterScraper\X\Communities\CommunityGetSearchResponse;
 use XTwitterScraper\X\Communities\CommunityNewResponse;
 
 /**
@@ -42,8 +45,8 @@ final class CommunitiesTest extends TestCase
         }
 
         $result = $this->client->x->communities->create(
-            account: 'account',
-            name: 'name'
+            account: '@elonmusk',
+            name: 'Example Name'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -58,9 +61,9 @@ final class CommunitiesTest extends TestCase
         }
 
         $result = $this->client->x->communities->create(
-            account: 'account',
-            name: 'name',
-            description: 'description'
+            account: '@elonmusk',
+            name: 'Example Name',
+            description: 'A community for Tesla enthusiasts',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -76,8 +79,8 @@ final class CommunitiesTest extends TestCase
 
         $result = $this->client->x->communities->delete(
             'id',
-            account: 'account',
-            communityName: 'community_name'
+            account: '@elonmusk',
+            communityName: 'Tesla Fans'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -93,8 +96,8 @@ final class CommunitiesTest extends TestCase
 
         $result = $this->client->x->communities->delete(
             'id',
-            account: 'account',
-            communityName: 'community_name'
+            account: '@elonmusk',
+            communityName: 'Tesla Fans'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -124,7 +127,7 @@ final class CommunitiesTest extends TestCase
         $result = $this->client->x->communities->retrieveMembers('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(CommunityGetMembersResponse::class, $result);
     }
 
     #[Test]
@@ -137,7 +140,7 @@ final class CommunitiesTest extends TestCase
         $result = $this->client->x->communities->retrieveModerators('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(CommunityGetModeratorsResponse::class, $result);
     }
 
     #[Test]
@@ -150,7 +153,7 @@ final class CommunitiesTest extends TestCase
         $result = $this->client->x->communities->retrieveSearch(q: 'q');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(CommunityGetSearchResponse::class, $result);
     }
 
     #[Test]
@@ -167,6 +170,6 @@ final class CommunitiesTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(CommunityGetSearchResponse::class, $result);
     }
 }

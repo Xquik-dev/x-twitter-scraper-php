@@ -42,7 +42,7 @@ final class JoinTest extends TestCase
 
         $result = $this->client->x->communities->join->create(
             'id',
-            account: 'account'
+            account: '@elonmusk'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -58,7 +58,7 @@ final class JoinTest extends TestCase
 
         $result = $this->client->x->communities->join->create(
             'id',
-            account: 'account'
+            account: '@elonmusk'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -74,7 +74,7 @@ final class JoinTest extends TestCase
 
         $result = $this->client->x->communities->join->deleteAll(
             'id',
-            account: 'account'
+            account: '@elonmusk'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -90,7 +90,7 @@ final class JoinTest extends TestCase
 
         $result = $this->client->x->communities->join->deleteAll(
             'id',
-            account: 'account'
+            account: '@elonmusk'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

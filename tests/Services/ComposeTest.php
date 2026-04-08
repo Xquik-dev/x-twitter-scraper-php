@@ -54,16 +54,16 @@ final class ComposeTest extends TestCase
 
         $result = $this->client->compose->create(
             step: 'compose',
-            additionalContext: 'additionalContext',
-            callToAction: 'callToAction',
-            draft: 'draft',
+            additionalContext: 'https://x.com/elonmusk/status/1234567890',
+            callToAction: 'Follow for more',
+            draft: 'AI is changing everything. Here\'s why.',
             goal: 'engagement',
-            hasLink: true,
-            hasMedia: true,
-            mediaType: 'photo',
-            styleUsername: 'styleUsername',
-            tone: 'tone',
-            topic: 'topic',
+            hasLink: false,
+            hasMedia: false,
+            mediaType: 'none',
+            styleUsername: 'elonmusk',
+            tone: 'professional',
+            topic: 'AI trends in 2025',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

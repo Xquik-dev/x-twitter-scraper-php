@@ -25,7 +25,7 @@ final class UserRetrieveFollowersParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for followers list.
      */
     #[Optional]
     public ?string $cursor;
@@ -59,7 +59,7 @@ final class UserRetrieveFollowersParams implements BaseModel
     }
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for followers list.
      */
     public function withCursor(string $cursor): self
     {

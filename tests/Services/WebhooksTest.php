@@ -45,8 +45,8 @@ final class WebhooksTest extends TestCase
         }
 
         $result = $this->client->webhooks->create(
-            eventTypes: ['tweet.new'],
-            url: 'https://example.com'
+            eventTypes: ['tweet.new', 'follower.gained'],
+            url: 'https://example.com/webhook',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -61,8 +61,8 @@ final class WebhooksTest extends TestCase
         }
 
         $result = $this->client->webhooks->create(
-            eventTypes: ['tweet.new'],
-            url: 'https://example.com'
+            eventTypes: ['tweet.new', 'follower.gained'],
+            url: 'https://example.com/webhook',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

@@ -8,6 +8,7 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Communities\Tweets\TweetListParams;
+use XTwitterScraper\X\Communities\Tweets\TweetListResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -20,7 +21,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetListParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<TweetListResponse>
      *
      * @throws APIException
      */

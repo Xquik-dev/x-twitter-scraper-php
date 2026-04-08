@@ -8,6 +8,9 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\X\Lists\ListGetFollowersResponse;
+use XTwitterScraper\X\Lists\ListGetMembersResponse;
+use XTwitterScraper\X\Lists\ListGetTweetsResponse;
 
 /**
  * @internal
@@ -41,7 +44,7 @@ final class ListsTest extends TestCase
         $result = $this->client->x->lists->retrieveFollowers('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(ListGetFollowersResponse::class, $result);
     }
 
     #[Test]
@@ -54,7 +57,7 @@ final class ListsTest extends TestCase
         $result = $this->client->x->lists->retrieveMembers('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(ListGetMembersResponse::class, $result);
     }
 
     #[Test]
@@ -67,6 +70,6 @@ final class ListsTest extends TestCase
         $result = $this->client->x->lists->retrieveTweets('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(ListGetTweetsResponse::class, $result);
     }
 }

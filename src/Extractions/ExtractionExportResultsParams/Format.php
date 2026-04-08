@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Extractions\ExtractionExportResultsParams;
 
+/**
+ * Export file format.
+ */
 enum Format: string
 {
     case CSV = 'csv';

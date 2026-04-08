@@ -23,7 +23,7 @@ final class UserRetrieveMediaParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for media tweets.
      */
     #[Optional]
     public ?string $cursor;
@@ -48,7 +48,7 @@ final class UserRetrieveMediaParams implements BaseModel
     }
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for media tweets.
      */
     public function withCursor(string $cursor): self
     {

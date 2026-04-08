@@ -44,9 +44,9 @@ final class AccountsTest extends TestCase
         }
 
         $result = $this->client->x->accounts->create(
-            email: 'email',
-            password: 'password',
-            username: 'username'
+            email: 'user@example.com',
+            password: 's3cur3Pa$$w0rd',
+            username: 'elonmusk',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -61,11 +61,11 @@ final class AccountsTest extends TestCase
         }
 
         $result = $this->client->x->accounts->create(
-            email: 'email',
-            password: 'password',
-            username: 'username',
-            proxyCountry: 'proxy_country',
-            totpSecret: 'totp_secret',
+            email: 'user@example.com',
+            password: 's3cur3Pa$$w0rd',
+            username: 'elonmusk',
+            proxyCountry: 'US',
+            totpSecret: 'JBSWY3DPEHPK3PXP',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -118,7 +118,10 @@ final class AccountsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->accounts->reauth('id', password: 'password');
+        $result = $this->client->x->accounts->reauth(
+            'id',
+            password: 'password_value'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(AccountReauthResponse::class, $result);
@@ -133,8 +136,8 @@ final class AccountsTest extends TestCase
 
         $result = $this->client->x->accounts->reauth(
             'id',
-            password: 'password',
-            totpSecret: 'totp_secret'
+            password: 'password_value',
+            totpSecret: 'totp_secret_value'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

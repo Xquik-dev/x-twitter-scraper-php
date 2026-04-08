@@ -46,9 +46,9 @@ final class IntegrationsTest extends TestCase
         }
 
         $result = $this->client->integrations->create(
-            config: ['chatID' => 'chatId'],
-            eventTypes: ['tweet.new'],
-            name: 'name',
+            config: ['chatID' => '-1001234567890'],
+            eventTypes: ['tweet.new', 'follower.gained'],
+            name: 'My Telegram Bot',
             type: 'telegram',
         );
 
@@ -64,9 +64,9 @@ final class IntegrationsTest extends TestCase
         }
 
         $result = $this->client->integrations->create(
-            config: ['chatID' => 'chatId'],
-            eventTypes: ['tweet.new'],
-            name: 'name',
+            config: ['chatID' => '-1001234567890'],
+            eventTypes: ['tweet.new', 'follower.gained'],
+            name: 'My Telegram Bot',
             type: 'telegram',
         );
 

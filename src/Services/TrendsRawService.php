@@ -28,7 +28,7 @@ final class TrendsRawService implements TrendsRawContract
     /**
      * @api
      *
-     * Get trending topics
+     * Get regional trending topics
      *
      * @param array{count?: int, woeid?: int}|TrendListParams $params
      * @param RequestOpts|null $requestOptions

@@ -41,7 +41,7 @@ final class ProfileTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->profile->update(account: 'account');
+        $result = $this->client->x->profile->update(account: '@elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(ProfileUpdateResponse::class, $result);
@@ -55,11 +55,11 @@ final class ProfileTest extends TestCase
         }
 
         $result = $this->client->x->profile->update(
-            account: 'account',
-            description: 'description',
-            location: 'location',
-            name: 'name',
-            url: 'url',
+            account: '@elonmusk',
+            description: 'description_value',
+            location: 'location_value',
+            name: 'Example Name',
+            url: 'https://xquik.com/example',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -74,7 +74,7 @@ final class ProfileTest extends TestCase
         }
 
         $result = $this->client->x->profile->updateAvatar(
-            account: 'account',
+            account: '@elonmusk',
             file: 'file'
         );
 
@@ -90,7 +90,7 @@ final class ProfileTest extends TestCase
         }
 
         $result = $this->client->x->profile->updateAvatar(
-            account: 'account',
+            account: '@elonmusk',
             file: 'file'
         );
 
@@ -106,7 +106,7 @@ final class ProfileTest extends TestCase
         }
 
         $result = $this->client->x->profile->updateBanner(
-            account: 'account',
+            account: '@elonmusk',
             file: 'file'
         );
 
@@ -122,7 +122,7 @@ final class ProfileTest extends TestCase
         }
 
         $result = $this->client->x->profile->updateBanner(
-            account: 'account',
+            account: '@elonmusk',
             file: 'file'
         );
 

@@ -25,7 +25,7 @@ final class UserRetrieveVerifiedFollowersParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for verified followers.
      */
     #[Optional]
     public ?string $cursor;
@@ -50,7 +50,7 @@ final class UserRetrieveVerifiedFollowersParams implements BaseModel
     }
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for verified followers.
      */
     public function withCursor(string $cursor): self
     {

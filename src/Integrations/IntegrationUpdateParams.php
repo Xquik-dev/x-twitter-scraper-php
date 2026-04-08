@@ -31,7 +31,11 @@ final class IntegrationUpdateParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
-    /** @var list<value-of<EventType>>|null $eventTypes */
+    /**
+     * Array of event types to subscribe to.
+     *
+     * @var list<value-of<EventType>>|null $eventTypes
+     */
     #[Optional(list: EventType::class)]
     public ?array $eventTypes;
 
@@ -100,6 +104,8 @@ final class IntegrationUpdateParams implements BaseModel
     }
 
     /**
+     * Array of event types to subscribe to.
+     *
      * @param list<EventType|value-of<EventType>> $eventTypes
      */
     public function withEventTypes(array $eventTypes): self

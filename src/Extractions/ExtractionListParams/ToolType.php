@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Extractions\ExtractionListParams;
 
+/**
+ * Filter by extraction tool type.
+ */
 enum ToolType: string
 {
     case ARTICLE_EXTRACTOR = 'article_extractor';

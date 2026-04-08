@@ -29,7 +29,11 @@ final class WebhookNewResponse implements BaseModel
     #[Required]
     public \DateTimeInterface $createdAt;
 
-    /** @var list<value-of<EventType>> $eventTypes */
+    /**
+     * Array of event types to subscribe to.
+     *
+     * @var list<value-of<EventType>> $eventTypes
+     */
     #[Required(list: EventType::class)]
     public array $eventTypes;
 
@@ -107,6 +111,8 @@ final class WebhookNewResponse implements BaseModel
     }
 
     /**
+     * Array of event types to subscribe to.
+     *
      * @param list<EventType|value-of<EventType>> $eventTypes
      */
     public function withEventTypes(array $eventTypes): self

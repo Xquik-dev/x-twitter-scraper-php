@@ -23,6 +23,7 @@ use XTwitterScraper\X\XGetArticleResponse;
 use XTwitterScraper\X\XGetHomeTimelineResponse;
 use XTwitterScraper\X\XGetNotificationsParams\Type;
 use XTwitterScraper\X\XGetNotificationsResponse;
+use XTwitterScraper\X\XGetTrendsResponse;
 
 /**
  * X data lookups (subscription required).
@@ -109,6 +110,7 @@ final class XService implements XContract
      *
      * Retrieve the full content of an X Article (long-form post) by tweet ID.
      *
+     * @param string $tweetID Tweet ID of the article
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -128,7 +130,7 @@ final class XService implements XContract
      *
      * Get home timeline
      *
-     * @param string $cursor Pagination cursor from previous response
+     * @param string $cursor Pagination cursor for timeline
      * @param string $seenTweetIDs Comma-separated tweet IDs to exclude from results
      * @param RequestOpts|null $requestOptions
      *
@@ -154,7 +156,7 @@ final class XService implements XContract
      *
      * Get notifications
      *
-     * @param string $cursor Pagination cursor from previous response
+     * @param string $cursor Pagination cursor for notifications
      * @param Type|value-of<Type> $type Notification type filter
      * @param RequestOpts|null $requestOptions
      *
@@ -184,7 +186,7 @@ final class XService implements XContract
      */
     public function getTrends(
         RequestOptions|array|null $requestOptions = null
-    ): mixed {
+    ): XGetTrendsResponse {
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->getTrends(requestOptions: $requestOptions);
 

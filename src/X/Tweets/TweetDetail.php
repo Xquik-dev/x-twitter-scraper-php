@@ -11,6 +11,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\Tweets\TweetDetail\Media;
 
 /**
+ * Full tweet with text, engagement metrics, media, and metadata.
+ *
  * @phpstan-import-type MediaShape from \XTwitterScraper\X\Tweets\TweetDetail\Media
  *
  * @phpstan-type TweetDetailShape = array{
@@ -24,12 +26,12 @@ use XTwitterScraper\X\Tweets\TweetDetail\Media;
  *   viewCount: int,
  *   conversationID?: string|null,
  *   createdAt?: string|null,
- *   entities?: mixed,
+ *   entities?: array<string,mixed>|null,
  *   isNoteTweet?: bool|null,
  *   isQuoteStatus?: bool|null,
  *   isReply?: bool|null,
  *   media?: list<Media|MediaShape>|null,
- *   quotedTweet?: mixed,
+ *   quotedTweet?: array<string,mixed>|null,
  *   source?: string|null,
  * }
  */
@@ -73,9 +75,11 @@ final class TweetDetail implements BaseModel
 
     /**
      * Parsed entities from the tweet text (URLs, mentions, hashtags, media).
+     *
+     * @var array<string,mixed>|null $entities
      */
-    #[Optional]
-    public mixed $entities;
+    #[Optional(map: 'mixed')]
+    public ?array $entities;
 
     /**
      * Whether this is a Note Tweet (long-form post, up to 25,000 characters).
@@ -105,9 +109,11 @@ final class TweetDetail implements BaseModel
 
     /**
      * The quoted tweet object, present when isQuoteStatus is true.
+     *
+     * @var array<string,mixed>|null $quotedTweet
      */
-    #[Optional('quoted_tweet')]
-    public mixed $quotedTweet;
+    #[Optional('quoted_tweet', map: 'mixed')]
+    public ?array $quotedTweet;
 
     /**
      * Client application used to post this tweet.
@@ -156,7 +162,9 @@ final class TweetDetail implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param array<string,mixed>|null $entities
      * @param list<Media|MediaShape>|null $media
+     * @param array<string,mixed>|null $quotedTweet
      */
     public static function with(
         string $id,
@@ -169,12 +177,12 @@ final class TweetDetail implements BaseModel
         int $viewCount,
         ?string $conversationID = null,
         ?string $createdAt = null,
-        mixed $entities = null,
+        ?array $entities = null,
         ?bool $isNoteTweet = null,
         ?bool $isQuoteStatus = null,
         ?bool $isReply = null,
         ?array $media = null,
-        mixed $quotedTweet = null,
+        ?array $quotedTweet = null,
         ?string $source = null,
     ): self {
         $self = new self;
@@ -286,8 +294,10 @@ final class TweetDetail implements BaseModel
 
     /**
      * Parsed entities from the tweet text (URLs, mentions, hashtags, media).
+     *
+     * @param array<string,mixed> $entities
      */
-    public function withEntities(mixed $entities): self
+    public function withEntities(array $entities): self
     {
         $self = clone $this;
         $self['entities'] = $entities;
@@ -343,8 +353,10 @@ final class TweetDetail implements BaseModel
 
     /**
      * The quoted tweet object, present when isQuoteStatus is true.
+     *
+     * @param array<string,mixed> $quotedTweet
      */
-    public function withQuotedTweet(mixed $quotedTweet): self
+    public function withQuotedTweet(array $quotedTweet): self
     {
         $self = clone $this;
         $self['quotedTweet'] = $quotedTweet;

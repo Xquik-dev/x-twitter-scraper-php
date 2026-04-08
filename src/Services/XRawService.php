@@ -16,6 +16,7 @@ use XTwitterScraper\X\XGetHomeTimelineResponse;
 use XTwitterScraper\X\XGetNotificationsParams;
 use XTwitterScraper\X\XGetNotificationsParams\Type;
 use XTwitterScraper\X\XGetNotificationsResponse;
+use XTwitterScraper\X\XGetTrendsResponse;
 
 /**
  * X data lookups (subscription required).
@@ -35,6 +36,7 @@ final class XRawService implements XRawContract
      *
      * Retrieve the full content of an X Article (long-form post) by tweet ID.
      *
+     * @param string $tweetID Tweet ID of the article
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<XGetArticleResponse>
@@ -130,7 +132,7 @@ final class XRawService implements XRawContract
      *
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<XGetTrendsResponse>
      *
      * @throws APIException
      */
@@ -142,7 +144,7 @@ final class XRawService implements XRawContract
             method: 'get',
             path: 'x/trends',
             options: $requestOptions,
-            convert: null
+            convert: XGetTrendsResponse::class,
         );
     }
 }

@@ -10,6 +10,7 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\Communities\TweetsRawContract;
 use XTwitterScraper\X\Communities\Tweets\TweetListParams;
+use XTwitterScraper\X\Communities\Tweets\TweetListResponse;
 
 /**
  * X data lookups (subscription required).
@@ -34,7 +35,7 @@ final class TweetsRawService implements TweetsRawContract
      * }|TweetListParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<TweetListResponse>
      *
      * @throws APIException
      */
@@ -53,7 +54,7 @@ final class TweetsRawService implements TweetsRawContract
             path: 'x/communities/tweets',
             query: $parsed,
             options: $options,
-            convert: null,
+            convert: TweetListResponse::class,
         );
     }
 }

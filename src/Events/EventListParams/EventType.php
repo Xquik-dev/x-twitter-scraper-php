@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Events\EventListParams;
 
+/**
+ * Filter events by type.
+ */
 enum EventType: string
 {
     case TWEET_NEW = 'tweet.new';

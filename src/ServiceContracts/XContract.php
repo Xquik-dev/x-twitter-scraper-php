@@ -10,6 +10,7 @@ use XTwitterScraper\X\XGetArticleResponse;
 use XTwitterScraper\X\XGetHomeTimelineResponse;
 use XTwitterScraper\X\XGetNotificationsParams\Type;
 use XTwitterScraper\X\XGetNotificationsResponse;
+use XTwitterScraper\X\XGetTrendsResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -19,6 +20,7 @@ interface XContract
     /**
      * @api
      *
+     * @param string $tweetID Tweet ID of the article
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -31,7 +33,7 @@ interface XContract
     /**
      * @api
      *
-     * @param string $cursor Pagination cursor from previous response
+     * @param string $cursor Pagination cursor for timeline
      * @param string $seenTweetIDs Comma-separated tweet IDs to exclude from results
      * @param RequestOpts|null $requestOptions
      *
@@ -46,7 +48,7 @@ interface XContract
     /**
      * @api
      *
-     * @param string $cursor Pagination cursor from previous response
+     * @param string $cursor Pagination cursor for notifications
      * @param Type|value-of<Type> $type Notification type filter
      * @param RequestOpts|null $requestOptions
      *
@@ -67,5 +69,5 @@ interface XContract
      */
     public function getTrends(
         RequestOptions|array|null $requestOptions = null
-    ): mixed;
+    ): XGetTrendsResponse;
 }

@@ -11,6 +11,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\Events\EventGetResponse\Type;
 
 /**
+ * Full monitor event including payload data and optional X event ID.
+ *
  * @phpstan-type EventGetResponseShape = array{
  *   id: string,
  *   data: array<string,mixed>,
@@ -43,7 +45,11 @@ final class EventGetResponse implements BaseModel
     #[Required]
     public \DateTimeInterface $occurredAt;
 
-    /** @var value-of<Type> $type */
+    /**
+     * Type of monitor event fired when account activity occurs.
+     *
+     * @var value-of<Type> $type
+     */
     #[Required(enum: Type::class)]
     public string $type;
 
@@ -149,6 +155,8 @@ final class EventGetResponse implements BaseModel
     }
 
     /**
+     * Type of monitor event fired when account activity occurs.
+     *
      * @param Type|value-of<Type> $type
      */
     public function withType(Type|string $type): self

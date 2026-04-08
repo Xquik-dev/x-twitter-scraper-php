@@ -42,7 +42,7 @@ final class WebhooksService implements WebhooksContract
      *
      * Create webhook
      *
-     * @param list<EventType|value-of<EventType>> $eventTypes
+     * @param list<EventType|value-of<EventType>> $eventTypes array of event types to subscribe to
      * @param string $url HTTPS URL
      * @param RequestOpts|null $requestOptions
      *
@@ -67,7 +67,7 @@ final class WebhooksService implements WebhooksContract
      * Update webhook
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param list<\XTwitterScraper\Webhooks\WebhookUpdateParams\EventType|value-of<\XTwitterScraper\Webhooks\WebhookUpdateParams\EventType>> $eventTypes
+     * @param list<\XTwitterScraper\Webhooks\WebhookUpdateParams\EventType|value-of<\XTwitterScraper\Webhooks\WebhookUpdateParams\EventType>> $eventTypes array of event types to subscribe to
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

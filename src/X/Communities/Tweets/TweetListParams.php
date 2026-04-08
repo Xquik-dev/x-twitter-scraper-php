@@ -26,19 +26,19 @@ final class TweetListParams implements BaseModel
     use SdkParams;
 
     /**
-     * Search query.
+     * Search query for cross-community tweets.
      */
     #[Required]
     public string $q;
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for cross-community results.
      */
     #[Optional]
     public ?string $cursor;
 
     /**
-     * Sort order (Latest or Top).
+     * Sort order for cross-community results (Latest or Top).
      */
     #[Optional]
     public ?string $queryType;
@@ -83,7 +83,7 @@ final class TweetListParams implements BaseModel
     }
 
     /**
-     * Search query.
+     * Search query for cross-community tweets.
      */
     public function withQ(string $q): self
     {
@@ -94,7 +94,7 @@ final class TweetListParams implements BaseModel
     }
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for cross-community results.
      */
     public function withCursor(string $cursor): self
     {
@@ -105,7 +105,7 @@ final class TweetListParams implements BaseModel
     }
 
     /**
-     * Sort order (Latest or Top).
+     * Sort order for cross-community results (Latest or Top).
      */
     public function withQueryType(string $queryType): self
     {

@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\Webhooks\WebhookListResponse\Webhook\EventType;
 
 /**
+ * Webhook endpoint registered to receive event deliveries.
+ *
  * @phpstan-type WebhookShape = array{
  *   id: string,
  *   createdAt: \DateTimeInterface,
@@ -29,7 +31,11 @@ final class Webhook implements BaseModel
     #[Required]
     public \DateTimeInterface $createdAt;
 
-    /** @var list<value-of<EventType>> $eventTypes */
+    /**
+     * Array of event types to subscribe to.
+     *
+     * @var list<value-of<EventType>> $eventTypes
+     */
     #[Required(list: EventType::class)]
     public array $eventTypes;
 
@@ -105,6 +111,8 @@ final class Webhook implements BaseModel
     }
 
     /**
+     * Array of event types to subscribe to.
+     *
      * @param list<EventType|value-of<EventType>> $eventTypes
      */
     public function withEventTypes(array $eventTypes): self

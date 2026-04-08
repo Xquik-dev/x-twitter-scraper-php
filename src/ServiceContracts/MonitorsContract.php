@@ -21,7 +21,7 @@ interface MonitorsContract
     /**
      * @api
      *
-     * @param list<EventType|value-of<EventType>> $eventTypes
+     * @param list<EventType|value-of<EventType>> $eventTypes array of event types to subscribe to
      * @param string $username X username (without @)
      * @param RequestOpts|null $requestOptions
      *
@@ -50,7 +50,7 @@ interface MonitorsContract
      * @api
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param list<\XTwitterScraper\Monitors\MonitorUpdateParams\EventType|value-of<\XTwitterScraper\Monitors\MonitorUpdateParams\EventType>> $eventTypes
+     * @param list<\XTwitterScraper\Monitors\MonitorUpdateParams\EventType|value-of<\XTwitterScraper\Monitors\MonitorUpdateParams\EventType>> $eventTypes array of event types to subscribe to
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

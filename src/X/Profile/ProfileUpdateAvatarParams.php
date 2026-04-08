@@ -25,7 +25,7 @@ final class ProfileUpdateAvatarParams implements BaseModel
     use SdkParams;
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) for avatar update.
      */
     #[Required]
     public string $account;
@@ -71,7 +71,7 @@ final class ProfileUpdateAvatarParams implements BaseModel
     }
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) for avatar update.
      */
     public function withAccount(string $account): self
     {
