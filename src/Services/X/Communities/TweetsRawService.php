@@ -7,7 +7,6 @@ namespace XTwitterScraper\Services\X\Communities;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\CursorPage;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\Communities\TweetsRawContract;
@@ -37,7 +36,7 @@ final class TweetsRawService implements TweetsRawContract
      * }|TweetListParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<CursorPage<PaginatedTweets>>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -57,7 +56,6 @@ final class TweetsRawService implements TweetsRawContract
             query: $parsed,
             options: $options,
             convert: PaginatedTweets::class,
-            page: CursorPage::class,
         );
     }
 
@@ -70,7 +68,7 @@ final class TweetsRawService implements TweetsRawContract
      * @param array{cursor?: string}|TweetListByCommunityParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<CursorPage<PaginatedTweets>>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -91,7 +89,6 @@ final class TweetsRawService implements TweetsRawContract
             query: $parsed,
             options: $options,
             convert: PaginatedTweets::class,
-            page: CursorPage::class,
         );
     }
 }

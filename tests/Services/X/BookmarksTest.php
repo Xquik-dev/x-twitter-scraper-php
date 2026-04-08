@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\CursorPage;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\X\Bookmarks\BookmarkGetFoldersResponse;
 
@@ -41,15 +40,10 @@ final class BookmarksTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $page = $this->client->x->bookmarks->list();
+        $result = $this->client->x->bookmarks->list();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(CursorPage::class, $page);
-
-        if ($item = $page->getItems()[0] ?? null) {
-            // @phpstan-ignore-next-line method.alreadyNarrowedType
-            $this->assertInstanceOf(PaginatedTweets::class, $item);
-        }
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]

@@ -8,7 +8,6 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\CursorPage;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\BookmarksRawContract;
@@ -36,7 +35,7 @@ final class BookmarksRawService implements BookmarksRawContract
      * @param array{cursor?: string, folderID?: string}|BookmarkListParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<CursorPage<PaginatedTweets>>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -56,7 +55,6 @@ final class BookmarksRawService implements BookmarksRawContract
             query: Util::array_transform_keys($parsed, ['folderID' => 'folderId']),
             options: $options,
             convert: PaginatedTweets::class,
-            page: CursorPage::class,
         );
     }
 

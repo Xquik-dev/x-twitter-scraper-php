@@ -6,7 +6,6 @@ namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\CursorPage;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Bookmarks\BookmarkGetFoldersResponse;
@@ -23,7 +22,7 @@ interface BookmarksRawContract
      * @param array<string,mixed>|BookmarkListParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<CursorPage<PaginatedTweets>>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */

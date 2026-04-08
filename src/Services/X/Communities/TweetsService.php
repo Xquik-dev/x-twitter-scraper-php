@@ -7,7 +7,6 @@ namespace XTwitterScraper\Services\X\Communities;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\CursorPage;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\Communities\TweetsContract;
@@ -42,8 +41,6 @@ final class TweetsService implements TweetsContract
      * @param string $queryType Sort order for cross-community results (Latest or Top)
      * @param RequestOpts|null $requestOptions
      *
-     * @return CursorPage<PaginatedTweets>
-     *
      * @throws APIException
      */
     public function list(
@@ -51,7 +48,7 @@ final class TweetsService implements TweetsContract
         ?string $cursor = null,
         ?string $queryType = null,
         RequestOptions|array|null $requestOptions = null,
-    ): CursorPage {
+    ): PaginatedTweets {
         $params = Util::removeNulls(
             ['q' => $q, 'cursor' => $cursor, 'queryType' => $queryType]
         );
@@ -71,15 +68,13 @@ final class TweetsService implements TweetsContract
      * @param string $cursor Pagination cursor for community tweets
      * @param RequestOpts|null $requestOptions
      *
-     * @return CursorPage<PaginatedTweets>
-     *
      * @throws APIException
      */
     public function listByCommunity(
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): CursorPage {
+    ): PaginatedTweets {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
