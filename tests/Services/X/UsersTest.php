@@ -10,7 +10,7 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\PaginatedUsers;
-use XTwitterScraper\X\Users\UserProfile;
+use XTwitterScraper\UserProfile;
 
 /**
  * @internal

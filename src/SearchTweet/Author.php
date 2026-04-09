@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace XTwitterScraper\X\Tweets\SearchTweet;
+namespace XTwitterScraper\SearchTweet;
 
 use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace XTwitterScraper\X\Tweets;
+namespace XTwitterScraper;
 
 use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\X\Tweets\SearchTweet\Author;
+use XTwitterScraper\SearchTweet\Author;
 
 /**
  * Tweet returned from search results with inline author info.
  *
- * @phpstan-import-type AuthorShape from \XTwitterScraper\X\Tweets\SearchTweet\Author
+ * @phpstan-import-type AuthorShape from \XTwitterScraper\SearchTweet\Author
  *
  * @phpstan-type SearchTweetShape = array{
  *   id: string,
