@@ -180,15 +180,21 @@ final class XService implements XContract
      *
      * Get trending topics
      *
+     * @param int $count Number of trending topics to return (1-50, default 30)
+     * @param int $woeid Region WOEID (1=Worldwide, 23424977=US, 23424975=UK, 23424969=Turkey)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function getTrends(
-        RequestOptions|array|null $requestOptions = null
+        int $count = 30,
+        int $woeid = 1,
+        RequestOptions|array|null $requestOptions = null,
     ): XGetTrendsResponse {
+        $params = Util::removeNulls(['count' => $count, 'woeid' => $woeid]);
+
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->getTrends(requestOptions: $requestOptions);
+        $response = $this->raw->getTrends(params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

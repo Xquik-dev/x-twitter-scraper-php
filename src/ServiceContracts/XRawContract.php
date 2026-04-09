@@ -12,6 +12,7 @@ use XTwitterScraper\X\XGetArticleResponse;
 use XTwitterScraper\X\XGetHomeTimelineParams;
 use XTwitterScraper\X\XGetNotificationsParams;
 use XTwitterScraper\X\XGetNotificationsResponse;
+use XTwitterScraper\X\XGetTrendsParams;
 use XTwitterScraper\X\XGetTrendsResponse;
 
 /**
@@ -67,6 +68,7 @@ interface XRawContract
     /**
      * @api
      *
+     * @param array<string,mixed>|XGetTrendsParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<XGetTrendsResponse>
@@ -74,6 +76,7 @@ interface XRawContract
      * @throws APIException
      */
     public function getTrends(
-        RequestOptions|array|null $requestOptions = null
+        array|XGetTrendsParams $params,
+        RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 }
