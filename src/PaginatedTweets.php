@@ -7,12 +7,11 @@ namespace XTwitterScraper;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\X\Tweets\SearchTweet;
 
 /**
  * Paginated list of tweets with cursor-based navigation.
  *
- * @phpstan-import-type SearchTweetShape from \XTwitterScraper\X\Tweets\SearchTweet
+ * @phpstan-import-type SearchTweetShape from \XTwitterScraper\SearchTweet
  *
  * @phpstan-type PaginatedTweetsShape = array{
  *   hasNextPage: bool,

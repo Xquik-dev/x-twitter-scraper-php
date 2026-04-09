@@ -9,7 +9,7 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
-use XTwitterScraper\X\Users\UserProfile;
+use XTwitterScraper\UserProfile;
 use XTwitterScraper\X\Users\UserRetrieveBatchParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersYouKnowParams;

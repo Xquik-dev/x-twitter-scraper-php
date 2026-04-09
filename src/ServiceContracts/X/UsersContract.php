@@ -8,7 +8,7 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
-use XTwitterScraper\X\Users\UserProfile;
+use XTwitterScraper\UserProfile;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions

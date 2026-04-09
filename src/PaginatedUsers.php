@@ -7,12 +7,11 @@ namespace XTwitterScraper;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\X\Users\UserProfile;
 
 /**
  * Paginated list of user profiles with cursor-based navigation.
  *
- * @phpstan-import-type UserProfileShape from \XTwitterScraper\X\Users\UserProfile
+ * @phpstan-import-type UserProfileShape from \XTwitterScraper\UserProfile
  *
  * @phpstan-type PaginatedUsersShape = array{
  *   hasNextPage: bool,

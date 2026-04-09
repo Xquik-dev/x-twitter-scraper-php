@@ -12,7 +12,7 @@ use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\UsersContract;
 use XTwitterScraper\Services\X\Users\FollowService;
-use XTwitterScraper\X\Users\UserProfile;
+use XTwitterScraper\UserProfile;
 
 /**
  * X data lookups (subscription required).
