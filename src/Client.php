@@ -193,17 +193,10 @@ class Client extends BaseClient
         $this->credits = new CreditsService($this);
     }
 
-    /**
-     * @param array{apiKey?: bool, oauthBearer?: bool} $security
-     *
-     * @return array<string,string>
-     */
-    protected function authHeaders(array $security): array
+    /** @return array<string,string> */
+    protected function authHeaders(): array
     {
-        return [
-            ...($security['apiKey'] ?? false) ? $this->apiKeyScheme() : [],
-            ...($security['oauthBearer'] ?? false) ? $this->oauthBearer() : [],
-        ];
+        return [...$this->apiKeyScheme(), ...$this->oauthBearer()];
     }
 
     /** @return array<string,string> */
@@ -227,7 +220,6 @@ class Client extends BaseClient
      * @param array<string,mixed> $query
      * @param array<string,string|int|list<string|int>|null> $headers
      * @param RequestOpts|null $opts
-     * @param array{apiKey?: bool, oauthBearer?: bool}|null $security
      *
      * @return array{NormalizedRequest, RequestOptions}
      */
@@ -238,21 +230,14 @@ class Client extends BaseClient
         array $headers,
         mixed $body,
         RequestOptions|array|null $opts,
-        ?array $security = null,
     ): array {
         return parent::buildRequest(
             method: $method,
             path: $path,
             query: $query,
-            headers: [
-                ...$this->authHeaders(
-                    security: ($security ?? ['apiKey' => true, 'oauthBearer' => true])
-                ),
-                ...$headers,
-            ],
+            headers: [...$this->authHeaders(), ...$headers],
             body: $body,
             opts: $opts,
-            security: $security,
         );
     }
 }

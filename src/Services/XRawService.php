@@ -16,6 +16,7 @@ use XTwitterScraper\X\XGetHomeTimelineParams;
 use XTwitterScraper\X\XGetNotificationsParams;
 use XTwitterScraper\X\XGetNotificationsParams\Type;
 use XTwitterScraper\X\XGetNotificationsResponse;
+use XTwitterScraper\X\XGetTrendsParams;
 use XTwitterScraper\X\XGetTrendsResponse;
 
 /**
@@ -130,6 +131,7 @@ final class XRawService implements XRawContract
      *
      * Get trending topics
      *
+     * @param array{count?: int, woeid?: int}|XGetTrendsParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<XGetTrendsResponse>
@@ -137,13 +139,20 @@ final class XRawService implements XRawContract
      * @throws APIException
      */
     public function getTrends(
-        RequestOptions|array|null $requestOptions = null
+        array|XGetTrendsParams $params,
+        RequestOptions|array|null $requestOptions = null,
     ): BaseResponse {
+        [$parsed, $options] = XGetTrendsParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'get',
             path: 'x/trends',
-            options: $requestOptions,
+            query: $parsed,
+            options: $options,
             convert: XGetTrendsResponse::class,
         );
     }

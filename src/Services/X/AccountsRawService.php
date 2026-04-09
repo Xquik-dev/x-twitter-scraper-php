@@ -65,7 +65,6 @@ final class AccountsRawService implements AccountsRawContract
             body: (object) $parsed,
             options: $options,
             convert: AccountNewResponse::class,
-            security: ['apiKey' => true],
         );
     }
 
@@ -91,7 +90,6 @@ final class AccountsRawService implements AccountsRawContract
             path: ['x/accounts/%1$s', $id],
             options: $requestOptions,
             convert: XAccountDetail::class,
-            security: ['apiKey' => true],
         );
     }
 
@@ -115,7 +113,6 @@ final class AccountsRawService implements AccountsRawContract
             path: 'x/accounts',
             options: $requestOptions,
             convert: AccountListResponse::class,
-            security: ['apiKey' => true],
         );
     }
 
@@ -141,7 +138,6 @@ final class AccountsRawService implements AccountsRawContract
             path: ['x/accounts/%1$s', $id],
             options: $requestOptions,
             convert: AccountDeleteResponse::class,
-            security: ['apiKey' => true],
         );
     }
 
@@ -165,7 +161,6 @@ final class AccountsRawService implements AccountsRawContract
             path: 'x/accounts/bulk-retry',
             options: $requestOptions,
             convert: AccountBulkRetryResponse::class,
-            security: ['apiKey' => true],
         );
     }
 
@@ -199,7 +194,6 @@ final class AccountsRawService implements AccountsRawContract
             body: (object) $parsed,
             options: $options,
             convert: AccountReauthResponse::class,
-            security: ['apiKey' => true],
         );
     }
 }

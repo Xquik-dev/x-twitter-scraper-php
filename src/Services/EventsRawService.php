@@ -86,7 +86,6 @@ final class EventsRawService implements EventsRawContract
             query: Util::array_transform_keys($parsed, ['monitorID' => 'monitorId']),
             options: $options,
             convert: EventListResponse::class,
-            security: ['apiKey' => true],
         );
     }
 }
