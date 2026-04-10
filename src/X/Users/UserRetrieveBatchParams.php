@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get multiple users by IDs.
+ * Look up multiple users by IDs in one call.
  *
  * @see XTwitterScraper\Services\X\UsersService::retrieveBatch()
  *

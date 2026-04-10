@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Check follow relationship.
+ * Check if one user follows another.
  *
  * @see XTwitterScraper\Services\X\FollowersService::check()
  *

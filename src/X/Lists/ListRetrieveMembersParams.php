@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get list members.
+ * List members of an X List.
  *
  * @see XTwitterScraper\Services\X\ListsService::retrieveMembers()
  *

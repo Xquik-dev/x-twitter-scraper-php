@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get community moderators.
+ * List moderators of a community.
  *
  * @see XTwitterScraper\Services\X\CommunitiesService::retrieveModerators()
  *

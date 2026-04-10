@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get regional trending topics.
+ * Get trending hashtags & topics by region (alias).
  *
  * @see XTwitterScraper\Services\TrendsService::list()
  *

@@ -90,7 +90,7 @@ final class TweetsService implements TweetsContract
     /**
      * @api
      *
-     * Look up tweet
+     * Get tweet with full text, author, metrics & media
      *
      * @param string $id Tweet ID
      * @param RequestOpts|null $requestOptions
@@ -156,7 +156,7 @@ final class TweetsService implements TweetsContract
     /**
      * @api
      *
-     * Get users who liked a tweet
+     * List users who liked a tweet
      *
      * @param string $id Tweet ID to get favoriters
      * @param string $cursor Pagination cursor for favoriters
@@ -180,7 +180,7 @@ final class TweetsService implements TweetsContract
     /**
      * @api
      *
-     * Get quote tweets of a tweet
+     * List quote tweets of a tweet
      *
      * @param string $id Tweet ID to get quotes
      * @param string $cursor Pagination cursor for quote tweets
@@ -217,7 +217,7 @@ final class TweetsService implements TweetsContract
     /**
      * @api
      *
-     * Get replies to a tweet
+     * List replies to a tweet
      *
      * @param string $id Tweet ID to get replies
      * @param string $cursor Pagination cursor for tweet replies
@@ -251,7 +251,7 @@ final class TweetsService implements TweetsContract
     /**
      * @api
      *
-     * Get users who retweeted a tweet
+     * List users who retweeted a tweet
      *
      * @param string $id Tweet ID to get retweeters
      * @param string $cursor Pagination cursor for retweeters
@@ -275,7 +275,7 @@ final class TweetsService implements TweetsContract
     /**
      * @api
      *
-     * Get thread context for a tweet
+     * Get full conversation thread for a tweet
      *
      * @param string $id Tweet ID to get thread context
      * @param string $cursor Pagination cursor for thread tweets
@@ -299,7 +299,7 @@ final class TweetsService implements TweetsContract
     /**
      * @api
      *
-     * Search tweets
+     * Search tweets with X query operators & pagination
      *
      * @param string $q Search query (keywords,
      * @param string $cursor Pagination cursor from previous response

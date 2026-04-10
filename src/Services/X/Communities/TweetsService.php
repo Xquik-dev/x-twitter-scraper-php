@@ -12,7 +12,7 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\Communities\TweetsContract;
 
 /**
- * X data lookups (subscription required).
+ * X Community info, members, and tweets.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -34,7 +34,7 @@ final class TweetsService implements TweetsContract
     /**
      * @api
      *
-     * Search tweets across all communities
+     * List tweets across all communities
      *
      * @param string $q Search query for cross-community tweets
      * @param string $cursor Pagination cursor for cross-community results
@@ -62,7 +62,7 @@ final class TweetsService implements TweetsContract
     /**
      * @api
      *
-     * Get community tweets
+     * List tweets posted in a community
      *
      * @param string $id Community ID for tweet lookup
      * @param string $cursor Pagination cursor for community tweets

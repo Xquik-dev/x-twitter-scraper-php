@@ -15,7 +15,7 @@ use XTwitterScraper\Services\X\Users\FollowService;
 use XTwitterScraper\UserProfile;
 
 /**
- * X data lookups (subscription required).
+ * Look up, search, and explore user profiles and relationships.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -43,7 +43,7 @@ final class UsersService implements UsersContract
     /**
      * @api
      *
-     * Look up X user
+     * Get user profile with follower counts & verification
      *
      * @param string $id X username (without @) or user ID
      * @param RequestOpts|null $requestOptions
@@ -63,7 +63,7 @@ final class UsersService implements UsersContract
     /**
      * @api
      *
-     * Get multiple users by IDs
+     * Look up multiple users by IDs in one call
      *
      * @param string $ids Comma-separated user IDs (max 100)
      * @param RequestOpts|null $requestOptions
@@ -85,7 +85,7 @@ final class UsersService implements UsersContract
     /**
      * @api
      *
-     * Get user followers
+     * List followers of a user
      *
      * @param string $id User ID or username
      * @param string $cursor Pagination cursor for followers list
@@ -111,7 +111,7 @@ final class UsersService implements UsersContract
     /**
      * @api
      *
-     * Get followers you know for a user
+     * List mutual followers between you and a user
      *
      * @param string $id User ID for followers-you-know lookup
      * @param string $cursor Pagination cursor for followers-you-know
@@ -135,7 +135,7 @@ final class UsersService implements UsersContract
     /**
      * @api
      *
-     * Get users this user follows
+     * List accounts a user follows
      *
      * @param string $id User ID or username for following lookup
      * @param string $cursor Pagination cursor for following list
@@ -161,7 +161,7 @@ final class UsersService implements UsersContract
     /**
      * @api
      *
-     * Get tweets liked by a user
+     * List tweets liked by a user
      *
      * @param string $id User ID
      * @param string $cursor Pagination cursor for liked tweets
@@ -185,7 +185,7 @@ final class UsersService implements UsersContract
     /**
      * @api
      *
-     * Get media tweets by a user
+     * List media tweets posted by a user
      *
      * @param string $id User ID for media lookup
      * @param string $cursor Pagination cursor for media tweets
@@ -209,7 +209,7 @@ final class UsersService implements UsersContract
     /**
      * @api
      *
-     * Get tweets mentioning a user
+     * List tweets mentioning a user
      *
      * @param string $id User ID or username for mentions lookup
      * @param string $cursor Pagination cursor for mentions
@@ -267,7 +267,7 @@ final class UsersService implements UsersContract
     /**
      * @api
      *
-     * Get recent tweets by a user
+     * List recent tweets posted by a user
      *
      * @param string $id X user ID or username
      * @param string $cursor Pagination cursor for user tweets
@@ -301,7 +301,7 @@ final class UsersService implements UsersContract
     /**
      * @api
      *
-     * Get verified followers
+     * List verified followers of a user
      *
      * @param string $id User ID or username for verified followers
      * @param string $cursor Pagination cursor for verified followers

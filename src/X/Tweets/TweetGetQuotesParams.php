@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get quote tweets of a tweet.
+ * List quote tweets of a tweet.
  *
  * @see XTwitterScraper\Services\X\TweetsService::getQuotes()
  *

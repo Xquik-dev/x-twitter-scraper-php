@@ -19,7 +19,7 @@ use XTwitterScraper\Styles\StyleUpdateParams;
 use XTwitterScraper\Styles\StyleUpdateParams\Tweet;
 
 /**
- * Tweet composition, drafts, writing styles & radar.
+ * AI tweet composition, drafts, writing styles, and radar.
  *
  * @phpstan-import-type TweetShape from \XTwitterScraper\Styles\StyleUpdateParams\Tweet
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions

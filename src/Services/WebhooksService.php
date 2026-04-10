@@ -18,7 +18,7 @@ use XTwitterScraper\Webhooks\WebhookNewResponse;
 use XTwitterScraper\Webhooks\WebhookTestResponse;
 
 /**
- * Webhook endpoint management & delivery.
+ * Webhook endpoint management and delivery.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */

@@ -12,7 +12,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\Tweets\TweetSearchParams\QueryType;
 
 /**
- * Search tweets.
+ * Search tweets with X query operators & pagination.
  *
  * @see XTwitterScraper\Services\X\TweetsService::search()
  *

@@ -11,7 +11,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Search tweets across all communities.
+ * List tweets across all communities.
  *
  * @see XTwitterScraper\Services\X\Communities\TweetsService::list()
  *

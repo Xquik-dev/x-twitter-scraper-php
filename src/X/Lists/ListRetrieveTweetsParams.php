@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get list tweets.
+ * List tweets from an X List.
  *
  * @see XTwitterScraper\Services\X\ListsService::retrieveTweets()
  *

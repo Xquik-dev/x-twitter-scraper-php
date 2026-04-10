@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get followers you know for a user.
+ * List mutual followers between you and a user.
  *
  * @see XTwitterScraper\Services\X\UsersService::retrieveFollowersYouKnow()
  *

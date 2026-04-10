@@ -11,7 +11,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Search tweets across communities.
+ * Search for communities by keyword.
  *
  * @see XTwitterScraper\Services\X\CommunitiesService::retrieveSearch()
  *

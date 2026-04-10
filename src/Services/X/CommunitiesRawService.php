@@ -102,7 +102,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
     /**
      * @api
      *
-     * Get community details
+     * Get community name, description & member count
      *
      * @param string $id Community ID
      * @param RequestOpts|null $requestOptions
@@ -127,7 +127,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
     /**
      * @api
      *
-     * Get community members
+     * List members of a community
      *
      * @param string $id Community ID for member lookup
      * @param array{cursor?: string}|CommunityRetrieveMembersParams $params
@@ -160,7 +160,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
     /**
      * @api
      *
-     * Get community moderators
+     * List moderators of a community
      *
      * @param string $id Community ID for moderator lookup
      * @param array{cursor?: string}|CommunityRetrieveModeratorsParams $params
@@ -193,7 +193,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
     /**
      * @api
      *
-     * Search tweets across communities
+     * Search for communities by keyword
      *
      * @param array{
      *   q: string, cursor?: string, queryType?: string

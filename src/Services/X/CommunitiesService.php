@@ -106,7 +106,7 @@ final class CommunitiesService implements CommunitiesContract
     /**
      * @api
      *
-     * Get community details
+     * Get community name, description & member count
      *
      * @param string $id Community ID
      * @param RequestOpts|null $requestOptions
@@ -126,7 +126,7 @@ final class CommunitiesService implements CommunitiesContract
     /**
      * @api
      *
-     * Get community members
+     * List members of a community
      *
      * @param string $id Community ID for member lookup
      * @param string $cursor Pagination cursor
@@ -150,7 +150,7 @@ final class CommunitiesService implements CommunitiesContract
     /**
      * @api
      *
-     * Get community moderators
+     * List moderators of a community
      *
      * @param string $id Community ID for moderator lookup
      * @param string $cursor Pagination cursor for community moderators
@@ -174,7 +174,7 @@ final class CommunitiesService implements CommunitiesContract
     /**
      * @api
      *
-     * Search tweets across communities
+     * Search for communities by keyword
      *
      * @param string $q Search query
      * @param string $cursor Pagination cursor for community search

@@ -13,7 +13,7 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\CreditsContract;
 
 /**
- * Subscription & billing.
+ * Subscription, billing, and credits.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */

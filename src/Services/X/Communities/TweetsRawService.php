@@ -14,7 +14,7 @@ use XTwitterScraper\X\Communities\Tweets\TweetListByCommunityParams;
 use XTwitterScraper\X\Communities\Tweets\TweetListParams;
 
 /**
- * X data lookups (subscription required).
+ * X Community info, members, and tweets.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -29,7 +29,7 @@ final class TweetsRawService implements TweetsRawContract
     /**
      * @api
      *
-     * Search tweets across all communities
+     * List tweets across all communities
      *
      * @param array{
      *   q: string, cursor?: string, queryType?: string
@@ -62,7 +62,7 @@ final class TweetsRawService implements TweetsRawContract
     /**
      * @api
      *
-     * Get community tweets
+     * List tweets posted in a community
      *
      * @param string $id Community ID for tweet lookup
      * @param array{cursor?: string}|TweetListByCommunityParams $params

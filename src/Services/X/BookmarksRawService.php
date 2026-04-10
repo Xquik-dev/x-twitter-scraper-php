@@ -15,7 +15,7 @@ use XTwitterScraper\X\Bookmarks\BookmarkGetFoldersResponse;
 use XTwitterScraper\X\Bookmarks\BookmarkListParams;
 
 /**
- * X data lookups (subscription required).
+ * Look up, search, and analyze individual tweets.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */

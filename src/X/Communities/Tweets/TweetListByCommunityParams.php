@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get community tweets.
+ * List tweets posted in a community.
  *
  * @see XTwitterScraper\Services\X\Communities\TweetsService::listByCommunity()
  *
