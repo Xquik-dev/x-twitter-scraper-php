@@ -14,7 +14,7 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\CreditsRawContract;
 
 /**
- * Subscription & billing.
+ * Subscription, billing, and credits.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */

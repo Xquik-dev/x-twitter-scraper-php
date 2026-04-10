@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get verified followers.
+ * List verified followers of a user.
  *
  * @see XTwitterScraper\Services\X\UsersService::retrieveVerifiedFollowers()
  *

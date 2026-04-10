@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get tweets liked by a user.
+ * List tweets liked by a user.
  *
  * @see XTwitterScraper\Services\X\UsersService::retrieveLikes()
  *

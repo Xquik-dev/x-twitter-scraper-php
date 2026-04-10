@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get recent tweets by a user.
+ * List recent tweets posted by a user.
  *
  * @see XTwitterScraper\Services\X\UsersService::retrieveTweets()
  *

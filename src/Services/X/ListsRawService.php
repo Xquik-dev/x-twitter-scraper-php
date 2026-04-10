@@ -16,7 +16,7 @@ use XTwitterScraper\X\Lists\ListRetrieveMembersParams;
 use XTwitterScraper\X\Lists\ListRetrieveTweetsParams;
 
 /**
- * X data lookups (subscription required).
+ * X List followers, members, and tweets.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -31,7 +31,7 @@ final class ListsRawService implements ListsRawContract
     /**
      * @api
      *
-     * Get list followers
+     * List followers of an X List
      *
      * @param string $id List ID
      * @param array{cursor?: string}|ListRetrieveFollowersParams $params
@@ -64,7 +64,7 @@ final class ListsRawService implements ListsRawContract
     /**
      * @api
      *
-     * Get list members
+     * List members of an X List
      *
      * @param string $id List ID for member lookup
      * @param array{cursor?: string}|ListRetrieveMembersParams $params
@@ -97,7 +97,7 @@ final class ListsRawService implements ListsRawContract
     /**
      * @api
      *
-     * Get list tweets
+     * List tweets from an X List
      *
      * @param string $id List ID for tweet lookup
      * @param array{

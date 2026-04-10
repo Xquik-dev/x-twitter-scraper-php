@@ -16,7 +16,7 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\DraftsRawContract;
 
 /**
- * Tweet composition, drafts, writing styles & radar.
+ * AI tweet composition, drafts, writing styles, and radar.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */

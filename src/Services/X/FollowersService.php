@@ -12,7 +12,7 @@ use XTwitterScraper\ServiceContracts\X\FollowersContract;
 use XTwitterScraper\X\Followers\FollowerCheckResponse;
 
 /**
- * X data lookups (subscription required).
+ * Look up, search, and explore user profiles and relationships.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -34,7 +34,7 @@ final class FollowersService implements FollowersContract
     /**
      * @api
      *
-     * Check follow relationship
+     * Check if one user follows another
      *
      * @param string $source Username to check (without @)
      * @param string $target Target username (without @)

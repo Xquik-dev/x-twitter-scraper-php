@@ -17,7 +17,7 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\AccountRawContract;
 
 /**
- * Account info & settings.
+ * Account info and settings.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */

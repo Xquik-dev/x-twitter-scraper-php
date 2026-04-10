@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get thread context for a tweet.
+ * Get full conversation thread for a tweet.
  *
  * @see XTwitterScraper\Services\X\TweetsService::getThread()
  *

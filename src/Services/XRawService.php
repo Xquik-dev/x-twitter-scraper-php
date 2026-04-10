@@ -20,8 +20,6 @@ use XTwitterScraper\X\XGetTrendsParams;
 use XTwitterScraper\X\XGetTrendsResponse;
 
 /**
- * X data lookups (subscription required).
- *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
 final class XRawService implements XRawContract
@@ -129,7 +127,7 @@ final class XRawService implements XRawContract
     /**
      * @api
      *
-     * Get trending topics
+     * Get trending hashtags & topics from X by region
      *
      * @param array{count?: int, woeid?: int}|XGetTrendsParams $params
      * @param RequestOpts|null $requestOptions

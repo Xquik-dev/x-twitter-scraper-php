@@ -24,7 +24,7 @@ use XTwitterScraper\X\Users\UserRetrieveTweetsParams;
 use XTwitterScraper\X\Users\UserRetrieveVerifiedFollowersParams;
 
 /**
- * X data lookups (subscription required).
+ * Look up, search, and explore user profiles and relationships.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -39,7 +39,7 @@ final class UsersRawService implements UsersRawContract
     /**
      * @api
      *
-     * Look up X user
+     * Get user profile with follower counts & verification
      *
      * @param string $id X username (without @) or user ID
      * @param RequestOpts|null $requestOptions
@@ -64,7 +64,7 @@ final class UsersRawService implements UsersRawContract
     /**
      * @api
      *
-     * Get multiple users by IDs
+     * Look up multiple users by IDs in one call
      *
      * @param array{ids: string}|UserRetrieveBatchParams $params
      * @param RequestOpts|null $requestOptions
@@ -95,7 +95,7 @@ final class UsersRawService implements UsersRawContract
     /**
      * @api
      *
-     * Get user followers
+     * List followers of a user
      *
      * @param string $id User ID or username
      * @param array{
@@ -130,7 +130,7 @@ final class UsersRawService implements UsersRawContract
     /**
      * @api
      *
-     * Get followers you know for a user
+     * List mutual followers between you and a user
      *
      * @param string $id User ID for followers-you-know lookup
      * @param array{cursor?: string}|UserRetrieveFollowersYouKnowParams $params
@@ -163,7 +163,7 @@ final class UsersRawService implements UsersRawContract
     /**
      * @api
      *
-     * Get users this user follows
+     * List accounts a user follows
      *
      * @param string $id User ID or username for following lookup
      * @param array{
@@ -198,7 +198,7 @@ final class UsersRawService implements UsersRawContract
     /**
      * @api
      *
-     * Get tweets liked by a user
+     * List tweets liked by a user
      *
      * @param string $id User ID
      * @param array{cursor?: string}|UserRetrieveLikesParams $params
@@ -231,7 +231,7 @@ final class UsersRawService implements UsersRawContract
     /**
      * @api
      *
-     * Get media tweets by a user
+     * List media tweets posted by a user
      *
      * @param string $id User ID for media lookup
      * @param array{cursor?: string}|UserRetrieveMediaParams $params
@@ -264,7 +264,7 @@ final class UsersRawService implements UsersRawContract
     /**
      * @api
      *
-     * Get tweets mentioning a user
+     * List tweets mentioning a user
      *
      * @param string $id User ID or username for mentions lookup
      * @param array{
@@ -330,7 +330,7 @@ final class UsersRawService implements UsersRawContract
     /**
      * @api
      *
-     * Get recent tweets by a user
+     * List recent tweets posted by a user
      *
      * @param string $id X user ID or username
      * @param array{
@@ -365,7 +365,7 @@ final class UsersRawService implements UsersRawContract
     /**
      * @api
      *
-     * Get verified followers
+     * List verified followers of a user
      *
      * @param string $id User ID or username for verified followers
      * @param array{cursor?: string}|UserRetrieveVerifiedFollowersParams $params

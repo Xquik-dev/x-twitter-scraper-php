@@ -12,7 +12,7 @@ use XTwitterScraper\ServiceContracts\TrendsContract;
 use XTwitterScraper\Trends\TrendListResponse;
 
 /**
- * Trending topics by region.
+ * Trending topics and hashtags by region.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -34,7 +34,7 @@ final class TrendsService implements TrendsContract
     /**
      * @api
      *
-     * Get regional trending topics
+     * Get trending hashtags & topics by region (alias)
      *
      * @param int $count Number of trending topics to return (1-50, default 30)
      * @param int $woeid Region WOEID (1=Worldwide, 23424977=US, 23424975=UK, 23424969=Turkey)

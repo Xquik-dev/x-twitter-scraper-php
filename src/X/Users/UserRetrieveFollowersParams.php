@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get user followers.
+ * List followers of a user.
  *
  * @see XTwitterScraper\Services\X\UsersService::retrieveFollowers()
  *

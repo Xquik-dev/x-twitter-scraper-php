@@ -15,7 +15,7 @@ use XTwitterScraper\X\Media\MediaUploadParams;
 use XTwitterScraper\X\Media\MediaUploadResponse;
 
 /**
- * Media upload & download.
+ * Media upload and download.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -30,7 +30,7 @@ final class MediaRawService implements MediaRawContract
     /**
      * @api
      *
-     * Download tweet media
+     * Download images & videos from tweets
      *
      * @param array{
      *   tweetIDs?: list<string>, tweetInput?: string

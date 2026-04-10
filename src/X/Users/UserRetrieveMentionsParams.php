@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get tweets mentioning a user.
+ * List tweets mentioning a user.
  *
  * @see XTwitterScraper\Services\X\UsersService::retrieveMentions()
  *

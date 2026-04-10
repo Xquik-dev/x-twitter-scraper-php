@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get replies to a tweet.
+ * List replies to a tweet.
  *
  * @see XTwitterScraper\Services\X\TweetsService::getReplies()
  *

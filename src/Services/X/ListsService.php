@@ -13,7 +13,7 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\ListsContract;
 
 /**
- * X data lookups (subscription required).
+ * X List followers, members, and tweets.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -35,7 +35,7 @@ final class ListsService implements ListsContract
     /**
      * @api
      *
-     * Get list followers
+     * List followers of an X List
      *
      * @param string $id List ID
      * @param string $cursor Pagination cursor for list followers
@@ -59,7 +59,7 @@ final class ListsService implements ListsContract
     /**
      * @api
      *
-     * Get list members
+     * List members of an X List
      *
      * @param string $id List ID for member lookup
      * @param string $cursor Pagination cursor for list members
@@ -83,7 +83,7 @@ final class ListsService implements ListsContract
     /**
      * @api
      *
-     * Get list tweets
+     * List tweets from an X List
      *
      * @param string $id List ID for tweet lookup
      * @param string $cursor Pagination cursor for list tweets
