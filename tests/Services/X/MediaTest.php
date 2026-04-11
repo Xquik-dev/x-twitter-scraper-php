@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
+use XTwitterScraper\Core\FileParam;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\Media\MediaDownloadResponse;
 use XTwitterScraper\X\Media\MediaUploadResponse;
@@ -51,7 +52,7 @@ final class MediaTest extends TestCase
 
         $result = $this->client->x->media->upload(
             account: '@elonmusk',
-            file: 'file'
+            file: FileParam::fromString('Example data', filename: uniqid('file-upload-', true)),
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -67,8 +68,8 @@ final class MediaTest extends TestCase
 
         $result = $this->client->x->media->upload(
             account: '@elonmusk',
-            file: 'file',
-            isLongVideo: true
+            file: FileParam::fromString('Example data', filename: uniqid('file-upload-', true)),
+            isLongVideo: true,
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

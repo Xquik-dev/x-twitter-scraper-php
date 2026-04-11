@@ -6,6 +6,7 @@ namespace XTwitterScraper\Services\X;
 
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\FileParam;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\ProfileContract;
@@ -76,14 +77,14 @@ final class ProfileService implements ProfileContract
      * Update profile avatar
      *
      * @param string $account X account (@username or ID) for avatar update
-     * @param string $file Avatar image (max 716KB)
+     * @param string|FileParam $file Avatar image (max 716KB)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function updateAvatar(
         string $account,
-        string $file,
+        string|FileParam $file,
         RequestOptions|array|null $requestOptions = null,
     ): ProfileUpdateAvatarResponse {
         $params = Util::removeNulls(['account' => $account, 'file' => $file]);
@@ -100,14 +101,14 @@ final class ProfileService implements ProfileContract
      * Update profile banner
      *
      * @param string $account X account (@username or ID) for banner update
-     * @param string $file Banner image (max 2MB)
+     * @param string|FileParam $file Banner image (max 2MB)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function updateBanner(
         string $account,
-        string $file,
+        string|FileParam $file,
         RequestOptions|array|null $requestOptions = null,
     ): ProfileUpdateBannerResponse {
         $params = Util::removeNulls(['account' => $account, 'file' => $file]);
