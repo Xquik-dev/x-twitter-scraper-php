@@ -6,6 +6,7 @@ namespace XTwitterScraper\Services\X;
 
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\FileParam;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\MediaContract;
@@ -64,14 +65,14 @@ final class MediaService implements MediaContract
      * Upload media
      *
      * @param string $account X account (@username or ID) uploading media
-     * @param string $file Media file to upload
+     * @param string|FileParam $file Media file to upload
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function upload(
         string $account,
-        string $file,
+        string|FileParam $file,
         ?bool $isLongVideo = null,
         RequestOptions|array|null $requestOptions = null,
     ): MediaUploadResponse {

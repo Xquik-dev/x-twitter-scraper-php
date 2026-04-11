@@ -8,6 +8,7 @@ use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Core\FileParam;
 
 /**
  * Update profile banner.
@@ -15,7 +16,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\X\ProfileService::updateBanner()
  *
  * @phpstan-type ProfileUpdateBannerParamsShape = array{
- *   account: string, file: string
+ *   account: string, file: string|FileParam
  * }
  */
 final class ProfileUpdateBannerParams implements BaseModel
@@ -60,7 +61,7 @@ final class ProfileUpdateBannerParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $account, string $file): self
+    public static function with(string $account, string|FileParam $file): self
     {
         $self = new self;
 
@@ -84,7 +85,7 @@ final class ProfileUpdateBannerParams implements BaseModel
     /**
      * Banner image (max 2MB).
      */
-    public function withFile(string $file): self
+    public function withFile(string|FileParam $file): self
     {
         $self = clone $this;
         $self['file'] = $file;
