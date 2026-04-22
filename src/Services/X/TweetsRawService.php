@@ -79,7 +79,7 @@ final class TweetsRawService implements TweetsRawContract
     /**
      * @api
      *
-     * Get tweet with full text, author, metrics & media
+     * Get tweet with full text, author, metrics and media
      *
      * @param string $id Tweet ID
      * @param RequestOpts|null $requestOptions
@@ -337,7 +337,7 @@ final class TweetsRawService implements TweetsRawContract
     /**
      * @api
      *
-     * Search tweets with X query operators & pagination
+     * Search tweets with X query operators and pagination
      *
      * @param array{
      *   q: string,

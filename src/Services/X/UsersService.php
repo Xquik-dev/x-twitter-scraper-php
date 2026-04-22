@@ -43,7 +43,7 @@ final class UsersService implements UsersContract
     /**
      * @api
      *
-     * Get user profile with follower counts & verification
+     * Get user profile with follower counts and verification
      *
      * @param string $id X username (without @) or user ID
      * @param RequestOpts|null $requestOptions
