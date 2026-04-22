@@ -7,6 +7,7 @@ namespace XTwitterScraper\X\Accounts;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\X\Accounts\XAccount\Health;
 
 /**
  * Linked X account summary with username and connection status.
@@ -14,6 +15,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @phpstan-type XAccountShape = array{
  *   id: string,
  *   createdAt: \DateTimeInterface,
+ *   health: Health|value-of<Health>,
  *   status: string,
  *   xUserID: string,
  *   xUsername: string,
@@ -30,6 +32,14 @@ final class XAccount implements BaseModel
     #[Required]
     public \DateTimeInterface $createdAt;
 
+    /**
+     * Derived login/cookie health. `healthy` = cookies valid. `needsReauth` = user must submit fresh credentials. `locked` = X locked the account; unlock on x.com first. `suspended` = X banned the account. `recovering` = past cooldown, will auto-retry on next use. `temporaryIssue` = transient backend problem; retry shortly.
+     *
+     * @var value-of<Health> $health
+     */
+    #[Required(enum: Health::class)]
+    public string $health;
+
     #[Required]
     public string $status;
 
@@ -45,7 +55,12 @@ final class XAccount implements BaseModel
      * To enforce required parameters use
      * ```
      * XAccount::with(
-     *   id: ..., createdAt: ..., status: ..., xUserID: ..., xUsername: ...
+     *   id: ...,
+     *   createdAt: ...,
+     *   health: ...,
+     *   status: ...,
+     *   xUserID: ...,
+     *   xUsername: ...,
      * )
      * ```
      *
@@ -55,6 +70,7 @@ final class XAccount implements BaseModel
      * (new XAccount)
      *   ->withID(...)
      *   ->withCreatedAt(...)
+     *   ->withHealth(...)
      *   ->withStatus(...)
      *   ->withXUserID(...)
      *   ->withXUsername(...)
@@ -69,10 +85,13 @@ final class XAccount implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param Health|value-of<Health> $health
      */
     public static function with(
         string $id,
         \DateTimeInterface $createdAt,
+        Health|string $health,
         string $status,
         string $xUserID,
         string $xUsername,
@@ -81,6 +100,7 @@ final class XAccount implements BaseModel
 
         $self['id'] = $id;
         $self['createdAt'] = $createdAt;
+        $self['health'] = $health;
         $self['status'] = $status;
         $self['xUserID'] = $xUserID;
         $self['xUsername'] = $xUsername;
@@ -100,6 +120,19 @@ final class XAccount implements BaseModel
     {
         $self = clone $this;
         $self['createdAt'] = $createdAt;
+
+        return $self;
+    }
+
+    /**
+     * Derived login/cookie health. `healthy` = cookies valid. `needsReauth` = user must submit fresh credentials. `locked` = X locked the account; unlock on x.com first. `suspended` = X banned the account. `recovering` = past cooldown, will auto-retry on next use. `temporaryIssue` = transient backend problem; retry shortly.
+     *
+     * @param Health|value-of<Health> $health
+     */
+    public function withHealth(Health|string $health): self
+    {
+        $self = clone $this;
+        $self['health'] = $health;
 
         return $self;
     }

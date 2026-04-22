@@ -92,6 +92,8 @@ interface AccountsContract
      *
      * @param string $id Resource ID (stringified bigint)
      * @param string $password Updated account password
+     * @param string $email Email for the X account (updates stored email)
+     * @param string $proxyCountry Two-letter country code for login proxy region
      * @param string $totpSecret TOTP secret for 2FA re-authentication
      * @param RequestOpts|null $requestOptions
      *
@@ -100,6 +102,8 @@ interface AccountsContract
     public function reauth(
         string $id,
         string $password,
+        ?string $email = null,
+        ?string $proxyCountry = null,
         ?string $totpSecret = null,
         RequestOptions|array|null $requestOptions = null,
     ): AccountReauthResponse;

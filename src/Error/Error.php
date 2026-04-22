@@ -24,6 +24,8 @@ enum Error: string
 
     case INVALID_USERNAME = 'invalid_username';
 
+    case INSUFFICIENT_CREDITS = 'insufficient_credits';
+
     case MISSING_PARAMS = 'missing_params';
 
     case MISSING_QUERY = 'missing_query';
@@ -32,19 +34,17 @@ enum Error: string
 
     case MONITOR_LIMIT_REACHED = 'monitor_limit_reached';
 
+    case NO_CREDITS = 'no_credits';
+
     case NO_SUBSCRIPTION = 'no_subscription';
 
     case NOT_FOUND = 'not_found';
-
-    case STREAM_REGISTRATION_FAILED = 'stream_registration_failed';
 
     case SUBSCRIPTION_INACTIVE = 'subscription_inactive';
 
     case TWEET_NOT_FOUND = 'tweet_not_found';
 
     case UNAUTHENTICATED = 'unauthenticated';
-
-    case USAGE_LIMIT_REACHED = 'usage_limit_reached';
 
     case USER_NOT_FOUND = 'user_not_found';
 

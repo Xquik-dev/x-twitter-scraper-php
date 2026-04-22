@@ -147,7 +147,9 @@ final class AccountsTest extends TestCase
         $result = $this->client->x->accounts->reauth(
             'id',
             password: 'password_value',
-            totpSecret: 'totp_secret_value'
+            email: 'user@example.com',
+            proxyCountry: 'US',
+            totpSecret: 'totp_secret_value',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

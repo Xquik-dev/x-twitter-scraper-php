@@ -40,7 +40,7 @@ final class MonitorsTest extends TestCase
         }
 
         $result = $this->client->monitors->create(
-            eventTypes: [EventType::TWEET_NEW, EventType::FOLLOWER_GAINED],
+            eventTypes: [EventType::TWEET_NEW, EventType::TWEET_REPLY],
             username: 'elonmusk',
         );
 
@@ -56,7 +56,7 @@ final class MonitorsTest extends TestCase
         }
 
         $result = $this->client->monitors->create(
-            eventTypes: [EventType::TWEET_NEW, EventType::FOLLOWER_GAINED],
+            eventTypes: [EventType::TWEET_NEW, EventType::TWEET_REPLY],
             username: 'elonmusk',
         );
 

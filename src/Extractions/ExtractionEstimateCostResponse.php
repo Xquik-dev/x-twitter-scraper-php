@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Extractions;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
@@ -11,10 +12,11 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 /**
  * @phpstan-type ExtractionEstimateCostResponseShape = array{
  *   allowed: bool,
+ *   creditsAvailable: string,
+ *   creditsRequired: string,
  *   estimatedResults: int,
- *   projectedPercent: float,
  *   source: string,
- *   usagePercent: float,
+ *   resolvedXUserID?: string|null,
  * }
  */
 final class ExtractionEstimateCostResponse implements BaseModel
@@ -26,16 +28,19 @@ final class ExtractionEstimateCostResponse implements BaseModel
     public bool $allowed;
 
     #[Required]
-    public int $estimatedResults;
+    public string $creditsAvailable;
 
     #[Required]
-    public float $projectedPercent;
+    public string $creditsRequired;
+
+    #[Required]
+    public int $estimatedResults;
 
     #[Required]
     public string $source;
 
-    #[Required]
-    public float $usagePercent;
+    #[Optional('resolvedXUserId')]
+    public ?string $resolvedXUserID;
 
     /**
      * `new ExtractionEstimateCostResponse()` is missing required properties by the API.
@@ -44,10 +49,10 @@ final class ExtractionEstimateCostResponse implements BaseModel
      * ```
      * ExtractionEstimateCostResponse::with(
      *   allowed: ...,
+     *   creditsAvailable: ...,
+     *   creditsRequired: ...,
      *   estimatedResults: ...,
-     *   projectedPercent: ...,
      *   source: ...,
-     *   usagePercent: ...,
      * )
      * ```
      *
@@ -56,10 +61,10 @@ final class ExtractionEstimateCostResponse implements BaseModel
      * ```
      * (new ExtractionEstimateCostResponse)
      *   ->withAllowed(...)
+     *   ->withCreditsAvailable(...)
+     *   ->withCreditsRequired(...)
      *   ->withEstimatedResults(...)
-     *   ->withProjectedPercent(...)
      *   ->withSource(...)
-     *   ->withUsagePercent(...)
      * ```
      */
     public function __construct()
@@ -74,18 +79,21 @@ final class ExtractionEstimateCostResponse implements BaseModel
      */
     public static function with(
         bool $allowed,
+        string $creditsAvailable,
+        string $creditsRequired,
         int $estimatedResults,
-        float $projectedPercent,
         string $source,
-        float $usagePercent,
+        ?string $resolvedXUserID = null,
     ): self {
         $self = new self;
 
         $self['allowed'] = $allowed;
+        $self['creditsAvailable'] = $creditsAvailable;
+        $self['creditsRequired'] = $creditsRequired;
         $self['estimatedResults'] = $estimatedResults;
-        $self['projectedPercent'] = $projectedPercent;
         $self['source'] = $source;
-        $self['usagePercent'] = $usagePercent;
+
+        null !== $resolvedXUserID && $self['resolvedXUserID'] = $resolvedXUserID;
 
         return $self;
     }
@@ -98,18 +106,26 @@ final class ExtractionEstimateCostResponse implements BaseModel
         return $self;
     }
 
-    public function withEstimatedResults(int $estimatedResults): self
+    public function withCreditsAvailable(string $creditsAvailable): self
     {
         $self = clone $this;
-        $self['estimatedResults'] = $estimatedResults;
+        $self['creditsAvailable'] = $creditsAvailable;
 
         return $self;
     }
 
-    public function withProjectedPercent(float $projectedPercent): self
+    public function withCreditsRequired(string $creditsRequired): self
     {
         $self = clone $this;
-        $self['projectedPercent'] = $projectedPercent;
+        $self['creditsRequired'] = $creditsRequired;
+
+        return $self;
+    }
+
+    public function withEstimatedResults(int $estimatedResults): self
+    {
+        $self = clone $this;
+        $self['estimatedResults'] = $estimatedResults;
 
         return $self;
     }
@@ -122,10 +138,10 @@ final class ExtractionEstimateCostResponse implements BaseModel
         return $self;
     }
 
-    public function withUsagePercent(float $usagePercent): self
+    public function withResolvedXUserID(string $resolvedXUserID): self
     {
         $self = clone $this;
-        $self['usagePercent'] = $usagePercent;
+        $self['resolvedXUserID'] = $resolvedXUserID;
 
         return $self;
     }

@@ -17,12 +17,13 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *
  * @phpstan-type TweetCreateParamsShape = array{
  *   account: string,
- *   text: string,
  *   attachmentURL?: string|null,
  *   communityID?: string|null,
  *   isNoteTweet?: bool|null,
+ *   media?: list<string>|null,
  *   mediaIDs?: list<string>|null,
  *   replyToTweetID?: string|null,
+ *   text?: string|null,
  * }
  */
 final class TweetCreateParams implements BaseModel
@@ -37,9 +38,6 @@ final class TweetCreateParams implements BaseModel
     #[Required]
     public string $account;
 
-    #[Required]
-    public string $text;
-
     #[Optional('attachment_url')]
     public ?string $attachmentURL;
 
@@ -49,7 +47,19 @@ final class TweetCreateParams implements BaseModel
     #[Optional('is_note_tweet')]
     public ?bool $isNoteTweet;
 
-    /** @var list<string>|null $mediaIDs */
+    /**
+     * Array of media URLs to attach (mutually exclusive with media_ids).
+     *
+     * @var list<string>|null $media
+     */
+    #[Optional(list: 'string')]
+    public ?array $media;
+
+    /**
+     * Array of media IDs to attach (mutually exclusive with media).
+     *
+     * @var list<string>|null $mediaIDs
+     */
     #[Optional('media_ids', list: 'string')]
     public ?array $mediaIDs;
 
@@ -57,17 +67,23 @@ final class TweetCreateParams implements BaseModel
     public ?string $replyToTweetID;
 
     /**
+     * Tweet text (optional when media is provided).
+     */
+    #[Optional]
+    public ?string $text;
+
+    /**
      * `new TweetCreateParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * TweetCreateParams::with(account: ..., text: ...)
+     * TweetCreateParams::with(account: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new TweetCreateParams)->withAccount(...)->withText(...)
+     * (new TweetCreateParams)->withAccount(...)
      * ```
      */
     public function __construct()
@@ -80,27 +96,30 @@ final class TweetCreateParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param list<string>|null $media
      * @param list<string>|null $mediaIDs
      */
     public static function with(
         string $account,
-        string $text,
         ?string $attachmentURL = null,
         ?string $communityID = null,
         ?bool $isNoteTweet = null,
+        ?array $media = null,
         ?array $mediaIDs = null,
         ?string $replyToTweetID = null,
+        ?string $text = null,
     ): self {
         $self = new self;
 
         $self['account'] = $account;
-        $self['text'] = $text;
 
         null !== $attachmentURL && $self['attachmentURL'] = $attachmentURL;
         null !== $communityID && $self['communityID'] = $communityID;
         null !== $isNoteTweet && $self['isNoteTweet'] = $isNoteTweet;
+        null !== $media && $self['media'] = $media;
         null !== $mediaIDs && $self['mediaIDs'] = $mediaIDs;
         null !== $replyToTweetID && $self['replyToTweetID'] = $replyToTweetID;
+        null !== $text && $self['text'] = $text;
 
         return $self;
     }
@@ -112,14 +131,6 @@ final class TweetCreateParams implements BaseModel
     {
         $self = clone $this;
         $self['account'] = $account;
-
-        return $self;
-    }
-
-    public function withText(string $text): self
-    {
-        $self = clone $this;
-        $self['text'] = $text;
 
         return $self;
     }
@@ -149,6 +160,21 @@ final class TweetCreateParams implements BaseModel
     }
 
     /**
+     * Array of media URLs to attach (mutually exclusive with media_ids).
+     *
+     * @param list<string> $media
+     */
+    public function withMedia(array $media): self
+    {
+        $self = clone $this;
+        $self['media'] = $media;
+
+        return $self;
+    }
+
+    /**
+     * Array of media IDs to attach (mutually exclusive with media).
+     *
      * @param list<string> $mediaIDs
      */
     public function withMediaIDs(array $mediaIDs): self
@@ -163,6 +189,17 @@ final class TweetCreateParams implements BaseModel
     {
         $self = clone $this;
         $self['replyToTweetID'] = $replyToTweetID;
+
+        return $self;
+    }
+
+    /**
+     * Tweet text (optional when media is provided).
+     */
+    public function withText(string $text): self
+    {
+        $self = clone $this;
+        $self['text'] = $text;
 
         return $self;
     }

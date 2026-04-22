@@ -43,12 +43,13 @@ final class TweetsRawService implements TweetsRawContract
      *
      * @param array{
      *   account: string,
-     *   text: string,
      *   attachmentURL?: string,
      *   communityID?: string,
      *   isNoteTweet?: bool,
+     *   media?: list<string>,
      *   mediaIDs?: list<string>,
      *   replyToTweetID?: string,
+     *   text?: string,
      * }|TweetCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
