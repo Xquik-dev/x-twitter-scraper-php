@@ -8,6 +8,7 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\X\Accounts\XAccountDetail\Health;
 
 /**
  * Full X account details including proxy, cookies, and update timestamp.
@@ -15,6 +16,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @phpstan-type XAccountDetailShape = array{
  *   id: string,
  *   createdAt: \DateTimeInterface,
+ *   health: Health|value-of<Health>,
  *   status: string,
  *   xUserID: string,
  *   xUsername: string,
@@ -33,6 +35,10 @@ final class XAccountDetail implements BaseModel
 
     #[Required]
     public \DateTimeInterface $createdAt;
+
+    /** @var value-of<Health> $health */
+    #[Required(enum: Health::class)]
+    public string $health;
 
     #[Required]
     public string $status;
@@ -58,7 +64,12 @@ final class XAccountDetail implements BaseModel
      * To enforce required parameters use
      * ```
      * XAccountDetail::with(
-     *   id: ..., createdAt: ..., status: ..., xUserID: ..., xUsername: ...
+     *   id: ...,
+     *   createdAt: ...,
+     *   health: ...,
+     *   status: ...,
+     *   xUserID: ...,
+     *   xUsername: ...,
      * )
      * ```
      *
@@ -68,6 +79,7 @@ final class XAccountDetail implements BaseModel
      * (new XAccountDetail)
      *   ->withID(...)
      *   ->withCreatedAt(...)
+     *   ->withHealth(...)
      *   ->withStatus(...)
      *   ->withXUserID(...)
      *   ->withXUsername(...)
@@ -82,10 +94,13 @@ final class XAccountDetail implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param Health|value-of<Health> $health
      */
     public static function with(
         string $id,
         \DateTimeInterface $createdAt,
+        Health|string $health,
         string $status,
         string $xUserID,
         string $xUsername,
@@ -97,6 +112,7 @@ final class XAccountDetail implements BaseModel
 
         $self['id'] = $id;
         $self['createdAt'] = $createdAt;
+        $self['health'] = $health;
         $self['status'] = $status;
         $self['xUserID'] = $xUserID;
         $self['xUsername'] = $xUsername;
@@ -120,6 +136,17 @@ final class XAccountDetail implements BaseModel
     {
         $self = clone $this;
         $self['createdAt'] = $createdAt;
+
+        return $self;
+    }
+
+    /**
+     * @param Health|value-of<Health> $health
+     */
+    public function withHealth(Health|string $health): self
+    {
+        $self = clone $this;
+        $self['health'] = $health;
 
         return $self;
     }

@@ -39,10 +39,7 @@ final class TweetsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->tweets->create(
-            account: '@elonmusk',
-            text: 'Just launched our new feature!'
-        );
+        $result = $this->client->x->tweets->create(account: '@elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TweetNewResponse::class, $result);
@@ -57,12 +54,13 @@ final class TweetsTest extends TestCase
 
         $result = $this->client->x->tweets->create(
             account: '@elonmusk',
-            text: 'Just launched our new feature!',
             attachmentURL: 'https://x.com/elonmusk/status/1234567890',
             communityID: '1500000000000000000',
             isNoteTweet: false,
+            media: ['https://example.com/image.jpg'],
             mediaIDs: ['1234567890123456789'],
             replyToTweetID: '1234567890',
+            text: 'Just launched our new feature!',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

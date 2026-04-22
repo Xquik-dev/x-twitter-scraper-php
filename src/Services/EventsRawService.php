@@ -60,7 +60,7 @@ final class EventsRawService implements EventsRawContract
      *
      * @param array{
      *   after?: string,
-     *   eventType?: value-of<EventType>,
+     *   eventType?: EventType|value-of<EventType>,
      *   limit?: int,
      *   monitorID?: string,
      * }|EventListParams $params

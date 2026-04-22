@@ -170,7 +170,9 @@ final class AccountsRawService implements AccountsRawContract
      * Re-authenticate X account
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param array{password: string, totpSecret?: string}|AccountReauthParams $params
+     * @param array{
+     *   password: string, email?: string, proxyCountry?: string, totpSecret?: string
+     * }|AccountReauthParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<AccountReauthResponse>

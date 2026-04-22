@@ -22,19 +22,22 @@ interface TweetsContract
      * @api
      *
      * @param string $account X account (@username or account ID)
-     * @param list<string> $mediaIDs
+     * @param list<string> $media Array of media URLs to attach (mutually exclusive with media_ids)
+     * @param list<string> $mediaIDs Array of media IDs to attach (mutually exclusive with media)
+     * @param string $text Tweet text (optional when media is provided)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function create(
         string $account,
-        string $text,
         ?string $attachmentURL = null,
         ?string $communityID = null,
         ?bool $isNoteTweet = null,
+        ?array $media = null,
         ?array $mediaIDs = null,
         ?string $replyToTweetID = null,
+        ?string $text = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetNewResponse;
 

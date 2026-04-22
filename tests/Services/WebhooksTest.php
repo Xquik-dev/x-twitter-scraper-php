@@ -42,7 +42,7 @@ final class WebhooksTest extends TestCase
         }
 
         $result = $this->client->webhooks->create(
-            eventTypes: [EventType::TWEET_NEW, EventType::FOLLOWER_GAINED],
+            eventTypes: [EventType::TWEET_NEW, EventType::TWEET_REPLY],
             url: 'https://example.com/webhook',
         );
 
@@ -58,7 +58,7 @@ final class WebhooksTest extends TestCase
         }
 
         $result = $this->client->webhooks->create(
-            eventTypes: [EventType::TWEET_NEW, EventType::FOLLOWER_GAINED],
+            eventTypes: [EventType::TWEET_NEW, EventType::TWEET_REPLY],
             url: 'https://example.com/webhook',
         );
 
