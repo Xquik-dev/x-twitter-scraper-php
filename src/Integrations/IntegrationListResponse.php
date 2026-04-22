@@ -7,13 +7,12 @@ namespace XTwitterScraper\Integrations;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Integrations\IntegrationListResponse\Integration;
 
 /**
- * @phpstan-import-type IntegrationShape from \XTwitterScraper\Integrations\IntegrationListResponse\Integration
+ * @phpstan-import-type IntegrationShape from \XTwitterScraper\Integrations\Integration
  *
  * @phpstan-type IntegrationListResponseShape = array{
- *   integrations: list<\XTwitterScraper\Integrations\IntegrationListResponse\Integration|IntegrationShape>,
+ *   integrations: list<Integration|IntegrationShape>
  * }
  */
 final class IntegrationListResponse implements BaseModel
@@ -21,12 +20,8 @@ final class IntegrationListResponse implements BaseModel
     /** @use SdkModel<IntegrationListResponseShape> */
     use SdkModel;
 
-    /**
-     * @var list<Integration> $integrations
-     */
-    #[Required(
-        list: Integration::class,
-    )]
+    /** @var list<Integration> $integrations */
+    #[Required(list: Integration::class)]
     public array $integrations;
 
     /**

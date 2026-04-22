@@ -7,19 +7,16 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\TweetsContract;
 use XTwitterScraper\Services\X\Tweets\LikeService;
 use XTwitterScraper\Services\X\Tweets\RetweetService;
-use XTwitterScraper\X\Tweets\TweetGetFavoritersResponse;
-use XTwitterScraper\X\Tweets\TweetGetQuotesResponse;
-use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
-use XTwitterScraper\X\Tweets\TweetGetRetweetersResponse;
-use XTwitterScraper\X\Tweets\TweetGetThreadResponse;
-use XTwitterScraper\X\Tweets\TweetListResponse;
+use XTwitterScraper\X\Tweets\TweetDeleteResponse;
+use XTwitterScraper\X\Tweets\TweetGetResponse;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
 use XTwitterScraper\X\Tweets\TweetSearchParams\QueryType;
-use XTwitterScraper\X\Tweets\TweetSearchResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -93,6 +90,26 @@ final class TweetsService implements TweetsContract
     /**
      * @api
      *
+     * Look up tweet
+     *
+     * @param string $id Tweet ID
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function retrieve(
+        string $id,
+        RequestOptions|array|null $requestOptions = null
+    ): TweetGetResponse {
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->retrieve($id, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
      * Get multiple tweets by IDs
      *
      * @param string $ids Comma-separated tweet IDs (max 100)
@@ -103,11 +120,35 @@ final class TweetsService implements TweetsContract
     public function list(
         string $ids,
         RequestOptions|array|null $requestOptions = null
-    ): TweetListResponse {
+    ): PaginatedTweets {
         $params = Util::removeNulls(['ids' => $ids]);
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->list(params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Delete tweet
+     *
+     * @param string $id Tweet ID to delete
+     * @param string $account X account identifier (@username or account ID)
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function delete(
+        string $id,
+        string $account,
+        RequestOptions|array|null $requestOptions = null,
+    ): TweetDeleteResponse {
+        $params = Util::removeNulls(['account' => $account]);
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->delete($id, params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }
@@ -127,7 +168,7 @@ final class TweetsService implements TweetsContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): TweetGetFavoritersResponse {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -157,7 +198,7 @@ final class TweetsService implements TweetsContract
         ?string $sinceTime = null,
         ?string $untilTime = null,
         RequestOptions|array|null $requestOptions = null,
-    ): TweetGetQuotesResponse {
+    ): PaginatedTweets {
         $params = Util::removeNulls(
             [
                 'cursor' => $cursor,
@@ -192,7 +233,7 @@ final class TweetsService implements TweetsContract
         ?string $sinceTime = null,
         ?string $untilTime = null,
         RequestOptions|array|null $requestOptions = null,
-    ): TweetGetRepliesResponse {
+    ): PaginatedTweets {
         $params = Util::removeNulls(
             [
                 'cursor' => $cursor,
@@ -222,7 +263,7 @@ final class TweetsService implements TweetsContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): TweetGetRetweetersResponse {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -246,7 +287,7 @@ final class TweetsService implements TweetsContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): TweetGetThreadResponse {
+    ): PaginatedTweets {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -278,7 +319,7 @@ final class TweetsService implements TweetsContract
         ?string $sinceTime = null,
         ?string $untilTime = null,
         RequestOptions|array|null $requestOptions = null,
-    ): TweetSearchResponse {
+    ): PaginatedTweets {
         $params = Util::removeNulls(
             [
                 'q' => $q,

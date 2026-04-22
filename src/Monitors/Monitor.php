@@ -7,7 +7,7 @@ namespace XTwitterScraper\Monitors;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Monitors\Monitor\EventType;
+use XTwitterScraper\EventType;
 
 /**
  * Account monitor that tracks activity for a given X user.

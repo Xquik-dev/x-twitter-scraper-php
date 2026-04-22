@@ -6,14 +6,13 @@ namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Communities\CommunityCreateParams;
 use XTwitterScraper\X\Communities\CommunityDeleteParams;
 use XTwitterScraper\X\Communities\CommunityDeleteResponse;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse;
-use XTwitterScraper\X\Communities\CommunityGetMembersResponse;
-use XTwitterScraper\X\Communities\CommunityGetModeratorsResponse;
-use XTwitterScraper\X\Communities\CommunityGetSearchResponse;
 use XTwitterScraper\X\Communities\CommunityNewResponse;
 use XTwitterScraper\X\Communities\CommunityRetrieveMembersParams;
 use XTwitterScraper\X\Communities\CommunityRetrieveModeratorsParams;
@@ -78,7 +77,7 @@ interface CommunitiesRawContract
      * @param array<string,mixed>|CommunityRetrieveMembersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<CommunityGetMembersResponse>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -95,7 +94,7 @@ interface CommunitiesRawContract
      * @param array<string,mixed>|CommunityRetrieveModeratorsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<CommunityGetModeratorsResponse>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -111,7 +110,7 @@ interface CommunitiesRawContract
      * @param array<string,mixed>|CommunityRetrieveSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<CommunityGetSearchResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */

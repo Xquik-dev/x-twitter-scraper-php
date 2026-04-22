@@ -8,15 +8,12 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Events\EventListResponse\Event;
 
 /**
- * @phpstan-import-type EventShape from \XTwitterScraper\Events\EventListResponse\Event
+ * @phpstan-import-type EventShape from \XTwitterScraper\Events\Event
  *
  * @phpstan-type EventListResponseShape = array{
- *   events: list<\XTwitterScraper\Events\EventListResponse\Event|EventShape>,
- *   hasMore: bool,
- *   nextCursor?: string|null,
+ *   events: list<Event|EventShape>, hasMore: bool, nextCursor?: string|null
  * }
  */
 final class EventListResponse implements BaseModel

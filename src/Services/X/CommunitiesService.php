@@ -7,15 +7,14 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\CommunitiesContract;
 use XTwitterScraper\Services\X\Communities\JoinService;
 use XTwitterScraper\Services\X\Communities\TweetsService;
 use XTwitterScraper\X\Communities\CommunityDeleteResponse;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse;
-use XTwitterScraper\X\Communities\CommunityGetMembersResponse;
-use XTwitterScraper\X\Communities\CommunityGetModeratorsResponse;
-use XTwitterScraper\X\Communities\CommunityGetSearchResponse;
 use XTwitterScraper\X\Communities\CommunityNewResponse;
 
 /**
@@ -139,7 +138,7 @@ final class CommunitiesService implements CommunitiesContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): CommunityGetMembersResponse {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -163,7 +162,7 @@ final class CommunitiesService implements CommunitiesContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): CommunityGetModeratorsResponse {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -189,7 +188,7 @@ final class CommunitiesService implements CommunitiesContract
         ?string $cursor = null,
         ?string $queryType = null,
         RequestOptions|array|null $requestOptions = null,
-    ): CommunityGetSearchResponse {
+    ): PaginatedTweets {
         $params = Util::removeNulls(
             ['q' => $q, 'cursor' => $cursor, 'queryType' => $queryType]
         );

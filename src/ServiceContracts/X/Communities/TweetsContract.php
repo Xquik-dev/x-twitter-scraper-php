@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace XTwitterScraper\ServiceContracts\X\Communities;
 
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\CursorPage;
+use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
-use XTwitterScraper\X\Communities\Tweets\TweetListResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -21,6 +22,8 @@ interface TweetsContract
      * @param string $queryType Sort order for cross-community results (Latest or Top)
      * @param RequestOpts|null $requestOptions
      *
+     * @return CursorPage<PaginatedTweets>
+     *
      * @throws APIException
      */
     public function list(
@@ -28,5 +31,22 @@ interface TweetsContract
         ?string $cursor = null,
         ?string $queryType = null,
         RequestOptions|array|null $requestOptions = null,
-    ): TweetListResponse;
+    ): CursorPage;
+
+    /**
+     * @api
+     *
+     * @param string $id Community ID for tweet lookup
+     * @param string $cursor Pagination cursor for community tweets
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return CursorPage<PaginatedTweets>
+     *
+     * @throws APIException
+     */
+    public function listByCommunity(
+        string $id,
+        ?string $cursor = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): CursorPage;
 }

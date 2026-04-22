@@ -5,23 +5,29 @@ declare(strict_types=1);
 namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
-use XTwitterScraper\X\Users\UserGetBatchResponse;
-use XTwitterScraper\X\Users\UserGetFollowersResponse;
-use XTwitterScraper\X\Users\UserGetFollowersYouKnowResponse;
-use XTwitterScraper\X\Users\UserGetFollowingResponse;
-use XTwitterScraper\X\Users\UserGetLikesResponse;
-use XTwitterScraper\X\Users\UserGetMediaResponse;
-use XTwitterScraper\X\Users\UserGetMentionsResponse;
-use XTwitterScraper\X\Users\UserGetSearchResponse;
-use XTwitterScraper\X\Users\UserGetTweetsResponse;
-use XTwitterScraper\X\Users\UserGetVerifiedFollowersResponse;
+use XTwitterScraper\X\Users\UserProfile;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
 interface UsersContract
 {
+    /**
+     * @api
+     *
+     * @param string $id X username (without @) or user ID
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function retrieve(
+        string $id,
+        RequestOptions|array|null $requestOptions = null
+    ): UserProfile;
+
     /**
      * @api
      *
@@ -33,7 +39,7 @@ interface UsersContract
     public function retrieveBatch(
         string $ids,
         RequestOptions|array|null $requestOptions = null
-    ): UserGetBatchResponse;
+    ): PaginatedUsers;
 
     /**
      * @api
@@ -50,7 +56,7 @@ interface UsersContract
         ?string $cursor = null,
         ?int $pageSize = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetFollowersResponse;
+    ): PaginatedUsers;
 
     /**
      * @api
@@ -65,7 +71,7 @@ interface UsersContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetFollowersYouKnowResponse;
+    ): PaginatedUsers;
 
     /**
      * @api
@@ -82,7 +88,7 @@ interface UsersContract
         ?string $cursor = null,
         ?int $pageSize = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetFollowingResponse;
+    ): PaginatedUsers;
 
     /**
      * @api
@@ -97,7 +103,7 @@ interface UsersContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetLikesResponse;
+    ): PaginatedTweets;
 
     /**
      * @api
@@ -112,7 +118,7 @@ interface UsersContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetMediaResponse;
+    ): PaginatedTweets;
 
     /**
      * @api
@@ -131,7 +137,7 @@ interface UsersContract
         ?string $sinceTime = null,
         ?string $untilTime = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetMentionsResponse;
+    ): PaginatedTweets;
 
     /**
      * @api
@@ -146,7 +152,7 @@ interface UsersContract
         string $q,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetSearchResponse;
+    ): PaginatedUsers;
 
     /**
      * @api
@@ -165,7 +171,7 @@ interface UsersContract
         bool $includeParentTweet = false,
         bool $includeReplies = false,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetTweetsResponse;
+    ): PaginatedTweets;
 
     /**
      * @api
@@ -180,5 +186,5 @@ interface UsersContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetVerifiedFollowersResponse;
+    ): PaginatedUsers;
 }

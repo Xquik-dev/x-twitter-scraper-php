@@ -8,8 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\X\Communities\Join\JoinDeleteAllResponse;
-use XTwitterScraper\X\Communities\Join\JoinNewResponse;
+use XTwitterScraper\X\Communities\CommunityActionResult;
 
 /**
  * @internal
@@ -46,7 +45,7 @@ final class JoinTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(JoinNewResponse::class, $result);
+        $this->assertInstanceOf(CommunityActionResult::class, $result);
     }
 
     #[Test]
@@ -62,7 +61,7 @@ final class JoinTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(JoinNewResponse::class, $result);
+        $this->assertInstanceOf(CommunityActionResult::class, $result);
     }
 
     #[Test]
@@ -78,7 +77,7 @@ final class JoinTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(JoinDeleteAllResponse::class, $result);
+        $this->assertInstanceOf(CommunityActionResult::class, $result);
     }
 
     #[Test]
@@ -94,6 +93,6 @@ final class JoinTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(JoinDeleteAllResponse::class, $result);
+        $this->assertInstanceOf(CommunityActionResult::class, $result);
     }
 }

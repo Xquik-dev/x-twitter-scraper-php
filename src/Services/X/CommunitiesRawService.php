@@ -7,15 +7,14 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\CommunitiesRawContract;
 use XTwitterScraper\X\Communities\CommunityCreateParams;
 use XTwitterScraper\X\Communities\CommunityDeleteParams;
 use XTwitterScraper\X\Communities\CommunityDeleteResponse;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse;
-use XTwitterScraper\X\Communities\CommunityGetMembersResponse;
-use XTwitterScraper\X\Communities\CommunityGetModeratorsResponse;
-use XTwitterScraper\X\Communities\CommunityGetSearchResponse;
 use XTwitterScraper\X\Communities\CommunityNewResponse;
 use XTwitterScraper\X\Communities\CommunityRetrieveMembersParams;
 use XTwitterScraper\X\Communities\CommunityRetrieveModeratorsParams;
@@ -134,7 +133,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
      * @param array{cursor?: string}|CommunityRetrieveMembersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<CommunityGetMembersResponse>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -154,7 +153,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
             path: ['x/communities/%1$s/members', $id],
             query: $parsed,
             options: $options,
-            convert: CommunityGetMembersResponse::class,
+            convert: PaginatedUsers::class,
         );
     }
 
@@ -167,7 +166,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
      * @param array{cursor?: string}|CommunityRetrieveModeratorsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<CommunityGetModeratorsResponse>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -187,7 +186,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
             path: ['x/communities/%1$s/moderators', $id],
             query: $parsed,
             options: $options,
-            convert: CommunityGetModeratorsResponse::class,
+            convert: PaginatedUsers::class,
         );
     }
 
@@ -201,7 +200,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
      * }|CommunityRetrieveSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<CommunityGetSearchResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -220,7 +219,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
             path: 'x/communities/search',
             query: $parsed,
             options: $options,
-            convert: CommunityGetSearchResponse::class,
+            convert: PaginatedTweets::class,
         );
     }
 }

@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\EventType;
+use XTwitterScraper\Integrations\Integration;
 use XTwitterScraper\Integrations\IntegrationCreateParams\Config;
-use XTwitterScraper\Integrations\IntegrationCreateParams\EventType;
 use XTwitterScraper\Integrations\IntegrationCreateParams\Type;
 use XTwitterScraper\Integrations\IntegrationDeleteResponse;
-use XTwitterScraper\Integrations\IntegrationGetResponse;
 use XTwitterScraper\Integrations\IntegrationListDeliveriesResponse;
 use XTwitterScraper\Integrations\IntegrationListResponse;
-use XTwitterScraper\Integrations\IntegrationNewResponse;
 use XTwitterScraper\Integrations\IntegrationSendTestResponse;
-use XTwitterScraper\Integrations\IntegrationUpdateResponse;
 use XTwitterScraper\RequestOptions;
 
 /**
@@ -39,7 +37,7 @@ interface IntegrationsContract
         string $name,
         Type|string $type,
         RequestOptions|array|null $requestOptions = null,
-    ): IntegrationNewResponse;
+    ): Integration;
 
     /**
      * @api
@@ -52,13 +50,13 @@ interface IntegrationsContract
     public function retrieve(
         string $id,
         RequestOptions|array|null $requestOptions = null
-    ): IntegrationGetResponse;
+    ): Integration;
 
     /**
      * @api
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param list<\XTwitterScraper\Integrations\IntegrationUpdateParams\EventType|value-of<\XTwitterScraper\Integrations\IntegrationUpdateParams\EventType>> $eventTypes array of event types to subscribe to
+     * @param list<EventType|value-of<EventType>> $eventTypes array of event types to subscribe to
      * @param array<string,mixed> $filters Event filter rules (JSON)
      * @param array<string,mixed> $messageTemplate Custom message template (JSON)
      * @param RequestOpts|null $requestOptions
@@ -75,7 +73,7 @@ interface IntegrationsContract
         ?bool $scopeAllMonitors = null,
         ?bool $silentPush = null,
         RequestOptions|array|null $requestOptions = null,
-    ): IntegrationUpdateResponse;
+    ): Integration;
 
     /**
      * @api

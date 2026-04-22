@@ -7,15 +7,17 @@ namespace XTwitterScraper;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\PaginatedUsers\User;
+use XTwitterScraper\X\Users\UserProfile;
 
 /**
  * Paginated list of user profiles with cursor-based navigation.
  *
- * @phpstan-import-type UserShape from \XTwitterScraper\PaginatedUsers\User
+ * @phpstan-import-type UserProfileShape from \XTwitterScraper\X\Users\UserProfile
  *
  * @phpstan-type PaginatedUsersShape = array{
- *   hasNextPage: bool, nextCursor: string, users: list<User|UserShape>
+ *   hasNextPage: bool,
+ *   nextCursor: string,
+ *   users: list<UserProfile|UserProfileShape>,
  * }
  */
 final class PaginatedUsers implements BaseModel
@@ -29,8 +31,8 @@ final class PaginatedUsers implements BaseModel
     #[Required('next_cursor')]
     public string $nextCursor;
 
-    /** @var list<User> $users */
-    #[Required(list: User::class)]
+    /** @var list<UserProfile> $users */
+    #[Required(list: UserProfile::class)]
     public array $users;
 
     /**
@@ -57,7 +59,7 @@ final class PaginatedUsers implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param list<User|UserShape> $users
+     * @param list<UserProfile|UserProfileShape> $users
      */
     public static function with(
         bool $hasNextPage,
@@ -90,7 +92,7 @@ final class PaginatedUsers implements BaseModel
     }
 
     /**
-     * @param list<User|UserShape> $users
+     * @param list<UserProfile|UserProfileShape> $users
      */
     public function withUsers(array $users): self
     {

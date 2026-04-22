@@ -6,23 +6,21 @@ namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Tweets\TweetCreateParams;
+use XTwitterScraper\X\Tweets\TweetDeleteParams;
+use XTwitterScraper\X\Tweets\TweetDeleteResponse;
 use XTwitterScraper\X\Tweets\TweetGetFavoritersParams;
-use XTwitterScraper\X\Tweets\TweetGetFavoritersResponse;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams;
-use XTwitterScraper\X\Tweets\TweetGetQuotesResponse;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams;
-use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
+use XTwitterScraper\X\Tweets\TweetGetResponse;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersParams;
-use XTwitterScraper\X\Tweets\TweetGetRetweetersResponse;
 use XTwitterScraper\X\Tweets\TweetGetThreadParams;
-use XTwitterScraper\X\Tweets\TweetGetThreadResponse;
 use XTwitterScraper\X\Tweets\TweetListParams;
-use XTwitterScraper\X\Tweets\TweetListResponse;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
 use XTwitterScraper\X\Tweets\TweetSearchParams;
-use XTwitterScraper\X\Tweets\TweetSearchResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -47,10 +45,25 @@ interface TweetsRawContract
     /**
      * @api
      *
+     * @param string $id Tweet ID
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<TweetGetResponse>
+     *
+     * @throws APIException
+     */
+    public function retrieve(
+        string $id,
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
      * @param array<string,mixed>|TweetListParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<TweetListResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -62,11 +75,28 @@ interface TweetsRawContract
     /**
      * @api
      *
+     * @param string $id Tweet ID to delete
+     * @param array<string,mixed>|TweetDeleteParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<TweetDeleteResponse>
+     *
+     * @throws APIException
+     */
+    public function delete(
+        string $id,
+        array|TweetDeleteParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
      * @param string $id Tweet ID to get favoriters
      * @param array<string,mixed>|TweetGetFavoritersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<TweetGetFavoritersResponse>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -83,7 +113,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetGetQuotesParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<TweetGetQuotesResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -100,7 +130,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetGetRepliesParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<TweetGetRepliesResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -117,7 +147,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetGetRetweetersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<TweetGetRetweetersResponse>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -134,7 +164,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetGetThreadParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<TweetGetThreadResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -150,7 +180,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<TweetSearchResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */

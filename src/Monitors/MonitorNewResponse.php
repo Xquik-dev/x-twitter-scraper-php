@@ -7,7 +7,7 @@ namespace XTwitterScraper\Monitors;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Monitors\MonitorNewResponse\EventType;
+use XTwitterScraper\EventType;
 
 /**
  * @phpstan-type MonitorNewResponseShape = array{

@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Communities\CommunityDeleteResponse;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse;
-use XTwitterScraper\X\Communities\CommunityGetMembersResponse;
-use XTwitterScraper\X\Communities\CommunityGetModeratorsResponse;
-use XTwitterScraper\X\Communities\CommunityGetSearchResponse;
 use XTwitterScraper\X\Communities\CommunityNewResponse;
 
 /**
@@ -78,7 +77,7 @@ interface CommunitiesContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): CommunityGetMembersResponse;
+    ): PaginatedUsers;
 
     /**
      * @api
@@ -93,7 +92,7 @@ interface CommunitiesContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): CommunityGetModeratorsResponse;
+    ): PaginatedUsers;
 
     /**
      * @api
@@ -110,5 +109,5 @@ interface CommunitiesContract
         ?string $cursor = null,
         ?string $queryType = null,
         RequestOptions|array|null $requestOptions = null,
-    ): CommunityGetSearchResponse;
+    ): PaginatedTweets;
 }

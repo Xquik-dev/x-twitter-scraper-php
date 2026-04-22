@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\CursorPage;
+use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Bookmarks\BookmarkGetFoldersResponse;
-use XTwitterScraper\X\Bookmarks\BookmarkListResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -21,13 +22,15 @@ interface BookmarksContract
      * @param string $folderID Optional bookmark folder ID
      * @param RequestOpts|null $requestOptions
      *
+     * @return CursorPage<PaginatedTweets>
+     *
      * @throws APIException
      */
     public function list(
         ?string $cursor = null,
         ?string $folderID = null,
         RequestOptions|array|null $requestOptions = null,
-    ): BookmarkListResponse;
+    ): CursorPage;
 
     /**
      * @api

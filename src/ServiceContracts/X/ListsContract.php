@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
-use XTwitterScraper\X\Lists\ListGetFollowersResponse;
-use XTwitterScraper\X\Lists\ListGetMembersResponse;
-use XTwitterScraper\X\Lists\ListGetTweetsResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -28,7 +27,7 @@ interface ListsContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): ListGetFollowersResponse;
+    ): PaginatedUsers;
 
     /**
      * @api
@@ -43,7 +42,7 @@ interface ListsContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): ListGetMembersResponse;
+    ): PaginatedUsers;
 
     /**
      * @api
@@ -64,5 +63,5 @@ interface ListsContract
         ?string $sinceTime = null,
         ?string $untilTime = null,
         RequestOptions|array|null $requestOptions = null,
-    ): ListGetTweetsResponse;
+    ): PaginatedTweets;
 }

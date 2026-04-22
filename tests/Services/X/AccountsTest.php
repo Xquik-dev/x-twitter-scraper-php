@@ -8,11 +8,12 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\X\Accounts\AccountBulkRetryResponse;
 use XTwitterScraper\X\Accounts\AccountDeleteResponse;
-use XTwitterScraper\X\Accounts\AccountGetResponse;
 use XTwitterScraper\X\Accounts\AccountListResponse;
 use XTwitterScraper\X\Accounts\AccountNewResponse;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
+use XTwitterScraper\X\Accounts\XAccountDetail;
 
 /**
  * @internal
@@ -82,7 +83,7 @@ final class AccountsTest extends TestCase
         $result = $this->client->x->accounts->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(AccountGetResponse::class, $result);
+        $this->assertInstanceOf(XAccountDetail::class, $result);
     }
 
     #[Test]
@@ -109,6 +110,19 @@ final class AccountsTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(AccountDeleteResponse::class, $result);
+    }
+
+    #[Test]
+    public function testBulkRetry(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->x->accounts->bulkRetry();
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(AccountBulkRetryResponse::class, $result);
     }
 
     #[Test]

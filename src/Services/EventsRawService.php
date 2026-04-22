@@ -8,10 +8,10 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\Events\EventGetResponse;
+use XTwitterScraper\Events\EventDetail;
 use XTwitterScraper\Events\EventListParams;
-use XTwitterScraper\Events\EventListParams\EventType;
 use XTwitterScraper\Events\EventListResponse;
+use XTwitterScraper\EventType;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\EventsRawContract;
 
@@ -36,7 +36,7 @@ final class EventsRawService implements EventsRawContract
      * @param string $id Resource ID (stringified bigint)
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<EventGetResponse>
+     * @return BaseResponse<EventDetail>
      *
      * @throws APIException
      */
@@ -49,7 +49,7 @@ final class EventsRawService implements EventsRawContract
             method: 'get',
             path: ['events/%1$s', $id],
             options: $requestOptions,
-            convert: EventGetResponse::class,
+            convert: EventDetail::class,
         );
     }
 

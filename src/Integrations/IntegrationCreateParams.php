@@ -8,8 +8,8 @@ use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\EventType;
 use XTwitterScraper\Integrations\IntegrationCreateParams\Config;
-use XTwitterScraper\Integrations\IntegrationCreateParams\EventType;
 use XTwitterScraper\Integrations\IntegrationCreateParams\Type;
 
 /**

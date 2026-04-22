@@ -8,13 +8,12 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Extractions\ExtractionListResponse\Extraction;
 
 /**
- * @phpstan-import-type ExtractionShape from \XTwitterScraper\Extractions\ExtractionListResponse\Extraction
+ * @phpstan-import-type ExtractionJobShape from \XTwitterScraper\Extractions\ExtractionJob
  *
  * @phpstan-type ExtractionListResponseShape = array{
- *   extractions: list<Extraction|ExtractionShape>,
+ *   extractions: list<ExtractionJob|ExtractionJobShape>,
  *   hasMore: bool,
  *   nextCursor?: string|null,
  * }
@@ -24,8 +23,8 @@ final class ExtractionListResponse implements BaseModel
     /** @use SdkModel<ExtractionListResponseShape> */
     use SdkModel;
 
-    /** @var list<Extraction> $extractions */
-    #[Required(list: Extraction::class)]
+    /** @var list<ExtractionJob> $extractions */
+    #[Required(list: ExtractionJob::class)]
     public array $extractions;
 
     #[Required]
@@ -58,7 +57,7 @@ final class ExtractionListResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param list<Extraction|ExtractionShape> $extractions
+     * @param list<ExtractionJob|ExtractionJobShape> $extractions
      */
     public static function with(
         array $extractions,
@@ -76,7 +75,7 @@ final class ExtractionListResponse implements BaseModel
     }
 
     /**
-     * @param list<Extraction|ExtractionShape> $extractions
+     * @param list<ExtractionJob|ExtractionJobShape> $extractions
      */
     public function withExtractions(array $extractions): self
     {

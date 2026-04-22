@@ -8,11 +8,10 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\X\Communities\CommunityDeleteResponse;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse;
-use XTwitterScraper\X\Communities\CommunityGetMembersResponse;
-use XTwitterScraper\X\Communities\CommunityGetModeratorsResponse;
-use XTwitterScraper\X\Communities\CommunityGetSearchResponse;
 use XTwitterScraper\X\Communities\CommunityNewResponse;
 
 /**
@@ -127,7 +126,7 @@ final class CommunitiesTest extends TestCase
         $result = $this->client->x->communities->retrieveMembers('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(CommunityGetMembersResponse::class, $result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 
     #[Test]
@@ -140,7 +139,7 @@ final class CommunitiesTest extends TestCase
         $result = $this->client->x->communities->retrieveModerators('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(CommunityGetModeratorsResponse::class, $result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 
     #[Test]
@@ -153,7 +152,7 @@ final class CommunitiesTest extends TestCase
         $result = $this->client->x->communities->retrieveSearch(q: 'q');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(CommunityGetSearchResponse::class, $result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -170,6 +169,6 @@ final class CommunitiesTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(CommunityGetSearchResponse::class, $result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 }

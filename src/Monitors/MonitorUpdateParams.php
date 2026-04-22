@@ -8,7 +8,7 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Monitors\MonitorUpdateParams\EventType;
+use XTwitterScraper\EventType;
 
 /**
  * Update monitor.

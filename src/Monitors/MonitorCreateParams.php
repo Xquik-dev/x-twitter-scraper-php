@@ -8,7 +8,7 @@ use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Monitors\MonitorCreateParams\EventType;
+use XTwitterScraper\EventType;
 
 /**
  * Create monitor.

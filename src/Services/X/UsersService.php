@@ -7,19 +7,12 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\UsersContract;
 use XTwitterScraper\Services\X\Users\FollowService;
-use XTwitterScraper\X\Users\UserGetBatchResponse;
-use XTwitterScraper\X\Users\UserGetFollowersResponse;
-use XTwitterScraper\X\Users\UserGetFollowersYouKnowResponse;
-use XTwitterScraper\X\Users\UserGetFollowingResponse;
-use XTwitterScraper\X\Users\UserGetLikesResponse;
-use XTwitterScraper\X\Users\UserGetMediaResponse;
-use XTwitterScraper\X\Users\UserGetMentionsResponse;
-use XTwitterScraper\X\Users\UserGetSearchResponse;
-use XTwitterScraper\X\Users\UserGetTweetsResponse;
-use XTwitterScraper\X\Users\UserGetVerifiedFollowersResponse;
+use XTwitterScraper\X\Users\UserProfile;
 
 /**
  * X data lookups (subscription required).
@@ -50,6 +43,26 @@ final class UsersService implements UsersContract
     /**
      * @api
      *
+     * Look up X user
+     *
+     * @param string $id X username (without @) or user ID
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function retrieve(
+        string $id,
+        RequestOptions|array|null $requestOptions = null
+    ): UserProfile {
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->retrieve($id, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
      * Get multiple users by IDs
      *
      * @param string $ids Comma-separated user IDs (max 100)
@@ -60,7 +73,7 @@ final class UsersService implements UsersContract
     public function retrieveBatch(
         string $ids,
         RequestOptions|array|null $requestOptions = null
-    ): UserGetBatchResponse {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['ids' => $ids]);
 
         // @phpstan-ignore-next-line argument.type
@@ -86,7 +99,7 @@ final class UsersService implements UsersContract
         ?string $cursor = null,
         ?int $pageSize = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetFollowersResponse {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['cursor' => $cursor, 'pageSize' => $pageSize]);
 
         // @phpstan-ignore-next-line argument.type
@@ -110,7 +123,7 @@ final class UsersService implements UsersContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetFollowersYouKnowResponse {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -136,7 +149,7 @@ final class UsersService implements UsersContract
         ?string $cursor = null,
         ?int $pageSize = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetFollowingResponse {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['cursor' => $cursor, 'pageSize' => $pageSize]);
 
         // @phpstan-ignore-next-line argument.type
@@ -160,7 +173,7 @@ final class UsersService implements UsersContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetLikesResponse {
+    ): PaginatedTweets {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -184,7 +197,7 @@ final class UsersService implements UsersContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetMediaResponse {
+    ): PaginatedTweets {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -212,7 +225,7 @@ final class UsersService implements UsersContract
         ?string $sinceTime = null,
         ?string $untilTime = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetMentionsResponse {
+    ): PaginatedTweets {
         $params = Util::removeNulls(
             [
                 'cursor' => $cursor,
@@ -242,7 +255,7 @@ final class UsersService implements UsersContract
         string $q,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetSearchResponse {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['q' => $q, 'cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -270,7 +283,7 @@ final class UsersService implements UsersContract
         bool $includeParentTweet = false,
         bool $includeReplies = false,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetTweetsResponse {
+    ): PaginatedTweets {
         $params = Util::removeNulls(
             [
                 'cursor' => $cursor,
@@ -300,7 +313,7 @@ final class UsersService implements UsersContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): UserGetVerifiedFollowersResponse {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type

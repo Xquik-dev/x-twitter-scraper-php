@@ -9,10 +9,9 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\Communities\JoinRawContract;
+use XTwitterScraper\X\Communities\CommunityActionResult;
 use XTwitterScraper\X\Communities\Join\JoinCreateParams;
 use XTwitterScraper\X\Communities\Join\JoinDeleteAllParams;
-use XTwitterScraper\X\Communities\Join\JoinDeleteAllResponse;
-use XTwitterScraper\X\Communities\Join\JoinNewResponse;
 
 /**
  * X write actions (tweets, likes, follows, DMs).
@@ -36,7 +35,7 @@ final class JoinRawService implements JoinRawContract
      * @param array{account: string}|JoinCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<JoinNewResponse>
+     * @return BaseResponse<CommunityActionResult>
      *
      * @throws APIException
      */
@@ -56,7 +55,7 @@ final class JoinRawService implements JoinRawContract
             path: ['x/communities/%1$s/join', $id],
             body: (object) $parsed,
             options: $options,
-            convert: JoinNewResponse::class,
+            convert: CommunityActionResult::class,
         );
     }
 
@@ -69,7 +68,7 @@ final class JoinRawService implements JoinRawContract
      * @param array{account: string}|JoinDeleteAllParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<JoinDeleteAllResponse>
+     * @return BaseResponse<CommunityActionResult>
      *
      * @throws APIException
      */
@@ -89,7 +88,7 @@ final class JoinRawService implements JoinRawContract
             path: ['x/communities/%1$s/join', $id],
             body: (object) $parsed,
             options: $options,
-            convert: JoinDeleteAllResponse::class,
+            convert: CommunityActionResult::class,
         );
     }
 }

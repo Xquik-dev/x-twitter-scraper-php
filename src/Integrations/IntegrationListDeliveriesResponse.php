@@ -7,13 +7,12 @@ namespace XTwitterScraper\Integrations;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Integrations\IntegrationListDeliveriesResponse\Delivery;
 
 /**
- * @phpstan-import-type DeliveryShape from \XTwitterScraper\Integrations\IntegrationListDeliveriesResponse\Delivery
+ * @phpstan-import-type IntegrationDeliveryShape from \XTwitterScraper\Integrations\IntegrationDelivery
  *
  * @phpstan-type IntegrationListDeliveriesResponseShape = array{
- *   deliveries: list<Delivery|DeliveryShape>
+ *   deliveries: list<IntegrationDelivery|IntegrationDeliveryShape>
  * }
  */
 final class IntegrationListDeliveriesResponse implements BaseModel
@@ -21,8 +20,8 @@ final class IntegrationListDeliveriesResponse implements BaseModel
     /** @use SdkModel<IntegrationListDeliveriesResponseShape> */
     use SdkModel;
 
-    /** @var list<Delivery> $deliveries */
-    #[Required(list: Delivery::class)]
+    /** @var list<IntegrationDelivery> $deliveries */
+    #[Required(list: IntegrationDelivery::class)]
     public array $deliveries;
 
     /**
@@ -49,7 +48,7 @@ final class IntegrationListDeliveriesResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param list<Delivery|DeliveryShape> $deliveries
+     * @param list<IntegrationDelivery|IntegrationDeliveryShape> $deliveries
      */
     public static function with(array $deliveries): self
     {
@@ -61,7 +60,7 @@ final class IntegrationListDeliveriesResponse implements BaseModel
     }
 
     /**
-     * @param list<Delivery|DeliveryShape> $deliveries
+     * @param list<IntegrationDelivery|IntegrationDeliveryShape> $deliveries
      */
     public function withDeliveries(array $deliveries): self
     {

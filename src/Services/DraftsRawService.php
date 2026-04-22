@@ -9,10 +9,9 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Drafts\DraftCreateParams;
 use XTwitterScraper\Drafts\DraftCreateParams\Goal;
-use XTwitterScraper\Drafts\DraftGetResponse;
+use XTwitterScraper\Drafts\DraftDetail;
 use XTwitterScraper\Drafts\DraftListParams;
 use XTwitterScraper\Drafts\DraftListResponse;
-use XTwitterScraper\Drafts\DraftNewResponse;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\DraftsRawContract;
 
@@ -39,7 +38,7 @@ final class DraftsRawService implements DraftsRawContract
      * }|DraftCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<DraftNewResponse>
+     * @return BaseResponse<DraftDetail>
      *
      * @throws APIException
      */
@@ -58,7 +57,7 @@ final class DraftsRawService implements DraftsRawContract
             path: 'drafts',
             body: (object) $parsed,
             options: $options,
-            convert: DraftNewResponse::class,
+            convert: DraftDetail::class,
         );
     }
 
@@ -70,7 +69,7 @@ final class DraftsRawService implements DraftsRawContract
      * @param string $id Resource ID (stringified bigint)
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<DraftGetResponse>
+     * @return BaseResponse<DraftDetail>
      *
      * @throws APIException
      */
@@ -83,7 +82,7 @@ final class DraftsRawService implements DraftsRawContract
             method: 'get',
             path: ['drafts/%1$s', $id],
             options: $requestOptions,
-            convert: DraftGetResponse::class,
+            convert: DraftDetail::class,
         );
     }
 

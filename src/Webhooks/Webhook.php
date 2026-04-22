@@ -7,7 +7,7 @@ namespace XTwitterScraper\Webhooks;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Webhooks\Webhook\EventType;
+use XTwitterScraper\EventType;
 
 /**
  * Webhook endpoint registered to receive event deliveries.

@@ -7,16 +7,14 @@ namespace XTwitterScraper\Services;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\EventType;
+use XTwitterScraper\Integrations\Integration;
 use XTwitterScraper\Integrations\IntegrationCreateParams\Config;
-use XTwitterScraper\Integrations\IntegrationCreateParams\EventType;
 use XTwitterScraper\Integrations\IntegrationCreateParams\Type;
 use XTwitterScraper\Integrations\IntegrationDeleteResponse;
-use XTwitterScraper\Integrations\IntegrationGetResponse;
 use XTwitterScraper\Integrations\IntegrationListDeliveriesResponse;
 use XTwitterScraper\Integrations\IntegrationListResponse;
-use XTwitterScraper\Integrations\IntegrationNewResponse;
 use XTwitterScraper\Integrations\IntegrationSendTestResponse;
-use XTwitterScraper\Integrations\IntegrationUpdateResponse;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\IntegrationsContract;
 
@@ -59,7 +57,7 @@ final class IntegrationsService implements IntegrationsContract
         string $name,
         Type|string $type,
         RequestOptions|array|null $requestOptions = null,
-    ): IntegrationNewResponse {
+    ): Integration {
         $params = Util::removeNulls(
             [
                 'config' => $config,
@@ -88,7 +86,7 @@ final class IntegrationsService implements IntegrationsContract
     public function retrieve(
         string $id,
         RequestOptions|array|null $requestOptions = null
-    ): IntegrationGetResponse {
+    ): Integration {
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieve($id, requestOptions: $requestOptions);
 
@@ -101,7 +99,7 @@ final class IntegrationsService implements IntegrationsContract
      * Update integration
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param list<\XTwitterScraper\Integrations\IntegrationUpdateParams\EventType|value-of<\XTwitterScraper\Integrations\IntegrationUpdateParams\EventType>> $eventTypes array of event types to subscribe to
+     * @param list<EventType|value-of<EventType>> $eventTypes array of event types to subscribe to
      * @param array<string,mixed> $filters Event filter rules (JSON)
      * @param array<string,mixed> $messageTemplate Custom message template (JSON)
      * @param RequestOpts|null $requestOptions
@@ -118,7 +116,7 @@ final class IntegrationsService implements IntegrationsContract
         ?bool $scopeAllMonitors = null,
         ?bool $silentPush = null,
         RequestOptions|array|null $requestOptions = null,
-    ): IntegrationUpdateResponse {
+    ): Integration {
         $params = Util::removeNulls(
             [
                 'eventTypes' => $eventTypes,

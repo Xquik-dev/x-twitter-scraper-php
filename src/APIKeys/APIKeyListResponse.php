@@ -4,23 +4,22 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\APIKeys;
 
-use XTwitterScraper\APIKeys\APIKeyListResponse\Key;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-import-type KeyShape from \XTwitterScraper\APIKeys\APIKeyListResponse\Key
+ * @phpstan-import-type APIKeyShape from \XTwitterScraper\APIKeys\APIKey
  *
- * @phpstan-type APIKeyListResponseShape = array{keys: list<Key|KeyShape>}
+ * @phpstan-type APIKeyListResponseShape = array{keys: list<APIKey|APIKeyShape>}
  */
 final class APIKeyListResponse implements BaseModel
 {
     /** @use SdkModel<APIKeyListResponseShape> */
     use SdkModel;
 
-    /** @var list<Key> $keys */
-    #[Required(list: Key::class)]
+    /** @var list<APIKey> $keys */
+    #[Required(list: APIKey::class)]
     public array $keys;
 
     /**
@@ -47,7 +46,7 @@ final class APIKeyListResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param list<Key|KeyShape> $keys
+     * @param list<APIKey|APIKeyShape> $keys
      */
     public static function with(array $keys): self
     {
@@ -59,7 +58,7 @@ final class APIKeyListResponse implements BaseModel
     }
 
     /**
-     * @param list<Key|KeyShape> $keys
+     * @param list<APIKey|APIKeyShape> $keys
      */
     public function withKeys(array $keys): self
     {

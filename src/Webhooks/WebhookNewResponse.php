@@ -7,7 +7,7 @@ namespace XTwitterScraper\Webhooks;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Webhooks\WebhookNewResponse\EventType;
+use XTwitterScraper\EventType;
 
 /**
  * @phpstan-type WebhookNewResponseShape = array{
