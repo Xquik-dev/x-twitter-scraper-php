@@ -9,13 +9,14 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\AccountsRawContract;
+use XTwitterScraper\X\Accounts\AccountBulkRetryResponse;
 use XTwitterScraper\X\Accounts\AccountCreateParams;
 use XTwitterScraper\X\Accounts\AccountDeleteResponse;
-use XTwitterScraper\X\Accounts\AccountGetResponse;
 use XTwitterScraper\X\Accounts\AccountListResponse;
 use XTwitterScraper\X\Accounts\AccountNewResponse;
 use XTwitterScraper\X\Accounts\AccountReauthParams;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
+use XTwitterScraper\X\Accounts\XAccountDetail;
 
 /**
  * Connected X account management.
@@ -64,7 +65,6 @@ final class AccountsRawService implements AccountsRawContract
             body: (object) $parsed,
             options: $options,
             convert: AccountNewResponse::class,
-            security: ['apiKey' => true],
         );
     }
 
@@ -76,7 +76,7 @@ final class AccountsRawService implements AccountsRawContract
      * @param string $id Resource ID (stringified bigint)
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<AccountGetResponse>
+     * @return BaseResponse<XAccountDetail>
      *
      * @throws APIException
      */
@@ -89,8 +89,7 @@ final class AccountsRawService implements AccountsRawContract
             method: 'get',
             path: ['x/accounts/%1$s', $id],
             options: $requestOptions,
-            convert: AccountGetResponse::class,
-            security: ['apiKey' => true],
+            convert: XAccountDetail::class,
         );
     }
 
@@ -114,7 +113,6 @@ final class AccountsRawService implements AccountsRawContract
             path: 'x/accounts',
             options: $requestOptions,
             convert: AccountListResponse::class,
-            security: ['apiKey' => true],
         );
     }
 
@@ -140,7 +138,29 @@ final class AccountsRawService implements AccountsRawContract
             path: ['x/accounts/%1$s', $id],
             options: $requestOptions,
             convert: AccountDeleteResponse::class,
-            security: ['apiKey' => true],
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Clears loginFailedAt and loginFailureReason for all accounts with transient or automated failure reasons, making them eligible for retry on next use.
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<AccountBulkRetryResponse>
+     *
+     * @throws APIException
+     */
+    public function bulkRetry(
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse {
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'post',
+            path: 'x/accounts/bulk-retry',
+            options: $requestOptions,
+            convert: AccountBulkRetryResponse::class,
         );
     }
 
@@ -150,7 +170,9 @@ final class AccountsRawService implements AccountsRawContract
      * Re-authenticate X account
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param array{password: string, totpSecret?: string}|AccountReauthParams $params
+     * @param array{
+     *   password: string, email?: string, proxyCountry?: string, totpSecret?: string
+     * }|AccountReauthParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<AccountReauthResponse>
@@ -174,7 +196,6 @@ final class AccountsRawService implements AccountsRawContract
             body: (object) $parsed,
             options: $options,
             convert: AccountReauthResponse::class,
-            security: ['apiKey' => true],
         );
     }
 }

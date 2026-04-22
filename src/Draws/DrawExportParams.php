@@ -26,7 +26,11 @@ final class DrawExportParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
-    /** @var value-of<Format>|null $format */
+    /**
+     * Export output format.
+     *
+     * @var value-of<Format>|null $format
+     */
     #[Optional(enum: Format::class)]
     public ?string $format;
 
@@ -64,6 +68,8 @@ final class DrawExportParams implements BaseModel
     }
 
     /**
+     * Export output format.
+     *
      * @param Format|value-of<Format> $format
      */
     public function withFormat(Format|string $format): self

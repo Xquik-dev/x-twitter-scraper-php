@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Download tweet media.
+ * Download images & videos from tweets.
  *
  * @see XTwitterScraper\Services\X\MediaService::download()
  *

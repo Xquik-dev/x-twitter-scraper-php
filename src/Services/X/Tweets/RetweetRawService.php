@@ -32,6 +32,7 @@ final class RetweetRawService implements RetweetRawContract
      *
      * Retweet
      *
+     * @param string $id Tweet ID to retweet
      * @param array{account: string}|RetweetCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -40,7 +41,7 @@ final class RetweetRawService implements RetweetRawContract
      * @throws APIException
      */
     public function create(
-        string $tweetID,
+        string $id,
         array|RetweetCreateParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse {
@@ -52,7 +53,7 @@ final class RetweetRawService implements RetweetRawContract
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
-            path: ['x/tweets/%1$s/retweet', $tweetID],
+            path: ['x/tweets/%1$s/retweet', $id],
             body: (object) $parsed,
             options: $options,
             convert: RetweetNewResponse::class,
@@ -64,6 +65,7 @@ final class RetweetRawService implements RetweetRawContract
      *
      * Unretweet
      *
+     * @param string $id Tweet ID to unretweet
      * @param array{account: string}|RetweetDeleteParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -72,7 +74,7 @@ final class RetweetRawService implements RetweetRawContract
      * @throws APIException
      */
     public function delete(
-        string $tweetID,
+        string $id,
         array|RetweetDeleteParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse {
@@ -84,7 +86,7 @@ final class RetweetRawService implements RetweetRawContract
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'delete',
-            path: ['x/tweets/%1$s/retweet', $tweetID],
+            path: ['x/tweets/%1$s/retweet', $id],
             body: (object) $parsed,
             options: $options,
             convert: RetweetDeleteResponse::class,

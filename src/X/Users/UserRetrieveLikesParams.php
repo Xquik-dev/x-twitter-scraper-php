@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get tweets liked by a user.
+ * List tweets liked by a user.
  *
  * @see XTwitterScraper\Services\X\UsersService::retrieveLikes()
  *
@@ -23,7 +23,7 @@ final class UserRetrieveLikesParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for liked tweets.
      */
     #[Optional]
     public ?string $cursor;
@@ -48,7 +48,7 @@ final class UserRetrieveLikesParams implements BaseModel
     }
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for liked tweets.
      */
     public function withCursor(string $cursor): self
     {

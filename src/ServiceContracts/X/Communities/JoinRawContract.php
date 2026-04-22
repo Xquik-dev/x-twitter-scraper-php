@@ -7,10 +7,9 @@ namespace XTwitterScraper\ServiceContracts\X\Communities;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
+use XTwitterScraper\X\Communities\CommunityActionResult;
 use XTwitterScraper\X\Communities\Join\JoinCreateParams;
 use XTwitterScraper\X\Communities\Join\JoinDeleteAllParams;
-use XTwitterScraper\X\Communities\Join\JoinDeleteAllResponse;
-use XTwitterScraper\X\Communities\Join\JoinNewResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -24,7 +23,7 @@ interface JoinRawContract
      * @param array<string,mixed>|JoinCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<JoinNewResponse>
+     * @return BaseResponse<CommunityActionResult>
      *
      * @throws APIException
      */
@@ -41,7 +40,7 @@ interface JoinRawContract
      * @param array<string,mixed>|JoinDeleteAllParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<JoinDeleteAllResponse>
+     * @return BaseResponse<CommunityActionResult>
      *
      * @throws APIException
      */

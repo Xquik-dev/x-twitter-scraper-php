@@ -8,6 +8,7 @@ use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Core\FileParam;
 
 /**
  * Update profile avatar.
@@ -15,7 +16,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\X\ProfileService::updateAvatar()
  *
  * @phpstan-type ProfileUpdateAvatarParamsShape = array{
- *   account: string, file: string
+ *   account: string, file: string|FileParam
  * }
  */
 final class ProfileUpdateAvatarParams implements BaseModel
@@ -25,7 +26,7 @@ final class ProfileUpdateAvatarParams implements BaseModel
     use SdkParams;
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) for avatar update.
      */
     #[Required]
     public string $account;
@@ -60,7 +61,7 @@ final class ProfileUpdateAvatarParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $account, string $file): self
+    public static function with(string $account, string|FileParam $file): self
     {
         $self = new self;
 
@@ -71,7 +72,7 @@ final class ProfileUpdateAvatarParams implements BaseModel
     }
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) for avatar update.
      */
     public function withAccount(string $account): self
     {
@@ -84,7 +85,7 @@ final class ProfileUpdateAvatarParams implements BaseModel
     /**
      * Avatar image (max 716KB).
      */
-    public function withFile(string $file): self
+    public function withFile(string|FileParam $file): self
     {
         $self = clone $this;
         $self['file'] = $file;

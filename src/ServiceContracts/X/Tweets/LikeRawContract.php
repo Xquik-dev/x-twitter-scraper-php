@@ -20,6 +20,7 @@ interface LikeRawContract
     /**
      * @api
      *
+     * @param string $id Tweet ID to like
      * @param array<string,mixed>|LikeCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -28,7 +29,7 @@ interface LikeRawContract
      * @throws APIException
      */
     public function create(
-        string $tweetID,
+        string $id,
         array|LikeCreateParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
@@ -36,6 +37,7 @@ interface LikeRawContract
     /**
      * @api
      *
+     * @param string $id Tweet ID to unlike
      * @param array<string,mixed>|LikeDeleteParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -44,7 +46,7 @@ interface LikeRawContract
      * @throws APIException
      */
     public function delete(
-        string $tweetID,
+        string $id,
         array|LikeDeleteParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;

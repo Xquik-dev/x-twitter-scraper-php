@@ -17,14 +17,14 @@ interface FollowContract
     /**
      * @api
      *
-     * @param string $userID User ID to follow
-     * @param string $account X account (@username or account ID)
+     * @param string $id User ID to follow
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function create(
-        string $userID,
+        string $id,
         string $account,
         RequestOptions|array|null $requestOptions = null,
     ): FollowNewResponse;
@@ -32,14 +32,14 @@ interface FollowContract
     /**
      * @api
      *
-     * @param string $userID User ID to unfollow
-     * @param string $account X account (@username or account ID)
+     * @param string $id User ID to unfollow
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function deleteAll(
-        string $userID,
+        string $id,
         string $account,
         RequestOptions|array|null $requestOptions = null,
     ): FollowDeleteAllResponse;

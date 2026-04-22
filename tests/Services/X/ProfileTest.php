@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
+use XTwitterScraper\Core\FileParam;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\Profile\ProfileUpdateAvatarResponse;
 use XTwitterScraper\X\Profile\ProfileUpdateBannerResponse;
@@ -25,11 +26,7 @@ final class ProfileTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -41,7 +38,7 @@ final class ProfileTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->profile->update(account: 'account');
+        $result = $this->client->x->profile->update(account: '@elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(ProfileUpdateResponse::class, $result);
@@ -55,11 +52,11 @@ final class ProfileTest extends TestCase
         }
 
         $result = $this->client->x->profile->update(
-            account: 'account',
-            description: 'description',
-            location: 'location',
-            name: 'name',
-            url: 'url',
+            account: '@elonmusk',
+            description: 'description_value',
+            location: 'location_value',
+            name: 'Example Name',
+            url: 'https://xquik.com/example',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -74,8 +71,8 @@ final class ProfileTest extends TestCase
         }
 
         $result = $this->client->x->profile->updateAvatar(
-            account: 'account',
-            file: 'file'
+            account: '@elonmusk',
+            file: FileParam::fromString('Example data', filename: uniqid('file-upload-', true)),
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -90,8 +87,8 @@ final class ProfileTest extends TestCase
         }
 
         $result = $this->client->x->profile->updateAvatar(
-            account: 'account',
-            file: 'file'
+            account: '@elonmusk',
+            file: FileParam::fromString('Example data', filename: uniqid('file-upload-', true)),
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -106,8 +103,8 @@ final class ProfileTest extends TestCase
         }
 
         $result = $this->client->x->profile->updateBanner(
-            account: 'account',
-            file: 'file'
+            account: '@elonmusk',
+            file: FileParam::fromString('Example data', filename: uniqid('file-upload-', true)),
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -122,8 +119,8 @@ final class ProfileTest extends TestCase
         }
 
         $result = $this->client->x->profile->updateBanner(
-            account: 'account',
-            file: 'file'
+            account: '@elonmusk',
+            file: FileParam::fromString('Example data', filename: uniqid('file-upload-', true)),
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedTweets;
 
 /**
  * @internal
@@ -22,11 +23,7 @@ final class TweetsTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -41,7 +38,7 @@ final class TweetsTest extends TestCase
         $result = $this->client->x->communities->tweets->list(q: 'q');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -58,6 +55,19 @@ final class TweetsTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
+    }
+
+    #[Test]
+    public function testListByCommunity(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->x->communities->tweets->listByCommunity('id');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 }

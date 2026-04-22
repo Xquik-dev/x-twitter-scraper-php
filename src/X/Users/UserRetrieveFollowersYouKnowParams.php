@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get followers you know for a user.
+ * List mutual followers between you and a user.
  *
  * @see XTwitterScraper\Services\X\UsersService::retrieveFollowersYouKnow()
  *
@@ -25,7 +25,7 @@ final class UserRetrieveFollowersYouKnowParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for followers-you-know.
      */
     #[Optional]
     public ?string $cursor;
@@ -50,7 +50,7 @@ final class UserRetrieveFollowersYouKnowParams implements BaseModel
     }
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for followers-you-know.
      */
     public function withCursor(string $cursor): self
     {

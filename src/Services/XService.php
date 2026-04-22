@@ -7,6 +7,7 @@ namespace XTwitterScraper\Services;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\XContract;
 use XTwitterScraper\Services\X\AccountsService;
@@ -20,13 +21,11 @@ use XTwitterScraper\Services\X\ProfileService;
 use XTwitterScraper\Services\X\TweetsService;
 use XTwitterScraper\Services\X\UsersService;
 use XTwitterScraper\X\XGetArticleResponse;
-use XTwitterScraper\X\XGetHomeTimelineResponse;
 use XTwitterScraper\X\XGetNotificationsParams\Type;
 use XTwitterScraper\X\XGetNotificationsResponse;
+use XTwitterScraper\X\XGetTrendsResponse;
 
 /**
- * X data lookups (subscription required).
- *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
 final class XService implements XContract
@@ -109,6 +108,7 @@ final class XService implements XContract
      *
      * Retrieve the full content of an X Article (long-form post) by tweet ID.
      *
+     * @param string $tweetID Tweet ID of the article
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -128,7 +128,7 @@ final class XService implements XContract
      *
      * Get home timeline
      *
-     * @param string $cursor Pagination cursor from previous response
+     * @param string $cursor Pagination cursor for timeline
      * @param string $seenTweetIDs Comma-separated tweet IDs to exclude from results
      * @param RequestOpts|null $requestOptions
      *
@@ -138,7 +138,7 @@ final class XService implements XContract
         ?string $cursor = null,
         ?string $seenTweetIDs = null,
         RequestOptions|array|null $requestOptions = null,
-    ): XGetHomeTimelineResponse {
+    ): PaginatedTweets {
         $params = Util::removeNulls(
             ['cursor' => $cursor, 'seenTweetIDs' => $seenTweetIDs]
         );
@@ -154,7 +154,7 @@ final class XService implements XContract
      *
      * Get notifications
      *
-     * @param string $cursor Pagination cursor from previous response
+     * @param string $cursor Pagination cursor for notifications
      * @param Type|value-of<Type> $type Notification type filter
      * @param RequestOpts|null $requestOptions
      *
@@ -176,17 +176,23 @@ final class XService implements XContract
     /**
      * @api
      *
-     * Get trending topics
+     * Get trending hashtags & topics from X by region
      *
+     * @param int $count Number of trending topics to return (1-50, default 30)
+     * @param int $woeid Region WOEID (1=Worldwide, 23424977=US, 23424975=UK, 23424969=Turkey)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function getTrends(
-        RequestOptions|array|null $requestOptions = null
-    ): mixed {
+        int $count = 30,
+        int $woeid = 1,
+        RequestOptions|array|null $requestOptions = null,
+    ): XGetTrendsResponse {
+        $params = Util::removeNulls(['count' => $count, 'woeid' => $woeid]);
+
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->getTrends(requestOptions: $requestOptions);
+        $response = $this->raw->getTrends(params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

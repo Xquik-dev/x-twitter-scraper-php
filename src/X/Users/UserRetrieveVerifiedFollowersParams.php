@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get verified followers.
+ * List verified followers of a user.
  *
  * @see XTwitterScraper\Services\X\UsersService::retrieveVerifiedFollowers()
  *
@@ -25,7 +25,7 @@ final class UserRetrieveVerifiedFollowersParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for verified followers.
      */
     #[Optional]
     public ?string $cursor;
@@ -50,7 +50,7 @@ final class UserRetrieveVerifiedFollowersParams implements BaseModel
     }
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for verified followers.
      */
     public function withCursor(string $cursor): self
     {

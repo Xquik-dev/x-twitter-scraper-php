@@ -7,11 +7,13 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\ListsContract;
 
 /**
- * X data lookups (subscription required).
+ * X List followers, members, and tweets.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -33,10 +35,10 @@ final class ListsService implements ListsContract
     /**
      * @api
      *
-     * Get list followers
+     * List followers of an X List
      *
      * @param string $id List ID
-     * @param string $cursor Pagination cursor
+     * @param string $cursor Pagination cursor for list followers
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -45,7 +47,7 @@ final class ListsService implements ListsContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): mixed {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -57,10 +59,10 @@ final class ListsService implements ListsContract
     /**
      * @api
      *
-     * Get list members
+     * List members of an X List
      *
-     * @param string $id List ID
-     * @param string $cursor Pagination cursor
+     * @param string $id List ID for member lookup
+     * @param string $cursor Pagination cursor for list members
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -69,7 +71,7 @@ final class ListsService implements ListsContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): mixed {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -81,10 +83,10 @@ final class ListsService implements ListsContract
     /**
      * @api
      *
-     * Get list tweets
+     * List tweets from an X List
      *
-     * @param string $id List ID
-     * @param string $cursor Pagination cursor
+     * @param string $id List ID for tweet lookup
+     * @param string $cursor Pagination cursor for list tweets
      * @param bool $includeReplies Include replies (default false)
      * @param string $sinceTime Unix timestamp - filter after
      * @param string $untilTime Unix timestamp - filter before
@@ -99,7 +101,7 @@ final class ListsService implements ListsContract
         ?string $sinceTime = null,
         ?string $untilTime = null,
         RequestOptions|array|null $requestOptions = null,
-    ): mixed {
+    ): PaginatedTweets {
         $params = Util::removeNulls(
             [
                 'cursor' => $cursor,

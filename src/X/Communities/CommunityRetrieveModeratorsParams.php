@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get community moderators.
+ * List moderators of a community.
  *
  * @see XTwitterScraper\Services\X\CommunitiesService::retrieveModerators()
  *
@@ -25,7 +25,7 @@ final class CommunityRetrieveModeratorsParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for community moderators.
      */
     #[Optional]
     public ?string $cursor;
@@ -50,7 +50,7 @@ final class CommunityRetrieveModeratorsParams implements BaseModel
     }
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for community moderators.
      */
     public function withCursor(string $cursor): self
     {

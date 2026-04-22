@@ -25,11 +25,7 @@ final class DrawsTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -80,7 +76,9 @@ final class DrawsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->draws->run(tweetURL: 'https://example.com');
+        $result = $this->client->draws->run(
+            tweetURL: 'https://x.com/elonmusk/status/1234567890'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(DrawRunResponse::class, $result);
@@ -94,18 +92,18 @@ final class DrawsTest extends TestCase
         }
 
         $result = $this->client->draws->run(
-            tweetURL: 'https://example.com',
-            backupCount: 0,
-            filterAccountAgeDays: 0,
-            filterLanguage: 'filterLanguage',
-            filterMinFollowers: 0,
-            mustFollowUsername: 'mustFollowUsername',
+            tweetURL: 'https://x.com/elonmusk/status/1234567890',
+            backupCount: 2,
+            filterAccountAgeDays: 30,
+            filterLanguage: 'en',
+            filterMinFollowers: 50,
+            mustFollowUsername: 'elonmusk',
             mustRetweet: true,
-            requiredHashtags: ['string'],
-            requiredKeywords: ['string'],
-            requiredMentions: ['string'],
+            requiredHashtags: ['#giveaway'],
+            requiredKeywords: ['entered'],
+            requiredMentions: ['@elonmusk'],
             uniqueAuthorsOnly: true,
-            winnerCount: 0,
+            winnerCount: 3,
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

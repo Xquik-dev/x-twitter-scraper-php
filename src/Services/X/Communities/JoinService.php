@@ -9,8 +9,7 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\Communities\JoinContract;
-use XTwitterScraper\X\Communities\Join\JoinDeleteAllResponse;
-use XTwitterScraper\X\Communities\Join\JoinNewResponse;
+use XTwitterScraper\X\Communities\CommunityActionResult;
 
 /**
  * X write actions (tweets, likes, follows, DMs).
@@ -38,7 +37,7 @@ final class JoinService implements JoinContract
      * Join community
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param string $account X account (@username or account ID)
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -47,7 +46,7 @@ final class JoinService implements JoinContract
         string $id,
         string $account,
         RequestOptions|array|null $requestOptions = null,
-    ): JoinNewResponse {
+    ): CommunityActionResult {
         $params = Util::removeNulls(['account' => $account]);
 
         // @phpstan-ignore-next-line argument.type
@@ -62,7 +61,7 @@ final class JoinService implements JoinContract
      * Leave community
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param string $account X account (@username or account ID)
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -71,7 +70,7 @@ final class JoinService implements JoinContract
         string $id,
         string $account,
         RequestOptions|array|null $requestOptions = null,
-    ): JoinDeleteAllResponse {
+    ): CommunityActionResult {
         $params = Util::removeNulls(['account' => $account]);
 
         // @phpstan-ignore-next-line argument.type

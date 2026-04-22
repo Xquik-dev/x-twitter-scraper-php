@@ -8,11 +8,11 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\EventType;
+use XTwitterScraper\Monitors\Monitor;
 use XTwitterScraper\Monitors\MonitorDeactivateResponse;
-use XTwitterScraper\Monitors\MonitorGetResponse;
 use XTwitterScraper\Monitors\MonitorListResponse;
 use XTwitterScraper\Monitors\MonitorNewResponse;
-use XTwitterScraper\Monitors\MonitorUpdateResponse;
 
 /**
  * @internal
@@ -27,11 +27,7 @@ final class MonitorsTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -44,8 +40,8 @@ final class MonitorsTest extends TestCase
         }
 
         $result = $this->client->monitors->create(
-            eventTypes: ['tweet.new'],
-            username: 'username'
+            eventTypes: [EventType::TWEET_NEW, EventType::TWEET_REPLY],
+            username: 'elonmusk',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -60,8 +56,8 @@ final class MonitorsTest extends TestCase
         }
 
         $result = $this->client->monitors->create(
-            eventTypes: ['tweet.new'],
-            username: 'username'
+            eventTypes: [EventType::TWEET_NEW, EventType::TWEET_REPLY],
+            username: 'elonmusk',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -78,7 +74,7 @@ final class MonitorsTest extends TestCase
         $result = $this->client->monitors->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(MonitorGetResponse::class, $result);
+        $this->assertInstanceOf(Monitor::class, $result);
     }
 
     #[Test]
@@ -91,7 +87,7 @@ final class MonitorsTest extends TestCase
         $result = $this->client->monitors->update('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(MonitorUpdateResponse::class, $result);
+        $this->assertInstanceOf(Monitor::class, $result);
     }
 
     #[Test]

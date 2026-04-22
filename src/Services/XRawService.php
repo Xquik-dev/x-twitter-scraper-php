@@ -8,18 +8,18 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\XRawContract;
 use XTwitterScraper\X\XGetArticleResponse;
 use XTwitterScraper\X\XGetHomeTimelineParams;
-use XTwitterScraper\X\XGetHomeTimelineResponse;
 use XTwitterScraper\X\XGetNotificationsParams;
 use XTwitterScraper\X\XGetNotificationsParams\Type;
 use XTwitterScraper\X\XGetNotificationsResponse;
+use XTwitterScraper\X\XGetTrendsParams;
+use XTwitterScraper\X\XGetTrendsResponse;
 
 /**
- * X data lookups (subscription required).
- *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
 final class XRawService implements XRawContract
@@ -35,6 +35,7 @@ final class XRawService implements XRawContract
      *
      * Retrieve the full content of an X Article (long-form post) by tweet ID.
      *
+     * @param string $tweetID Tweet ID of the article
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<XGetArticleResponse>
@@ -64,7 +65,7 @@ final class XRawService implements XRawContract
      * }|XGetHomeTimelineParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<XGetHomeTimelineResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -86,7 +87,7 @@ final class XRawService implements XRawContract
                 ['seenTweetIDs' => 'seenTweetIds']
             ),
             options: $options,
-            convert: XGetHomeTimelineResponse::class,
+            convert: PaginatedTweets::class,
         );
     }
 
@@ -126,23 +127,31 @@ final class XRawService implements XRawContract
     /**
      * @api
      *
-     * Get trending topics
+     * Get trending hashtags & topics from X by region
      *
+     * @param array{count?: int, woeid?: int}|XGetTrendsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<XGetTrendsResponse>
      *
      * @throws APIException
      */
     public function getTrends(
-        RequestOptions|array|null $requestOptions = null
+        array|XGetTrendsParams $params,
+        RequestOptions|array|null $requestOptions = null,
     ): BaseResponse {
+        [$parsed, $options] = XGetTrendsParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'get',
             path: 'x/trends',
-            options: $requestOptions,
-            convert: null
+            query: $parsed,
+            options: $options,
+            convert: XGetTrendsResponse::class,
         );
     }
 }

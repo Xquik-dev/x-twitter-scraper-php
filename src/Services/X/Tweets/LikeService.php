@@ -37,20 +37,21 @@ final class LikeService implements LikeContract
      *
      * Like tweet
      *
-     * @param string $account X account (@username or account ID)
+     * @param string $id Tweet ID to like
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function create(
-        string $tweetID,
+        string $id,
         string $account,
         RequestOptions|array|null $requestOptions = null,
     ): LikeNewResponse {
         $params = Util::removeNulls(['account' => $account]);
 
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->create($tweetID, params: $params, requestOptions: $requestOptions);
+        $response = $this->raw->create($id, params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }
@@ -60,20 +61,21 @@ final class LikeService implements LikeContract
      *
      * Unlike tweet
      *
-     * @param string $account X account (@username or account ID)
+     * @param string $id Tweet ID to unlike
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function delete(
-        string $tweetID,
+        string $id,
         string $account,
         RequestOptions|array|null $requestOptions = null,
     ): LikeDeleteResponse {
         $params = Util::removeNulls(['account' => $account]);
 
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->delete($tweetID, params: $params, requestOptions: $requestOptions);
+        $response = $this->raw->delete($id, params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

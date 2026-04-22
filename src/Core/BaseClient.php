@@ -55,7 +55,6 @@ abstract class BaseClient
      * @param string|int|list<string|int>|null $unwrap
      * @param class-string<BasePage<mixed>>|null $page
      * @param class-string<BaseStream<mixed>>|null $stream
-     * @param array{apiKey?: bool, oauthBearer?: bool}|null $security
      * @param RequestOptions|array<string,mixed>|null $options
      *
      * @return BaseResponse<mixed>
@@ -70,7 +69,6 @@ abstract class BaseClient
         string|Converter|ConverterSource|null $convert = null,
         ?string $page = null,
         ?string $stream = null,
-        ?array $security = null,
         RequestOptions|array|null $options = [],
     ): BaseResponse {
         [$req, $opts] = $this->buildRequest(
@@ -81,7 +79,6 @@ abstract class BaseClient
             // @phpstan-ignore argument.type
             headers: $headers,
             body: $body,
-            security: $security,
             // @phpstan-ignore argument.type
             opts: $options,
         );
@@ -116,7 +113,6 @@ abstract class BaseClient
      * @param array<string,mixed> $query
      * @param array<string,string|int|list<string|int>|null> $headers
      * @param RequestOpts|null $opts
-     * @param array{apiKey?: bool, oauthBearer?: bool}|null $security
      *
      * @return array{NormalizedRequest, RequestOptions}
      */
@@ -127,7 +123,6 @@ abstract class BaseClient
         array $headers,
         mixed $body,
         RequestOptions|array|null $opts,
-        ?array $security = null,
     ): array {
         $options = RequestOptions::parse($this->options, $opts);
 

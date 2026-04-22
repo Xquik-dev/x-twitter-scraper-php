@@ -7,6 +7,7 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\FileParam;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\MediaRawContract;
 use XTwitterScraper\X\Media\MediaDownloadParams;
@@ -15,7 +16,7 @@ use XTwitterScraper\X\Media\MediaUploadParams;
 use XTwitterScraper\X\Media\MediaUploadResponse;
 
 /**
- * Media upload & download.
+ * Media upload and download.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -30,7 +31,7 @@ final class MediaRawService implements MediaRawContract
     /**
      * @api
      *
-     * Download tweet media
+     * Download images & videos from tweets
      *
      * @param array{
      *   tweetIDs?: list<string>, tweetInput?: string
@@ -66,7 +67,7 @@ final class MediaRawService implements MediaRawContract
      * Upload media
      *
      * @param array{
-     *   account: string, file: string, isLongVideo?: bool
+     *   account: string, file: string|FileParam, isLongVideo?: bool
      * }|MediaUploadParams $params
      * @param RequestOpts|null $requestOptions
      *

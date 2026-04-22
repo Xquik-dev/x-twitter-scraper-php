@@ -8,10 +8,10 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\Events\EventGetResponse;
+use XTwitterScraper\Events\EventDetail;
 use XTwitterScraper\Events\EventListParams;
-use XTwitterScraper\Events\EventListParams\EventType;
 use XTwitterScraper\Events\EventListResponse;
+use XTwitterScraper\EventType;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\EventsRawContract;
 
@@ -36,7 +36,7 @@ final class EventsRawService implements EventsRawContract
      * @param string $id Resource ID (stringified bigint)
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<EventGetResponse>
+     * @return BaseResponse<EventDetail>
      *
      * @throws APIException
      */
@@ -49,7 +49,7 @@ final class EventsRawService implements EventsRawContract
             method: 'get',
             path: ['events/%1$s', $id],
             options: $requestOptions,
-            convert: EventGetResponse::class,
+            convert: EventDetail::class,
         );
     }
 
@@ -60,7 +60,7 @@ final class EventsRawService implements EventsRawContract
      *
      * @param array{
      *   after?: string,
-     *   eventType?: value-of<EventType>,
+     *   eventType?: EventType|value-of<EventType>,
      *   limit?: int,
      *   monitorID?: string,
      * }|EventListParams $params
@@ -86,7 +86,6 @@ final class EventsRawService implements EventsRawContract
             query: Util::array_transform_keys($parsed, ['monitorID' => 'monitorId']),
             options: $options,
             convert: EventListResponse::class,
-            security: ['apiKey' => true],
         );
     }
 }

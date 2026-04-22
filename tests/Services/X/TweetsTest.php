@@ -8,15 +8,11 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\X\Tweets\TweetDeleteResponse;
-use XTwitterScraper\X\Tweets\TweetGetFavoritersResponse;
-use XTwitterScraper\X\Tweets\TweetGetQuotesResponse;
-use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
 use XTwitterScraper\X\Tweets\TweetGetResponse;
-use XTwitterScraper\X\Tweets\TweetGetRetweetersResponse;
-use XTwitterScraper\X\Tweets\TweetGetThreadResponse;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
-use XTwitterScraper\X\Tweets\TweetSearchResponse;
 
 /**
  * @internal
@@ -31,11 +27,7 @@ final class TweetsTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -47,10 +39,7 @@ final class TweetsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->tweets->create(
-            account: 'account',
-            text: 'text'
-        );
+        $result = $this->client->x->tweets->create(account: '@elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TweetNewResponse::class, $result);
@@ -64,13 +53,14 @@ final class TweetsTest extends TestCase
         }
 
         $result = $this->client->x->tweets->create(
-            account: 'account',
-            text: 'text',
-            attachmentURL: 'attachment_url',
-            communityID: 'community_id',
-            isNoteTweet: true,
-            mediaIDs: ['string'],
-            replyToTweetID: 'reply_to_tweet_id',
+            account: '@elonmusk',
+            attachmentURL: 'https://x.com/elonmusk/status/1234567890',
+            communityID: '1500000000000000000',
+            isNoteTweet: false,
+            media: ['https://example.com/image.jpg'],
+            mediaIDs: ['1234567890123456789'],
+            replyToTweetID: '1234567890',
+            text: 'Just launched our new feature!',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -84,7 +74,7 @@ final class TweetsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->tweets->retrieve('tweetId');
+        $result = $this->client->x->tweets->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TweetGetResponse::class, $result);
@@ -100,7 +90,7 @@ final class TweetsTest extends TestCase
         $result = $this->client->x->tweets->list(ids: 'ids');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -113,7 +103,7 @@ final class TweetsTest extends TestCase
         $result = $this->client->x->tweets->list(ids: 'ids');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -123,7 +113,7 @@ final class TweetsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->tweets->delete('tweetId', account: 'account');
+        $result = $this->client->x->tweets->delete('id', account: '@elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TweetDeleteResponse::class, $result);
@@ -136,7 +126,7 @@ final class TweetsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->tweets->delete('tweetId', account: 'account');
+        $result = $this->client->x->tweets->delete('id', account: '@elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TweetDeleteResponse::class, $result);
@@ -152,7 +142,7 @@ final class TweetsTest extends TestCase
         $result = $this->client->x->tweets->getFavoriters('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(TweetGetFavoritersResponse::class, $result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 
     #[Test]
@@ -165,7 +155,7 @@ final class TweetsTest extends TestCase
         $result = $this->client->x->tweets->getQuotes('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(TweetGetQuotesResponse::class, $result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -178,7 +168,7 @@ final class TweetsTest extends TestCase
         $result = $this->client->x->tweets->getReplies('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(TweetGetRepliesResponse::class, $result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -191,7 +181,7 @@ final class TweetsTest extends TestCase
         $result = $this->client->x->tweets->getRetweeters('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(TweetGetRetweetersResponse::class, $result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 
     #[Test]
@@ -204,7 +194,7 @@ final class TweetsTest extends TestCase
         $result = $this->client->x->tweets->getThread('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(TweetGetThreadResponse::class, $result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -217,7 +207,7 @@ final class TweetsTest extends TestCase
         $result = $this->client->x->tweets->search(q: 'q');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(TweetSearchResponse::class, $result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -237,6 +227,6 @@ final class TweetsTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(TweetSearchResponse::class, $result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 }

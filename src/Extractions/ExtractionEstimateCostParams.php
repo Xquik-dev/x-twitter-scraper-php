@@ -35,24 +35,28 @@ final class ExtractionEstimateCostParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
-    /** @var value-of<ToolType> $toolType */
+    /**
+     * Identifier for the extraction tool used to run a job.
+     *
+     * @var value-of<ToolType> $toolType
+     */
     #[Required(enum: ToolType::class)]
     public string $toolType;
 
     /**
-     * Raw advanced search query appended as-is (tweet_search_extractor).
+     * Raw advanced query string appended to the estimate (tweet_search_extractor).
      */
     #[Optional]
     public ?string $advancedQuery;
 
     /**
-     * Exact phrase to match (tweet_search_extractor).
+     * Exact phrase filter for search estimation.
      */
     #[Optional]
     public ?string $exactPhrase;
 
     /**
-     * Words to exclude from results (tweet_search_extractor).
+     * Words excluded from estimated search results.
      */
     #[Optional]
     public ?string $excludeWords;
@@ -131,6 +135,8 @@ final class ExtractionEstimateCostParams implements BaseModel
     }
 
     /**
+     * Identifier for the extraction tool used to run a job.
+     *
      * @param ToolType|value-of<ToolType> $toolType
      */
     public function withToolType(ToolType|string $toolType): self
@@ -142,7 +148,7 @@ final class ExtractionEstimateCostParams implements BaseModel
     }
 
     /**
-     * Raw advanced search query appended as-is (tweet_search_extractor).
+     * Raw advanced query string appended to the estimate (tweet_search_extractor).
      */
     public function withAdvancedQuery(string $advancedQuery): self
     {
@@ -153,7 +159,7 @@ final class ExtractionEstimateCostParams implements BaseModel
     }
 
     /**
-     * Exact phrase to match (tweet_search_extractor).
+     * Exact phrase filter for search estimation.
      */
     public function withExactPhrase(string $exactPhrase): self
     {
@@ -164,7 +170,7 @@ final class ExtractionEstimateCostParams implements BaseModel
     }
 
     /**
-     * Words to exclude from results (tweet_search_extractor).
+     * Words excluded from estimated search results.
      */
     public function withExcludeWords(string $excludeWords): self
     {

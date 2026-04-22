@@ -6,6 +6,8 @@ namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Radar\RadarGetTrendingTopicsResponse;
+use XTwitterScraper\Radar\RadarRetrieveTrendingTopicsParams\Category;
+use XTwitterScraper\Radar\RadarRetrieveTrendingTopicsParams\Source;
 use XTwitterScraper\RequestOptions;
 
 /**
@@ -16,21 +18,23 @@ interface RadarContract
     /**
      * @api
      *
-     * @param string $category Filter by category (general, tech, dev, etc.)
-     * @param int $count Number of items to return
-     * @param int $hours Lookback window in hours
+     * @param string $after cursor for pagination (from prior response nextCursor)
+     * @param Category|value-of<Category> $category filter by category
+     * @param int $hours lookback window in hours (1-168, default 24)
+     * @param int $limit number of items to return (1-100, default 50)
      * @param string $region Region filter (us, global, etc.)
-     * @param string $source Source filter. One of: github, google_trends, hacker_news, polymarket, reddit, trustmrr, wikipedia
+     * @param Source|value-of<Source> $source Source filter. One of: github, google_trends, hacker_news, polymarket, reddit, trustmrr, wikipedia
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function retrieveTrendingTopics(
-        ?string $category = null,
-        ?int $count = null,
-        ?int $hours = null,
+        ?string $after = null,
+        Category|string|null $category = null,
+        int $hours = 24,
+        int $limit = 50,
         ?string $region = null,
-        ?string $source = null,
+        Source|string|null $source = null,
         RequestOptions|array|null $requestOptions = null,
     ): RadarGetTrendingTopicsResponse;
 }

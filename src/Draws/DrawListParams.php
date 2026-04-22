@@ -23,11 +23,14 @@ final class DrawListParams implements BaseModel
     use SdkParams;
 
     /**
-     * Cursor for pagination.
+     * Cursor for keyset pagination.
      */
     #[Optional]
     public ?string $after;
 
+    /**
+     * Maximum number of items to return (1-100, default 50).
+     */
     #[Optional]
     public ?int $limit;
 
@@ -52,7 +55,7 @@ final class DrawListParams implements BaseModel
     }
 
     /**
-     * Cursor for pagination.
+     * Cursor for keyset pagination.
      */
     public function withAfter(string $after): self
     {
@@ -62,6 +65,9 @@ final class DrawListParams implements BaseModel
         return $self;
     }
 
+    /**
+     * Maximum number of items to return (1-100, default 50).
+     */
     public function withLimit(int $limit): self
     {
         $self = clone $this;

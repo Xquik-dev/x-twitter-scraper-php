@@ -6,6 +6,7 @@ namespace XTwitterScraper\Services\X;
 
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\FileParam;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\MediaContract;
@@ -13,7 +14,7 @@ use XTwitterScraper\X\Media\MediaDownloadResponse;
 use XTwitterScraper\X\Media\MediaUploadResponse;
 
 /**
- * Media upload & download.
+ * Media upload and download.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -35,7 +36,7 @@ final class MediaService implements MediaContract
     /**
      * @api
      *
-     * Download tweet media
+     * Download images & videos from tweets
      *
      * @param list<string> $tweetIDs Array of tweet URLs or IDs (bulk, max 50)
      * @param string $tweetInput Tweet URL or ID (single tweet)
@@ -63,15 +64,15 @@ final class MediaService implements MediaContract
      *
      * Upload media
      *
-     * @param string $account X account (@username or account ID)
-     * @param string $file Media file to upload
+     * @param string $account X account (@username or ID) uploading media
+     * @param string|FileParam $file Media file to upload
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function upload(
         string $account,
-        string $file,
+        string|FileParam $file,
         ?bool $isLongVideo = null,
         RequestOptions|array|null $requestOptions = null,
     ): MediaUploadResponse {

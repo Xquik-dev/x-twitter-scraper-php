@@ -6,6 +6,8 @@ namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Communities\CommunityCreateParams;
 use XTwitterScraper\X\Communities\CommunityDeleteParams;
@@ -71,11 +73,11 @@ interface CommunitiesRawContract
     /**
      * @api
      *
-     * @param string $id Community ID
+     * @param string $id Community ID for member lookup
      * @param array<string,mixed>|CommunityRetrieveMembersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -88,11 +90,11 @@ interface CommunitiesRawContract
     /**
      * @api
      *
-     * @param string $id Community ID
+     * @param string $id Community ID for moderator lookup
      * @param array<string,mixed>|CommunityRetrieveModeratorsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -108,7 +110,7 @@ interface CommunitiesRawContract
      * @param array<string,mixed>|CommunityRetrieveSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */

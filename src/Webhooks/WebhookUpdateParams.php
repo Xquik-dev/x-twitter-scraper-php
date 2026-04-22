@@ -8,7 +8,7 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Webhooks\WebhookUpdateParams\EventType;
+use XTwitterScraper\EventType;
 
 /**
  * Update webhook.
@@ -27,7 +27,11 @@ final class WebhookUpdateParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
-    /** @var list<value-of<EventType>>|null $eventTypes */
+    /**
+     * Array of event types to subscribe to.
+     *
+     * @var list<value-of<EventType>>|null $eventTypes
+     */
     #[Optional(list: EventType::class)]
     public ?array $eventTypes;
 
@@ -64,6 +68,8 @@ final class WebhookUpdateParams implements BaseModel
     }
 
     /**
+     * Array of event types to subscribe to.
+     *
      * @param list<EventType|value-of<EventType>> $eventTypes
      */
     public function withEventTypes(array $eventTypes): self

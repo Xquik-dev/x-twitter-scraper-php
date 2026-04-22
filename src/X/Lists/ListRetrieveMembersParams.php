@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get list members.
+ * List members of an X List.
  *
  * @see XTwitterScraper\Services\X\ListsService::retrieveMembers()
  *
@@ -23,7 +23,7 @@ final class ListRetrieveMembersParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for list members.
      */
     #[Optional]
     public ?string $cursor;
@@ -48,7 +48,7 @@ final class ListRetrieveMembersParams implements BaseModel
     }
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for list members.
      */
     public function withCursor(string $cursor): self
     {

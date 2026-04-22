@@ -37,21 +37,21 @@ final class FollowService implements FollowContract
      *
      * Follow user
      *
-     * @param string $userID User ID to follow
-     * @param string $account X account (@username or account ID)
+     * @param string $id User ID to follow
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function create(
-        string $userID,
+        string $id,
         string $account,
         RequestOptions|array|null $requestOptions = null,
     ): FollowNewResponse {
         $params = Util::removeNulls(['account' => $account]);
 
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->create($userID, params: $params, requestOptions: $requestOptions);
+        $response = $this->raw->create($id, params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }
@@ -61,21 +61,21 @@ final class FollowService implements FollowContract
      *
      * Unfollow user
      *
-     * @param string $userID User ID to unfollow
-     * @param string $account X account (@username or account ID)
+     * @param string $id User ID to unfollow
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function deleteAll(
-        string $userID,
+        string $id,
         string $account,
         RequestOptions|array|null $requestOptions = null,
     ): FollowDeleteAllResponse {
         $params = Util::removeNulls(['account' => $account]);
 
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->deleteAll($userID, params: $params, requestOptions: $requestOptions);
+        $response = $this->raw->deleteAll($id, params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

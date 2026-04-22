@@ -12,7 +12,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\Tweets\TweetSearchParams\QueryType;
 
 /**
- * Search tweets.
+ * Search tweets with X query operators & pagination.
  *
  * @see XTwitterScraper\Services\X\TweetsService::search()
  *
@@ -44,7 +44,7 @@ final class TweetSearchParams implements BaseModel
     public ?string $cursor;
 
     /**
-     * Deprecated — use cursor-based pagination instead.
+     * Max tweets to return (server paginates internally). Omit for single page (~20).
      */
     #[Optional]
     public ?int $limit;
@@ -139,7 +139,7 @@ final class TweetSearchParams implements BaseModel
     }
 
     /**
-     * Deprecated — use cursor-based pagination instead.
+     * Max tweets to return (server paginates internally). Omit for single page (~20).
      */
     public function withLimit(int $limit): self
     {

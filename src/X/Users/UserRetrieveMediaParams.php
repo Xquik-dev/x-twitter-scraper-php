@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get media tweets by a user.
+ * List media tweets posted by a user.
  *
  * @see XTwitterScraper\Services\X\UsersService::retrieveMedia()
  *
@@ -23,7 +23,7 @@ final class UserRetrieveMediaParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for media tweets.
      */
     #[Optional]
     public ?string $cursor;
@@ -48,7 +48,7 @@ final class UserRetrieveMediaParams implements BaseModel
     }
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for media tweets.
      */
     public function withCursor(string $cursor): self
     {

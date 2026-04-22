@@ -8,15 +8,12 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Drafts\DraftListResponse\Draft;
 
 /**
- * @phpstan-import-type DraftShape from \XTwitterScraper\Drafts\DraftListResponse\Draft
+ * @phpstan-import-type DraftShape from \XTwitterScraper\Drafts\Draft
  *
  * @phpstan-type DraftListResponseShape = array{
- *   drafts: list<\XTwitterScraper\Drafts\DraftListResponse\Draft|DraftShape>,
- *   hasMore: bool,
- *   nextCursor?: string|null,
+ *   drafts: list<Draft|DraftShape>, hasMore: bool, nextCursor?: string|null
  * }
  */
 final class DraftListResponse implements BaseModel

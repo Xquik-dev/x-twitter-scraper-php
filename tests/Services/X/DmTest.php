@@ -24,11 +24,7 @@ final class DmTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -55,8 +51,8 @@ final class DmTest extends TestCase
 
         $result = $this->client->x->dm->send(
             'userId',
-            account: 'account',
-            text: 'text'
+            account: '@elonmusk',
+            text: 'Example text content'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -72,10 +68,10 @@ final class DmTest extends TestCase
 
         $result = $this->client->x->dm->send(
             'userId',
-            account: 'account',
-            text: 'text',
-            mediaIDs: ['string'],
-            replyToMessageID: 'reply_to_message_id',
+            account: '@elonmusk',
+            text: 'Example text content',
+            mediaIDs: ['1234567890123456789'],
+            replyToMessageID: '1234567890123456789',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

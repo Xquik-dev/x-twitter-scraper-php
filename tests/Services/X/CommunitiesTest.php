@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\X\Communities\CommunityDeleteResponse;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse;
 use XTwitterScraper\X\Communities\CommunityNewResponse;
@@ -25,11 +27,7 @@ final class CommunitiesTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -42,8 +40,8 @@ final class CommunitiesTest extends TestCase
         }
 
         $result = $this->client->x->communities->create(
-            account: 'account',
-            name: 'name'
+            account: '@elonmusk',
+            name: 'Example Name'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -58,9 +56,9 @@ final class CommunitiesTest extends TestCase
         }
 
         $result = $this->client->x->communities->create(
-            account: 'account',
-            name: 'name',
-            description: 'description'
+            account: '@elonmusk',
+            name: 'Example Name',
+            description: 'A community for Tesla enthusiasts',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -76,8 +74,8 @@ final class CommunitiesTest extends TestCase
 
         $result = $this->client->x->communities->delete(
             'id',
-            account: 'account',
-            communityName: 'community_name'
+            account: '@elonmusk',
+            communityName: 'Tesla Fans'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -93,8 +91,8 @@ final class CommunitiesTest extends TestCase
 
         $result = $this->client->x->communities->delete(
             'id',
-            account: 'account',
-            communityName: 'community_name'
+            account: '@elonmusk',
+            communityName: 'Tesla Fans'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -124,7 +122,7 @@ final class CommunitiesTest extends TestCase
         $result = $this->client->x->communities->retrieveMembers('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 
     #[Test]
@@ -137,7 +135,7 @@ final class CommunitiesTest extends TestCase
         $result = $this->client->x->communities->retrieveModerators('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 
     #[Test]
@@ -150,7 +148,7 @@ final class CommunitiesTest extends TestCase
         $result = $this->client->x->communities->retrieveSearch(q: 'q');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -167,6 +165,6 @@ final class CommunitiesTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 }

@@ -16,7 +16,10 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\X\AccountsService::reauth()
  *
  * @phpstan-type AccountReauthParamsShape = array{
- *   password: string, totpSecret?: string|null
+ *   password: string,
+ *   email?: string|null,
+ *   proxyCountry?: string|null,
+ *   totpSecret?: string|null,
  * }
  */
 final class AccountReauthParams implements BaseModel
@@ -26,13 +29,25 @@ final class AccountReauthParams implements BaseModel
     use SdkParams;
 
     /**
-     * Account password.
+     * Updated account password.
      */
     #[Required]
     public string $password;
 
     /**
-     * TOTP secret for 2FA.
+     * Email for the X account (updates stored email).
+     */
+    #[Optional]
+    public ?string $email;
+
+    /**
+     * Two-letter country code for login proxy region.
+     */
+    #[Optional('proxy_country')]
+    public ?string $proxyCountry;
+
+    /**
+     * TOTP secret for 2FA re-authentication.
      */
     #[Optional('totp_secret')]
     public ?string $totpSecret;
@@ -63,19 +78,23 @@ final class AccountReauthParams implements BaseModel
      */
     public static function with(
         string $password,
-        ?string $totpSecret = null
+        ?string $email = null,
+        ?string $proxyCountry = null,
+        ?string $totpSecret = null,
     ): self {
         $self = new self;
 
         $self['password'] = $password;
 
+        null !== $email && $self['email'] = $email;
+        null !== $proxyCountry && $self['proxyCountry'] = $proxyCountry;
         null !== $totpSecret && $self['totpSecret'] = $totpSecret;
 
         return $self;
     }
 
     /**
-     * Account password.
+     * Updated account password.
      */
     public function withPassword(string $password): self
     {
@@ -86,7 +105,29 @@ final class AccountReauthParams implements BaseModel
     }
 
     /**
-     * TOTP secret for 2FA.
+     * Email for the X account (updates stored email).
+     */
+    public function withEmail(string $email): self
+    {
+        $self = clone $this;
+        $self['email'] = $email;
+
+        return $self;
+    }
+
+    /**
+     * Two-letter country code for login proxy region.
+     */
+    public function withProxyCountry(string $proxyCountry): self
+    {
+        $self = clone $this;
+        $self['proxyCountry'] = $proxyCountry;
+
+        return $self;
+    }
+
+    /**
+     * TOTP secret for 2FA re-authentication.
      */
     public function withTotpSecret(string $totpSecret): self
     {

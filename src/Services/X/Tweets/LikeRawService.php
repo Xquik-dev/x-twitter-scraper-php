@@ -32,6 +32,7 @@ final class LikeRawService implements LikeRawContract
      *
      * Like tweet
      *
+     * @param string $id Tweet ID to like
      * @param array{account: string}|LikeCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -40,7 +41,7 @@ final class LikeRawService implements LikeRawContract
      * @throws APIException
      */
     public function create(
-        string $tweetID,
+        string $id,
         array|LikeCreateParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse {
@@ -52,7 +53,7 @@ final class LikeRawService implements LikeRawContract
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
-            path: ['x/tweets/%1$s/like', $tweetID],
+            path: ['x/tweets/%1$s/like', $id],
             body: (object) $parsed,
             options: $options,
             convert: LikeNewResponse::class,
@@ -64,6 +65,7 @@ final class LikeRawService implements LikeRawContract
      *
      * Unlike tweet
      *
+     * @param string $id Tweet ID to unlike
      * @param array{account: string}|LikeDeleteParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -72,7 +74,7 @@ final class LikeRawService implements LikeRawContract
      * @throws APIException
      */
     public function delete(
-        string $tweetID,
+        string $id,
         array|LikeDeleteParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse {
@@ -84,7 +86,7 @@ final class LikeRawService implements LikeRawContract
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'delete',
-            path: ['x/tweets/%1$s/like', $tweetID],
+            path: ['x/tweets/%1$s/like', $id],
             body: (object) $parsed,
             options: $options,
             convert: LikeDeleteResponse::class,

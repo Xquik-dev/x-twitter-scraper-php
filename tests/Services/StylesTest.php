@@ -8,12 +8,10 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\Styles\StyleAnalyzeResponse;
 use XTwitterScraper\Styles\StyleCompareResponse;
 use XTwitterScraper\Styles\StyleGetPerformanceResponse;
-use XTwitterScraper\Styles\StyleGetResponse;
 use XTwitterScraper\Styles\StyleListResponse;
-use XTwitterScraper\Styles\StyleUpdateResponse;
+use XTwitterScraper\Styles\StyleProfile;
 
 /**
  * @internal
@@ -28,11 +26,7 @@ final class StylesTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -44,10 +38,10 @@ final class StylesTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->styles->retrieve('username');
+        $result = $this->client->styles->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(StyleGetResponse::class, $result);
+        $this->assertInstanceOf(StyleProfile::class, $result);
     }
 
     #[Test]
@@ -58,13 +52,13 @@ final class StylesTest extends TestCase
         }
 
         $result = $this->client->styles->update(
-            'username',
-            label: 'label',
-            tweets: [['text' => 'text']]
+            'id',
+            label: 'Professional Voice',
+            tweets: [['text' => 'Excited to share our latest research findings.']],
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(StyleUpdateResponse::class, $result);
+        $this->assertInstanceOf(StyleProfile::class, $result);
     }
 
     #[Test]
@@ -75,13 +69,13 @@ final class StylesTest extends TestCase
         }
 
         $result = $this->client->styles->update(
-            'username',
-            label: 'label',
-            tweets: [['text' => 'text']]
+            'id',
+            label: 'Professional Voice',
+            tweets: [['text' => 'Excited to share our latest research findings.']],
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(StyleUpdateResponse::class, $result);
+        $this->assertInstanceOf(StyleProfile::class, $result);
     }
 
     #[Test]
@@ -104,7 +98,7 @@ final class StylesTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->styles->delete('username');
+        $result = $this->client->styles->delete('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertNull($result);
@@ -117,10 +111,10 @@ final class StylesTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->styles->analyze(username: 'username');
+        $result = $this->client->styles->analyze(username: 'elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(StyleAnalyzeResponse::class, $result);
+        $this->assertInstanceOf(StyleProfile::class, $result);
     }
 
     #[Test]
@@ -130,10 +124,10 @@ final class StylesTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->styles->analyze(username: 'username');
+        $result = $this->client->styles->analyze(username: 'elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(StyleAnalyzeResponse::class, $result);
+        $this->assertInstanceOf(StyleProfile::class, $result);
     }
 
     #[Test]
@@ -175,7 +169,7 @@ final class StylesTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->styles->getPerformance('username');
+        $result = $this->client->styles->getPerformance('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(StyleGetPerformanceResponse::class, $result);

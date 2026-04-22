@@ -7,6 +7,8 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\CommunitiesContract;
 use XTwitterScraper\Services\X\Communities\JoinService;
@@ -50,7 +52,7 @@ final class CommunitiesService implements CommunitiesContract
      *
      * Create community
      *
-     * @param string $account X account (@username or account ID)
+     * @param string $account X account (@username or ID) creating the community
      * @param string $name Community name
      * @param string $description Community description
      * @param RequestOpts|null $requestOptions
@@ -79,7 +81,7 @@ final class CommunitiesService implements CommunitiesContract
      * Delete community
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param string $account X account (@username or account ID)
+     * @param string $account X account (@username or ID) deleting the community
      * @param string $communityName Community name for confirmation
      * @param RequestOpts|null $requestOptions
      *
@@ -104,7 +106,7 @@ final class CommunitiesService implements CommunitiesContract
     /**
      * @api
      *
-     * Get community details
+     * Get community name, description & member count
      *
      * @param string $id Community ID
      * @param RequestOpts|null $requestOptions
@@ -124,9 +126,9 @@ final class CommunitiesService implements CommunitiesContract
     /**
      * @api
      *
-     * Get community members
+     * List members of a community
      *
-     * @param string $id Community ID
+     * @param string $id Community ID for member lookup
      * @param string $cursor Pagination cursor
      * @param RequestOpts|null $requestOptions
      *
@@ -136,7 +138,7 @@ final class CommunitiesService implements CommunitiesContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): mixed {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -148,10 +150,10 @@ final class CommunitiesService implements CommunitiesContract
     /**
      * @api
      *
-     * Get community moderators
+     * List moderators of a community
      *
-     * @param string $id Community ID
-     * @param string $cursor Pagination cursor
+     * @param string $id Community ID for moderator lookup
+     * @param string $cursor Pagination cursor for community moderators
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -160,7 +162,7 @@ final class CommunitiesService implements CommunitiesContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): mixed {
+    ): PaginatedUsers {
         $params = Util::removeNulls(['cursor' => $cursor]);
 
         // @phpstan-ignore-next-line argument.type
@@ -172,10 +174,10 @@ final class CommunitiesService implements CommunitiesContract
     /**
      * @api
      *
-     * Search tweets across communities
+     * Search for communities by keyword
      *
      * @param string $q Search query
-     * @param string $cursor Pagination cursor
+     * @param string $cursor Pagination cursor for community search
      * @param string $queryType Sort order (Latest or Top)
      * @param RequestOpts|null $requestOptions
      *
@@ -186,7 +188,7 @@ final class CommunitiesService implements CommunitiesContract
         ?string $cursor = null,
         ?string $queryType = null,
         RequestOptions|array|null $requestOptions = null,
-    ): mixed {
+    ): PaginatedTweets {
         $params = Util::removeNulls(
             ['q' => $q, 'cursor' => $cursor, 'queryType' => $queryType]
         );

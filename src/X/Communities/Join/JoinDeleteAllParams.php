@@ -23,7 +23,7 @@ final class JoinDeleteAllParams implements BaseModel
     use SdkParams;
 
     /**
-     * X account (@username or account ID).
+     * X account identifier (@username or account ID).
      */
     #[Required]
     public string $account;
@@ -62,7 +62,7 @@ final class JoinDeleteAllParams implements BaseModel
     }
 
     /**
-     * X account (@username or account ID).
+     * X account identifier (@username or account ID).
      */
     public function withAccount(string $account): self
     {

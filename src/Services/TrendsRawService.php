@@ -13,7 +13,7 @@ use XTwitterScraper\Trends\TrendListParams;
 use XTwitterScraper\Trends\TrendListResponse;
 
 /**
- * Trending topics by region.
+ * Trending topics and hashtags by region.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -28,7 +28,7 @@ final class TrendsRawService implements TrendsRawContract
     /**
      * @api
      *
-     * Get trending topics
+     * Get trending hashtags & topics by region (alias)
      *
      * @param array{count?: int, woeid?: int}|TrendListParams $params
      * @param RequestOpts|null $requestOptions

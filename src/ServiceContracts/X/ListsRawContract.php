@@ -6,6 +6,8 @@ namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Lists\ListRetrieveFollowersParams;
 use XTwitterScraper\X\Lists\ListRetrieveMembersParams;
@@ -23,7 +25,7 @@ interface ListsRawContract
      * @param array<string,mixed>|ListRetrieveFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -36,11 +38,11 @@ interface ListsRawContract
     /**
      * @api
      *
-     * @param string $id List ID
+     * @param string $id List ID for member lookup
      * @param array<string,mixed>|ListRetrieveMembersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -53,11 +55,11 @@ interface ListsRawContract
     /**
      * @api
      *
-     * @param string $id List ID
+     * @param string $id List ID for tweet lookup
      * @param array<string,mixed>|ListRetrieveTweetsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */

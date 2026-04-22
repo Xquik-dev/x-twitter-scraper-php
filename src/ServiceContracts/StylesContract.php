@@ -6,13 +6,11 @@ namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
-use XTwitterScraper\Styles\StyleAnalyzeResponse;
 use XTwitterScraper\Styles\StyleCompareResponse;
 use XTwitterScraper\Styles\StyleGetPerformanceResponse;
-use XTwitterScraper\Styles\StyleGetResponse;
 use XTwitterScraper\Styles\StyleListResponse;
+use XTwitterScraper\Styles\StyleProfile;
 use XTwitterScraper\Styles\StyleUpdateParams\Tweet;
-use XTwitterScraper\Styles\StyleUpdateResponse;
 
 /**
  * @phpstan-import-type TweetShape from \XTwitterScraper\Styles\StyleUpdateParams\Tweet
@@ -23,20 +21,20 @@ interface StylesContract
     /**
      * @api
      *
-     * @param string $username X username of cached style
+     * @param string $id Style profile ID or X username
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function retrieve(
-        string $username,
+        string $id,
         RequestOptions|array|null $requestOptions = null
-    ): StyleGetResponse;
+    ): StyleProfile;
 
     /**
      * @api
      *
-     * @param string $username X username of cached style
+     * @param string $id Style profile ID or X username
      * @param string $label Display label for the style
      * @param list<Tweet|TweetShape> $tweets Array of tweet objects
      * @param RequestOpts|null $requestOptions
@@ -44,11 +42,11 @@ interface StylesContract
      * @throws APIException
      */
     public function update(
-        string $username,
+        string $id,
         string $label,
         array $tweets,
         RequestOptions|array|null $requestOptions = null,
-    ): StyleUpdateResponse;
+    ): StyleProfile;
 
     /**
      * @api
@@ -64,13 +62,13 @@ interface StylesContract
     /**
      * @api
      *
-     * @param string $username X username of cached style
+     * @param string $id Style profile ID or X username
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function delete(
-        string $username,
+        string $id,
         RequestOptions|array|null $requestOptions = null
     ): mixed;
 
@@ -85,7 +83,7 @@ interface StylesContract
     public function analyze(
         string $username,
         RequestOptions|array|null $requestOptions = null
-    ): StyleAnalyzeResponse;
+    ): StyleProfile;
 
     /**
      * @api
@@ -105,13 +103,13 @@ interface StylesContract
     /**
      * @api
      *
-     * @param string $username X username of cached style
+     * @param string $id Style profile ID or X username
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function getPerformance(
-        string $username,
+        string $id,
         RequestOptions|array|null $requestOptions = null
     ): StyleGetPerformanceResponse;
 }

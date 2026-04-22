@@ -5,17 +5,13 @@ declare(strict_types=1);
 namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Tweets\TweetDeleteResponse;
-use XTwitterScraper\X\Tweets\TweetGetFavoritersResponse;
-use XTwitterScraper\X\Tweets\TweetGetQuotesResponse;
-use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
 use XTwitterScraper\X\Tweets\TweetGetResponse;
-use XTwitterScraper\X\Tweets\TweetGetRetweetersResponse;
-use XTwitterScraper\X\Tweets\TweetGetThreadResponse;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
 use XTwitterScraper\X\Tweets\TweetSearchParams\QueryType;
-use XTwitterScraper\X\Tweets\TweetSearchResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -26,31 +22,35 @@ interface TweetsContract
      * @api
      *
      * @param string $account X account (@username or account ID)
-     * @param list<string> $mediaIDs
+     * @param list<string> $media Array of media URLs to attach (mutually exclusive with media_ids)
+     * @param list<string> $mediaIDs Array of media IDs to attach (mutually exclusive with media)
+     * @param string $text Tweet text (optional when media is provided)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function create(
         string $account,
-        string $text,
         ?string $attachmentURL = null,
         ?string $communityID = null,
         ?bool $isNoteTweet = null,
+        ?array $media = null,
         ?array $mediaIDs = null,
         ?string $replyToTweetID = null,
+        ?string $text = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetNewResponse;
 
     /**
      * @api
      *
+     * @param string $id Tweet ID
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function retrieve(
-        string $tweetID,
+        string $id,
         RequestOptions|array|null $requestOptions = null
     ): TweetGetResponse;
 
@@ -65,18 +65,19 @@ interface TweetsContract
     public function list(
         string $ids,
         RequestOptions|array|null $requestOptions = null
-    ): mixed;
+    ): PaginatedTweets;
 
     /**
      * @api
      *
-     * @param string $account X account (@username or account ID)
+     * @param string $id Tweet ID to delete
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function delete(
-        string $tweetID,
+        string $id,
         string $account,
         RequestOptions|array|null $requestOptions = null,
     ): TweetDeleteResponse;
@@ -84,8 +85,8 @@ interface TweetsContract
     /**
      * @api
      *
-     * @param string $id Tweet ID
-     * @param string $cursor Pagination cursor from previous response
+     * @param string $id Tweet ID to get favoriters
+     * @param string $cursor Pagination cursor for favoriters
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -94,16 +95,16 @@ interface TweetsContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): TweetGetFavoritersResponse;
+    ): PaginatedUsers;
 
     /**
      * @api
      *
-     * @param string $id Tweet ID
-     * @param string $cursor Pagination cursor
-     * @param bool $includeReplies Include replies (default false)
-     * @param string $sinceTime Unix timestamp - filter after
-     * @param string $untilTime Unix timestamp - filter before
+     * @param string $id Tweet ID to get quotes
+     * @param string $cursor Pagination cursor for quote tweets
+     * @param bool $includeReplies Include reply quotes (default false)
+     * @param string $sinceTime Unix timestamp - return quotes posted after this time
+     * @param string $untilTime Unix timestamp - return quotes posted before this time
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -115,15 +116,15 @@ interface TweetsContract
         ?string $sinceTime = null,
         ?string $untilTime = null,
         RequestOptions|array|null $requestOptions = null,
-    ): TweetGetQuotesResponse;
+    ): PaginatedTweets;
 
     /**
      * @api
      *
-     * @param string $id Tweet ID
-     * @param string $cursor Pagination cursor
-     * @param string $sinceTime Unix timestamp - filter after
-     * @param string $untilTime Unix timestamp - filter before
+     * @param string $id Tweet ID to get replies
+     * @param string $cursor Pagination cursor for tweet replies
+     * @param string $sinceTime Unix timestamp - return replies posted after this time
+     * @param string $untilTime Unix timestamp - return replies posted before this time
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -134,13 +135,13 @@ interface TweetsContract
         ?string $sinceTime = null,
         ?string $untilTime = null,
         RequestOptions|array|null $requestOptions = null,
-    ): TweetGetRepliesResponse;
+    ): PaginatedTweets;
 
     /**
      * @api
      *
-     * @param string $id Tweet ID
-     * @param string $cursor Pagination cursor
+     * @param string $id Tweet ID to get retweeters
+     * @param string $cursor Pagination cursor for retweeters
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -149,13 +150,13 @@ interface TweetsContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): TweetGetRetweetersResponse;
+    ): PaginatedUsers;
 
     /**
      * @api
      *
-     * @param string $id Tweet ID
-     * @param string $cursor Pagination cursor
+     * @param string $id Tweet ID to get thread context
+     * @param string $cursor Pagination cursor for thread tweets
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -164,14 +165,14 @@ interface TweetsContract
         string $id,
         ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null,
-    ): TweetGetThreadResponse;
+    ): PaginatedTweets;
 
     /**
      * @api
      *
      * @param string $q Search query (keywords,
      * @param string $cursor Pagination cursor from previous response
-     * @param int $limit Deprecated — use cursor-based pagination instead
+     * @param int $limit Max tweets to return (server paginates internally). Omit for single page (~20).
      * @param QueryType|value-of<QueryType> $queryType Sort order — Latest (chronological) or Top (engagement-ranked)
      * @param string $sinceTime ISO 8601 timestamp — only return tweets after this time
      * @param string $untilTime ISO 8601 timestamp — only return tweets before this time
@@ -187,5 +188,5 @@ interface TweetsContract
         ?string $sinceTime = null,
         ?string $untilTime = null,
         RequestOptions|array|null $requestOptions = null,
-    ): TweetSearchResponse;
+    ): PaginatedTweets;
 }

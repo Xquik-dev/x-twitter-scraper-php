@@ -8,12 +8,13 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\EventType;
+use XTwitterScraper\Webhooks\Webhook;
 use XTwitterScraper\Webhooks\WebhookDeactivateResponse;
 use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse;
 use XTwitterScraper\Webhooks\WebhookListResponse;
 use XTwitterScraper\Webhooks\WebhookNewResponse;
 use XTwitterScraper\Webhooks\WebhookTestResponse;
-use XTwitterScraper\Webhooks\WebhookUpdateResponse;
 
 /**
  * @internal
@@ -28,11 +29,7 @@ final class WebhooksTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -45,8 +42,8 @@ final class WebhooksTest extends TestCase
         }
 
         $result = $this->client->webhooks->create(
-            eventTypes: ['tweet.new'],
-            url: 'https://example.com'
+            eventTypes: [EventType::TWEET_NEW, EventType::TWEET_REPLY],
+            url: 'https://example.com/webhook',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -61,8 +58,8 @@ final class WebhooksTest extends TestCase
         }
 
         $result = $this->client->webhooks->create(
-            eventTypes: ['tweet.new'],
-            url: 'https://example.com'
+            eventTypes: [EventType::TWEET_NEW, EventType::TWEET_REPLY],
+            url: 'https://example.com/webhook',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -79,7 +76,7 @@ final class WebhooksTest extends TestCase
         $result = $this->client->webhooks->update('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(WebhookUpdateResponse::class, $result);
+        $this->assertInstanceOf(Webhook::class, $result);
     }
 
     #[Test]

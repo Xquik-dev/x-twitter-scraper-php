@@ -1,0 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+namespace XTwitterScraper\Radar\RadarItem;
+
+enum Category: string
+{
+    case GENERAL = 'general';
+
+    case TECH = 'tech';
+
+    case DEV = 'dev';
+
+    case SCIENCE = 'science';
+
+    case CULTURE = 'culture';
+
+    case POLITICS = 'politics';
+
+    case BUSINESS = 'business';
+
+    case ENTERTAINMENT = 'entertainment';
+}

@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get thread context for a tweet.
+ * Get full conversation thread for a tweet.
  *
  * @see XTwitterScraper\Services\X\TweetsService::getThread()
  *
@@ -23,7 +23,7 @@ final class TweetGetThreadParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for thread tweets.
      */
     #[Optional]
     public ?string $cursor;
@@ -48,7 +48,7 @@ final class TweetGetThreadParams implements BaseModel
     }
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for thread tweets.
      */
     public function withCursor(string $cursor): self
     {

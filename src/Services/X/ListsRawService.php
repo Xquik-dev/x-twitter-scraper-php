@@ -7,6 +7,8 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\ListsRawContract;
 use XTwitterScraper\X\Lists\ListRetrieveFollowersParams;
@@ -14,7 +16,7 @@ use XTwitterScraper\X\Lists\ListRetrieveMembersParams;
 use XTwitterScraper\X\Lists\ListRetrieveTweetsParams;
 
 /**
- * X data lookups (subscription required).
+ * X List followers, members, and tweets.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -29,13 +31,13 @@ final class ListsRawService implements ListsRawContract
     /**
      * @api
      *
-     * Get list followers
+     * List followers of an X List
      *
      * @param string $id List ID
      * @param array{cursor?: string}|ListRetrieveFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -55,20 +57,20 @@ final class ListsRawService implements ListsRawContract
             path: ['x/lists/%1$s/followers', $id],
             query: $parsed,
             options: $options,
-            convert: null,
+            convert: PaginatedUsers::class,
         );
     }
 
     /**
      * @api
      *
-     * Get list members
+     * List members of an X List
      *
-     * @param string $id List ID
+     * @param string $id List ID for member lookup
      * @param array{cursor?: string}|ListRetrieveMembersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<PaginatedUsers>
      *
      * @throws APIException
      */
@@ -88,22 +90,22 @@ final class ListsRawService implements ListsRawContract
             path: ['x/lists/%1$s/members', $id],
             query: $parsed,
             options: $options,
-            convert: null,
+            convert: PaginatedUsers::class,
         );
     }
 
     /**
      * @api
      *
-     * Get list tweets
+     * List tweets from an X List
      *
-     * @param string $id List ID
+     * @param string $id List ID for tweet lookup
      * @param array{
      *   cursor?: string, includeReplies?: bool, sinceTime?: string, untilTime?: string
      * }|ListRetrieveTweetsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -123,7 +125,7 @@ final class ListsRawService implements ListsRawContract
             path: ['x/lists/%1$s/tweets', $id],
             query: $parsed,
             options: $options,
-            convert: null,
+            convert: PaginatedTweets::class,
         );
     }
 }

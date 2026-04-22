@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * API key metadata returned when listing keys.
+ *
  * @phpstan-type APIKeyShape = array{
  *   id: string,
  *   createdAt: \DateTimeInterface,

@@ -17,7 +17,7 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\AccountRawContract;
 
 /**
- * Account info & settings.
+ * Account info and settings.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -49,7 +49,6 @@ final class AccountRawService implements AccountRawContract
             path: 'account',
             options: $requestOptions,
             convert: AccountGetResponse::class,
-            security: ['apiKey' => true],
         );
     }
 
@@ -112,7 +111,6 @@ final class AccountRawService implements AccountRawContract
             body: (object) $parsed,
             options: $options,
             convert: AccountUpdateLocaleResponse::class,
-            security: ['apiKey' => true],
         );
     }
 }

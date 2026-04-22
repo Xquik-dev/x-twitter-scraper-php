@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\Events\EventGetResponse;
+use XTwitterScraper\Events\EventDetail;
 use XTwitterScraper\Events\EventListResponse;
 
 /**
@@ -24,11 +24,7 @@ final class EventsTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -43,7 +39,7 @@ final class EventsTest extends TestCase
         $result = $this->client->events->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(EventGetResponse::class, $result);
+        $this->assertInstanceOf(EventDetail::class, $result);
     }
 
     #[Test]

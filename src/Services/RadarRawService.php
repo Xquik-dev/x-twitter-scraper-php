@@ -9,11 +9,13 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Radar\RadarGetTrendingTopicsResponse;
 use XTwitterScraper\Radar\RadarRetrieveTrendingTopicsParams;
+use XTwitterScraper\Radar\RadarRetrieveTrendingTopicsParams\Category;
+use XTwitterScraper\Radar\RadarRetrieveTrendingTopicsParams\Source;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\RadarRawContract;
 
 /**
- * Tweet composition, drafts, writing styles & radar.
+ * AI tweet composition, drafts, writing styles, and radar.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -31,7 +33,12 @@ final class RadarRawService implements RadarRawContract
      * Get trending topics from curated sources
      *
      * @param array{
-     *   category?: string, count?: int, hours?: int, region?: string, source?: string
+     *   after?: string,
+     *   category?: value-of<Category>,
+     *   hours?: int,
+     *   limit?: int,
+     *   region?: string,
+     *   source?: value-of<Source>,
      * }|RadarRetrieveTrendingTopicsParams $params
      * @param RequestOpts|null $requestOptions
      *

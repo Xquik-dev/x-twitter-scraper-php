@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get list tweets.
+ * List tweets from an X List.
  *
  * @see XTwitterScraper\Services\X\ListsService::retrieveTweets()
  *
@@ -28,7 +28,7 @@ final class ListRetrieveTweetsParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for list tweets.
      */
     #[Optional]
     public ?string $cursor;
@@ -78,7 +78,7 @@ final class ListRetrieveTweetsParams implements BaseModel
     }
 
     /**
-     * Pagination cursor.
+     * Pagination cursor for list tweets.
      */
     public function withCursor(string $cursor): self
     {

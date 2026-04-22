@@ -10,14 +10,12 @@ use XTwitterScraper\Core\BaseClient;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Services\AccountService;
 use XTwitterScraper\Services\APIKeysService;
-use XTwitterScraper\Services\BotService;
 use XTwitterScraper\Services\ComposeService;
 use XTwitterScraper\Services\CreditsService;
 use XTwitterScraper\Services\DraftsService;
 use XTwitterScraper\Services\DrawsService;
 use XTwitterScraper\Services\EventsService;
 use XTwitterScraper\Services\ExtractionsService;
-use XTwitterScraper\Services\IntegrationsService;
 use XTwitterScraper\Services\MonitorsService;
 use XTwitterScraper\Services\RadarService;
 use XTwitterScraper\Services\StylesService;
@@ -100,22 +98,12 @@ class Client extends BaseClient
     /**
      * @api
      */
-    public IntegrationsService $integrations;
-
-    /**
-     * @api
-     */
     public XService $x;
 
     /**
      * @api
      */
     public TrendsService $trends;
-
-    /**
-     * @api
-     */
-    public BotService $bot;
 
     /**
      * @api
@@ -185,25 +173,16 @@ class Client extends BaseClient
         $this->extractions = new ExtractionsService($this);
         $this->draws = new DrawsService($this);
         $this->webhooks = new WebhooksService($this);
-        $this->integrations = new IntegrationsService($this);
         $this->x = new XService($this);
         $this->trends = new TrendsService($this);
-        $this->bot = new BotService($this);
         $this->support = new SupportService($this);
         $this->credits = new CreditsService($this);
     }
 
-    /**
-     * @param array{apiKey?: bool, oauthBearer?: bool} $security
-     *
-     * @return array<string,string>
-     */
-    protected function authHeaders(array $security): array
+    /** @return array<string,string> */
+    protected function authHeaders(): array
     {
-        return [
-            ...($security['apiKey'] ?? false) ? $this->apiKeyScheme() : [],
-            ...($security['oauthBearer'] ?? false) ? $this->oauthBearer() : [],
-        ];
+        return [...$this->apiKeyScheme(), ...$this->oauthBearer()];
     }
 
     /** @return array<string,string> */
@@ -227,7 +206,6 @@ class Client extends BaseClient
      * @param array<string,mixed> $query
      * @param array<string,string|int|list<string|int>|null> $headers
      * @param RequestOpts|null $opts
-     * @param array{apiKey?: bool, oauthBearer?: bool}|null $security
      *
      * @return array{NormalizedRequest, RequestOptions}
      */
@@ -238,21 +216,14 @@ class Client extends BaseClient
         array $headers,
         mixed $body,
         RequestOptions|array|null $opts,
-        ?array $security = null,
     ): array {
         return parent::buildRequest(
             method: $method,
             path: $path,
             query: $query,
-            headers: [
-                ...$this->authHeaders(
-                    security: ($security ?? ['apiKey' => true, 'oauthBearer' => true])
-                ),
-                ...$headers,
-            ],
+            headers: [...$this->authHeaders(), ...$headers],
             body: $body,
             opts: $opts,
-            security: $security,
         );
     }
 }

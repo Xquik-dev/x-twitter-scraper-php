@@ -9,11 +9,12 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\AccountsContract;
+use XTwitterScraper\X\Accounts\AccountBulkRetryResponse;
 use XTwitterScraper\X\Accounts\AccountDeleteResponse;
-use XTwitterScraper\X\Accounts\AccountGetResponse;
 use XTwitterScraper\X\Accounts\AccountListResponse;
 use XTwitterScraper\X\Accounts\AccountNewResponse;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
+use XTwitterScraper\X\Accounts\XAccountDetail;
 
 /**
  * Connected X account management.
@@ -86,7 +87,7 @@ final class AccountsService implements AccountsContract
     public function retrieve(
         string $id,
         RequestOptions|array|null $requestOptions = null
-    ): AccountGetResponse {
+    ): XAccountDetail {
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieve($id, requestOptions: $requestOptions);
 
@@ -134,11 +135,31 @@ final class AccountsService implements AccountsContract
     /**
      * @api
      *
+     * Clears loginFailedAt and loginFailureReason for all accounts with transient or automated failure reasons, making them eligible for retry on next use.
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function bulkRetry(
+        RequestOptions|array|null $requestOptions = null
+    ): AccountBulkRetryResponse {
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->bulkRetry(requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
      * Re-authenticate X account
      *
      * @param string $id Resource ID (stringified bigint)
-     * @param string $password Account password
-     * @param string $totpSecret TOTP secret for 2FA
+     * @param string $password Updated account password
+     * @param string $email Email for the X account (updates stored email)
+     * @param string $proxyCountry Two-letter country code for login proxy region
+     * @param string $totpSecret TOTP secret for 2FA re-authentication
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -146,11 +167,18 @@ final class AccountsService implements AccountsContract
     public function reauth(
         string $id,
         string $password,
+        ?string $email = null,
+        ?string $proxyCountry = null,
         ?string $totpSecret = null,
         RequestOptions|array|null $requestOptions = null,
     ): AccountReauthResponse {
         $params = Util::removeNulls(
-            ['password' => $password, 'totpSecret' => $totpSecret]
+            [
+                'password' => $password,
+                'email' => $email,
+                'proxyCountry' => $proxyCountry,
+                'totpSecret' => $totpSecret,
+            ],
         );
 
         // @phpstan-ignore-next-line argument.type

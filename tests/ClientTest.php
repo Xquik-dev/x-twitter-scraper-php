@@ -29,7 +29,6 @@ class ClientTest extends TestCase
         $client = new \XTwitterScraper\Client(
             baseUrl: 'http://localhost',
             apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
             requestOptions: ['transporter' => $transporter],
         );
 

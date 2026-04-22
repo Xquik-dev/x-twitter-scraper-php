@@ -8,9 +8,8 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\Drafts\DraftGetResponse;
+use XTwitterScraper\Drafts\DraftDetail;
 use XTwitterScraper\Drafts\DraftListResponse;
-use XTwitterScraper\Drafts\DraftNewResponse;
 
 /**
  * @internal
@@ -25,11 +24,7 @@ final class DraftsTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -41,10 +36,12 @@ final class DraftsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->drafts->create(text: 'text');
+        $result = $this->client->drafts->create(
+            text: 'AI is the future of productivity'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(DraftNewResponse::class, $result);
+        $this->assertInstanceOf(DraftDetail::class, $result);
     }
 
     #[Test]
@@ -55,13 +52,13 @@ final class DraftsTest extends TestCase
         }
 
         $result = $this->client->drafts->create(
-            text: 'text',
+            text: 'AI is the future of productivity',
             goal: 'engagement',
-            topic: 'topic'
+            topic: 'AI trends',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(DraftNewResponse::class, $result);
+        $this->assertInstanceOf(DraftDetail::class, $result);
     }
 
     #[Test]
@@ -74,7 +71,7 @@ final class DraftsTest extends TestCase
         $result = $this->client->drafts->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(DraftGetResponse::class, $result);
+        $this->assertInstanceOf(DraftDetail::class, $result);
     }
 
     #[Test]

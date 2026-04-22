@@ -44,9 +44,9 @@ $client = new Client(
   apiKey: getenv('X_TWITTER_SCRAPER_API_KEY') ?: 'My API Key'
 );
 
-$response = $client->x->tweets->search(q: 'from:elonmusk', limit: 10);
+$paginatedTweets = $client->x->tweets->search(q: 'from:elonmusk', limit: 10);
 
-var_dump($response->has_next_page);
+var_dump($paginatedTweets->has_next_page);
 ```
 
 ### Value Objects
@@ -68,7 +68,7 @@ use XTwitterScraper\Core\Exceptions\RateLimitException;
 use XTwitterScraper\Core\Exceptions\APIStatusException;
 
 try {
-  $response = $client->x->tweets->search(q: 'from:elonmusk');
+  $paginatedTweets = $client->x->tweets->search(q: 'from:elonmusk');
 } catch (APIConnectionException $e) {
   echo "The server could not be reached", PHP_EOL;
   var_dump($e->getPrevious());
@@ -118,6 +118,36 @@ $result = $client->x->tweets->search(
 );
 ```
 
+### File uploads
+
+Request parameters that correspond to file uploads can be passed as a resource returned by `fopen()`, a string of file contents, or a `FileParam` instance.
+
+```php
+<?php
+
+use XTwitterScraper\Core\FileParam;
+
+// Pass a string with filename and content type:
+$contents = file_get_contents('/path/to/file');
+// Pass a string with filename and content type:
+$response = $client->x->media->upload(
+  file: FileParam::fromString($contents, filename: '/path/to/file', contentType: '…'),
+);
+
+// Pass in only a string (where applicable)
+$response = $client->x->media->upload(file: '…');
+
+// Pass an open resource:
+$fd = fopen('/path/to/file', 'r');
+try {
+  $response = $client->x->media->upload(
+    file: FileParam::fromResource($fd, filename: '/path/to/file', contentType: '…'),
+  );
+} finally {
+  fclose($fd);
+}
+```
+
 ## Advanced concepts
 
 ### Making custom or undocumented requests
@@ -131,7 +161,7 @@ Note: the `extra*` parameters of the same name overrides the documented paramete
 ```php
 <?php
 
-$response = $client->x->tweets->search(
+$paginatedTweets = $client->x->tweets->search(
   q: 'from:elonmusk',
   limit: 10,
   requestOptions: [

@@ -25,7 +25,7 @@ final class XGetHomeTimelineParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for timeline.
      */
     #[Optional]
     public ?string $cursor;
@@ -59,7 +59,7 @@ final class XGetHomeTimelineParams implements BaseModel
     }
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for timeline.
      */
     public function withCursor(string $cursor): self
     {

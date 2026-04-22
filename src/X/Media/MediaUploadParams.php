@@ -9,6 +9,7 @@ use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Core\FileParam;
 
 /**
  * Upload media.
@@ -16,7 +17,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\X\MediaService::upload()
  *
  * @phpstan-type MediaUploadParamsShape = array{
- *   account: string, file: string, isLongVideo?: bool|null
+ *   account: string, file: string|FileParam, isLongVideo?: bool|null
  * }
  */
 final class MediaUploadParams implements BaseModel
@@ -26,7 +27,7 @@ final class MediaUploadParams implements BaseModel
     use SdkParams;
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) uploading media.
      */
     #[Required]
     public string $account;
@@ -66,7 +67,7 @@ final class MediaUploadParams implements BaseModel
      */
     public static function with(
         string $account,
-        string $file,
+        string|FileParam $file,
         ?bool $isLongVideo = null
     ): self {
         $self = new self;
@@ -80,7 +81,7 @@ final class MediaUploadParams implements BaseModel
     }
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) uploading media.
      */
     public function withAccount(string $account): self
     {
@@ -93,7 +94,7 @@ final class MediaUploadParams implements BaseModel
     /**
      * Media file to upload.
      */
-    public function withFile(string $file): self
+    public function withFile(string|FileParam $file): self
     {
         $self = clone $this;
         $self['file'] = $file;

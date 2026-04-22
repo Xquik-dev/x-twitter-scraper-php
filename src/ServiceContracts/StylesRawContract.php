@@ -8,14 +8,12 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\Styles\StyleAnalyzeParams;
-use XTwitterScraper\Styles\StyleAnalyzeResponse;
 use XTwitterScraper\Styles\StyleCompareParams;
 use XTwitterScraper\Styles\StyleCompareResponse;
 use XTwitterScraper\Styles\StyleGetPerformanceResponse;
-use XTwitterScraper\Styles\StyleGetResponse;
 use XTwitterScraper\Styles\StyleListResponse;
+use XTwitterScraper\Styles\StyleProfile;
 use XTwitterScraper\Styles\StyleUpdateParams;
-use XTwitterScraper\Styles\StyleUpdateResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -25,31 +23,31 @@ interface StylesRawContract
     /**
      * @api
      *
-     * @param string $username X username of cached style
+     * @param string $id Style profile ID or X username
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<StyleGetResponse>
+     * @return BaseResponse<StyleProfile>
      *
      * @throws APIException
      */
     public function retrieve(
-        string $username,
+        string $id,
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 
     /**
      * @api
      *
-     * @param string $username X username of cached style
+     * @param string $id Style profile ID or X username
      * @param array<string,mixed>|StyleUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<StyleUpdateResponse>
+     * @return BaseResponse<StyleProfile>
      *
      * @throws APIException
      */
     public function update(
-        string $username,
+        string $id,
         array|StyleUpdateParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
@@ -70,7 +68,7 @@ interface StylesRawContract
     /**
      * @api
      *
-     * @param string $username X username of cached style
+     * @param string $id Style profile ID or X username
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<mixed>
@@ -78,7 +76,7 @@ interface StylesRawContract
      * @throws APIException
      */
     public function delete(
-        string $username,
+        string $id,
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 
@@ -88,7 +86,7 @@ interface StylesRawContract
      * @param array<string,mixed>|StyleAnalyzeParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<StyleAnalyzeResponse>
+     * @return BaseResponse<StyleProfile>
      *
      * @throws APIException
      */
@@ -115,7 +113,7 @@ interface StylesRawContract
     /**
      * @api
      *
-     * @param string $username X username of cached style
+     * @param string $id Style profile ID or X username
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<StyleGetPerformanceResponse>
@@ -123,7 +121,7 @@ interface StylesRawContract
      * @throws APIException
      */
     public function getPerformance(
-        string $username,
+        string $id,
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 }

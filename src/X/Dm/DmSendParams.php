@@ -29,7 +29,7 @@ final class DmSendParams implements BaseModel
     use SdkParams;
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) sending the DM.
      */
     #[Required]
     public string $account;
@@ -88,7 +88,7 @@ final class DmSendParams implements BaseModel
     }
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) sending the DM.
      */
     public function withAccount(string $account): self
     {

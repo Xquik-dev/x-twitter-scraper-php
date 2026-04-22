@@ -20,7 +20,7 @@ interface FollowRawContract
     /**
      * @api
      *
-     * @param string $userID User ID to follow
+     * @param string $id User ID to follow
      * @param array<string,mixed>|FollowCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -29,7 +29,7 @@ interface FollowRawContract
      * @throws APIException
      */
     public function create(
-        string $userID,
+        string $id,
         array|FollowCreateParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
@@ -37,7 +37,7 @@ interface FollowRawContract
     /**
      * @api
      *
-     * @param string $userID User ID to unfollow
+     * @param string $id User ID to unfollow
      * @param array<string,mixed>|FollowDeleteAllParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -46,7 +46,7 @@ interface FollowRawContract
      * @throws APIException
      */
     public function deleteAll(
-        string $userID,
+        string $id,
         array|FollowDeleteAllParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;

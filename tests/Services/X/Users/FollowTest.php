@@ -24,11 +24,7 @@ final class FollowTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -41,8 +37,8 @@ final class FollowTest extends TestCase
         }
 
         $result = $this->client->x->users->follow->create(
-            'userId',
-            account: 'account'
+            'id',
+            account: '@elonmusk'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -57,8 +53,8 @@ final class FollowTest extends TestCase
         }
 
         $result = $this->client->x->users->follow->create(
-            'userId',
-            account: 'account'
+            'id',
+            account: '@elonmusk'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -73,8 +69,8 @@ final class FollowTest extends TestCase
         }
 
         $result = $this->client->x->users->follow->deleteAll(
-            'userId',
-            account: 'account'
+            'id',
+            account: '@elonmusk'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -89,8 +85,8 @@ final class FollowTest extends TestCase
         }
 
         $result = $this->client->x->users->follow->deleteAll(
-            'userId',
-            account: 'account'
+            'id',
+            account: '@elonmusk'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

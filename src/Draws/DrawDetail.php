@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * Full giveaway draw with tweet metrics, entries, and timing.
+ *
  * @phpstan-type DrawDetailShape = array{
  *   id: string,
  *   createdAt: \DateTimeInterface,

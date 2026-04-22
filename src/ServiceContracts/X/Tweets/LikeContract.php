@@ -17,13 +17,14 @@ interface LikeContract
     /**
      * @api
      *
-     * @param string $account X account (@username or account ID)
+     * @param string $id Tweet ID to like
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function create(
-        string $tweetID,
+        string $id,
         string $account,
         RequestOptions|array|null $requestOptions = null,
     ): LikeNewResponse;
@@ -31,13 +32,14 @@ interface LikeContract
     /**
      * @api
      *
-     * @param string $account X account (@username or account ID)
+     * @param string $id Tweet ID to unlike
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function delete(
-        string $tweetID,
+        string $id,
         string $account,
         RequestOptions|array|null $requestOptions = null,
     ): LikeDeleteResponse;

@@ -26,7 +26,7 @@ final class CommunityCreateParams implements BaseModel
     use SdkParams;
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) creating the community.
      */
     #[Required]
     public string $account;
@@ -83,7 +83,7 @@ final class CommunityCreateParams implements BaseModel
     }
 
     /**
-     * X account (@username or account ID).
+     * X account (@username or ID) creating the community.
      */
     public function withAccount(string $account): self
     {

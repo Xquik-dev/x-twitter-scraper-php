@@ -6,12 +6,14 @@ namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\XGetArticleResponse;
 use XTwitterScraper\X\XGetHomeTimelineParams;
-use XTwitterScraper\X\XGetHomeTimelineResponse;
 use XTwitterScraper\X\XGetNotificationsParams;
 use XTwitterScraper\X\XGetNotificationsResponse;
+use XTwitterScraper\X\XGetTrendsParams;
+use XTwitterScraper\X\XGetTrendsResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -21,6 +23,7 @@ interface XRawContract
     /**
      * @api
      *
+     * @param string $tweetID Tweet ID of the article
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<XGetArticleResponse>
@@ -38,7 +41,7 @@ interface XRawContract
      * @param array<string,mixed>|XGetHomeTimelineParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<XGetHomeTimelineResponse>
+     * @return BaseResponse<PaginatedTweets>
      *
      * @throws APIException
      */
@@ -65,13 +68,15 @@ interface XRawContract
     /**
      * @api
      *
+     * @param array<string,mixed>|XGetTrendsParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<XGetTrendsResponse>
      *
      * @throws APIException
      */
     public function getTrends(
-        RequestOptions|array|null $requestOptions = null
+        array|XGetTrendsParams $params,
+        RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 }

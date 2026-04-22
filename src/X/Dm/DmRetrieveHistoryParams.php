@@ -25,7 +25,7 @@ final class DmRetrieveHistoryParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for DM history.
      */
     #[Optional]
     public ?string $cursor;
@@ -59,7 +59,7 @@ final class DmRetrieveHistoryParams implements BaseModel
     }
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for DM history.
      */
     public function withCursor(string $cursor): self
     {

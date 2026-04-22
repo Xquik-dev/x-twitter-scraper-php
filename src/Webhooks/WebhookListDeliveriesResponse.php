@@ -7,13 +7,12 @@ namespace XTwitterScraper\Webhooks;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse\Delivery;
 
 /**
- * @phpstan-import-type DeliveryShape from \XTwitterScraper\Webhooks\WebhookListDeliveriesResponse\Delivery
+ * @phpstan-import-type DeliveryShape from \XTwitterScraper\Webhooks\Delivery
  *
  * @phpstan-type WebhookListDeliveriesResponseShape = array{
- *   deliveries: list<\XTwitterScraper\Webhooks\WebhookListDeliveriesResponse\Delivery|DeliveryShape>,
+ *   deliveries: list<Delivery|DeliveryShape>
  * }
  */
 final class WebhookListDeliveriesResponse implements BaseModel
@@ -21,12 +20,8 @@ final class WebhookListDeliveriesResponse implements BaseModel
     /** @use SdkModel<WebhookListDeliveriesResponseShape> */
     use SdkModel;
 
-    /**
-     * @var list<Delivery> $deliveries
-     */
-    #[Required(
-        list: Delivery::class,
-    )]
+    /** @var list<Delivery> $deliveries */
+    #[Required(list: Delivery::class)]
     public array $deliveries;
 
     /**

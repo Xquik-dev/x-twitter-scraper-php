@@ -17,13 +17,14 @@ interface RetweetContract
     /**
      * @api
      *
-     * @param string $account X account (@username or account ID)
+     * @param string $id Tweet ID to retweet
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function create(
-        string $tweetID,
+        string $id,
         string $account,
         RequestOptions|array|null $requestOptions = null,
     ): RetweetNewResponse;
@@ -31,13 +32,14 @@ interface RetweetContract
     /**
      * @api
      *
-     * @param string $account X account (@username or account ID)
+     * @param string $id Tweet ID to unretweet
+     * @param string $account X account identifier (@username or account ID)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function delete(
-        string $tweetID,
+        string $id,
         string $account,
         RequestOptions|array|null $requestOptions = null,
     ): RetweetDeleteResponse;

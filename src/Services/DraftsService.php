@@ -8,14 +8,13 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Drafts\DraftCreateParams\Goal;
-use XTwitterScraper\Drafts\DraftGetResponse;
+use XTwitterScraper\Drafts\DraftDetail;
 use XTwitterScraper\Drafts\DraftListResponse;
-use XTwitterScraper\Drafts\DraftNewResponse;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\DraftsContract;
 
 /**
- * Tweet composition, drafts, writing styles & radar.
+ * AI tweet composition, drafts, writing styles, and radar.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -49,7 +48,7 @@ final class DraftsService implements DraftsContract
         Goal|string|null $goal = null,
         ?string $topic = null,
         RequestOptions|array|null $requestOptions = null,
-    ): DraftNewResponse {
+    ): DraftDetail {
         $params = Util::removeNulls(
             ['text' => $text, 'goal' => $goal, 'topic' => $topic]
         );
@@ -73,7 +72,7 @@ final class DraftsService implements DraftsContract
     public function retrieve(
         string $id,
         RequestOptions|array|null $requestOptions = null
-    ): DraftGetResponse {
+    ): DraftDetail {
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieve($id, requestOptions: $requestOptions);
 
@@ -86,6 +85,7 @@ final class DraftsService implements DraftsContract
      * List saved drafts
      *
      * @param string $afterCursor Cursor for pagination
+     * @param int $limit Maximum number of items to return (1-100, default 50)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

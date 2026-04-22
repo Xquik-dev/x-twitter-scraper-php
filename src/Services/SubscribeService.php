@@ -11,7 +11,7 @@ use XTwitterScraper\ServiceContracts\SubscribeContract;
 use XTwitterScraper\Subscribe\SubscribeNewResponse;
 
 /**
- * Subscription & billing.
+ * Subscription, billing, and credits.
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */

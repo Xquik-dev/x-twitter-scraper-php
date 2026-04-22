@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * Author of a tweet with follower count and verification status.
+ *
  * @phpstan-type TweetAuthorShape = array{
  *   id: string,
  *   followers: int,

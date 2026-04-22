@@ -8,15 +8,14 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\X\Tweets\TweetGetResponse\Author;
-use XTwitterScraper\X\Tweets\TweetGetResponse\Tweet;
 
 /**
- * @phpstan-import-type TweetShape from \XTwitterScraper\X\Tweets\TweetGetResponse\Tweet
- * @phpstan-import-type AuthorShape from \XTwitterScraper\X\Tweets\TweetGetResponse\Author
+ * @phpstan-import-type TweetDetailShape from \XTwitterScraper\X\Tweets\TweetDetail
+ * @phpstan-import-type TweetAuthorShape from \XTwitterScraper\X\Tweets\TweetAuthor
  *
  * @phpstan-type TweetGetResponseShape = array{
- *   tweet: Tweet|TweetShape, author?: null|Author|AuthorShape
+ *   tweet: TweetDetail|TweetDetailShape,
+ *   author?: null|TweetAuthor|TweetAuthorShape,
  * }
  */
 final class TweetGetResponse implements BaseModel
@@ -24,11 +23,17 @@ final class TweetGetResponse implements BaseModel
     /** @use SdkModel<TweetGetResponseShape> */
     use SdkModel;
 
+    /**
+     * Full tweet with text, engagement metrics, media, and metadata.
+     */
     #[Required]
-    public Tweet $tweet;
+    public TweetDetail $tweet;
 
+    /**
+     * Author of a tweet with follower count and verification status.
+     */
     #[Optional]
-    public ?Author $author;
+    public ?TweetAuthor $author;
 
     /**
      * `new TweetGetResponse()` is missing required properties by the API.
@@ -54,12 +59,12 @@ final class TweetGetResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param Tweet|TweetShape $tweet
-     * @param Author|AuthorShape|null $author
+     * @param TweetDetail|TweetDetailShape $tweet
+     * @param TweetAuthor|TweetAuthorShape|null $author
      */
     public static function with(
-        Tweet|array $tweet,
-        Author|array|null $author = null
+        TweetDetail|array $tweet,
+        TweetAuthor|array|null $author = null
     ): self {
         $self = new self;
 
@@ -71,9 +76,11 @@ final class TweetGetResponse implements BaseModel
     }
 
     /**
-     * @param Tweet|TweetShape $tweet
+     * Full tweet with text, engagement metrics, media, and metadata.
+     *
+     * @param TweetDetail|TweetDetailShape $tweet
      */
-    public function withTweet(Tweet|array $tweet): self
+    public function withTweet(TweetDetail|array $tweet): self
     {
         $self = clone $this;
         $self['tweet'] = $tweet;
@@ -82,9 +89,11 @@ final class TweetGetResponse implements BaseModel
     }
 
     /**
-     * @param Author|AuthorShape $author
+     * Author of a tweet with follower count and verification status.
+     *
+     * @param TweetAuthor|TweetAuthorShape $author
      */
-    public function withAuthor(Author|array $author): self
+    public function withAuthor(TweetAuthor|array $author): self
     {
         $self = clone $this;
         $self['author'] = $author;

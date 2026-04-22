@@ -8,9 +8,10 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\X\XGetArticleResponse;
-use XTwitterScraper\X\XGetHomeTimelineResponse;
 use XTwitterScraper\X\XGetNotificationsResponse;
+use XTwitterScraper\X\XGetTrendsResponse;
 
 /**
  * @internal
@@ -25,11 +26,7 @@ final class XTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -57,7 +54,7 @@ final class XTest extends TestCase
         $result = $this->client->x->getHomeTimeline();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(XGetHomeTimelineResponse::class, $result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -83,6 +80,6 @@ final class XTest extends TestCase
         $result = $this->client->x->getTrends();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(XGetTrendsResponse::class, $result);
     }
 }

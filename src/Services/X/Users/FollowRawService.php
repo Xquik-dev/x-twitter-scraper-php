@@ -32,7 +32,7 @@ final class FollowRawService implements FollowRawContract
      *
      * Follow user
      *
-     * @param string $userID User ID to follow
+     * @param string $id User ID to follow
      * @param array{account: string}|FollowCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -41,7 +41,7 @@ final class FollowRawService implements FollowRawContract
      * @throws APIException
      */
     public function create(
-        string $userID,
+        string $id,
         array|FollowCreateParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse {
@@ -53,7 +53,7 @@ final class FollowRawService implements FollowRawContract
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
-            path: ['x/users/%1$s/follow', $userID],
+            path: ['x/users/%1$s/follow', $id],
             body: (object) $parsed,
             options: $options,
             convert: FollowNewResponse::class,
@@ -65,7 +65,7 @@ final class FollowRawService implements FollowRawContract
      *
      * Unfollow user
      *
-     * @param string $userID User ID to unfollow
+     * @param string $id User ID to unfollow
      * @param array{account: string}|FollowDeleteAllParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -74,7 +74,7 @@ final class FollowRawService implements FollowRawContract
      * @throws APIException
      */
     public function deleteAll(
-        string $userID,
+        string $id,
         array|FollowDeleteAllParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse {
@@ -86,7 +86,7 @@ final class FollowRawService implements FollowRawContract
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'delete',
-            path: ['x/users/%1$s/follow', $userID],
+            path: ['x/users/%1$s/follow', $id],
             body: (object) $parsed,
             options: $options,
             convert: FollowDeleteAllResponse::class,

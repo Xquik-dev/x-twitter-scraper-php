@@ -8,11 +8,12 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\X\Accounts\AccountBulkRetryResponse;
 use XTwitterScraper\X\Accounts\AccountDeleteResponse;
-use XTwitterScraper\X\Accounts\AccountGetResponse;
 use XTwitterScraper\X\Accounts\AccountListResponse;
 use XTwitterScraper\X\Accounts\AccountNewResponse;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
+use XTwitterScraper\X\Accounts\XAccountDetail;
 
 /**
  * @internal
@@ -27,11 +28,7 @@ final class AccountsTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -44,9 +41,9 @@ final class AccountsTest extends TestCase
         }
 
         $result = $this->client->x->accounts->create(
-            email: 'email',
-            password: 'password',
-            username: 'username'
+            email: 'user@example.com',
+            password: 's3cur3Pa$$w0rd',
+            username: 'elonmusk',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -61,11 +58,11 @@ final class AccountsTest extends TestCase
         }
 
         $result = $this->client->x->accounts->create(
-            email: 'email',
-            password: 'password',
-            username: 'username',
-            proxyCountry: 'proxy_country',
-            totpSecret: 'totp_secret',
+            email: 'user@example.com',
+            password: 's3cur3Pa$$w0rd',
+            username: 'elonmusk',
+            proxyCountry: 'US',
+            totpSecret: 'JBSWY3DPEHPK3PXP',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -82,7 +79,7 @@ final class AccountsTest extends TestCase
         $result = $this->client->x->accounts->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(AccountGetResponse::class, $result);
+        $this->assertInstanceOf(XAccountDetail::class, $result);
     }
 
     #[Test]
@@ -112,13 +109,29 @@ final class AccountsTest extends TestCase
     }
 
     #[Test]
+    public function testBulkRetry(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->x->accounts->bulkRetry();
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(AccountBulkRetryResponse::class, $result);
+    }
+
+    #[Test]
     public function testReauth(): void
     {
         if (UnsupportedMockTests::$skip) {
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->accounts->reauth('id', password: 'password');
+        $result = $this->client->x->accounts->reauth(
+            'id',
+            password: 'password_value'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(AccountReauthResponse::class, $result);
@@ -133,8 +146,10 @@ final class AccountsTest extends TestCase
 
         $result = $this->client->x->accounts->reauth(
             'id',
-            password: 'password',
-            totpSecret: 'totp_secret'
+            password: 'password_value',
+            email: 'user@example.com',
+            proxyCountry: 'US',
+            totpSecret: 'totp_secret_value',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

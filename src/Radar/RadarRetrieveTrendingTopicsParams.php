@@ -8,6 +8,8 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Radar\RadarRetrieveTrendingTopicsParams\Category;
+use XTwitterScraper\Radar\RadarRetrieveTrendingTopicsParams\Source;
 
 /**
  * Get trending topics from curated sources.
@@ -15,11 +17,12 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\RadarService::retrieveTrendingTopics()
  *
  * @phpstan-type RadarRetrieveTrendingTopicsParamsShape = array{
- *   category?: string|null,
- *   count?: int|null,
+ *   after?: string|null,
+ *   category?: null|Category|value-of<Category>,
  *   hours?: int|null,
+ *   limit?: int|null,
  *   region?: string|null,
- *   source?: string|null,
+ *   source?: null|Source|value-of<Source>,
  * }
  */
 final class RadarRetrieveTrendingTopicsParams implements BaseModel
@@ -29,22 +32,30 @@ final class RadarRetrieveTrendingTopicsParams implements BaseModel
     use SdkParams;
 
     /**
-     * Filter by category (general, tech, dev, etc.).
+     * Cursor for pagination (from prior response nextCursor).
      */
     #[Optional]
+    public ?string $after;
+
+    /**
+     * Filter by category.
+     *
+     * @var value-of<Category>|null $category
+     */
+    #[Optional(enum: Category::class)]
     public ?string $category;
 
     /**
-     * Number of items to return.
-     */
-    #[Optional]
-    public ?int $count;
-
-    /**
-     * Lookback window in hours.
+     * Lookback window in hours (1-168, default 24).
      */
     #[Optional]
     public ?int $hours;
+
+    /**
+     * Number of items to return (1-100, default 50).
+     */
+    #[Optional]
+    public ?int $limit;
 
     /**
      * Region filter (us, global, etc.).
@@ -54,8 +65,10 @@ final class RadarRetrieveTrendingTopicsParams implements BaseModel
 
     /**
      * Source filter. One of: github, google_trends, hacker_news, polymarket, reddit, trustmrr, wikipedia.
+     *
+     * @var value-of<Source>|null $source
      */
-    #[Optional]
+    #[Optional(enum: Source::class)]
     public ?string $source;
 
     public function __construct()
@@ -67,19 +80,24 @@ final class RadarRetrieveTrendingTopicsParams implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param Category|value-of<Category>|null $category
+     * @param Source|value-of<Source>|null $source
      */
     public static function with(
-        ?string $category = null,
-        ?int $count = null,
+        ?string $after = null,
+        Category|string|null $category = null,
         ?int $hours = null,
+        ?int $limit = null,
         ?string $region = null,
-        ?string $source = null,
+        Source|string|null $source = null,
     ): self {
         $self = new self;
 
+        null !== $after && $self['after'] = $after;
         null !== $category && $self['category'] = $category;
-        null !== $count && $self['count'] = $count;
         null !== $hours && $self['hours'] = $hours;
+        null !== $limit && $self['limit'] = $limit;
         null !== $region && $self['region'] = $region;
         null !== $source && $self['source'] = $source;
 
@@ -87,9 +105,22 @@ final class RadarRetrieveTrendingTopicsParams implements BaseModel
     }
 
     /**
-     * Filter by category (general, tech, dev, etc.).
+     * Cursor for pagination (from prior response nextCursor).
      */
-    public function withCategory(string $category): self
+    public function withAfter(string $after): self
+    {
+        $self = clone $this;
+        $self['after'] = $after;
+
+        return $self;
+    }
+
+    /**
+     * Filter by category.
+     *
+     * @param Category|value-of<Category> $category
+     */
+    public function withCategory(Category|string $category): self
     {
         $self = clone $this;
         $self['category'] = $category;
@@ -98,23 +129,23 @@ final class RadarRetrieveTrendingTopicsParams implements BaseModel
     }
 
     /**
-     * Number of items to return.
-     */
-    public function withCount(int $count): self
-    {
-        $self = clone $this;
-        $self['count'] = $count;
-
-        return $self;
-    }
-
-    /**
-     * Lookback window in hours.
+     * Lookback window in hours (1-168, default 24).
      */
     public function withHours(int $hours): self
     {
         $self = clone $this;
         $self['hours'] = $hours;
+
+        return $self;
+    }
+
+    /**
+     * Number of items to return (1-100, default 50).
+     */
+    public function withLimit(int $limit): self
+    {
+        $self = clone $this;
+        $self['limit'] = $limit;
 
         return $self;
     }
@@ -132,8 +163,10 @@ final class RadarRetrieveTrendingTopicsParams implements BaseModel
 
     /**
      * Source filter. One of: github, google_trends, hacker_news, polymarket, reddit, trustmrr, wikipedia.
+     *
+     * @param Source|value-of<Source> $source
      */
-    public function withSource(string $source): self
+    public function withSource(Source|string $source): self
     {
         $self = clone $this;
         $self['source'] = $source;

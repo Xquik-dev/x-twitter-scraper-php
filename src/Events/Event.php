@@ -7,15 +7,17 @@ namespace XTwitterScraper\Events;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Events\Event\Type;
+use XTwitterScraper\EventType;
 
 /**
+ * Monitor event summary with type, username, and occurrence time.
+ *
  * @phpstan-type EventShape = array{
  *   id: string,
  *   data: array<string,mixed>,
  *   monitorID: string,
  *   occurredAt: \DateTimeInterface,
- *   type: Type|value-of<Type>,
+ *   type: EventType|value-of<EventType>,
  *   username: string,
  * }
  */
@@ -37,8 +39,12 @@ final class Event implements BaseModel
     #[Required]
     public \DateTimeInterface $occurredAt;
 
-    /** @var value-of<Type> $type */
-    #[Required(enum: Type::class)]
+    /**
+     * Type of monitor event fired when account activity occurs.
+     *
+     * @var value-of<EventType> $type
+     */
+    #[Required(enum: EventType::class)]
     public string $type;
 
     #[Required]
@@ -77,14 +83,14 @@ final class Event implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param array<string,mixed> $data
-     * @param Type|value-of<Type> $type
+     * @param EventType|value-of<EventType> $type
      */
     public static function with(
         string $id,
         array $data,
         string $monitorID,
         \DateTimeInterface $occurredAt,
-        Type|string $type,
+        EventType|string $type,
         string $username,
     ): self {
         $self = new self;
@@ -135,9 +141,11 @@ final class Event implements BaseModel
     }
 
     /**
-     * @param Type|value-of<Type> $type
+     * Type of monitor event fired when account activity occurs.
+     *
+     * @param EventType|value-of<EventType> $type
      */
-    public function withType(Type|string $type): self
+    public function withType(EventType|string $type): self
     {
         $self = clone $this;
         $self['type'] = $type;

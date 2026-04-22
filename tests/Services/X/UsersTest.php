@@ -8,11 +8,9 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\X\Users\UserGetFollowersYouKnowResponse;
-use XTwitterScraper\X\Users\UserGetLikesResponse;
-use XTwitterScraper\X\Users\UserGetMediaResponse;
-use XTwitterScraper\X\Users\UserGetResponse;
-use XTwitterScraper\X\Users\UserGetTweetsResponse;
+use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedUsers;
+use XTwitterScraper\UserProfile;
 
 /**
  * @internal
@@ -27,11 +25,7 @@ final class UsersTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -43,10 +37,10 @@ final class UsersTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->users->retrieve('username');
+        $result = $this->client->x->users->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(UserGetResponse::class, $result);
+        $this->assertInstanceOf(UserProfile::class, $result);
     }
 
     #[Test]
@@ -59,7 +53,7 @@ final class UsersTest extends TestCase
         $result = $this->client->x->users->retrieveBatch(ids: 'ids');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 
     #[Test]
@@ -72,7 +66,7 @@ final class UsersTest extends TestCase
         $result = $this->client->x->users->retrieveBatch(ids: 'ids');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 
     #[Test]
@@ -85,7 +79,7 @@ final class UsersTest extends TestCase
         $result = $this->client->x->users->retrieveFollowers('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 
     #[Test]
@@ -98,7 +92,7 @@ final class UsersTest extends TestCase
         $result = $this->client->x->users->retrieveFollowersYouKnow('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(UserGetFollowersYouKnowResponse::class, $result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 
     #[Test]
@@ -111,7 +105,7 @@ final class UsersTest extends TestCase
         $result = $this->client->x->users->retrieveFollowing('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 
     #[Test]
@@ -124,7 +118,7 @@ final class UsersTest extends TestCase
         $result = $this->client->x->users->retrieveLikes('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(UserGetLikesResponse::class, $result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -137,7 +131,7 @@ final class UsersTest extends TestCase
         $result = $this->client->x->users->retrieveMedia('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(UserGetMediaResponse::class, $result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -150,7 +144,7 @@ final class UsersTest extends TestCase
         $result = $this->client->x->users->retrieveMentions('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -163,7 +157,7 @@ final class UsersTest extends TestCase
         $result = $this->client->x->users->retrieveSearch(q: 'q');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 
     #[Test]
@@ -176,7 +170,7 @@ final class UsersTest extends TestCase
         $result = $this->client->x->users->retrieveSearch(q: 'q', cursor: 'cursor');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 
     #[Test]
@@ -189,7 +183,7 @@ final class UsersTest extends TestCase
         $result = $this->client->x->users->retrieveTweets('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(UserGetTweetsResponse::class, $result);
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
     }
 
     #[Test]
@@ -202,6 +196,6 @@ final class UsersTest extends TestCase
         $result = $this->client->x->users->retrieveVerifiedFollowers('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertNull($result);
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
     }
 }

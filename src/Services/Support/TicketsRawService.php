@@ -68,6 +68,7 @@ final class TicketsRawService implements TicketsRawContract
      *
      * Get ticket with all messages
      *
+     * @param string $id Support ticket ID
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<TicketGetResponse>
@@ -92,6 +93,7 @@ final class TicketsRawService implements TicketsRawContract
      *
      * Update ticket status
      *
+     * @param string $id Support ticket ID to update
      * @param array{status: Status|value-of<Status>}|TicketUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -147,6 +149,7 @@ final class TicketsRawService implements TicketsRawContract
      *
      * Reply to a support ticket
      *
+     * @param string $id Support ticket ID for the reply
      * @param array{body: string}|TicketReplyParams $params
      * @param RequestOpts|null $requestOptions
      *

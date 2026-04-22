@@ -35,7 +35,11 @@ final class ExtractionRunParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
-    /** @var value-of<ToolType> $toolType */
+    /**
+     * Identifier for the extraction tool used to run a job.
+     *
+     * @var value-of<ToolType> $toolType
+     */
     #[Required(enum: ToolType::class)]
     public string $toolType;
 
@@ -131,6 +135,8 @@ final class ExtractionRunParams implements BaseModel
     }
 
     /**
+     * Identifier for the extraction tool used to run a job.
+     *
      * @param ToolType|value-of<ToolType> $toolType
      */
     public function withToolType(ToolType|string $toolType): self

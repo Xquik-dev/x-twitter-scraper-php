@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get recent tweets by a user.
+ * List recent tweets posted by a user.
  *
  * @see XTwitterScraper\Services\X\UsersService::retrieveTweets()
  *
@@ -27,7 +27,7 @@ final class UserRetrieveTweetsParams implements BaseModel
     use SdkParams;
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for user tweets.
      */
     #[Optional]
     public ?string $cursor;
@@ -69,7 +69,7 @@ final class UserRetrieveTweetsParams implements BaseModel
     }
 
     /**
-     * Pagination cursor from previous response.
+     * Pagination cursor for user tweets.
      */
     public function withCursor(string $cursor): self
     {

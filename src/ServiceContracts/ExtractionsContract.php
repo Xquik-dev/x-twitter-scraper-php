@@ -23,7 +23,8 @@ interface ExtractionsContract
      * @api
      *
      * @param string $id Extraction public ID (UUID)
-     * @param string $after Cursor for pagination
+     * @param string $after Cursor for keyset pagination
+     * @param int $limit Maximum number of results to return (1-1000, default 100)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -38,9 +39,10 @@ interface ExtractionsContract
     /**
      * @api
      *
-     * @param string $after Cursor for pagination
-     * @param Status|value-of<Status> $status
-     * @param ToolType|value-of<ToolType> $toolType
+     * @param string $after Cursor for keyset pagination
+     * @param int $limit Maximum number of items to return (1-100, default 50)
+     * @param Status|value-of<Status> $status Filter by job status
+     * @param ToolType|value-of<ToolType> $toolType Filter by extraction tool type
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -56,10 +58,10 @@ interface ExtractionsContract
     /**
      * @api
      *
-     * @param \XTwitterScraper\Extractions\ExtractionEstimateCostParams\ToolType|value-of<\XTwitterScraper\Extractions\ExtractionEstimateCostParams\ToolType> $toolType
-     * @param string $advancedQuery Raw advanced search query appended as-is (tweet_search_extractor)
-     * @param string $exactPhrase Exact phrase to match (tweet_search_extractor)
-     * @param string $excludeWords Words to exclude from results (tweet_search_extractor)
+     * @param \XTwitterScraper\Extractions\ExtractionEstimateCostParams\ToolType|value-of<\XTwitterScraper\Extractions\ExtractionEstimateCostParams\ToolType> $toolType identifier for the extraction tool used to run a job
+     * @param string $advancedQuery Raw advanced query string appended to the estimate (tweet_search_extractor)
+     * @param string $exactPhrase Exact phrase filter for search estimation
+     * @param string $excludeWords Words excluded from estimated search results
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -82,7 +84,7 @@ interface ExtractionsContract
      * @api
      *
      * @param string $id Extraction public ID
-     * @param Format|value-of<Format> $format
+     * @param Format|value-of<Format> $format Export file format
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -96,7 +98,7 @@ interface ExtractionsContract
     /**
      * @api
      *
-     * @param \XTwitterScraper\Extractions\ExtractionRunParams\ToolType|value-of<\XTwitterScraper\Extractions\ExtractionRunParams\ToolType> $toolType
+     * @param \XTwitterScraper\Extractions\ExtractionRunParams\ToolType|value-of<\XTwitterScraper\Extractions\ExtractionRunParams\ToolType> $toolType identifier for the extraction tool used to run a job
      * @param string $advancedQuery Raw advanced search query appended as-is (tweet_search_extractor)
      * @param string $exactPhrase Exact phrase to match (tweet_search_extractor)
      * @param string $excludeWords Words to exclude from results (tweet_search_extractor)

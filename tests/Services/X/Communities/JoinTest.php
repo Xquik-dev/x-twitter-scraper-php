@@ -8,8 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
-use XTwitterScraper\X\Communities\Join\JoinDeleteAllResponse;
-use XTwitterScraper\X\Communities\Join\JoinNewResponse;
+use XTwitterScraper\X\Communities\CommunityActionResult;
 
 /**
  * @internal
@@ -24,11 +23,7 @@ final class JoinTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(
-            apiKey: 'My API Key',
-            bearerToken: 'My Bearer Token',
-            baseUrl: $testUrl,
-        );
+        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
 
         $this->client = $client;
     }
@@ -42,11 +37,11 @@ final class JoinTest extends TestCase
 
         $result = $this->client->x->communities->join->create(
             'id',
-            account: 'account'
+            account: '@elonmusk'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(JoinNewResponse::class, $result);
+        $this->assertInstanceOf(CommunityActionResult::class, $result);
     }
 
     #[Test]
@@ -58,11 +53,11 @@ final class JoinTest extends TestCase
 
         $result = $this->client->x->communities->join->create(
             'id',
-            account: 'account'
+            account: '@elonmusk'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(JoinNewResponse::class, $result);
+        $this->assertInstanceOf(CommunityActionResult::class, $result);
     }
 
     #[Test]
@@ -74,11 +69,11 @@ final class JoinTest extends TestCase
 
         $result = $this->client->x->communities->join->deleteAll(
             'id',
-            account: 'account'
+            account: '@elonmusk'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(JoinDeleteAllResponse::class, $result);
+        $this->assertInstanceOf(CommunityActionResult::class, $result);
     }
 
     #[Test]
@@ -90,10 +85,10 @@ final class JoinTest extends TestCase
 
         $result = $this->client->x->communities->join->deleteAll(
             'id',
-            account: 'account'
+            account: '@elonmusk'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(JoinDeleteAllResponse::class, $result);
+        $this->assertInstanceOf(CommunityActionResult::class, $result);
     }
 }

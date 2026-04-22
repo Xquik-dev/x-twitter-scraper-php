@@ -9,6 +9,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * Error response containing a machine-readable error code.
+ *
  * @phpstan-type ErrorShape = array{
  *   error: \XTwitterScraper\Error\Error|value-of<\XTwitterScraper\Error\Error>
  * }

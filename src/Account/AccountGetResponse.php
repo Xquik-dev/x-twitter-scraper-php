@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Account;
 
-use XTwitterScraper\Account\AccountGetResponse\CurrentPeriod;
+use XTwitterScraper\Account\AccountGetResponse\CreditInfo;
 use XTwitterScraper\Account\AccountGetResponse\Plan;
 use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
@@ -12,13 +12,13 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-import-type CurrentPeriodShape from \XTwitterScraper\Account\AccountGetResponse\CurrentPeriod
+ * @phpstan-import-type CreditInfoShape from \XTwitterScraper\Account\AccountGetResponse\CreditInfo
  *
  * @phpstan-type AccountGetResponseShape = array{
  *   monitorsAllowed: int,
  *   monitorsUsed: int,
  *   plan: Plan|value-of<Plan>,
- *   currentPeriod?: null|CurrentPeriod|CurrentPeriodShape,
+ *   creditInfo?: null|CreditInfo|CreditInfoShape,
  * }
  */
 final class AccountGetResponse implements BaseModel
@@ -37,7 +37,7 @@ final class AccountGetResponse implements BaseModel
     public string $plan;
 
     #[Optional]
-    public ?CurrentPeriod $currentPeriod;
+    public ?CreditInfo $creditInfo;
 
     /**
      * `new AccountGetResponse()` is missing required properties by the API.
@@ -67,13 +67,13 @@ final class AccountGetResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Plan|value-of<Plan> $plan
-     * @param CurrentPeriod|CurrentPeriodShape|null $currentPeriod
+     * @param CreditInfo|CreditInfoShape|null $creditInfo
      */
     public static function with(
         int $monitorsAllowed,
         int $monitorsUsed,
         Plan|string $plan,
-        CurrentPeriod|array|null $currentPeriod = null,
+        CreditInfo|array|null $creditInfo = null,
     ): self {
         $self = new self;
 
@@ -81,7 +81,7 @@ final class AccountGetResponse implements BaseModel
         $self['monitorsUsed'] = $monitorsUsed;
         $self['plan'] = $plan;
 
-        null !== $currentPeriod && $self['currentPeriod'] = $currentPeriod;
+        null !== $creditInfo && $self['creditInfo'] = $creditInfo;
 
         return $self;
     }
@@ -114,12 +114,12 @@ final class AccountGetResponse implements BaseModel
     }
 
     /**
-     * @param CurrentPeriod|CurrentPeriodShape $currentPeriod
+     * @param CreditInfo|CreditInfoShape $creditInfo
      */
-    public function withCurrentPeriod(CurrentPeriod|array $currentPeriod): self
+    public function withCreditInfo(CreditInfo|array $creditInfo): self
     {
         $self = clone $this;
-        $self['currentPeriod'] = $currentPeriod;
+        $self['creditInfo'] = $creditInfo;
 
         return $self;
     }

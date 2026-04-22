@@ -8,15 +8,17 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Events\EventDetail\Type;
+use XTwitterScraper\EventType;
 
 /**
+ * Full monitor event including payload data and optional X event ID.
+ *
  * @phpstan-type EventDetailShape = array{
  *   id: string,
  *   data: array<string,mixed>,
  *   monitorID: string,
  *   occurredAt: \DateTimeInterface,
- *   type: Type|value-of<Type>,
+ *   type: EventType|value-of<EventType>,
  *   username: string,
  *   xEventID?: string|null,
  * }
@@ -43,8 +45,12 @@ final class EventDetail implements BaseModel
     #[Required]
     public \DateTimeInterface $occurredAt;
 
-    /** @var value-of<Type> $type */
-    #[Required(enum: Type::class)]
+    /**
+     * Type of monitor event fired when account activity occurs.
+     *
+     * @var value-of<EventType> $type
+     */
+    #[Required(enum: EventType::class)]
     public string $type;
 
     #[Required]
@@ -86,14 +92,14 @@ final class EventDetail implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param array<string,mixed> $data
-     * @param Type|value-of<Type> $type
+     * @param EventType|value-of<EventType> $type
      */
     public static function with(
         string $id,
         array $data,
         string $monitorID,
         \DateTimeInterface $occurredAt,
-        Type|string $type,
+        EventType|string $type,
         string $username,
         ?string $xEventID = null,
     ): self {
@@ -149,9 +155,11 @@ final class EventDetail implements BaseModel
     }
 
     /**
-     * @param Type|value-of<Type> $type
+     * Type of monitor event fired when account activity occurs.
+     *
+     * @param EventType|value-of<EventType> $type
      */
-    public function withType(Type|string $type): self
+    public function withType(EventType|string $type): self
     {
         $self = clone $this;
         $self['type'] = $type;

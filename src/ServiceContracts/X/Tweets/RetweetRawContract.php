@@ -20,6 +20,7 @@ interface RetweetRawContract
     /**
      * @api
      *
+     * @param string $id Tweet ID to retweet
      * @param array<string,mixed>|RetweetCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -28,7 +29,7 @@ interface RetweetRawContract
      * @throws APIException
      */
     public function create(
-        string $tweetID,
+        string $id,
         array|RetweetCreateParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
@@ -36,6 +37,7 @@ interface RetweetRawContract
     /**
      * @api
      *
+     * @param string $id Tweet ID to unretweet
      * @param array<string,mixed>|RetweetDeleteParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -44,7 +46,7 @@ interface RetweetRawContract
      * @throws APIException
      */
     public function delete(
-        string $tweetID,
+        string $id,
         array|RetweetDeleteParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
