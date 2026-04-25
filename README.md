@@ -64,7 +64,7 @@ use XTwitterScraper\Core\Exceptions\RateLimitException;
 use XTwitterScraper\Core\Exceptions\APIStatusException;
 
 try {
-  $paginatedTweets = $client->x->tweets->search(q: 'from:elonmusk');
+  $account = $client->account->retrieve();
 } catch (APIConnectionException $e) {
   echo "The server could not be reached", PHP_EOL;
   var_dump($e->getPrevious());
@@ -109,9 +109,7 @@ use XTwitterScraper\Client;
 $client = new Client(requestOptions: ['maxRetries' => 0]);
 
 // Or, configure per-request:
-$result = $client->x->tweets->search(
-  q: 'from:elonmusk', limit: 10, requestOptions: ['maxRetries' => 5]
-);
+$result = $client->account->retrieve(requestOptions: ['maxRetries' => 5]);
 ```
 
 ### File uploads
@@ -157,9 +155,7 @@ Note: the `extra*` parameters of the same name overrides the documented paramete
 ```php
 <?php
 
-$paginatedTweets = $client->x->tweets->search(
-  q: 'from:elonmusk',
-  limit: 10,
+$account = $client->account->retrieve(
   requestOptions: [
     'extraQueryParams' => ['my_query_parameter' => 'value'],
     'extraBodyParams' => ['my_body_parameter' => 'value'],
