@@ -102,7 +102,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
     /**
      * @api
      *
-     * Get community name, description and member count
+     * Get community name, description & member count
      *
      * @param string $id Community ID
      * @param RequestOpts|null $requestOptions
@@ -130,7 +130,9 @@ final class CommunitiesRawService implements CommunitiesRawContract
      * List members of a community
      *
      * @param string $id Community ID for member lookup
-     * @param array{cursor?: string}|CommunityRetrieveMembersParams $params
+     * @param array{
+     *   cursor?: string, pageSize?: int
+     * }|CommunityRetrieveMembersParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedUsers>

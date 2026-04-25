@@ -12,7 +12,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\Tweets\TweetSearchParams\QueryType;
 
 /**
- * Search tweets with X query operators and pagination.
+ * Search tweets with X query operators & pagination.
  *
  * @see XTwitterScraper\Services\X\TweetsService::search()
  *
@@ -50,7 +50,7 @@ final class TweetSearchParams implements BaseModel
     public ?int $limit;
 
     /**
-     * Sort order — Latest (chronological) or Top (engagement-ranked).
+     * Sort order - Latest (chronological) or Top (engagement-ranked).
      *
      * @var value-of<QueryType>|null $queryType
      */
@@ -58,13 +58,13 @@ final class TweetSearchParams implements BaseModel
     public ?string $queryType;
 
     /**
-     * ISO 8601 timestamp — only return tweets after this time.
+     * ISO 8601 timestamp - only return tweets after this time.
      */
     #[Optional]
     public ?string $sinceTime;
 
     /**
-     * ISO 8601 timestamp — only return tweets before this time.
+     * ISO 8601 timestamp - only return tweets before this time.
      */
     #[Optional]
     public ?string $untilTime;
@@ -150,7 +150,7 @@ final class TweetSearchParams implements BaseModel
     }
 
     /**
-     * Sort order — Latest (chronological) or Top (engagement-ranked).
+     * Sort order - Latest (chronological) or Top (engagement-ranked).
      *
      * @param QueryType|value-of<QueryType> $queryType
      */
@@ -163,7 +163,7 @@ final class TweetSearchParams implements BaseModel
     }
 
     /**
-     * ISO 8601 timestamp — only return tweets after this time.
+     * ISO 8601 timestamp - only return tweets after this time.
      */
     public function withSinceTime(string $sinceTime): self
     {
@@ -174,7 +174,7 @@ final class TweetSearchParams implements BaseModel
     }
 
     /**
-     * ISO 8601 timestamp — only return tweets before this time.
+     * ISO 8601 timestamp - only return tweets before this time.
      */
     public function withUntilTime(string $untilTime): self
     {

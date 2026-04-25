@@ -127,7 +127,7 @@ final class XRawService implements XRawContract
     /**
      * @api
      *
-     * Get trending hashtags and topics from X by region
+     * Get trending hashtags & topics from X by region
      *
      * @param array{count?: int, woeid?: int}|XGetTrendsParams $params
      * @param RequestOpts|null $requestOptions

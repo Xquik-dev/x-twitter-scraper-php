@@ -63,6 +63,7 @@ final class ListsService implements ListsContract
      *
      * @param string $id List ID for member lookup
      * @param string $cursor Pagination cursor for list members
+     * @param int $pageSize Members per page (20-200, default 20)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -70,9 +71,10 @@ final class ListsService implements ListsContract
     public function retrieveMembers(
         string $id,
         ?string $cursor = null,
+        ?int $pageSize = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers {
-        $params = Util::removeNulls(['cursor' => $cursor]);
+        $params = Util::removeNulls(['cursor' => $cursor, 'pageSize' => $pageSize]);
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieveMembers($id, params: $params, requestOptions: $requestOptions);

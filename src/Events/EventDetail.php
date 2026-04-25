@@ -32,7 +32,7 @@ final class EventDetail implements BaseModel
     public string $id;
 
     /**
-     * Event payload — shape varies by event type (JSON).
+     * Event payload - shape varies by event type (JSON).
      *
      * @var array<string,mixed> $data
      */
@@ -126,7 +126,7 @@ final class EventDetail implements BaseModel
     }
 
     /**
-     * Event payload — shape varies by event type (JSON).
+     * Event payload - shape varies by event type (JSON).
      *
      * @param array<string,mixed> $data
      */

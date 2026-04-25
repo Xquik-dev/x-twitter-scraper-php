@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace XTwitterScraper\X\Tweets\TweetSearchParams;
 
 /**
- * Sort order — Latest (chronological) or Top (engagement-ranked).
+ * Sort order - Latest (chronological) or Top (engagement-ranked).
  */
 enum QueryType: string
 {

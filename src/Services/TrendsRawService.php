@@ -28,7 +28,7 @@ final class TrendsRawService implements TrendsRawContract
     /**
      * @api
      *
-     * Get trending hashtags and topics by region (alias)
+     * Get trending hashtags & topics by region (alias)
      *
      * @param array{count?: int, woeid?: int}|TrendListParams $params
      * @param RequestOpts|null $requestOptions

@@ -34,10 +34,10 @@ final class TrendsService implements TrendsContract
     /**
      * @api
      *
-     * Get trending hashtags and topics by region (alias)
+     * Get trending hashtags & topics by region (alias)
      *
-     * @param int $count Number of trending topics to return (1-50, default 30)
-     * @param int $woeid Region WOEID (1=Worldwide, 23424977=US, 23424975=UK, 23424969=Turkey)
+     * @param int $count Number of trending topics returned (1-50, default 30)
+     * @param int $woeid Region Yahoo WOEID code (1=Worldwide, 23424977=US, 23424975=UK, 23424969=Turkey)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

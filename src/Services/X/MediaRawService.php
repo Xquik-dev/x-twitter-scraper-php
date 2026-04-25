@@ -31,7 +31,7 @@ final class MediaRawService implements MediaRawContract
     /**
      * @api
      *
-     * Download images and videos from tweets
+     * Download images & videos from tweets
      *
      * @param array{
      *   tweetIDs?: list<string>, tweetInput?: string

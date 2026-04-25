@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Get trending hashtags and topics by region (alias).
+ * Get trending hashtags & topics by region (alias).
  *
  * @see XTwitterScraper\Services\TrendsService::list()
  *
@@ -23,13 +23,13 @@ final class TrendListParams implements BaseModel
     use SdkParams;
 
     /**
-     * Number of trending topics to return (1-50, default 30).
+     * Number of trending topics returned (1-50, default 30).
      */
     #[Optional]
     public ?int $count;
 
     /**
-     * Region WOEID (1=Worldwide, 23424977=US, 23424975=UK, 23424969=Turkey).
+     * Region Yahoo WOEID code (1=Worldwide, 23424977=US, 23424975=UK, 23424969=Turkey).
      */
     #[Optional]
     public ?int $woeid;
@@ -55,7 +55,7 @@ final class TrendListParams implements BaseModel
     }
 
     /**
-     * Number of trending topics to return (1-50, default 30).
+     * Number of trending topics returned (1-50, default 30).
      */
     public function withCount(int $count): self
     {
@@ -66,7 +66,7 @@ final class TrendListParams implements BaseModel
     }
 
     /**
-     * Region WOEID (1=Worldwide, 23424977=US, 23424975=UK, 23424969=Turkey).
+     * Region Yahoo WOEID code (1=Worldwide, 23424977=US, 23424975=UK, 23424969=Turkey).
      */
     public function withWoeid(int $woeid): self
     {

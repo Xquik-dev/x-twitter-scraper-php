@@ -47,7 +47,6 @@ final class TweetsRawService implements TweetsRawContract
      *   communityID?: string,
      *   isNoteTweet?: bool,
      *   media?: list<string>,
-     *   mediaIDs?: list<string>,
      *   replyToTweetID?: string,
      *   text?: string,
      * }|TweetCreateParams $params
@@ -79,7 +78,7 @@ final class TweetsRawService implements TweetsRawContract
     /**
      * @api
      *
-     * Get tweet with full text, author, metrics and media
+     * Get tweet with full text, author, metrics & media
      *
      * @param string $id Tweet ID
      * @param RequestOpts|null $requestOptions
@@ -337,7 +336,7 @@ final class TweetsRawService implements TweetsRawContract
     /**
      * @api
      *
-     * Search tweets with X query operators and pagination
+     * Search tweets with X query operators & pagination
      *
      * @param array{
      *   q: string,
