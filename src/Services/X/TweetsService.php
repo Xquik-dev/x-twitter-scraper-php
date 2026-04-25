@@ -91,7 +91,7 @@ final class TweetsService implements TweetsContract
     /**
      * @api
      *
-     * Get tweet with full text, author, metrics & media
+     * Get tweet with full text, author, metrics and media
      *
      * @param string $id Tweet ID
      * @param RequestOpts|null $requestOptions
@@ -300,7 +300,7 @@ final class TweetsService implements TweetsContract
     /**
      * @api
      *
-     * Search tweets with X query operators & pagination
+     * Search tweets with X query operators and pagination
      *
      * @param string $q Search query (keywords,
      * @param string $cursor Pagination cursor from previous response

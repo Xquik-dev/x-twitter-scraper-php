@@ -106,7 +106,7 @@ final class CommunitiesService implements CommunitiesContract
     /**
      * @api
      *
-     * Get community name, description & member count
+     * Get community name, description and member count
      *
      * @param string $id Community ID
      * @param RequestOpts|null $requestOptions
