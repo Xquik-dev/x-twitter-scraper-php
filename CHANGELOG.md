@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.1 (2026-04-25)
+
+Full Changelog: [v0.4.0...v0.4.1](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.4.0...v0.4.1)
+
+### Bug Fixes
+
+* escape ampersand in OpenAPI summaries for C# XML docs ([210ef0f](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/210ef0f5474ce59757f40de783503d6ca8e6bb4b))
+
+
+### Documentation
+
+* add Contributor Covenant 2.1 Code of Conduct ([#2192](https://github.com/Xquik-dev/x-twitter-scraper-php/issues/2192)) ([9b5a580](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/9b5a580eb39c479709602e6be3dc9c83bdb57cef))
+
 ## 0.4.0 (2026-04-22)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.3.0...v0.4.0)
