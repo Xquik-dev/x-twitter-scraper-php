@@ -1,5 +1,7 @@
 # X Twitter Scraper PHP API library
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg?url=https%3A%2F%2Fgithub.com%2FXquik-dev%2Fx-twitter-scraper-php)](https://deepwiki.com/Xquik-dev/x-twitter-scraper-php)
+
 The X Twitter Scraper PHP library provides convenient access to the X Twitter Scraper REST API from any PHP 8.1.0+ application.
 
 It is generated with [Stainless](https://www.stainless.com/).
