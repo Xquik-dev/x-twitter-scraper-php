@@ -1,6 +1,7 @@
 # X Twitter Scraper PHP API library
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg?url=https%3A%2F%2Fgithub.com%2FXquik-dev%2Fx-twitter-scraper-php)](https://deepwiki.com/Xquik-dev/x-twitter-scraper-php)
+<a href="https://nothumansearch.ai/site/xquik.com" target="_blank" rel="noopener"><img src="https://nothumansearch.ai/badge/xquik.com.svg" alt="NHS Agentic Readiness Score" height="28"></a>
 
 The X Twitter Scraper PHP library provides convenient access to the X Twitter Scraper REST API from any PHP 8.1.0+ application.
 
