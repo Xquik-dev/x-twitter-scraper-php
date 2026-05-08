@@ -1,9 +1,11 @@
-# X Twitter Scraper PHP API library
+# X (Twitter) Scraper PHP SDK: Tweet Search, Profile Tweets, Followers & Posting
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg?url=https%3A%2F%2Fgithub.com%2FXquik-dev%2Fx-twitter-scraper-php)](https://deepwiki.com/Xquik-dev/x-twitter-scraper-php)
 <a href="https://nothumansearch.ai/site/xquik.com" target="_blank" rel="noopener"><img src="https://nothumansearch.ai/badge/xquik.com.svg" alt="NHS Agentic Readiness Score" height="28"></a>
 
-The X Twitter Scraper PHP library provides convenient access to the X Twitter Scraper REST API from any PHP 8.1.0+ application.
+The Xquik PHP SDK is a Twitter API SDK and X API alternative for tweet search, advanced Twitter search queries, profile tweets, user lookup, follower export, media download, media upload, monitoring, webhooks, and posting automation.
+
+Use it from PHP 8.1.0+ applications to get tweets from profiles, search tweets by keyword or operator query, send tweets, post replies, like, repost, follow, DM, run giveaway draws, and automate X workflows.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
