@@ -14,6 +14,12 @@
       "Tests\\": "tests/"
     }
   },
+  "authors": [
+    {
+      "homepage": "https://xquik.com",
+      "name": "Xquik"
+    }
+  ],
   "config": {
     "allow-plugins": {
       "pestphp/pest-plugin": true,
@@ -26,7 +32,20 @@
     "preferred-install": "dist",
     "sort-packages": true
   },
-  "description": "X Twitter Scraper PHP SDK",
+  "description": "Official PHP SDK for Xquik tweet search, profile tweets, followers, webhooks, and X automation.",
+  "homepage": "https://docs.xquik.com/sdks/php",
+  "keywords": [
+    "api-client",
+    "automation",
+    "follower-export",
+    "media-download",
+    "profile-tweets",
+    "sdk",
+    "tweet-search",
+    "twitter-api",
+    "webhooks",
+    "x-api"
+  ],
   "name": "xquik/x-twitter-scraper",
   "require": {
     "php": "^8.1",
