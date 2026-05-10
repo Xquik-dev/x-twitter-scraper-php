@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.4.2 (2026-05-10)
+
+Full Changelog: [v0.4.1...v0.4.2](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.4.1...v0.4.2)
+
+### Documentation
+
+* add Skills.sh badge ([424dd9b](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/424dd9bb147181b06df392d86c7a3aafc2167b8b))
+* add DeepWiki badge and Context7 claim file ([05deaee](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/05deaee5db03c1c5f1052e6cb7d5afb9a8572e84))
+
+### Chores
+
+* improve PHP package metadata ([e4c398d](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/e4c398d350f7b3f49bfc995e295ac57486d8668d))
+* improve PHP package support metadata ([4d944ca](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/4d944ca6012f67f7a03212b21c49e84b9ab9907a))
+* improve PHP Context7 config ([1aa153c](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/1aa153c94bd562cda843dd7dab1018d8e54a1904))
+
 ## 0.4.1 (2026-04-25)
 
 Full Changelog: [v0.4.0...v0.4.1](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.4.0...v0.4.1)
