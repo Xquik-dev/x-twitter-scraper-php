@@ -7,6 +7,7 @@ namespace XTwitterScraper;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
 use XTwitterScraper\Core\BaseClient;
+use XTwitterScraper\Core\Implementation\StreamingHttpClient;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Services\AccountService;
 use XTwitterScraper\Services\APIKeysService;
@@ -144,6 +145,11 @@ class Client extends BaseClient
             ),
             $requestOptions,
         );
+
+        if (is_null($options->streamingTransporter)) {
+            assert(!is_null($options->transporter));
+            $options->streamingTransporter = new StreamingHttpClient($options->transporter);
+        }
 
         /** @var array<string, string|null> $headers */
         $headers = [
