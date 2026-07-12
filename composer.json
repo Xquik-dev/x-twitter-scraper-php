@@ -32,7 +32,7 @@
     "preferred-install": "dist",
     "sort-packages": true
   },
-  "description": "Official PHP SDK for Xquik tweet search, profile tweets, followers, webhooks, and X automation.",
+  "description": "Xquik PHP SDK for tweet search, profile tweets, followers, webhooks, and automation. Not affiliated with X Corp.",
   "homepage": "https://docs.xquik.com/sdks/php",
   "keywords": [
     "api-client",
