@@ -22,8 +22,7 @@ interface TweetsContract
      * @api
      *
      * @param string $account X account (@username or account ID)
-     * @param list<string> $media Array of media URLs to attach (mutually exclusive with media_ids)
-     * @param list<string> $mediaIDs Array of media IDs to attach (mutually exclusive with media)
+     * @param list<string> $media Array of public image URLs to attach (max 4). Each URL must be publicly reachable - the browser composer fetches them directly.
      * @param string $text Tweet text (optional when media is provided)
      * @param RequestOpts|null $requestOptions
      *
@@ -35,7 +34,6 @@ interface TweetsContract
         ?string $communityID = null,
         ?bool $isNoteTweet = null,
         ?array $media = null,
-        ?array $mediaIDs = null,
         ?string $replyToTweetID = null,
         ?string $text = null,
         RequestOptions|array|null $requestOptions = null,
@@ -173,9 +171,9 @@ interface TweetsContract
      * @param string $q Search query (keywords,
      * @param string $cursor Pagination cursor from previous response
      * @param int $limit Max tweets to return (server paginates internally). Omit for single page (~20).
-     * @param QueryType|value-of<QueryType> $queryType Sort order — Latest (chronological) or Top (engagement-ranked)
-     * @param string $sinceTime ISO 8601 timestamp — only return tweets after this time
-     * @param string $untilTime ISO 8601 timestamp — only return tweets before this time
+     * @param QueryType|value-of<QueryType> $queryType Sort order - Latest (chronological) or Top (engagement-ranked)
+     * @param string $sinceTime ISO 8601 timestamp - only return tweets after this time
+     * @param string $untilTime ISO 8601 timestamp - only return tweets before this time
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

@@ -58,7 +58,6 @@ final class TweetsTest extends TestCase
             communityID: '1500000000000000000',
             isNoteTweet: false,
             media: ['https://example.com/image.jpg'],
-            mediaIDs: ['1234567890123456789'],
             replyToTweetID: '1234567890',
             text: 'Just launched our new feature!',
         );

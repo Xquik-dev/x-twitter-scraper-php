@@ -14,12 +14,6 @@
       "Tests\\": "tests/"
     }
   },
-  "authors": [
-    {
-      "homepage": "https://xquik.com",
-      "name": "Xquik"
-    }
-  ],
   "config": {
     "allow-plugins": {
       "pestphp/pest-plugin": true,
@@ -32,26 +26,8 @@
     "preferred-install": "dist",
     "sort-packages": true
   },
-  "description": "Xquik PHP SDK for tweet search, profile tweets, followers, webhooks, and automation. Not affiliated with X Corp.",
-  "homepage": "https://docs.xquik.com/sdks/php",
-  "keywords": [
-    "api-client",
-    "automation",
-    "follower-export",
-    "media-download",
-    "profile-tweets",
-    "sdk",
-    "tweet-search",
-    "twitter-api",
-    "webhooks",
-    "x-api"
-  ],
+  "description": "X Twitter Scraper PHP SDK",
   "name": "xquik/x-twitter-scraper",
-  "support": {
-    "docs": "https://docs.xquik.com/sdks/php",
-    "issues": "https://github.com/Xquik-dev/x-twitter-scraper-php/issues",
-    "source": "https://github.com/Xquik-dev/x-twitter-scraper-php"
-  },
   "require": {
     "php": "^8.1",
     "php-http/discovery": "^1",
@@ -72,7 +48,7 @@
     "symfony/http-client": "^7"
   },
   "scripts": {
-    "build:docs": "curl --etag-save ./vendor/ag.etags --etag-compare ./vendor/ag.etags --create-dirs --remote-name --output-dir ./vendor/bin --no-progress-meter https://github.com/ApiGen/ApiGen/releases/latest/download/apigen.phar && php ./vendor/bin/apigen.phar --output docs src",
+    "build:docs": "curl --etag-save ./vendor/ag.etags --etag-compare ./vendor/ag.etags --create-dirs --remote-name --output-dir ./vendor/bin --no-progress-meter -- https://github.com/ApiGen/ApiGen/releases/latest/download/apigen.phar && php ./vendor/bin/apigen.phar --output docs -- src",
     "lint": "./scripts/lint",
     "test": "./scripts/test"
   }

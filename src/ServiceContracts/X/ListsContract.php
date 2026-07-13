@@ -34,6 +34,7 @@ interface ListsContract
      *
      * @param string $id List ID for member lookup
      * @param string $cursor Pagination cursor for list members
+     * @param int $pageSize Members per page (20-200, default 20)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -41,6 +42,7 @@ interface ListsContract
     public function retrieveMembers(
         string $id,
         ?string $cursor = null,
+        ?int $pageSize = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers;
 

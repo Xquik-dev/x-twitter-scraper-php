@@ -46,6 +46,8 @@ enum Error: string
 
     case UNAUTHENTICATED = 'unauthenticated';
 
+    case UNSUPPORTED_FIELD = 'unsupported_field';
+
     case USER_NOT_FOUND = 'user_not_found';
 
     case WEBHOOK_INACTIVE = 'webhook_inactive';

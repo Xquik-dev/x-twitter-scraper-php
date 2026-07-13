@@ -27,7 +27,7 @@ final class ExtractionGetResponse implements BaseModel
     public bool $hasMore;
 
     /**
-     * Extraction job metadata — shape varies by tool type (JSON).
+     * Extraction job metadata - shape varies by tool type (JSON).
      *
      * @var array<string,mixed> $job
      */
@@ -94,7 +94,7 @@ final class ExtractionGetResponse implements BaseModel
     }
 
     /**
-     * Extraction job metadata — shape varies by tool type (JSON).
+     * Extraction job metadata - shape varies by tool type (JSON).
      *
      * @param array<string,mixed> $job
      */

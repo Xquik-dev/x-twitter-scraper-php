@@ -1,14 +1,6 @@
-# X (Twitter) Scraper PHP SDK: Tweet Search, Profile Tweets, Followers & Posting
+# Xquik API library
 
-> **Xquik is an independent third-party service.** Not affiliated with X Corp.
-> "Twitter" and "X" are trademarks of X Corp.
-
-[![Ask DeepWiki](https://deepwiki.com/badge.svg?url=https%3A%2F%2Fgithub.com%2FXquik-dev%2Fx-twitter-scraper-php)](https://deepwiki.com/Xquik-dev/x-twitter-scraper-php)
-[![Skills.sh x-twitter-scraper Skill](https://skills.sh/b/xquik-dev/x-twitter-scraper)](https://skills.sh/xquik-dev/x-twitter-scraper)
-
-The Xquik PHP SDK is a Twitter API SDK and X API alternative for tweet search, advanced Twitter search queries, profile tweets, user lookup, follower export, media download, media upload, monitoring, webhooks, and posting automation.
-
-Use it from PHP 8.1.0+ applications to get tweets from profiles, search tweets by keyword or operator query, send tweets, post replies, like, repost, follow, DM, run giveaway draws, and automate X workflows.
+The Xquik library provides convenient access to the X Twitter Scraper REST API from any PHP 8.1.0+ application.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
@@ -20,14 +12,12 @@ The REST API documentation can be found on [xquik.com](https://xquik.com).
 
 To use this package, install via Composer by adding the following to your application's `composer.json`:
 
-<!-- x-release-please-start-version -->
-
 ```json
 {
   "repositories": [
     {
       "type": "vcs",
-      "url": "git@github.com:Xquik-dev/x-twitter-scraper-php.git"
+      "url": "git@github.com:stainless-sdks/x-twitter-scraper-php.git"
     }
   ],
   "require": {
@@ -35,8 +25,6 @@ To use this package, install via Composer by adding the following to your applic
   }
 }
 ```
-
-<!-- x-release-please-end -->
 
 ## Usage
 
@@ -76,7 +64,7 @@ use XTwitterScraper\Core\Exceptions\RateLimitException;
 use XTwitterScraper\Core\Exceptions\APIStatusException;
 
 try {
-  $paginatedTweets = $client->x->tweets->search(q: 'from:elonmusk');
+  $account = $client->account->retrieve();
 } catch (APIConnectionException $e) {
   echo "The server could not be reached", PHP_EOL;
   var_dump($e->getPrevious());
@@ -121,9 +109,7 @@ use XTwitterScraper\Client;
 $client = new Client(requestOptions: ['maxRetries' => 0]);
 
 // Or, configure per-request:
-$result = $client->x->tweets->search(
-  q: 'from:elonmusk', limit: 10, requestOptions: ['maxRetries' => 5]
-);
+$result = $client->account->retrieve(requestOptions: ['maxRetries' => 5]);
 ```
 
 ### File uploads
@@ -169,9 +155,7 @@ Note: the `extra*` parameters of the same name overrides the documented paramete
 ```php
 <?php
 
-$paginatedTweets = $client->x->tweets->search(
-  q: 'from:elonmusk',
-  limit: 10,
+$account = $client->account->retrieve(
   requestOptions: [
     'extraQueryParams' => ['my_query_parameter' => 'value'],
     'extraBodyParams' => ['my_body_parameter' => 'value'],
@@ -212,4 +196,4 @@ PHP 8.1.0 or higher.
 
 ## Contributing
 
-See [the contributing documentation](https://github.com/Xquik-dev/x-twitter-scraper-php/tree/main/CONTRIBUTING.md).
+See [the contributing documentation](https://github.com/stainless-sdks/x-twitter-scraper-php/tree/main/CONTRIBUTING.md).

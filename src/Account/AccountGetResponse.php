@@ -19,6 +19,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   monitorsUsed: int,
  *   plan: Plan|value-of<Plan>,
  *   creditInfo?: null|CreditInfo|CreditInfoShape,
+ *   xUsername?: string|null,
  * }
  */
 final class AccountGetResponse implements BaseModel
@@ -38,6 +39,12 @@ final class AccountGetResponse implements BaseModel
 
     #[Optional]
     public ?CreditInfo $creditInfo;
+
+    /**
+     * Linked X username, omitted when no X account is connected.
+     */
+    #[Optional]
+    public ?string $xUsername;
 
     /**
      * `new AccountGetResponse()` is missing required properties by the API.
@@ -74,6 +81,7 @@ final class AccountGetResponse implements BaseModel
         int $monitorsUsed,
         Plan|string $plan,
         CreditInfo|array|null $creditInfo = null,
+        ?string $xUsername = null,
     ): self {
         $self = new self;
 
@@ -82,6 +90,7 @@ final class AccountGetResponse implements BaseModel
         $self['plan'] = $plan;
 
         null !== $creditInfo && $self['creditInfo'] = $creditInfo;
+        null !== $xUsername && $self['xUsername'] = $xUsername;
 
         return $self;
     }
@@ -120,6 +129,17 @@ final class AccountGetResponse implements BaseModel
     {
         $self = clone $this;
         $self['creditInfo'] = $creditInfo;
+
+        return $self;
+    }
+
+    /**
+     * Linked X username, omitted when no X account is connected.
+     */
+    public function withXUsername(string $xUsername): self
+    {
+        $self = clone $this;
+        $self['xUsername'] = $xUsername;
 
         return $self;
     }

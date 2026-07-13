@@ -67,7 +67,7 @@ final class ListsRawService implements ListsRawContract
      * List members of an X List
      *
      * @param string $id List ID for member lookup
-     * @param array{cursor?: string}|ListRetrieveMembersParams $params
+     * @param array{cursor?: string, pageSize?: int}|ListRetrieveMembersParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedUsers>

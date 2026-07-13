@@ -14,7 +14,9 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *
  * @see XTwitterScraper\Services\X\ListsService::retrieveMembers()
  *
- * @phpstan-type ListRetrieveMembersParamsShape = array{cursor?: string|null}
+ * @phpstan-type ListRetrieveMembersParamsShape = array{
+ *   cursor?: string|null, pageSize?: int|null
+ * }
  */
 final class ListRetrieveMembersParams implements BaseModel
 {
@@ -28,6 +30,12 @@ final class ListRetrieveMembersParams implements BaseModel
     #[Optional]
     public ?string $cursor;
 
+    /**
+     * Members per page (20-200, default 20).
+     */
+    #[Optional]
+    public ?int $pageSize;
+
     public function __construct()
     {
         $this->initialize();
@@ -38,11 +46,14 @@ final class ListRetrieveMembersParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(?string $cursor = null): self
-    {
+    public static function with(
+        ?string $cursor = null,
+        ?int $pageSize = null
+    ): self {
         $self = new self;
 
         null !== $cursor && $self['cursor'] = $cursor;
+        null !== $pageSize && $self['pageSize'] = $pageSize;
 
         return $self;
     }
@@ -54,6 +65,17 @@ final class ListRetrieveMembersParams implements BaseModel
     {
         $self = clone $this;
         $self['cursor'] = $cursor;
+
+        return $self;
+    }
+
+    /**
+     * Members per page (20-200, default 20).
+     */
+    public function withPageSize(int $pageSize): self
+    {
+        $self = clone $this;
+        $self['pageSize'] = $pageSize;
 
         return $self;
     }

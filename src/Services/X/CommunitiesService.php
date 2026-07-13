@@ -130,6 +130,7 @@ final class CommunitiesService implements CommunitiesContract
      *
      * @param string $id Community ID for member lookup
      * @param string $cursor Pagination cursor
+     * @param int $pageSize Items per page (20-200, default 20)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -137,9 +138,10 @@ final class CommunitiesService implements CommunitiesContract
     public function retrieveMembers(
         string $id,
         ?string $cursor = null,
+        ?int $pageSize = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers {
-        $params = Util::removeNulls(['cursor' => $cursor]);
+        $params = Util::removeNulls(['cursor' => $cursor, 'pageSize' => $pageSize]);
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieveMembers($id, params: $params, requestOptions: $requestOptions);
