@@ -12,9 +12,10 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 /**
  * @phpstan-type MessageShape = array{
  *   id: string,
+ *   receiverID: string,
+ *   senderID: string,
  *   createdAt?: string|null,
- *   receiverID?: string|null,
- *   senderID?: string|null,
+ *   mediaURL?: string|null,
  *   text?: string|null,
  * }
  */
@@ -26,14 +27,20 @@ final class Message implements BaseModel
     #[Required]
     public string $id;
 
+    #[Required('receiverId')]
+    public string $receiverID;
+
+    #[Required('senderId')]
+    public string $senderID;
+
     #[Optional]
     public ?string $createdAt;
 
-    #[Optional('receiverId')]
-    public ?string $receiverID;
-
-    #[Optional('senderId')]
-    public ?string $senderID;
+    /**
+     * URL of attached media (image, GIF, or video). Omitted when the message has no media attachment.
+     */
+    #[Optional('mediaUrl')]
+    public ?string $mediaURL;
 
     #[Optional]
     public ?string $text;
@@ -43,13 +50,13 @@ final class Message implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * Message::with(id: ...)
+     * Message::with(id: ..., receiverID: ..., senderID: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new Message)->withID(...)
+     * (new Message)->withID(...)->withReceiverID(...)->withSenderID(...)
      * ```
      */
     public function __construct()
@@ -64,18 +71,20 @@ final class Message implements BaseModel
      */
     public static function with(
         string $id,
+        string $receiverID,
+        string $senderID,
         ?string $createdAt = null,
-        ?string $receiverID = null,
-        ?string $senderID = null,
+        ?string $mediaURL = null,
         ?string $text = null,
     ): self {
         $self = new self;
 
         $self['id'] = $id;
+        $self['receiverID'] = $receiverID;
+        $self['senderID'] = $senderID;
 
         null !== $createdAt && $self['createdAt'] = $createdAt;
-        null !== $receiverID && $self['receiverID'] = $receiverID;
-        null !== $senderID && $self['senderID'] = $senderID;
+        null !== $mediaURL && $self['mediaURL'] = $mediaURL;
         null !== $text && $self['text'] = $text;
 
         return $self;
@@ -85,14 +94,6 @@ final class Message implements BaseModel
     {
         $self = clone $this;
         $self['id'] = $id;
-
-        return $self;
-    }
-
-    public function withCreatedAt(string $createdAt): self
-    {
-        $self = clone $this;
-        $self['createdAt'] = $createdAt;
 
         return $self;
     }
@@ -109,6 +110,25 @@ final class Message implements BaseModel
     {
         $self = clone $this;
         $self['senderID'] = $senderID;
+
+        return $self;
+    }
+
+    public function withCreatedAt(string $createdAt): self
+    {
+        $self = clone $this;
+        $self['createdAt'] = $createdAt;
+
+        return $self;
+    }
+
+    /**
+     * URL of attached media (image, GIF, or video). Omitted when the message has no media attachment.
+     */
+    public function withMediaURL(string $mediaURL): self
+    {
+        $self = clone $this;
+        $self['mediaURL'] = $mediaURL;
 
         return $self;
     }

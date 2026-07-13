@@ -9,7 +9,7 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Paginated list of tweets with cursor-based navigation.
+ * Paginated tweet results. The item count can be lower than pageSize when the source returns fewer tweets, filters remove tweets, or remaining credits cover fewer results. Follow next_cursor while has_next_page is true. An empty page can still have has_next_page true after filtering. Zero affordable results returns 402 insufficient_credits.
  *
  * @phpstan-import-type SearchTweetShape from \XTwitterScraper\SearchTweet
  *

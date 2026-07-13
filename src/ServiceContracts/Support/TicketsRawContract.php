@@ -39,7 +39,7 @@ interface TicketsRawContract
     /**
      * @api
      *
-     * @param string $id Support ticket ID
+     * @param string $id Support ticket public ID
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<TicketGetResponse>
@@ -54,7 +54,7 @@ interface TicketsRawContract
     /**
      * @api
      *
-     * @param string $id Support ticket ID to update
+     * @param string $id Support ticket public ID to update
      * @param array<string,mixed>|TicketUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -84,7 +84,7 @@ interface TicketsRawContract
     /**
      * @api
      *
-     * @param string $id Support ticket ID for the reply
+     * @param string $id Support ticket public ID for the reply
      * @param array<string,mixed>|TicketReplyParams $params
      * @param RequestOpts|null $requestOptions
      *

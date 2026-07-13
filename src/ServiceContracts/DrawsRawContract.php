@@ -22,7 +22,7 @@ interface DrawsRawContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id draw public ID returned by create and list draw responses
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<DrawGetResponse>
@@ -52,7 +52,7 @@ interface DrawsRawContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id draw public ID returned by create and list draw responses
      * @param array<string,mixed>|DrawExportParams $params
      * @param RequestOpts|null $requestOptions
      *

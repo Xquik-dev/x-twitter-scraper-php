@@ -11,7 +11,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Run giveaway draw.
+ * Runs a giveaway draw from a source tweet. The draw first checks the minimum credits needed to inspect the source tweet and at least one candidate. Remaining credits cap how many replies and retweeters can be inspected before filters and winner selection run.
  *
  * @see XTwitterScraper\Services\DrawsService::run()
  *

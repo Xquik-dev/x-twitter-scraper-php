@@ -10,6 +10,7 @@ use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\XContract;
+use XTwitterScraper\Services\X\AccountConnectionChallengesService;
 use XTwitterScraper\Services\X\AccountsService;
 use XTwitterScraper\Services\X\BookmarksService;
 use XTwitterScraper\Services\X\CommunitiesService;
@@ -20,6 +21,7 @@ use XTwitterScraper\Services\X\MediaService;
 use XTwitterScraper\Services\X\ProfileService;
 use XTwitterScraper\Services\X\TweetsService;
 use XTwitterScraper\Services\X\UsersService;
+use XTwitterScraper\Services\X\WriteActionsService;
 use XTwitterScraper\X\XGetArticleResponse;
 use XTwitterScraper\X\XGetNotificationsParams\Type;
 use XTwitterScraper\X\XGetNotificationsResponse;
@@ -34,6 +36,11 @@ final class XService implements XContract
      * @api
      */
     public XRawService $raw;
+
+    /**
+     * @api
+     */
+    public WriteActionsService $writeActions;
 
     /**
      * @api
@@ -78,6 +85,11 @@ final class XService implements XContract
     /**
      * @api
      */
+    public AccountConnectionChallengesService $accountConnectionChallenges;
+
+    /**
+     * @api
+     */
     public BookmarksService $bookmarks;
 
     /**
@@ -91,6 +103,7 @@ final class XService implements XContract
     public function __construct(private Client $client)
     {
         $this->raw = new XRawService($client);
+        $this->writeActions = new WriteActionsService($client);
         $this->tweets = new TweetsService($client);
         $this->users = new UsersService($client);
         $this->followers = new FollowersService($client);
@@ -99,6 +112,7 @@ final class XService implements XContract
         $this->profile = new ProfileService($client);
         $this->communities = new CommunitiesService($client);
         $this->accounts = new AccountsService($client);
+        $this->accountConnectionChallenges = new AccountConnectionChallengesService($client);
         $this->bookmarks = new BookmarksService($client);
         $this->lists = new ListsService($client);
     }
@@ -106,9 +120,9 @@ final class XService implements XContract
     /**
      * @api
      *
-     * Retrieve the full content of an X Article (long-form post) by tweet ID.
+     * Retrieve the full content of an X Article (long-form post) by numeric tweet ID. Returns article_not_found when the tweet is valid but is not an X Article.
      *
-     * @param string $tweetID Tweet ID of the article
+     * @param string $tweetID Numeric tweet ID of the article, 15-20 digits. If you have a tweet URL, use the final status ID.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -129,7 +143,7 @@ final class XService implements XContract
      * Get home timeline
      *
      * @param string $cursor Pagination cursor for timeline
-     * @param string $seenTweetIDs Comma-separated tweet IDs to exclude from results
+     * @param string $seenTweetIDs Comma-separated tweet IDs to exclude from results. Empty entries are ignored.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -155,7 +169,7 @@ final class XService implements XContract
      * Get notifications
      *
      * @param string $cursor Pagination cursor for notifications
-     * @param Type|value-of<Type> $type Notification type filter
+     * @param Type|value-of<Type> $type Notification type filter. Unrecognized values fall back to All.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

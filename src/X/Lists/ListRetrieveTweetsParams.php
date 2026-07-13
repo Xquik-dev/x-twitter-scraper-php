@@ -17,6 +17,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @phpstan-type ListRetrieveTweetsParamsShape = array{
  *   cursor?: string|null,
  *   includeReplies?: bool|null,
+ *   pageSize?: int|null,
  *   sinceTime?: string|null,
  *   untilTime?: string|null,
  * }
@@ -38,6 +39,12 @@ final class ListRetrieveTweetsParams implements BaseModel
      */
     #[Optional]
     public ?bool $includeReplies;
+
+    /**
+     * Maximum items requested from this page (1-100, default 20). The response can contain fewer items because the source returned fewer, filters removed items, or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is empty. The deprecated limit and count aliases remain accepted.
+     */
+    #[Optional]
+    public ?int $pageSize;
 
     /**
      * Unix timestamp - filter after.
@@ -64,6 +71,7 @@ final class ListRetrieveTweetsParams implements BaseModel
     public static function with(
         ?string $cursor = null,
         ?bool $includeReplies = null,
+        ?int $pageSize = null,
         ?string $sinceTime = null,
         ?string $untilTime = null,
     ): self {
@@ -71,6 +79,7 @@ final class ListRetrieveTweetsParams implements BaseModel
 
         null !== $cursor && $self['cursor'] = $cursor;
         null !== $includeReplies && $self['includeReplies'] = $includeReplies;
+        null !== $pageSize && $self['pageSize'] = $pageSize;
         null !== $sinceTime && $self['sinceTime'] = $sinceTime;
         null !== $untilTime && $self['untilTime'] = $untilTime;
 
@@ -95,6 +104,17 @@ final class ListRetrieveTweetsParams implements BaseModel
     {
         $self = clone $this;
         $self['includeReplies'] = $includeReplies;
+
+        return $self;
+    }
+
+    /**
+     * Maximum items requested from this page (1-100, default 20). The response can contain fewer items because the source returned fewer, filters removed items, or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is empty. The deprecated limit and count aliases remain accepted.
+     */
+    public function withPageSize(int $pageSize): self
+    {
+        $self = clone $this;
+        $self['pageSize'] = $pageSize;
 
         return $self;
     }

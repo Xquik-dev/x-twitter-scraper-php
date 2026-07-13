@@ -8,15 +8,15 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\X\Tweets\TweetAuthor;
 use XTwitterScraper\X\XGetArticleResponse\Article;
+use XTwitterScraper\X\XGetArticleResponse\Author;
 
 /**
  * @phpstan-import-type ArticleShape from \XTwitterScraper\X\XGetArticleResponse\Article
- * @phpstan-import-type TweetAuthorShape from \XTwitterScraper\X\Tweets\TweetAuthor
+ * @phpstan-import-type AuthorShape from \XTwitterScraper\X\XGetArticleResponse\Author
  *
  * @phpstan-type XGetArticleResponseShape = array{
- *   article: Article|ArticleShape, author?: null|TweetAuthor|TweetAuthorShape
+ *   article: Article|ArticleShape, author?: null|Author|AuthorShape
  * }
  */
 final class XGetArticleResponse implements BaseModel
@@ -28,10 +28,10 @@ final class XGetArticleResponse implements BaseModel
     public Article $article;
 
     /**
-     * Author of a tweet with follower count and verification status.
+     * X Article author profile fields returned when available.
      */
     #[Optional]
-    public ?TweetAuthor $author;
+    public ?Author $author;
 
     /**
      * `new XGetArticleResponse()` is missing required properties by the API.
@@ -58,11 +58,11 @@ final class XGetArticleResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Article|ArticleShape $article
-     * @param TweetAuthor|TweetAuthorShape|null $author
+     * @param Author|AuthorShape|null $author
      */
     public static function with(
         Article|array $article,
-        TweetAuthor|array|null $author = null
+        Author|array|null $author = null
     ): self {
         $self = new self;
 
@@ -85,11 +85,11 @@ final class XGetArticleResponse implements BaseModel
     }
 
     /**
-     * Author of a tweet with follower count and verification status.
+     * X Article author profile fields returned when available.
      *
-     * @param TweetAuthor|TweetAuthorShape $author
+     * @param Author|AuthorShape $author
      */
-    public function withAuthor(TweetAuthor|array $author): self
+    public function withAuthor(Author|array $author): self
     {
         $self = clone $this;
         $self['author'] = $author;

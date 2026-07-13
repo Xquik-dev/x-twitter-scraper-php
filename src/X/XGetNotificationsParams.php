@@ -32,7 +32,7 @@ final class XGetNotificationsParams implements BaseModel
     public ?string $cursor;
 
     /**
-     * Notification type filter.
+     * Notification type filter. Unrecognized values fall back to All.
      *
      * @var value-of<Type>|null $type
      */
@@ -75,7 +75,7 @@ final class XGetNotificationsParams implements BaseModel
     }
 
     /**
-     * Notification type filter.
+     * Notification type filter. Unrecognized values fall back to All.
      *
      * @param Type|value-of<Type> $type
      */

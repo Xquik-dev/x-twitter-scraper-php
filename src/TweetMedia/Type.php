@@ -1,0 +1,14 @@
+<?php
+
+declare(strict_types=1);
+
+namespace XTwitterScraper\TweetMedia;
+
+enum Type: string
+{
+    case PHOTO = 'photo';
+
+    case VIDEO = 'video';
+
+    case ANIMATED_GIF = 'animated_gif';
+}

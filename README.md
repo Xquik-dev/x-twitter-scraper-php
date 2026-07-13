@@ -12,12 +12,14 @@ The REST API documentation can be found on [xquik.com](https://xquik.com).
 
 To use this package, install via Composer by adding the following to your application's `composer.json`:
 
+<!-- x-release-please-start-version -->
+
 ```json
 {
   "repositories": [
     {
       "type": "vcs",
-      "url": "git@github.com:stainless-sdks/x-twitter-scraper-php.git"
+      "url": "git@github.com:Xquik-dev/x-twitter-scraper-php.git"
     }
   ],
   "require": {
@@ -25,6 +27,8 @@ To use this package, install via Composer by adding the following to your applic
   }
 }
 ```
+
+<!-- x-release-please-end -->
 
 ## Usage
 
@@ -112,36 +116,6 @@ $client = new Client(requestOptions: ['maxRetries' => 0]);
 $result = $client->account->retrieve(requestOptions: ['maxRetries' => 5]);
 ```
 
-### File uploads
-
-Request parameters that correspond to file uploads can be passed as a resource returned by `fopen()`, a string of file contents, or a `FileParam` instance.
-
-```php
-<?php
-
-use XTwitterScraper\Core\FileParam;
-
-// Pass a string with filename and content type:
-$contents = file_get_contents('/path/to/file');
-// Pass a string with filename and content type:
-$response = $client->x->media->upload(
-  file: FileParam::fromString($contents, filename: '/path/to/file', contentType: '…'),
-);
-
-// Pass in only a string (where applicable)
-$response = $client->x->media->upload(file: '…');
-
-// Pass an open resource:
-$fd = fopen('/path/to/file', 'r');
-try {
-  $response = $client->x->media->upload(
-    file: FileParam::fromResource($fd, filename: '/path/to/file', contentType: '…'),
-  );
-} finally {
-  fclose($fd);
-}
-```
-
 ## Advanced concepts
 
 ### Making custom or undocumented requests
@@ -196,4 +170,4 @@ PHP 8.1.0 or higher.
 
 ## Contributing
 
-See [the contributing documentation](https://github.com/stainless-sdks/x-twitter-scraper-php/tree/main/CONTRIBUTING.md).
+See [the contributing documentation](https://github.com/Xquik-dev/x-twitter-scraper-php/tree/main/CONTRIBUTING.md).

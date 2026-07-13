@@ -7,22 +7,25 @@ namespace XTwitterScraper;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Error\Error\LegacyErrorCode;
+use XTwitterScraper\Error\Error\StructuredError;
 
 /**
- * Error response containing a machine-readable error code.
+ * Error response. Default v1 returns a legacy string error code. Send `xquik-api-contract: 2026-04-29` to receive the structured best-practice error object.
  *
- * @phpstan-type ErrorShape = array{
- *   error: \XTwitterScraper\Error\Error|value-of<\XTwitterScraper\Error\Error>
- * }
+ * @phpstan-import-type ErrorVariants from \XTwitterScraper\Error\Error
+ * @phpstan-import-type ErrorShape from \XTwitterScraper\Error\Error as ErrorShape1
+ *
+ * @phpstan-type ErrorShape = array{error: ErrorShape1}
  */
 final class Error implements BaseModel
 {
     /** @use SdkModel<ErrorShape> */
     use SdkModel;
 
-    /** @var value-of<Error\Error> $error */
-    #[Required(enum: Error\Error::class)]
-    public string $error;
+    /** @var ErrorVariants $error */
+    #[Required(union: Error\Error::class)]
+    public StructuredError|string $error;
 
     /**
      * `new Error()` is missing required properties by the API.
@@ -48,10 +51,10 @@ final class Error implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param Error\Error|value-of<Error\Error> $error
+     * @param ErrorShape1 $error
      */
     public static function with(
-        Error\Error|string $error
+        LegacyErrorCode|StructuredError|array|string $error
     ): self {
         $self = new self;
 
@@ -61,10 +64,11 @@ final class Error implements BaseModel
     }
 
     /**
-     * @param Error\Error|value-of<Error\Error> $error
+     * @param ErrorShape1 $error
      */
-    public function withError(Error\Error|string $error): self
-    {
+    public function withError(
+        LegacyErrorCode|StructuredError|array|string $error
+    ): self {
         $self = clone $this;
         $self['error'] = $error;
 

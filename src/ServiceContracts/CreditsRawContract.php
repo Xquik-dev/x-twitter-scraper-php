@@ -7,6 +7,9 @@ namespace XTwitterScraper\ServiceContracts;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Credits\CreditGetBalanceResponse;
+use XTwitterScraper\Credits\CreditGetTopupStatusResponse;
+use XTwitterScraper\Credits\CreditRedirectTopupCheckoutParams;
+use XTwitterScraper\Credits\CreditRetrieveTopupStatusParams;
 use XTwitterScraper\Credits\CreditTopupBalanceParams;
 use XTwitterScraper\Credits\CreditTopupBalanceResponse;
 use XTwitterScraper\RequestOptions;
@@ -19,6 +22,21 @@ interface CreditsRawContract
     /**
      * @api
      *
+     * @param array<string,mixed>|CreditRedirectTopupCheckoutParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<mixed>
+     *
+     * @throws APIException
+     */
+    public function redirectTopupCheckout(
+        array|CreditRedirectTopupCheckoutParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<CreditGetBalanceResponse>
@@ -27,6 +45,21 @@ interface CreditsRawContract
      */
     public function retrieveBalance(
         RequestOptions|array|null $requestOptions = null
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|CreditRetrieveTopupStatusParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<CreditGetTopupStatusResponse>
+     *
+     * @throws APIException
+     */
+    public function retrieveTopupStatus(
+        array|CreditRetrieveTopupStatusParams $params,
+        RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 
     /**

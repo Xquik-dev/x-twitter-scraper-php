@@ -31,7 +31,7 @@ final class DraftListParams implements BaseModel
     public ?string $afterCursor;
 
     /**
-     * Maximum number of items to return (1-100, default 50).
+     * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the returned count may be lower when remaining credits cannot cover the requested page. If zero paid results are affordable, the endpoint returns 402 insufficient_credits.
      */
     #[Optional]
     public ?int $limit;
@@ -70,7 +70,7 @@ final class DraftListParams implements BaseModel
     }
 
     /**
-     * Maximum number of items to return (1-100, default 50).
+     * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the returned count may be lower when remaining credits cannot cover the requested page. If zero paid results are affordable, the endpoint returns 402 insufficient_credits.
      */
     public function withLimit(int $limit): self
     {

@@ -25,9 +25,15 @@ final class BookmarkGetFoldersResponse implements BaseModel
     #[Required(list: Folder::class)]
     public array $folders;
 
+    /**
+     * Always false for the current bookmark folder route.
+     */
     #[Required('has_next_page')]
     public bool $hasNextPage;
 
+    /**
+     * Always empty for the current bookmark folder route.
+     */
     #[Required('next_cursor')]
     public string $nextCursor;
 
@@ -87,6 +93,9 @@ final class BookmarkGetFoldersResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Always false for the current bookmark folder route.
+     */
     public function withHasNextPage(bool $hasNextPage): self
     {
         $self = clone $this;
@@ -95,6 +104,9 @@ final class BookmarkGetFoldersResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Always empty for the current bookmark folder route.
+     */
     public function withNextCursor(string $nextCursor): self
     {
         $self = clone $this;

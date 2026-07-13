@@ -36,6 +36,7 @@ final class DmService implements DmContract
      * Get DM conversation history
      *
      * @param string $userID Target user ID
+     * @param string $account X handle (without the `@` prefix) of the connected X account used to read the conversation. The account must be a participant in the conversation.
      * @param string $cursor Pagination cursor for DM history
      * @param string $maxID Legacy pagination cursor (backward compat)
      * @param RequestOpts|null $requestOptions
@@ -44,11 +45,14 @@ final class DmService implements DmContract
      */
     public function retrieveHistory(
         string $userID,
+        string $account,
         ?string $cursor = null,
         ?string $maxID = null,
         RequestOptions|array|null $requestOptions = null,
     ): DmGetHistoryResponse {
-        $params = Util::removeNulls(['cursor' => $cursor, 'maxID' => $maxID]);
+        $params = Util::removeNulls(
+            ['account' => $account, 'cursor' => $cursor, 'maxID' => $maxID]
+        );
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieveHistory($userID, params: $params, requestOptions: $requestOptions);
@@ -63,7 +67,7 @@ final class DmService implements DmContract
      *
      * @param string $userID Recipient user ID
      * @param string $account X account (@username or ID) sending the DM
-     * @param list<string> $mediaIDs
+     * @param list<string> $mediaIDs optional array containing exactly 1 uploaded media ID
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -73,16 +77,10 @@ final class DmService implements DmContract
         string $account,
         string $text,
         ?array $mediaIDs = null,
-        ?string $replyToMessageID = null,
         RequestOptions|array|null $requestOptions = null,
     ): DmSendResponse {
         $params = Util::removeNulls(
-            [
-                'account' => $account,
-                'text' => $text,
-                'mediaIDs' => $mediaIDs,
-                'replyToMessageID' => $replyToMessageID,
-            ],
+            ['account' => $account, 'text' => $text, 'mediaIDs' => $mediaIDs]
         );
 
         // @phpstan-ignore-next-line argument.type

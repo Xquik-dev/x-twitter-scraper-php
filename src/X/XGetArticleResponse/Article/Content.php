@@ -7,10 +7,15 @@ namespace XTwitterScraper\X\XGetArticleResponse\Article;
 use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\X\XGetArticleResponse\Article\Content\InlineStyleRange;
 
 /**
+ * @phpstan-import-type InlineStyleRangeShape from \XTwitterScraper\X\XGetArticleResponse\Article\Content\InlineStyleRange
+ *
  * @phpstan-type ContentShape = array{
  *   height?: int|null,
+ *   inlineStyleRanges?: list<InlineStyleRange|InlineStyleRangeShape>|null,
+ *   previewURL?: string|null,
  *   text?: string|null,
  *   type?: string|null,
  *   url?: string|null,
@@ -25,17 +30,31 @@ final class Content implements BaseModel
     #[Optional]
     public ?int $height;
 
+    /**
+     * Inline text formatting ranges.
+     *
+     * @var list<InlineStyleRange>|null $inlineStyleRanges
+     */
+    #[Optional(list: InlineStyleRange::class)]
+    public ?array $inlineStyleRanges;
+
+    /**
+     * Preview image URL for media blocks.
+     */
+    #[Optional('previewUrl')]
+    public ?string $previewURL;
+
     #[Optional]
     public ?string $text;
 
     /**
-     * Block type: unstyled, header-one, header-two, header-three, unordered-list-item, ordered-list-item, image, gif, divider.
+     * Block type: paragraph, header-one, header-two, header-three, header-four, header-five, header-six, unordered-list-item, ordered-list-item, blockquote, code-block, media, divider.
      */
     #[Optional]
     public ?string $type;
 
     /**
-     * Media URL for image/gif blocks.
+     * Media URL for media blocks.
      */
     #[Optional]
     public ?string $url;
@@ -52,9 +71,13 @@ final class Content implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param list<InlineStyleRange|InlineStyleRangeShape>|null $inlineStyleRanges
      */
     public static function with(
         ?int $height = null,
+        ?array $inlineStyleRanges = null,
+        ?string $previewURL = null,
         ?string $text = null,
         ?string $type = null,
         ?string $url = null,
@@ -63,6 +86,8 @@ final class Content implements BaseModel
         $self = new self;
 
         null !== $height && $self['height'] = $height;
+        null !== $inlineStyleRanges && $self['inlineStyleRanges'] = $inlineStyleRanges;
+        null !== $previewURL && $self['previewURL'] = $previewURL;
         null !== $text && $self['text'] = $text;
         null !== $type && $self['type'] = $type;
         null !== $url && $self['url'] = $url;
@@ -79,6 +104,30 @@ final class Content implements BaseModel
         return $self;
     }
 
+    /**
+     * Inline text formatting ranges.
+     *
+     * @param list<InlineStyleRange|InlineStyleRangeShape> $inlineStyleRanges
+     */
+    public function withInlineStyleRanges(array $inlineStyleRanges): self
+    {
+        $self = clone $this;
+        $self['inlineStyleRanges'] = $inlineStyleRanges;
+
+        return $self;
+    }
+
+    /**
+     * Preview image URL for media blocks.
+     */
+    public function withPreviewURL(string $previewURL): self
+    {
+        $self = clone $this;
+        $self['previewURL'] = $previewURL;
+
+        return $self;
+    }
+
     public function withText(string $text): self
     {
         $self = clone $this;
@@ -88,7 +137,7 @@ final class Content implements BaseModel
     }
 
     /**
-     * Block type: unstyled, header-one, header-two, header-three, unordered-list-item, ordered-list-item, image, gif, divider.
+     * Block type: paragraph, header-one, header-two, header-three, header-four, header-five, header-six, unordered-list-item, ordered-list-item, blockquote, code-block, media, divider.
      */
     public function withType(string $type): self
     {
@@ -99,7 +148,7 @@ final class Content implements BaseModel
     }
 
     /**
-     * Media URL for image/gif blocks.
+     * Media URL for media blocks.
      */
     public function withURL(string $url): self
     {

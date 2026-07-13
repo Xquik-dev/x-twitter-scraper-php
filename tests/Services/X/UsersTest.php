@@ -11,6 +11,8 @@ use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\UserProfile;
+use XTwitterScraper\X\Users\UserGetBatchResponse;
+use XTwitterScraper\X\Users\UserRemoveFollowerResponse;
 
 /**
  * @internal
@@ -25,7 +27,11 @@ final class UsersTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
+        $client = new Client(
+            apiKey: 'My API Key',
+            bearerToken: 'My Bearer Token',
+            baseUrl: $testUrl,
+        );
 
         $this->client = $client;
     }
@@ -44,6 +50,38 @@ final class UsersTest extends TestCase
     }
 
     #[Test]
+    public function testRemoveFollower(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->x->users->removeFollower(
+            'id',
+            account: '@elonmusk'
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(UserRemoveFollowerResponse::class, $result);
+    }
+
+    #[Test]
+    public function testRemoveFollowerWithOptionalParams(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->x->users->removeFollower(
+            'id',
+            account: '@elonmusk'
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(UserRemoveFollowerResponse::class, $result);
+    }
+
+    #[Test]
     public function testRetrieveBatch(): void
     {
         if (UnsupportedMockTests::$skip) {
@@ -53,7 +91,7 @@ final class UsersTest extends TestCase
         $result = $this->client->x->users->retrieveBatch(ids: 'ids');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(PaginatedUsers::class, $result);
+        $this->assertInstanceOf(UserGetBatchResponse::class, $result);
     }
 
     #[Test]
@@ -66,7 +104,7 @@ final class UsersTest extends TestCase
         $result = $this->client->x->users->retrieveBatch(ids: 'ids');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(PaginatedUsers::class, $result);
+        $this->assertInstanceOf(UserGetBatchResponse::class, $result);
     }
 
     #[Test]
@@ -142,6 +180,19 @@ final class UsersTest extends TestCase
         }
 
         $result = $this->client->x->users->retrieveMentions('id');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(PaginatedTweets::class, $result);
+    }
+
+    #[Test]
+    public function testRetrieveReplies(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->x->users->retrieveReplies('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(PaginatedTweets::class, $result);

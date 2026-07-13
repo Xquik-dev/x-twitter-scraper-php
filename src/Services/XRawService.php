@@ -33,9 +33,9 @@ final class XRawService implements XRawContract
     /**
      * @api
      *
-     * Retrieve the full content of an X Article (long-form post) by tweet ID.
+     * Retrieve the full content of an X Article (long-form post) by numeric tweet ID. Returns article_not_found when the tweet is valid but is not an X Article.
      *
-     * @param string $tweetID Tweet ID of the article
+     * @param string $tweetID Numeric tweet ID of the article, 15-20 digits. If you have a tweet URL, use the final status ID.
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<XGetArticleResponse>

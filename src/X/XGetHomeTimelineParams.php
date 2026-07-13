@@ -31,7 +31,7 @@ final class XGetHomeTimelineParams implements BaseModel
     public ?string $cursor;
 
     /**
-     * Comma-separated tweet IDs to exclude from results.
+     * Comma-separated tweet IDs to exclude from results. Empty entries are ignored.
      */
     #[Optional]
     public ?string $seenTweetIDs;
@@ -70,7 +70,7 @@ final class XGetHomeTimelineParams implements BaseModel
     }
 
     /**
-     * Comma-separated tweet IDs to exclude from results.
+     * Comma-separated tweet IDs to exclude from results. Empty entries are ignored.
      */
     public function withSeenTweetIDs(string $seenTweetIDs): self
     {

@@ -8,6 +8,7 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Extractions\ExtractionEstimateCostResponse\Source;
 
 /**
  * @phpstan-type ExtractionEstimateCostResponseShape = array{
@@ -15,7 +16,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   creditsAvailable: string,
  *   creditsRequired: string,
  *   estimatedResults: int,
- *   source: string,
+ *   source: Source|value-of<Source>,
  *   resolvedXUserID?: string|null,
  * }
  */
@@ -36,7 +37,8 @@ final class ExtractionEstimateCostResponse implements BaseModel
     #[Required]
     public int $estimatedResults;
 
-    #[Required]
+    /** @var value-of<Source> $source */
+    #[Required(enum: Source::class)]
     public string $source;
 
     #[Optional('resolvedXUserId')]
@@ -76,13 +78,15 @@ final class ExtractionEstimateCostResponse implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param Source|value-of<Source> $source
      */
     public static function with(
         bool $allowed,
         string $creditsAvailable,
         string $creditsRequired,
         int $estimatedResults,
-        string $source,
+        Source|string $source,
         ?string $resolvedXUserID = null,
     ): self {
         $self = new self;
@@ -130,7 +134,10 @@ final class ExtractionEstimateCostResponse implements BaseModel
         return $self;
     }
 
-    public function withSource(string $source): self
+    /**
+     * @param Source|value-of<Source> $source
+     */
+    public function withSource(Source|string $source): self
     {
         $self = clone $this;
         $self['source'] = $source;

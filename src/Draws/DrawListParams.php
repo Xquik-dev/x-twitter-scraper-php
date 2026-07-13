@@ -14,7 +14,9 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *
  * @see XTwitterScraper\Services\DrawsService::list()
  *
- * @phpstan-type DrawListParamsShape = array{after?: string|null, limit?: int|null}
+ * @phpstan-type DrawListParamsShape = array{
+ *   cursor?: string|null, limit?: int|null
+ * }
  */
 final class DrawListParams implements BaseModel
 {
@@ -23,13 +25,13 @@ final class DrawListParams implements BaseModel
     use SdkParams;
 
     /**
-     * Cursor for keyset pagination.
+     * Cursor for keyset pagination from prior response next_cursor.
      */
     #[Optional]
-    public ?string $after;
+    public ?string $cursor;
 
     /**
-     * Maximum number of items to return (1-100, default 50).
+     * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the returned count may be lower when remaining credits cannot cover the requested page. If zero paid results are affordable, the endpoint returns 402 insufficient_credits.
      */
     #[Optional]
     public ?int $limit;
@@ -44,29 +46,29 @@ final class DrawListParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(?string $after = null, ?int $limit = null): self
+    public static function with(?string $cursor = null, ?int $limit = null): self
     {
         $self = new self;
 
-        null !== $after && $self['after'] = $after;
+        null !== $cursor && $self['cursor'] = $cursor;
         null !== $limit && $self['limit'] = $limit;
 
         return $self;
     }
 
     /**
-     * Cursor for keyset pagination.
+     * Cursor for keyset pagination from prior response next_cursor.
      */
-    public function withAfter(string $after): self
+    public function withCursor(string $cursor): self
     {
         $self = clone $this;
-        $self['after'] = $after;
+        $self['cursor'] = $cursor;
 
         return $self;
     }
 
     /**
-     * Maximum number of items to return (1-100, default 50).
+     * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the returned count may be lower when remaining credits cannot cover the requested page. If zero paid results are affordable, the endpoint returns 402 insufficient_credits.
      */
     public function withLimit(int $limit): self
     {

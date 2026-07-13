@@ -19,7 +19,7 @@ interface EventsRawContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<EventDetail>

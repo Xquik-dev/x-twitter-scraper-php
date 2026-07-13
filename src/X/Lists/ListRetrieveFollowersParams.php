@@ -14,7 +14,9 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *
  * @see XTwitterScraper\Services\X\ListsService::retrieveFollowers()
  *
- * @phpstan-type ListRetrieveFollowersParamsShape = array{cursor?: string|null}
+ * @phpstan-type ListRetrieveFollowersParamsShape = array{
+ *   cursor?: string|null, pageSize?: int|null
+ * }
  */
 final class ListRetrieveFollowersParams implements BaseModel
 {
@@ -28,6 +30,12 @@ final class ListRetrieveFollowersParams implements BaseModel
     #[Optional]
     public ?string $cursor;
 
+    /**
+     * Maximum user profiles requested from this page (20-200, default 200). The response can contain fewer profiles because the source returned fewer or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true. The deprecated limit and count aliases remain accepted.
+     */
+    #[Optional]
+    public ?int $pageSize;
+
     public function __construct()
     {
         $this->initialize();
@@ -38,11 +46,14 @@ final class ListRetrieveFollowersParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(?string $cursor = null): self
-    {
+    public static function with(
+        ?string $cursor = null,
+        ?int $pageSize = null
+    ): self {
         $self = new self;
 
         null !== $cursor && $self['cursor'] = $cursor;
+        null !== $pageSize && $self['pageSize'] = $pageSize;
 
         return $self;
     }
@@ -54,6 +65,17 @@ final class ListRetrieveFollowersParams implements BaseModel
     {
         $self = clone $this;
         $self['cursor'] = $cursor;
+
+        return $self;
+    }
+
+    /**
+     * Maximum user profiles requested from this page (20-200, default 200). The response can contain fewer profiles because the source returned fewer or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true. The deprecated limit and count aliases remain accepted.
+     */
+    public function withPageSize(int $pageSize): self
+    {
+        $self = clone $this;
+        $self['pageSize'] = $pageSize;
 
         return $self;
     }

@@ -24,7 +24,11 @@ final class DmTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
+        $client = new Client(
+            apiKey: 'My API Key',
+            bearerToken: 'My Bearer Token',
+            baseUrl: $testUrl,
+        );
 
         $this->client = $client;
     }
@@ -36,7 +40,28 @@ final class DmTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->dm->retrieveHistory('userId');
+        $result = $this->client->x->dm->retrieveHistory(
+            'userId',
+            account: 'account'
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(DmGetHistoryResponse::class, $result);
+    }
+
+    #[Test]
+    public function testRetrieveHistoryWithOptionalParams(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->x->dm->retrieveHistory(
+            'userId',
+            account: 'account',
+            cursor: 'cursor',
+            maxID: 'maxId'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(DmGetHistoryResponse::class, $result);
@@ -71,7 +96,6 @@ final class DmTest extends TestCase
             account: '@elonmusk',
             text: 'Example text content',
             mediaIDs: ['1234567890123456789'],
-            replyToMessageID: '1234567890123456789',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

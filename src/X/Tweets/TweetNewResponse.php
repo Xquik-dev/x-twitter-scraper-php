@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\Tweets;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-type TweetNewResponseShape = array{success: bool, tweetID: string}
+ * @phpstan-type TweetNewResponseShape = array{
+ *   charged: bool,
+ *   chargedCredits: string,
+ *   success: bool,
+ *   tweetID: string,
+ *   writeActionID?: string|null,
+ * }
  */
 final class TweetNewResponse implements BaseModel
 {
@@ -19,21 +26,36 @@ final class TweetNewResponse implements BaseModel
     #[Required]
     public bool $success = true;
 
+    #[Required]
+    public bool $charged;
+
+    /**
+     * Credits charged for this tweet. Text-only tweets and replies cost 30 credits; attached media adds 2 credits per started MB.
+     */
+    #[Required]
+    public string $chargedCredits;
+
     #[Required('tweetId')]
     public string $tweetID;
+
+    #[Optional('writeActionId')]
+    public ?string $writeActionID;
 
     /**
      * `new TweetNewResponse()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * TweetNewResponse::with(tweetID: ...)
+     * TweetNewResponse::with(charged: ..., chargedCredits: ..., tweetID: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new TweetNewResponse)->withTweetID(...)
+     * (new TweetNewResponse)
+     *   ->withCharged(...)
+     *   ->withChargedCredits(...)
+     *   ->withTweetID(...)
      * ```
      */
     public function __construct()
@@ -46,11 +68,38 @@ final class TweetNewResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $tweetID): self
-    {
+    public static function with(
+        bool $charged,
+        string $chargedCredits,
+        string $tweetID,
+        ?string $writeActionID = null,
+    ): self {
         $self = new self;
 
+        $self['charged'] = $charged;
+        $self['chargedCredits'] = $chargedCredits;
         $self['tweetID'] = $tweetID;
+
+        null !== $writeActionID && $self['writeActionID'] = $writeActionID;
+
+        return $self;
+    }
+
+    public function withCharged(bool $charged): self
+    {
+        $self = clone $this;
+        $self['charged'] = $charged;
+
+        return $self;
+    }
+
+    /**
+     * Credits charged for this tweet. Text-only tweets and replies cost 30 credits; attached media adds 2 credits per started MB.
+     */
+    public function withChargedCredits(string $chargedCredits): self
+    {
+        $self = clone $this;
+        $self['chargedCredits'] = $chargedCredits;
 
         return $self;
     }
@@ -67,6 +116,14 @@ final class TweetNewResponse implements BaseModel
     {
         $self = clone $this;
         $self['tweetID'] = $tweetID;
+
+        return $self;
+    }
+
+    public function withWriteActionID(string $writeActionID): self
+    {
+        $self = clone $this;
+        $self['writeActionID'] = $writeActionID;
 
         return $self;
     }

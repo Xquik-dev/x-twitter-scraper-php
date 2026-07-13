@@ -27,12 +27,18 @@ final class DrawRunResponse implements BaseModel
     #[Required]
     public string $id;
 
+    /**
+     * Candidate entries inspected for this draw after the credit-derived cap. This may be lower than the source tweet's full reply count.
+     */
     #[Required]
     public int $totalEntries;
 
     #[Required('tweetId')]
     public string $tweetID;
 
+    /**
+     * Entries from the inspected candidate set that passed all filters. This is not necessarily every valid reply on the source tweet when credits cap inspection.
+     */
     #[Required]
     public int $validEntries;
 
@@ -99,6 +105,9 @@ final class DrawRunResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Candidate entries inspected for this draw after the credit-derived cap. This may be lower than the source tweet's full reply count.
+     */
     public function withTotalEntries(int $totalEntries): self
     {
         $self = clone $this;
@@ -115,6 +124,9 @@ final class DrawRunResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Entries from the inspected candidate set that passed all filters. This is not necessarily every valid reply on the source tweet when credits cap inspection.
+     */
     public function withValidEntries(int $validEntries): self
     {
         $self = clone $this;

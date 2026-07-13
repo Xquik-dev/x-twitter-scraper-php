@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace XTwitterScraper\Draws;
 
 use XTwitterScraper\Core\Attributes\Optional;
+use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
@@ -17,7 +18,7 @@ use XTwitterScraper\Draws\DrawExportParams\Type;
  * @see XTwitterScraper\Services\DrawsService::export()
  *
  * @phpstan-type DrawExportParamsShape = array{
- *   format?: null|Format|value-of<Format>, type?: null|Type|value-of<Type>
+ *   format: Format|value-of<Format>, type?: null|Type|value-of<Type>
  * }
  */
 final class DrawExportParams implements BaseModel
@@ -29,10 +30,10 @@ final class DrawExportParams implements BaseModel
     /**
      * Export output format.
      *
-     * @var value-of<Format>|null $format
+     * @var value-of<Format> $format
      */
-    #[Optional(enum: Format::class)]
-    public ?string $format;
+    #[Required(enum: Format::class)]
+    public string $format;
 
     /**
      * Export winners or all entries.
@@ -42,6 +43,20 @@ final class DrawExportParams implements BaseModel
     #[Optional(enum: Type::class)]
     public ?string $type;
 
+    /**
+     * `new DrawExportParams()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * DrawExportParams::with(format: ...)
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new DrawExportParams)->withFormat(...)
+     * ```
+     */
     public function __construct()
     {
         $this->initialize();
@@ -52,16 +67,17 @@ final class DrawExportParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param Format|value-of<Format>|null $format
+     * @param Format|value-of<Format> $format
      * @param Type|value-of<Type>|null $type
      */
     public static function with(
-        Format|string|null $format = null,
+        Format|string $format,
         Type|string|null $type = null
     ): self {
         $self = new self;
 
-        null !== $format && $self['format'] = $format;
+        $self['format'] = $format;
+
         null !== $type && $self['type'] = $type;
 
         return $self;

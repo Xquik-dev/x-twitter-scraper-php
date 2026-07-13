@@ -27,7 +27,11 @@ final class TweetsTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
+        $client = new Client(
+            apiKey: 'My API Key',
+            bearerToken: 'My Bearer Token',
+            baseUrl: $testUrl,
+        );
 
         $this->client = $client;
     }
@@ -57,7 +61,7 @@ final class TweetsTest extends TestCase
             attachmentURL: 'https://x.com/elonmusk/status/1234567890',
             communityID: '1500000000000000000',
             isNoteTweet: false,
-            media: ['https://example.com/image.jpg'],
+            media: ['https://example.com/video.mp4'],
             replyToTweetID: '1234567890',
             text: 'Just launched our new feature!',
         );
@@ -218,11 +222,42 @@ final class TweetsTest extends TestCase
 
         $result = $this->client->x->tweets->search(
             q: 'q',
+            advancedQuery: 'advancedQuery',
+            anyWords: 'anyWords',
+            boundingBox: 'boundingBox',
+            cashtags: 'cashtags',
+            conversationID: 'conversationId',
             cursor: 'cursor',
+            exactPhrase: 'exactPhrase',
+            excludeWords: 'excludeWords',
+            fromUser: 'fromUser',
+            hashtags: 'hashtags',
+            inReplyToTweetID: 'inReplyToTweetId',
+            language: 'language',
             limit: 200,
+            listID: 'listId',
+            mediaType: 'images',
+            mentioning: 'mentioning',
+            minFaves: 0,
+            minQuotes: 0,
+            minReplies: 0,
+            minRetweets: 0,
+            place: 'place',
+            placeCountry: 'placeCountry',
+            pointRadius: 'pointRadius',
             queryType: 'Latest',
+            quotes: 'include',
+            quotesOfTweetID: 'quotesOfTweetId',
+            replies: 'include',
+            retweets: 'include',
+            retweetsOfTweetID: 'retweetsOfTweetId',
+            sinceDate: '2019-12-27',
             sinceTime: 'sinceTime',
+            toUser: 'toUser',
+            untilDate: '2019-12-27',
             untilTime: 'untilTime',
+            url: 'url',
+            verifiedOnly: true,
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

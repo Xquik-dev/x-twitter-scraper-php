@@ -14,6 +14,7 @@ use XTwitterScraper\Monitors\MonitorListResponse;
 use XTwitterScraper\Monitors\MonitorNewResponse;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\MonitorsContract;
+use XTwitterScraper\Services\Monitors\KeywordsService;
 
 /**
  * Real-time X account monitoring.
@@ -28,17 +29,23 @@ final class MonitorsService implements MonitorsContract
     public MonitorsRawService $raw;
 
     /**
+     * @api
+     */
+    public KeywordsService $keywords;
+
+    /**
      * @internal
      */
     public function __construct(private Client $client)
     {
         $this->raw = new MonitorsRawService($client);
+        $this->keywords = new KeywordsService($client);
     }
 
     /**
      * @api
      *
-     * Create monitor
+     * Creates an instant monitor. Monitors are unlimited. Active monitors check every 1 second and cost 21 credits per hour. Events and webhook deliveries are included. Creation requires available credits for the first hourly charge and username lookup.
      *
      * @param list<EventType|value-of<EventType>> $eventTypes array of event types to subscribe to
      * @param string $username X username (without @)
@@ -66,7 +73,7 @@ final class MonitorsService implements MonitorsContract
      *
      * Get monitor
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -86,7 +93,7 @@ final class MonitorsService implements MonitorsContract
      *
      * Update monitor
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param list<EventType|value-of<EventType>> $eventTypes array of event types to subscribe to
      * @param RequestOpts|null $requestOptions
      *
@@ -129,9 +136,9 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Deactivate monitor
+     * Delete monitor
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

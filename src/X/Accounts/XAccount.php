@@ -4,21 +4,24 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\Accounts;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\Accounts\XAccount\Health;
 
 /**
- * Linked X account summary with username and connection status.
+ * Linked X account summary with connection status, health, and timestamp metadata.
  *
  * @phpstan-type XAccountShape = array{
  *   id: string,
  *   createdAt: \DateTimeInterface,
  *   health: Health|value-of<Health>,
  *   status: string,
+ *   updatedAt: \DateTimeInterface,
  *   xUserID: string,
  *   xUsername: string,
+ *   cookiesObtainedAt?: \DateTimeInterface|null,
  * }
  */
 final class XAccount implements BaseModel
@@ -43,11 +46,17 @@ final class XAccount implements BaseModel
     #[Required]
     public string $status;
 
+    #[Required]
+    public \DateTimeInterface $updatedAt;
+
     #[Required('xUserId')]
     public string $xUserID;
 
     #[Required]
     public string $xUsername;
+
+    #[Optional]
+    public ?\DateTimeInterface $cookiesObtainedAt;
 
     /**
      * `new XAccount()` is missing required properties by the API.
@@ -59,6 +68,7 @@ final class XAccount implements BaseModel
      *   createdAt: ...,
      *   health: ...,
      *   status: ...,
+     *   updatedAt: ...,
      *   xUserID: ...,
      *   xUsername: ...,
      * )
@@ -72,6 +82,7 @@ final class XAccount implements BaseModel
      *   ->withCreatedAt(...)
      *   ->withHealth(...)
      *   ->withStatus(...)
+     *   ->withUpdatedAt(...)
      *   ->withXUserID(...)
      *   ->withXUsername(...)
      * ```
@@ -93,8 +104,10 @@ final class XAccount implements BaseModel
         \DateTimeInterface $createdAt,
         Health|string $health,
         string $status,
+        \DateTimeInterface $updatedAt,
         string $xUserID,
         string $xUsername,
+        ?\DateTimeInterface $cookiesObtainedAt = null,
     ): self {
         $self = new self;
 
@@ -102,8 +115,11 @@ final class XAccount implements BaseModel
         $self['createdAt'] = $createdAt;
         $self['health'] = $health;
         $self['status'] = $status;
+        $self['updatedAt'] = $updatedAt;
         $self['xUserID'] = $xUserID;
         $self['xUsername'] = $xUsername;
+
+        null !== $cookiesObtainedAt && $self['cookiesObtainedAt'] = $cookiesObtainedAt;
 
         return $self;
     }
@@ -145,6 +161,14 @@ final class XAccount implements BaseModel
         return $self;
     }
 
+    public function withUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $self = clone $this;
+        $self['updatedAt'] = $updatedAt;
+
+        return $self;
+    }
+
     public function withXUserID(string $xUserID): self
     {
         $self = clone $this;
@@ -157,6 +181,15 @@ final class XAccount implements BaseModel
     {
         $self = clone $this;
         $self['xUsername'] = $xUsername;
+
+        return $self;
+    }
+
+    public function withCookiesObtainedAt(
+        \DateTimeInterface $cookiesObtainedAt
+    ): self {
+        $self = clone $this;
+        $self['cookiesObtainedAt'] = $cookiesObtainedAt;
 
         return $self;
     }

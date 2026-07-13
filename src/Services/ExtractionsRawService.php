@@ -8,6 +8,10 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams;
+use XTwitterScraper\Extractions\ExtractionEstimateCostParams\MediaType;
+use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Quotes;
+use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Replies;
+use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Retweets;
 use XTwitterScraper\Extractions\ExtractionEstimateCostResponse;
 use XTwitterScraper\Extractions\ExtractionExportResultsParams;
 use XTwitterScraper\Extractions\ExtractionExportResultsParams\Format;
@@ -23,7 +27,7 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\ExtractionsRawContract;
 
 /**
- * Bulk data extraction (20 tool types).
+ * Bulk data extraction (23 tool types).
  *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
@@ -41,7 +45,7 @@ final class ExtractionsRawService implements ExtractionsRawContract
      * Get extraction results
      *
      * @param string $id Extraction public ID (UUID)
-     * @param array{after?: string, limit?: int}|ExtractionRetrieveParams $params
+     * @param array{cursor?: string, limit?: int}|ExtractionRetrieveParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<ExtractionGetResponse>
@@ -74,7 +78,7 @@ final class ExtractionsRawService implements ExtractionsRawContract
      * List extraction jobs
      *
      * @param array{
-     *   after?: string,
+     *   cursor?: string,
      *   limit?: int,
      *   status?: Status|value-of<Status>,
      *   toolType?: value-of<ToolType>,
@@ -112,14 +116,43 @@ final class ExtractionsRawService implements ExtractionsRawContract
      * @param array{
      *   toolType: value-of<ExtractionEstimateCostParams\ToolType>,
      *   advancedQuery?: string,
+     *   anyWords?: string,
+     *   boundingBox?: string,
+     *   cashtags?: string,
+     *   conversationID?: string,
      *   exactPhrase?: string,
      *   excludeWords?: string,
+     *   fromUser?: string,
+     *   hashtags?: string,
+     *   inReplyToTweetID?: string,
+     *   language?: string,
+     *   listID?: string,
+     *   mediaType?: MediaType|value-of<MediaType>,
+     *   mentioning?: string,
+     *   minFaves?: int,
+     *   minQuotes?: int,
+     *   minReplies?: int,
+     *   minRetweets?: int,
+     *   place?: string,
+     *   placeCountry?: string,
+     *   pointRadius?: string,
+     *   quotes?: Quotes|value-of<Quotes>,
+     *   quotesOfTweetID?: string,
+     *   replies?: Replies|value-of<Replies>,
+     *   resultsLimit?: int,
+     *   retweets?: Retweets|value-of<Retweets>,
+     *   retweetsOfTweetID?: string,
      *   searchQuery?: string,
+     *   sinceDate?: string,
      *   targetCommunityID?: string,
      *   targetListID?: string,
      *   targetSpaceID?: string,
      *   targetTweetID?: string,
      *   targetUsername?: string,
+     *   toUser?: string,
+     *   untilDate?: string,
+     *   url?: string,
+     *   verifiedOnly?: bool,
      * }|ExtractionEstimateCostParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -153,7 +186,7 @@ final class ExtractionsRawService implements ExtractionsRawContract
      *
      * @param string $id Extraction public ID
      * @param array{
-     *   format?: Format|value-of<Format>
+     *   format: Format|value-of<Format>
      * }|ExtractionExportResultsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -190,14 +223,43 @@ final class ExtractionsRawService implements ExtractionsRawContract
      * @param array{
      *   toolType: value-of<ExtractionRunParams\ToolType>,
      *   advancedQuery?: string,
+     *   anyWords?: string,
+     *   boundingBox?: string,
+     *   cashtags?: string,
+     *   conversationID?: string,
      *   exactPhrase?: string,
      *   excludeWords?: string,
+     *   fromUser?: string,
+     *   hashtags?: string,
+     *   inReplyToTweetID?: string,
+     *   language?: string,
+     *   listID?: string,
+     *   mediaType?: ExtractionRunParams\MediaType|value-of<ExtractionRunParams\MediaType>,
+     *   mentioning?: string,
+     *   minFaves?: int,
+     *   minQuotes?: int,
+     *   minReplies?: int,
+     *   minRetweets?: int,
+     *   place?: string,
+     *   placeCountry?: string,
+     *   pointRadius?: string,
+     *   quotes?: ExtractionRunParams\Quotes|value-of<ExtractionRunParams\Quotes>,
+     *   quotesOfTweetID?: string,
+     *   replies?: ExtractionRunParams\Replies|value-of<ExtractionRunParams\Replies>,
+     *   resultsLimit?: int,
+     *   retweets?: ExtractionRunParams\Retweets|value-of<ExtractionRunParams\Retweets>,
+     *   retweetsOfTweetID?: string,
      *   searchQuery?: string,
+     *   sinceDate?: string,
      *   targetCommunityID?: string,
      *   targetListID?: string,
      *   targetSpaceID?: string,
      *   targetTweetID?: string,
      *   targetUsername?: string,
+     *   toUser?: string,
+     *   untilDate?: string,
+     *   url?: string,
+     *   verifiedOnly?: bool,
      * }|ExtractionRunParams $params
      * @param RequestOpts|null $requestOptions
      *

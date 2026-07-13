@@ -37,7 +37,7 @@ final class RadarItem implements BaseModel
     use SdkModel;
 
     /**
-     * Internal numeric identifier (stringified bigint).
+     * Radar item identifier.
      */
     #[Required]
     public string $id;
@@ -187,7 +187,7 @@ final class RadarItem implements BaseModel
     }
 
     /**
-     * Internal numeric identifier (stringified bigint).
+     * Radar item identifier.
      */
     public function withID(string $id): self
     {

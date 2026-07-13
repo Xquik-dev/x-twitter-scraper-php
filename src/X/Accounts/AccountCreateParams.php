@@ -16,11 +16,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\X\AccountsService::create()
  *
  * @phpstan-type AccountCreateParamsShape = array{
- *   email: string,
- *   password: string,
- *   username: string,
- *   proxyCountry?: string|null,
- *   totpSecret?: string|null,
+ *   email: string, password: string, username: string, totpSecret?: string|null
  * }
  */
 final class AccountCreateParams implements BaseModel
@@ -46,12 +42,6 @@ final class AccountCreateParams implements BaseModel
      */
     #[Required]
     public string $username;
-
-    /**
-     * Proxy country code.
-     */
-    #[Optional('proxy_country')]
-    public ?string $proxyCountry;
 
     /**
      * TOTP secret for 2FA.
@@ -87,8 +77,7 @@ final class AccountCreateParams implements BaseModel
         string $email,
         string $password,
         string $username,
-        ?string $proxyCountry = null,
-        ?string $totpSecret = null,
+        ?string $totpSecret = null
     ): self {
         $self = new self;
 
@@ -96,7 +85,6 @@ final class AccountCreateParams implements BaseModel
         $self['password'] = $password;
         $self['username'] = $username;
 
-        null !== $proxyCountry && $self['proxyCountry'] = $proxyCountry;
         null !== $totpSecret && $self['totpSecret'] = $totpSecret;
 
         return $self;
@@ -131,17 +119,6 @@ final class AccountCreateParams implements BaseModel
     {
         $self = clone $this;
         $self['username'] = $username;
-
-        return $self;
-    }
-
-    /**
-     * Proxy country code.
-     */
-    public function withProxyCountry(string $proxyCountry): self
-    {
-        $self = clone $this;
-        $self['proxyCountry'] = $proxyCountry;
 
         return $self;
     }

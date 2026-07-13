@@ -37,7 +37,7 @@ interface MonitorsRawContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<Monitor>
@@ -52,7 +52,7 @@ interface MonitorsRawContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param array<string,mixed>|MonitorUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -82,7 +82,7 @@ interface MonitorsRawContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MonitorDeactivateResponse>

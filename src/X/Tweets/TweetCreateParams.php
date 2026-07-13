@@ -47,7 +47,7 @@ final class TweetCreateParams implements BaseModel
     public ?bool $isNoteTweet;
 
     /**
-     * Array of public image URLs to attach (max 4). Each URL must be publicly reachable - the browser composer fetches them directly.
+     * Array of public media URLs to attach. Supports up to 4 images or exactly 1 MP4 video up to 100 MB. Each URL must be publicly reachable. Attached media adds 2 credits per started MB across all files.
      *
      * @var list<string>|null $media
      */
@@ -148,7 +148,7 @@ final class TweetCreateParams implements BaseModel
     }
 
     /**
-     * Array of public image URLs to attach (max 4). Each URL must be publicly reachable - the browser composer fetches them directly.
+     * Array of public media URLs to attach. Supports up to 4 images or exactly 1 MP4 video up to 100 MB. Each URL must be publicly reachable. Attached media adds 2 credits per started MB across all files.
      *
      * @param list<string> $media
      */

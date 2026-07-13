@@ -32,7 +32,9 @@ final class DmRawService implements DmRawContract
      * Get DM conversation history
      *
      * @param string $userID Target user ID
-     * @param array{cursor?: string, maxID?: string}|DmRetrieveHistoryParams $params
+     * @param array{
+     *   account: string, cursor?: string, maxID?: string
+     * }|DmRetrieveHistoryParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<DmGetHistoryResponse>
@@ -66,10 +68,7 @@ final class DmRawService implements DmRawContract
      *
      * @param string $userID Recipient user ID
      * @param array{
-     *   account: string,
-     *   text: string,
-     *   mediaIDs?: list<string>,
-     *   replyToMessageID?: string,
+     *   account: string, text: string, mediaIDs?: list<string>
      * }|DmSendParams $params
      * @param RequestOpts|null $requestOptions
      *

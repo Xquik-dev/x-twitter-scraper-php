@@ -24,7 +24,6 @@ interface AccountsContract
      * @param string $email Account email
      * @param string $password Account password
      * @param string $username X username
-     * @param string $proxyCountry Proxy country code
      * @param string $totpSecret TOTP secret for 2FA
      * @param RequestOpts|null $requestOptions
      *
@@ -34,7 +33,6 @@ interface AccountsContract
         string $email,
         string $password,
         string $username,
-        ?string $proxyCountry = null,
         ?string $totpSecret = null,
         RequestOptions|array|null $requestOptions = null,
     ): AccountNewResponse;
@@ -42,7 +40,7 @@ interface AccountsContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -66,7 +64,7 @@ interface AccountsContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -90,10 +88,9 @@ interface AccountsContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param string $password Updated account password
      * @param string $email Email for the X account (updates stored email)
-     * @param string $proxyCountry Two-letter country code for login proxy region
      * @param string $totpSecret TOTP secret for 2FA re-authentication
      * @param RequestOpts|null $requestOptions
      *
@@ -103,7 +100,6 @@ interface AccountsContract
         string $id,
         string $password,
         ?string $email = null,
-        ?string $proxyCountry = null,
         ?string $totpSecret = null,
         RequestOptions|array|null $requestOptions = null,
     ): AccountReauthResponse;

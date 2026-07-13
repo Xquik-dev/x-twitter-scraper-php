@@ -27,7 +27,11 @@ final class TicketsTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
+        $client = new Client(
+            apiKey: 'My API Key',
+            bearerToken: 'My Bearer Token',
+            baseUrl: $testUrl,
+        );
 
         $this->client = $client;
     }
@@ -71,7 +75,9 @@ final class TicketsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->support->tickets->retrieve('messages_value');
+        $result = $this->client->support->tickets->retrieve(
+            'tkt_a1b2c3d4e5f6a1b2c3d4e5f6'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TicketGetResponse::class, $result);
@@ -84,7 +90,10 @@ final class TicketsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->support->tickets->update('id', status: 'resolved');
+        $result = $this->client->support->tickets->update(
+            'tkt_a1b2c3d4e5f6a1b2c3d4e5f6',
+            status: 'resolved'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TicketUpdateResponse::class, $result);
@@ -97,7 +106,10 @@ final class TicketsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->support->tickets->update('id', status: 'resolved');
+        $result = $this->client->support->tickets->update(
+            'tkt_a1b2c3d4e5f6a1b2c3d4e5f6',
+            status: 'resolved'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TicketUpdateResponse::class, $result);
@@ -124,7 +136,7 @@ final class TicketsTest extends TestCase
         }
 
         $result = $this->client->support->tickets->reply(
-            'id',
+            'tkt_a1b2c3d4e5f6a1b2c3d4e5f6',
             body: 'Thank you for the update.'
         );
 
@@ -140,7 +152,7 @@ final class TicketsTest extends TestCase
         }
 
         $result = $this->client->support->tickets->reply(
-            'id',
+            'tkt_a1b2c3d4e5f6a1b2c3d4e5f6',
             body: 'Thank you for the update.'
         );
 

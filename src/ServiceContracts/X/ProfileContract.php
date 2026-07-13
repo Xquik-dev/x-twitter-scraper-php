@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\Core\FileParam;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Profile\ProfileUpdateAvatarResponse;
 use XTwitterScraper\X\Profile\ProfileUpdateBannerResponse;
@@ -39,30 +38,30 @@ interface ProfileContract
     /**
      * @api
      *
-     * @param string $account X account (@username or ID) for avatar update
-     * @param string|FileParam $file Avatar image (max 716KB)
+     * @param string $account X account (@username or ID) receiving avatar from URL
+     * @param string $url HTTPS URL to the avatar image to download
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function updateAvatar(
         string $account,
-        string|FileParam $file,
+        string $url,
         RequestOptions|array|null $requestOptions = null,
     ): ProfileUpdateAvatarResponse;
 
     /**
      * @api
      *
-     * @param string $account X account (@username or ID) for banner update
-     * @param string|FileParam $file Banner image (max 2MB)
+     * @param string $account X account (@username or ID) receiving banner from URL
+     * @param string $url HTTPS URL to the banner image to download
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function updateBanner(
         string $account,
-        string|FileParam $file,
+        string $url,
         RequestOptions|array|null $requestOptions = null,
     ): ProfileUpdateBannerResponse;
 }

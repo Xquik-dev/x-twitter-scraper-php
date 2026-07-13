@@ -14,6 +14,8 @@ use XTwitterScraper\EventType;
  *   id: string,
  *   createdAt: \DateTimeInterface,
  *   eventTypes: list<EventType|value-of<EventType>>,
+ *   isActive: bool,
+ *   nextBillingAt: \DateTimeInterface,
  *   username: string,
  *   xUserID: string,
  * }
@@ -38,6 +40,15 @@ final class MonitorNewResponse implements BaseModel
     public array $eventTypes;
 
     #[Required]
+    public bool $isActive;
+
+    /**
+     * Next hourly credit charge time. New active monitors are due immediately.
+     */
+    #[Required]
+    public \DateTimeInterface $nextBillingAt;
+
+    #[Required]
     public string $username;
 
     #[Required('xUserId')]
@@ -49,7 +60,13 @@ final class MonitorNewResponse implements BaseModel
      * To enforce required parameters use
      * ```
      * MonitorNewResponse::with(
-     *   id: ..., createdAt: ..., eventTypes: ..., username: ..., xUserID: ...
+     *   id: ...,
+     *   createdAt: ...,
+     *   eventTypes: ...,
+     *   isActive: ...,
+     *   nextBillingAt: ...,
+     *   username: ...,
+     *   xUserID: ...,
      * )
      * ```
      *
@@ -60,6 +77,8 @@ final class MonitorNewResponse implements BaseModel
      *   ->withID(...)
      *   ->withCreatedAt(...)
      *   ->withEventTypes(...)
+     *   ->withIsActive(...)
+     *   ->withNextBillingAt(...)
      *   ->withUsername(...)
      *   ->withXUserID(...)
      * ```
@@ -80,6 +99,8 @@ final class MonitorNewResponse implements BaseModel
         string $id,
         \DateTimeInterface $createdAt,
         array $eventTypes,
+        bool $isActive,
+        \DateTimeInterface $nextBillingAt,
         string $username,
         string $xUserID,
     ): self {
@@ -88,6 +109,8 @@ final class MonitorNewResponse implements BaseModel
         $self['id'] = $id;
         $self['createdAt'] = $createdAt;
         $self['eventTypes'] = $eventTypes;
+        $self['isActive'] = $isActive;
+        $self['nextBillingAt'] = $nextBillingAt;
         $self['username'] = $username;
         $self['xUserID'] = $xUserID;
 
@@ -119,6 +142,25 @@ final class MonitorNewResponse implements BaseModel
     {
         $self = clone $this;
         $self['eventTypes'] = $eventTypes;
+
+        return $self;
+    }
+
+    public function withIsActive(bool $isActive): self
+    {
+        $self = clone $this;
+        $self['isActive'] = $isActive;
+
+        return $self;
+    }
+
+    /**
+     * Next hourly credit charge time. New active monitors are due immediately.
+     */
+    public function withNextBillingAt(\DateTimeInterface $nextBillingAt): self
+    {
+        $self = clone $this;
+        $self['nextBillingAt'] = $nextBillingAt;
 
         return $self;
     }
