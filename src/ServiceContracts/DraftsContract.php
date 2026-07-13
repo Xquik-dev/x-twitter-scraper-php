@@ -33,7 +33,7 @@ interface DraftsContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -47,7 +47,7 @@ interface DraftsContract
      * @api
      *
      * @param string $afterCursor Cursor for pagination
-     * @param int $limit Maximum number of items to return (1-100, default 50)
+     * @param int $limit Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the returned count may be lower when remaining credits cannot cover the requested page. If zero paid results are affordable, the endpoint returns 402 insufficient_credits.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -61,7 +61,7 @@ interface DraftsContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

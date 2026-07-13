@@ -36,8 +36,8 @@ final class FollowersService implements FollowersContract
      *
      * Check if one user follows another
      *
-     * @param string $source Username to check (without @)
-     * @param string $target Target username (without @)
+     * @param string $source Source username, @username, or X or Twitter profile URL
+     * @param string $target Target username, @username, or X or Twitter profile URL
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

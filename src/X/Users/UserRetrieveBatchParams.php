@@ -23,7 +23,7 @@ final class UserRetrieveBatchParams implements BaseModel
     use SdkParams;
 
     /**
-     * Comma-separated user IDs (max 100).
+     * Comma-separated numeric user IDs (1-100 values). Duplicate IDs are ignored while preserving first-seen order.
      */
     #[Required]
     public string $ids;
@@ -62,7 +62,7 @@ final class UserRetrieveBatchParams implements BaseModel
     }
 
     /**
-     * Comma-separated user IDs (max 100).
+     * Comma-separated numeric user IDs (1-100 values). Duplicate IDs are ignored while preserving first-seen order.
      */
     public function withIDs(string $ids): self
     {

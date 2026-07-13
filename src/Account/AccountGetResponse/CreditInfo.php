@@ -10,10 +10,12 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
  * @phpstan-type CreditInfoShape = array{
+ *   autoTopupAmountDollars: float,
  *   autoTopupEnabled: bool,
- *   balance: int,
- *   lifetimePurchased: int,
- *   lifetimeUsed: int,
+ *   autoTopupThreshold: string,
+ *   balance: string,
+ *   lifetimePurchased: string,
+ *   lifetimeUsed: string,
  * }
  */
 final class CreditInfo implements BaseModel
@@ -21,17 +23,38 @@ final class CreditInfo implements BaseModel
     /** @use SdkModel<CreditInfoShape> */
     use SdkModel;
 
+    /**
+     * Dollar amount charged when automatic top-up runs.
+     */
+    #[Required]
+    public float $autoTopupAmountDollars;
+
     #[Required]
     public bool $autoTopupEnabled;
 
+    /**
+     * Bigint string threshold that triggers automatic top-up when enabled.
+     */
     #[Required]
-    public int $balance;
+    public string $autoTopupThreshold;
 
+    /**
+     * Bigint string to preserve precision above Number.MAX_SAFE_INTEGER.
+     */
     #[Required]
-    public int $lifetimePurchased;
+    public string $balance;
 
+    /**
+     * Total purchased credits as a bigint string.
+     */
     #[Required]
-    public int $lifetimeUsed;
+    public string $lifetimePurchased;
+
+    /**
+     * Total consumed credits as a bigint string.
+     */
+    #[Required]
+    public string $lifetimeUsed;
 
     /**
      * `new CreditInfo()` is missing required properties by the API.
@@ -39,7 +62,12 @@ final class CreditInfo implements BaseModel
      * To enforce required parameters use
      * ```
      * CreditInfo::with(
-     *   autoTopupEnabled: ..., balance: ..., lifetimePurchased: ..., lifetimeUsed: ...
+     *   autoTopupAmountDollars: ...,
+     *   autoTopupEnabled: ...,
+     *   autoTopupThreshold: ...,
+     *   balance: ...,
+     *   lifetimePurchased: ...,
+     *   lifetimeUsed: ...,
      * )
      * ```
      *
@@ -47,7 +75,9 @@ final class CreditInfo implements BaseModel
      *
      * ```
      * (new CreditInfo)
+     *   ->withAutoTopupAmountDollars(...)
      *   ->withAutoTopupEnabled(...)
+     *   ->withAutoTopupThreshold(...)
      *   ->withBalance(...)
      *   ->withLifetimePurchased(...)
      *   ->withLifetimeUsed(...)
@@ -64,17 +94,33 @@ final class CreditInfo implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      */
     public static function with(
+        float $autoTopupAmountDollars,
         bool $autoTopupEnabled,
-        int $balance,
-        int $lifetimePurchased,
-        int $lifetimeUsed,
+        string $autoTopupThreshold,
+        string $balance,
+        string $lifetimePurchased,
+        string $lifetimeUsed,
     ): self {
         $self = new self;
 
+        $self['autoTopupAmountDollars'] = $autoTopupAmountDollars;
         $self['autoTopupEnabled'] = $autoTopupEnabled;
+        $self['autoTopupThreshold'] = $autoTopupThreshold;
         $self['balance'] = $balance;
         $self['lifetimePurchased'] = $lifetimePurchased;
         $self['lifetimeUsed'] = $lifetimeUsed;
+
+        return $self;
+    }
+
+    /**
+     * Dollar amount charged when automatic top-up runs.
+     */
+    public function withAutoTopupAmountDollars(
+        float $autoTopupAmountDollars
+    ): self {
+        $self = clone $this;
+        $self['autoTopupAmountDollars'] = $autoTopupAmountDollars;
 
         return $self;
     }
@@ -87,7 +133,21 @@ final class CreditInfo implements BaseModel
         return $self;
     }
 
-    public function withBalance(int $balance): self
+    /**
+     * Bigint string threshold that triggers automatic top-up when enabled.
+     */
+    public function withAutoTopupThreshold(string $autoTopupThreshold): self
+    {
+        $self = clone $this;
+        $self['autoTopupThreshold'] = $autoTopupThreshold;
+
+        return $self;
+    }
+
+    /**
+     * Bigint string to preserve precision above Number.MAX_SAFE_INTEGER.
+     */
+    public function withBalance(string $balance): self
     {
         $self = clone $this;
         $self['balance'] = $balance;
@@ -95,7 +155,10 @@ final class CreditInfo implements BaseModel
         return $self;
     }
 
-    public function withLifetimePurchased(int $lifetimePurchased): self
+    /**
+     * Total purchased credits as a bigint string.
+     */
+    public function withLifetimePurchased(string $lifetimePurchased): self
     {
         $self = clone $this;
         $self['lifetimePurchased'] = $lifetimePurchased;
@@ -103,7 +166,10 @@ final class CreditInfo implements BaseModel
         return $self;
     }
 
-    public function withLifetimeUsed(int $lifetimeUsed): self
+    /**
+     * Total consumed credits as a bigint string.
+     */
+    public function withLifetimeUsed(string $lifetimeUsed): self
     {
         $self = clone $this;
         $self['lifetimeUsed'] = $lifetimeUsed;

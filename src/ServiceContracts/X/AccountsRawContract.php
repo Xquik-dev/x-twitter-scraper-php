@@ -39,7 +39,7 @@ interface AccountsRawContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<XAccountDetail>
@@ -67,7 +67,7 @@ interface AccountsRawContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<AccountDeleteResponse>
@@ -95,7 +95,7 @@ interface AccountsRawContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param array<string,mixed>|AccountReauthParams $params
      * @param RequestOpts|null $requestOptions
      *

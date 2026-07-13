@@ -37,6 +37,9 @@ final class WebhookNewResponse implements BaseModel
     #[Required(list: EventType::class)]
     public array $eventTypes;
 
+    /**
+     * Plaintext HMAC signing secret returned only at creation.
+     */
     #[Required]
     public string $secret;
 
@@ -123,6 +126,9 @@ final class WebhookNewResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * Plaintext HMAC signing secret returned only at creation.
+     */
     public function withSecret(string $secret): self
     {
         $self = clone $this;

@@ -16,7 +16,7 @@ use XTwitterScraper\EventType;
  * @see XTwitterScraper\Services\EventsService::list()
  *
  * @phpstan-type EventListParamsShape = array{
- *   after?: string|null,
+ *   cursor?: string|null,
  *   eventType?: null|EventType|value-of<EventType>,
  *   limit?: int|null,
  *   monitorID?: string|null,
@@ -29,10 +29,10 @@ final class EventListParams implements BaseModel
     use SdkParams;
 
     /**
-     * Cursor for keyset pagination.
+     * Cursor for keyset pagination from prior response next_cursor.
      */
     #[Optional]
-    public ?string $after;
+    public ?string $cursor;
 
     /**
      * Filter events by type.
@@ -43,7 +43,7 @@ final class EventListParams implements BaseModel
     public ?string $eventType;
 
     /**
-     * Maximum number of items to return (1-100, default 50).
+     * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the returned count may be lower when remaining credits cannot cover the requested page. If zero paid results are affordable, the endpoint returns 402 insufficient_credits.
      */
     #[Optional]
     public ?int $limit;
@@ -67,14 +67,14 @@ final class EventListParams implements BaseModel
      * @param EventType|value-of<EventType>|null $eventType
      */
     public static function with(
-        ?string $after = null,
+        ?string $cursor = null,
         EventType|string|null $eventType = null,
         ?int $limit = null,
         ?string $monitorID = null,
     ): self {
         $self = new self;
 
-        null !== $after && $self['after'] = $after;
+        null !== $cursor && $self['cursor'] = $cursor;
         null !== $eventType && $self['eventType'] = $eventType;
         null !== $limit && $self['limit'] = $limit;
         null !== $monitorID && $self['monitorID'] = $monitorID;
@@ -83,12 +83,12 @@ final class EventListParams implements BaseModel
     }
 
     /**
-     * Cursor for keyset pagination.
+     * Cursor for keyset pagination from prior response next_cursor.
      */
-    public function withAfter(string $after): self
+    public function withCursor(string $cursor): self
     {
         $self = clone $this;
-        $self['after'] = $after;
+        $self['cursor'] = $cursor;
 
         return $self;
     }
@@ -107,7 +107,7 @@ final class EventListParams implements BaseModel
     }
 
     /**
-     * Maximum number of items to return (1-100, default 50).
+     * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the returned count may be lower when remaining credits cannot cover the requested page. If zero paid results are affordable, the endpoint returns 402 insufficient_credits.
      */
     public function withLimit(int $limit): self
     {

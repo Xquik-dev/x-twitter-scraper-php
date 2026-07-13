@@ -37,11 +37,7 @@ final class AccountsRawService implements AccountsRawContract
      * Connect X account
      *
      * @param array{
-     *   email: string,
-     *   password: string,
-     *   username: string,
-     *   proxyCountry?: string,
-     *   totpSecret?: string,
+     *   email: string, password: string, username: string, totpSecret?: string
      * }|AccountCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -73,7 +69,7 @@ final class AccountsRawService implements AccountsRawContract
      *
      * Get X account details
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<XAccountDetail>
@@ -121,7 +117,7 @@ final class AccountsRawService implements AccountsRawContract
      *
      * Disconnect X account
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<AccountDeleteResponse>
@@ -169,9 +165,9 @@ final class AccountsRawService implements AccountsRawContract
      *
      * Re-authenticate X account
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param array{
-     *   password: string, email?: string, proxyCountry?: string, totpSecret?: string
+     *   password: string, email?: string, totpSecret?: string
      * }|AccountReauthParams $params
      * @param RequestOpts|null $requestOptions
      *

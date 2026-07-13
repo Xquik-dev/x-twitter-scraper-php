@@ -8,7 +8,6 @@ use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Core\FileParam;
 
 /**
  * Update profile banner.
@@ -16,7 +15,7 @@ use XTwitterScraper\Core\FileParam;
  * @see XTwitterScraper\Services\X\ProfileService::updateBanner()
  *
  * @phpstan-type ProfileUpdateBannerParamsShape = array{
- *   account: string, file: string|FileParam
+ *   account: string, url: string
  * }
  */
 final class ProfileUpdateBannerParams implements BaseModel
@@ -26,29 +25,29 @@ final class ProfileUpdateBannerParams implements BaseModel
     use SdkParams;
 
     /**
-     * X account (@username or ID) for banner update.
+     * X account (@username or ID) receiving banner from URL.
      */
     #[Required]
     public string $account;
 
     /**
-     * Banner image (max 2MB).
+     * HTTPS URL to the banner image to download.
      */
     #[Required]
-    public string $file;
+    public string $url;
 
     /**
      * `new ProfileUpdateBannerParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * ProfileUpdateBannerParams::with(account: ..., file: ...)
+     * ProfileUpdateBannerParams::with(account: ..., url: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new ProfileUpdateBannerParams)->withAccount(...)->withFile(...)
+     * (new ProfileUpdateBannerParams)->withAccount(...)->withURL(...)
      * ```
      */
     public function __construct()
@@ -61,18 +60,18 @@ final class ProfileUpdateBannerParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $account, string|FileParam $file): self
+    public static function with(string $account, string $url): self
     {
         $self = new self;
 
         $self['account'] = $account;
-        $self['file'] = $file;
+        $self['url'] = $url;
 
         return $self;
     }
 
     /**
-     * X account (@username or ID) for banner update.
+     * X account (@username or ID) receiving banner from URL.
      */
     public function withAccount(string $account): self
     {
@@ -83,12 +82,12 @@ final class ProfileUpdateBannerParams implements BaseModel
     }
 
     /**
-     * Banner image (max 2MB).
+     * HTTPS URL to the banner image to download.
      */
-    public function withFile(string|FileParam $file): self
+    public function withURL(string $url): self
     {
         $self = clone $this;
-        $self['file'] = $file;
+        $self['url'] = $url;
 
         return $self;
     }

@@ -33,7 +33,7 @@ final class EventsRawService implements EventsRawContract
      *
      * Get event
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<EventDetail>
@@ -59,8 +59,8 @@ final class EventsRawService implements EventsRawContract
      * List events
      *
      * @param array{
-     *   after?: string,
-     *   eventType?: EventType|value-of<EventType>,
+     *   cursor?: string,
+     *   eventType?: value-of<EventType>,
      *   limit?: int,
      *   monitorID?: string,
      * }|EventListParams $params

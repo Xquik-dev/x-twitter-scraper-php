@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Credits;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Top up credits balance.
+ * Create a Stripe Checkout session only after the user confirms. The request never completes payment or adds credits by itself.
  *
  * @see XTwitterScraper\Services\CreditsService::topupBalance()
  *
- * @phpstan-type CreditTopupBalanceParamsShape = array{amount: int}
+ * @phpstan-type CreditTopupBalanceParamsShape = array{
+ *   dollars: int, locale?: string|null
+ * }
  */
 final class CreditTopupBalanceParams implements BaseModel
 {
@@ -23,23 +26,29 @@ final class CreditTopupBalanceParams implements BaseModel
     use SdkParams;
 
     /**
-     * Amount to top up in credits.
+     * Amount to top up in US dollars. Minimum 10.
      */
     #[Required]
-    public int $amount;
+    public int $dollars;
+
+    /**
+     * Optional checkout locale. Defaults to en.
+     */
+    #[Optional]
+    public ?string $locale;
 
     /**
      * `new CreditTopupBalanceParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * CreditTopupBalanceParams::with(amount: ...)
+     * CreditTopupBalanceParams::with(dollars: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new CreditTopupBalanceParams)->withAmount(...)
+     * (new CreditTopupBalanceParams)->withDollars(...)
      * ```
      */
     public function __construct()
@@ -52,22 +61,35 @@ final class CreditTopupBalanceParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(int $amount): self
+    public static function with(int $dollars, ?string $locale = null): self
     {
         $self = new self;
 
-        $self['amount'] = $amount;
+        $self['dollars'] = $dollars;
+
+        null !== $locale && $self['locale'] = $locale;
 
         return $self;
     }
 
     /**
-     * Amount to top up in credits.
+     * Amount to top up in US dollars. Minimum 10.
      */
-    public function withAmount(int $amount): self
+    public function withDollars(int $dollars): self
     {
         $self = clone $this;
-        $self['amount'] = $amount;
+        $self['dollars'] = $dollars;
+
+        return $self;
+    }
+
+    /**
+     * Optional checkout locale. Defaults to en.
+     */
+    public function withLocale(string $locale): self
+    {
+        $self = clone $this;
+        $self['locale'] = $locale;
 
         return $self;
     }

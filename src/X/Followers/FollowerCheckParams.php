@@ -23,13 +23,13 @@ final class FollowerCheckParams implements BaseModel
     use SdkParams;
 
     /**
-     * Username to check (without @).
+     * Source username, @username, or X or Twitter profile URL.
      */
     #[Required]
     public string $source;
 
     /**
-     * Target username (without @).
+     * Target username, @username, or X or Twitter profile URL.
      */
     #[Required]
     public string $target;
@@ -69,7 +69,7 @@ final class FollowerCheckParams implements BaseModel
     }
 
     /**
-     * Username to check (without @).
+     * Source username, @username, or X or Twitter profile URL.
      */
     public function withSource(string $source): self
     {
@@ -80,7 +80,7 @@ final class FollowerCheckParams implements BaseModel
     }
 
     /**
-     * Target username (without @).
+     * Target username, @username, or X or Twitter profile URL.
      */
     public function withTarget(string $target): self
     {

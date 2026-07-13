@@ -7,11 +7,13 @@ namespace XTwitterScraper\Services\X\Communities;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\Communities\TweetsRawContract;
 use XTwitterScraper\X\Communities\Tweets\TweetListByCommunityParams;
 use XTwitterScraper\X\Communities\Tweets\TweetListParams;
+use XTwitterScraper\X\Communities\Tweets\TweetListParams\QueryType;
 
 /**
  * X Community info, members, and tweets.
@@ -29,10 +31,14 @@ final class TweetsRawService implements TweetsRawContract
     /**
      * @api
      *
-     * List tweets across all communities
+     * Requires a Community ID and keyword query.
      *
      * @param array{
-     *   q: string, cursor?: string, queryType?: string
+     *   communityID: string,
+     *   q: string,
+     *   cursor?: string,
+     *   pageSize?: int,
+     *   queryType?: QueryType|value-of<QueryType>,
      * }|TweetListParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -53,7 +59,10 @@ final class TweetsRawService implements TweetsRawContract
         return $this->client->request(
             method: 'get',
             path: 'x/communities/tweets',
-            query: $parsed,
+            query: Util::array_transform_keys(
+                $parsed,
+                ['communityID' => 'communityId']
+            ),
             options: $options,
             convert: PaginatedTweets::class,
         );
@@ -65,7 +74,7 @@ final class TweetsRawService implements TweetsRawContract
      * List tweets posted in a community
      *
      * @param string $id Community ID for tweet lookup
-     * @param array{cursor?: string}|TweetListByCommunityParams $params
+     * @param array{cursor?: string, pageSize?: int}|TweetListByCommunityParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedTweets>

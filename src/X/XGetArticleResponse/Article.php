@@ -13,6 +13,7 @@ use XTwitterScraper\X\XGetArticleResponse\Article\Content;
  * @phpstan-import-type ContentShape from \XTwitterScraper\X\XGetArticleResponse\Article\Content
  *
  * @phpstan-type ArticleShape = array{
+ *   bodyText?: string|null,
  *   contents?: list<Content|ContentShape>|null,
  *   coverImageURL?: string|null,
  *   createdAt?: string|null,
@@ -28,6 +29,12 @@ final class Article implements BaseModel
 {
     /** @use SdkModel<ArticleShape> */
     use SdkModel;
+
+    /**
+     * Plain text joined from all article blocks.
+     */
+    #[Optional]
+    public ?string $bodyText;
 
     /** @var list<Content>|null $contents */
     #[Optional(list: Content::class)]
@@ -70,6 +77,7 @@ final class Article implements BaseModel
      * @param list<Content|ContentShape>|null $contents
      */
     public static function with(
+        ?string $bodyText = null,
         ?array $contents = null,
         ?string $coverImageURL = null,
         ?string $createdAt = null,
@@ -82,6 +90,7 @@ final class Article implements BaseModel
     ): self {
         $self = new self;
 
+        null !== $bodyText && $self['bodyText'] = $bodyText;
         null !== $contents && $self['contents'] = $contents;
         null !== $coverImageURL && $self['coverImageURL'] = $coverImageURL;
         null !== $createdAt && $self['createdAt'] = $createdAt;
@@ -91,6 +100,17 @@ final class Article implements BaseModel
         null !== $replyCount && $self['replyCount'] = $replyCount;
         null !== $title && $self['title'] = $title;
         null !== $viewCount && $self['viewCount'] = $viewCount;
+
+        return $self;
+    }
+
+    /**
+     * Plain text joined from all article blocks.
+     */
+    public function withBodyText(string $bodyText): self
+    {
+        $self = clone $this;
+        $self['bodyText'] = $bodyText;
 
         return $self;
     }

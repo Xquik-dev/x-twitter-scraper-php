@@ -24,13 +24,13 @@ final class TweetGetResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Full tweet with text, engagement metrics, media, and metadata.
+     * Full tweet with text, engagement metrics, media, and metadata. A zero metric can mean X did not report the count.
      */
     #[Required]
     public TweetDetail $tweet;
 
     /**
-     * Author of a tweet with follower count and verification status.
+     * Tweet author profile. The lookup route always includes follower count and verification state. Other profile fields appear when available.
      */
     #[Optional]
     public ?TweetAuthor $author;
@@ -76,7 +76,7 @@ final class TweetGetResponse implements BaseModel
     }
 
     /**
-     * Full tweet with text, engagement metrics, media, and metadata.
+     * Full tweet with text, engagement metrics, media, and metadata. A zero metric can mean X did not report the count.
      *
      * @param TweetDetail|TweetDetailShape $tweet
      */
@@ -89,7 +89,7 @@ final class TweetGetResponse implements BaseModel
     }
 
     /**
-     * Author of a tweet with follower count and verification status.
+     * Tweet author profile. The lookup route always includes follower count and verification state. Other profile fields appear when available.
      *
      * @param TweetAuthor|TweetAuthorShape $author
      */

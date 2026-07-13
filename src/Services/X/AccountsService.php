@@ -44,7 +44,6 @@ final class AccountsService implements AccountsContract
      * @param string $email Account email
      * @param string $password Account password
      * @param string $username X username
-     * @param string $proxyCountry Proxy country code
      * @param string $totpSecret TOTP secret for 2FA
      * @param RequestOpts|null $requestOptions
      *
@@ -54,7 +53,6 @@ final class AccountsService implements AccountsContract
         string $email,
         string $password,
         string $username,
-        ?string $proxyCountry = null,
         ?string $totpSecret = null,
         RequestOptions|array|null $requestOptions = null,
     ): AccountNewResponse {
@@ -63,7 +61,6 @@ final class AccountsService implements AccountsContract
                 'email' => $email,
                 'password' => $password,
                 'username' => $username,
-                'proxyCountry' => $proxyCountry,
                 'totpSecret' => $totpSecret,
             ],
         );
@@ -79,7 +76,7 @@ final class AccountsService implements AccountsContract
      *
      * Get X account details
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -117,7 +114,7 @@ final class AccountsService implements AccountsContract
      *
      * Disconnect X account
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -155,10 +152,9 @@ final class AccountsService implements AccountsContract
      *
      * Re-authenticate X account
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param string $password Updated account password
      * @param string $email Email for the X account (updates stored email)
-     * @param string $proxyCountry Two-letter country code for login proxy region
      * @param string $totpSecret TOTP secret for 2FA re-authentication
      * @param RequestOpts|null $requestOptions
      *
@@ -168,17 +164,11 @@ final class AccountsService implements AccountsContract
         string $id,
         string $password,
         ?string $email = null,
-        ?string $proxyCountry = null,
         ?string $totpSecret = null,
         RequestOptions|array|null $requestOptions = null,
     ): AccountReauthResponse {
         $params = Util::removeNulls(
-            [
-                'password' => $password,
-                'email' => $email,
-                'proxyCountry' => $proxyCountry,
-                'totpSecret' => $totpSecret,
-            ],
+            ['password' => $password, 'email' => $email, 'totpSecret' => $totpSecret]
         );
 
         // @phpstan-ignore-next-line argument.type

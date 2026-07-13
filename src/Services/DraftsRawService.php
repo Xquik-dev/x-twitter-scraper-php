@@ -66,7 +66,7 @@ final class DraftsRawService implements DraftsRawContract
      *
      * Get draft by ID
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<DraftDetail>
@@ -122,7 +122,7 @@ final class DraftsRawService implements DraftsRawContract
      *
      * Delete a draft
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<mixed>

@@ -33,7 +33,7 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Create monitor
+     * Creates an instant monitor. Monitors are unlimited. Active monitors check every 1 second and cost 21 credits per hour. Events and webhook deliveries are included. Creation requires available credits for the first hourly charge and username lookup.
      *
      * @param array{
      *   eventTypes: list<EventType|value-of<EventType>>, username: string
@@ -68,7 +68,7 @@ final class MonitorsRawService implements MonitorsRawContract
      *
      * Get monitor
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<Monitor>
@@ -93,7 +93,7 @@ final class MonitorsRawService implements MonitorsRawContract
      *
      * Update monitor
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param array{
      *   eventTypes?: list<EventType|value-of<EventType>>, isActive?: bool
      * }|MonitorUpdateParams $params
@@ -149,9 +149,9 @@ final class MonitorsRawService implements MonitorsRawContract
     /**
      * @api
      *
-     * Deactivate monitor
+     * Delete monitor
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MonitorDeactivateResponse>

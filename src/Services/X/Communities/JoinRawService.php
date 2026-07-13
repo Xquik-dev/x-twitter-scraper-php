@@ -9,9 +9,10 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\Communities\JoinRawContract;
-use XTwitterScraper\X\Communities\CommunityActionResult;
 use XTwitterScraper\X\Communities\Join\JoinCreateParams;
 use XTwitterScraper\X\Communities\Join\JoinDeleteAllParams;
+use XTwitterScraper\X\Communities\Join\JoinDeleteAllResponse;
+use XTwitterScraper\X\Communities\Join\JoinNewResponse;
 
 /**
  * X write actions (tweets, likes, follows, DMs).
@@ -31,11 +32,11 @@ final class JoinRawService implements JoinRawContract
      *
      * Join community
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param array{account: string}|JoinCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<CommunityActionResult>
+     * @return BaseResponse<JoinNewResponse>
      *
      * @throws APIException
      */
@@ -55,7 +56,7 @@ final class JoinRawService implements JoinRawContract
             path: ['x/communities/%1$s/join', $id],
             body: (object) $parsed,
             options: $options,
-            convert: CommunityActionResult::class,
+            convert: JoinNewResponse::class,
         );
     }
 
@@ -64,11 +65,11 @@ final class JoinRawService implements JoinRawContract
      *
      * Leave community
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param array{account: string}|JoinDeleteAllParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<CommunityActionResult>
+     * @return BaseResponse<JoinDeleteAllResponse>
      *
      * @throws APIException
      */
@@ -88,7 +89,7 @@ final class JoinRawService implements JoinRawContract
             path: ['x/communities/%1$s/join', $id],
             body: (object) $parsed,
             options: $options,
-            convert: CommunityActionResult::class,
+            convert: JoinDeleteAllResponse::class,
         );
     }
 }

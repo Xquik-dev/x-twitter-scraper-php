@@ -36,7 +36,7 @@ final class DrawsRawService implements DrawsRawContract
      *
      * Get draw details
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id draw public ID returned by create and list draw responses
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<DrawGetResponse>
@@ -61,7 +61,7 @@ final class DrawsRawService implements DrawsRawContract
      *
      * List draws
      *
-     * @param array{after?: string, limit?: int}|DrawListParams $params
+     * @param array{cursor?: string, limit?: int}|DrawListParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<DrawListResponse>
@@ -92,9 +92,9 @@ final class DrawsRawService implements DrawsRawContract
      *
      * Export draw data
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id draw public ID returned by create and list draw responses
      * @param array{
-     *   format?: Format|value-of<Format>, type?: Type|value-of<Type>
+     *   format: Format|value-of<Format>, type?: Type|value-of<Type>
      * }|DrawExportParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -126,7 +126,7 @@ final class DrawsRawService implements DrawsRawContract
     /**
      * @api
      *
-     * Run giveaway draw
+     * Runs a giveaway draw from a source tweet. The draw first checks the minimum credits needed to inspect the source tweet and at least one candidate. Remaining credits cap how many replies and retweeters can be inspected before filters and winner selection run.
      *
      * @param array{
      *   tweetURL: string,

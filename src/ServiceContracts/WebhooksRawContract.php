@@ -13,6 +13,7 @@ use XTwitterScraper\Webhooks\WebhookDeactivateResponse;
 use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse;
 use XTwitterScraper\Webhooks\WebhookListResponse;
 use XTwitterScraper\Webhooks\WebhookNewResponse;
+use XTwitterScraper\Webhooks\WebhookResumeResponse;
 use XTwitterScraper\Webhooks\WebhookTestResponse;
 use XTwitterScraper\Webhooks\WebhookUpdateParams;
 
@@ -39,7 +40,7 @@ interface WebhooksRawContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param array<string,mixed>|WebhookUpdateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -69,7 +70,7 @@ interface WebhooksRawContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<WebhookDeactivateResponse>
@@ -84,7 +85,7 @@ interface WebhooksRawContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<WebhookListDeliveriesResponse>
@@ -99,7 +100,22 @@ interface WebhooksRawContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<WebhookResumeResponse>
+     *
+     * @throws APIException
+     */
+    public function resume(
+        string $id,
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<WebhookTestResponse>

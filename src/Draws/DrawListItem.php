@@ -27,6 +27,9 @@ final class DrawListItem implements BaseModel
     /** @use SdkModel<DrawListItemShape> */
     use SdkModel;
 
+    /**
+     * Draw public ID for detail responses.
+     */
     #[Required]
     public string $id;
 
@@ -108,6 +111,9 @@ final class DrawListItem implements BaseModel
         return $self;
     }
 
+    /**
+     * Draw public ID for detail responses.
+     */
     public function withID(string $id): self
     {
         $self = clone $this;

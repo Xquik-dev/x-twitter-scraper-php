@@ -4,57 +4,27 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Error;
 
-enum Error: string
+use XTwitterScraper\Core\Concerns\SdkUnion;
+use XTwitterScraper\Core\Conversion\Contracts\Converter;
+use XTwitterScraper\Core\Conversion\Contracts\ConverterSource;
+use XTwitterScraper\Error\Error\LegacyErrorCode;
+use XTwitterScraper\Error\Error\StructuredError;
+
+/**
+ * @phpstan-import-type StructuredErrorShape from \XTwitterScraper\Error\Error\StructuredError
+ *
+ * @phpstan-type ErrorVariants = StructuredError|value-of<LegacyErrorCode>
+ * @phpstan-type ErrorShape = ErrorVariants|StructuredErrorShape
+ */
+final class Error implements ConverterSource
 {
-    case INTERNAL_ERROR = 'internal_error';
+    use SdkUnion;
 
-    case INVALID_FORMAT = 'invalid_format';
-
-    case INVALID_ID = 'invalid_id';
-
-    case INVALID_INPUT = 'invalid_input';
-
-    case INVALID_PARAMS = 'invalid_params';
-
-    case INVALID_TOOL_TYPE = 'invalid_tool_type';
-
-    case INVALID_TWEET_ID = 'invalid_tweet_id';
-
-    case INVALID_TWEET_URL = 'invalid_tweet_url';
-
-    case INVALID_USERNAME = 'invalid_username';
-
-    case INSUFFICIENT_CREDITS = 'insufficient_credits';
-
-    case MISSING_PARAMS = 'missing_params';
-
-    case MISSING_QUERY = 'missing_query';
-
-    case MONITOR_ALREADY_EXISTS = 'monitor_already_exists';
-
-    case MONITOR_LIMIT_REACHED = 'monitor_limit_reached';
-
-    case NO_CREDITS = 'no_credits';
-
-    case NO_SUBSCRIPTION = 'no_subscription';
-
-    case NOT_FOUND = 'not_found';
-
-    case SUBSCRIPTION_INACTIVE = 'subscription_inactive';
-
-    case TWEET_NOT_FOUND = 'tweet_not_found';
-
-    case UNAUTHENTICATED = 'unauthenticated';
-
-    case UNSUPPORTED_FIELD = 'unsupported_field';
-
-    case USER_NOT_FOUND = 'user_not_found';
-
-    case WEBHOOK_INACTIVE = 'webhook_inactive';
-
-    case X_API_RATE_LIMITED = 'x_api_rate_limited';
-
-    case X_API_UNAVAILABLE = 'x_api_unavailable';
-
-    case X_API_UNAUTHORIZED = 'x_api_unauthorized';
+    /**
+     * @return list<string|Converter|ConverterSource>|array<string,string|Converter|ConverterSource>
+     */
+    public static function variants(): array
+    {
+        return [LegacyErrorCode::class, StructuredError::class];
+    }
 }

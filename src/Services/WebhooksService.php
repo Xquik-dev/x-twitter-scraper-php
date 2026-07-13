@@ -15,6 +15,7 @@ use XTwitterScraper\Webhooks\WebhookDeactivateResponse;
 use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse;
 use XTwitterScraper\Webhooks\WebhookListResponse;
 use XTwitterScraper\Webhooks\WebhookNewResponse;
+use XTwitterScraper\Webhooks\WebhookResumeResponse;
 use XTwitterScraper\Webhooks\WebhookTestResponse;
 
 /**
@@ -66,7 +67,7 @@ final class WebhooksService implements WebhooksContract
      *
      * Update webhook
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param list<EventType|value-of<EventType>> $eventTypes array of event types to subscribe to
      * @param RequestOpts|null $requestOptions
      *
@@ -112,7 +113,7 @@ final class WebhooksService implements WebhooksContract
      *
      * Deactivate webhook
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -132,7 +133,7 @@ final class WebhooksService implements WebhooksContract
      *
      * List webhook deliveries
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -150,9 +151,29 @@ final class WebhooksService implements WebhooksContract
     /**
      * @api
      *
+     * Test and resume webhook endpoint
+     *
+     * @param string $id resource ID returned by the matching create or list endpoint
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function resume(
+        string $id,
+        RequestOptions|array|null $requestOptions = null
+    ): WebhookResumeResponse {
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->resume($id, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
      * Test webhook endpoint
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

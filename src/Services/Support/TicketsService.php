@@ -63,7 +63,7 @@ final class TicketsService implements TicketsContract
      *
      * Get ticket with all messages
      *
-     * @param string $id Support ticket ID
+     * @param string $id Support ticket public ID
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -83,7 +83,7 @@ final class TicketsService implements TicketsContract
      *
      * Update ticket status
      *
-     * @param string $id Support ticket ID to update
+     * @param string $id Support ticket public ID to update
      * @param Status|value-of<Status> $status
      * @param RequestOpts|null $requestOptions
      *
@@ -125,7 +125,7 @@ final class TicketsService implements TicketsContract
      *
      * Reply to a support ticket
      *
-     * @param string $id Support ticket ID for the reply
+     * @param string $id Support ticket public ID for the reply
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

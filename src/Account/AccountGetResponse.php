@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace XTwitterScraper\Account;
 
 use XTwitterScraper\Account\AccountGetResponse\CreditInfo;
+use XTwitterScraper\Account\AccountGetResponse\MonitorBilling;
 use XTwitterScraper\Account\AccountGetResponse\Plan;
 use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
@@ -12,9 +13,11 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * @phpstan-import-type MonitorBillingShape from \XTwitterScraper\Account\AccountGetResponse\MonitorBilling
  * @phpstan-import-type CreditInfoShape from \XTwitterScraper\Account\AccountGetResponse\CreditInfo
  *
  * @phpstan-type AccountGetResponseShape = array{
+ *   monitorBilling: MonitorBilling|MonitorBillingShape,
  *   monitorsAllowed: int,
  *   monitorsUsed: int,
  *   plan: Plan|value-of<Plan>,
@@ -27,6 +30,14 @@ final class AccountGetResponse implements BaseModel
     /** @use SdkModel<AccountGetResponseShape> */
     use SdkModel;
 
+    #[Required]
+    public MonitorBilling $monitorBilling;
+
+    /**
+     * @deprecated Monitor slots are unlimited. Use monitorBilling.unlimitedSlots instead.
+     *
+     * Deprecated. Monitor slots are unlimited, so this is always Number.MAX_SAFE_INTEGER.
+     */
     #[Required]
     public int $monitorsAllowed;
 
@@ -51,13 +62,16 @@ final class AccountGetResponse implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * AccountGetResponse::with(monitorsAllowed: ..., monitorsUsed: ..., plan: ...)
+     * AccountGetResponse::with(
+     *   monitorBilling: ..., monitorsAllowed: ..., monitorsUsed: ..., plan: ...
+     * )
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
      * (new AccountGetResponse)
+     *   ->withMonitorBilling(...)
      *   ->withMonitorsAllowed(...)
      *   ->withMonitorsUsed(...)
      *   ->withPlan(...)
@@ -73,10 +87,12 @@ final class AccountGetResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param MonitorBilling|MonitorBillingShape $monitorBilling
      * @param Plan|value-of<Plan> $plan
      * @param CreditInfo|CreditInfoShape|null $creditInfo
      */
     public static function with(
+        MonitorBilling|array $monitorBilling,
         int $monitorsAllowed,
         int $monitorsUsed,
         Plan|string $plan,
@@ -85,6 +101,7 @@ final class AccountGetResponse implements BaseModel
     ): self {
         $self = new self;
 
+        $self['monitorBilling'] = $monitorBilling;
         $self['monitorsAllowed'] = $monitorsAllowed;
         $self['monitorsUsed'] = $monitorsUsed;
         $self['plan'] = $plan;
@@ -95,6 +112,21 @@ final class AccountGetResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * @param MonitorBilling|MonitorBillingShape $monitorBilling
+     */
+    public function withMonitorBilling(
+        MonitorBilling|array $monitorBilling
+    ): self {
+        $self = clone $this;
+        $self['monitorBilling'] = $monitorBilling;
+
+        return $self;
+    }
+
+    /**
+     * Deprecated. Monitor slots are unlimited, so this is always Number.MAX_SAFE_INTEGER.
+     */
     public function withMonitorsAllowed(int $monitorsAllowed): self
     {
         $self = clone $this;

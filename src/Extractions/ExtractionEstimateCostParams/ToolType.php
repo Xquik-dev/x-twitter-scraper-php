@@ -19,6 +19,8 @@ enum ToolType: string
 
     case COMMUNITY_SEARCH = 'community_search';
 
+    case FAVORITERS = 'favoriters';
+
     case FOLLOWER_EXPLORER = 'follower_explorer';
 
     case FOLLOWING_EXPLORER = 'following_explorer';
@@ -46,6 +48,10 @@ enum ToolType: string
     case THREAD_EXTRACTOR = 'thread_extractor';
 
     case TWEET_SEARCH_EXTRACTOR = 'tweet_search_extractor';
+
+    case USER_LIKES = 'user_likes';
+
+    case USER_MEDIA = 'user_media';
 
     case VERIFIED_FOLLOWER_EXPLORER = 'verified_follower_explorer';
 }

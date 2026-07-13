@@ -20,7 +20,7 @@ interface XContract
     /**
      * @api
      *
-     * @param string $tweetID Tweet ID of the article
+     * @param string $tweetID Numeric tweet ID of the article, 15-20 digits. If you have a tweet URL, use the final status ID.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -34,7 +34,7 @@ interface XContract
      * @api
      *
      * @param string $cursor Pagination cursor for timeline
-     * @param string $seenTweetIDs Comma-separated tweet IDs to exclude from results
+     * @param string $seenTweetIDs Comma-separated tweet IDs to exclude from results. Empty entries are ignored.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -49,7 +49,7 @@ interface XContract
      * @api
      *
      * @param string $cursor Pagination cursor for notifications
-     * @param Type|value-of<Type> $type Notification type filter
+     * @param Type|value-of<Type> $type Notification type filter. Unrecognized values fall back to All.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

@@ -17,7 +17,7 @@ use XTwitterScraper\Extractions\ExtractionListParams\ToolType;
  * @see XTwitterScraper\Services\ExtractionsService::list()
  *
  * @phpstan-type ExtractionListParamsShape = array{
- *   after?: string|null,
+ *   cursor?: string|null,
  *   limit?: int|null,
  *   status?: null|Status|value-of<Status>,
  *   toolType?: null|ToolType|value-of<ToolType>,
@@ -30,13 +30,13 @@ final class ExtractionListParams implements BaseModel
     use SdkParams;
 
     /**
-     * Cursor for keyset pagination.
+     * Cursor for keyset pagination from prior response next_cursor.
      */
     #[Optional]
-    public ?string $after;
+    public ?string $cursor;
 
     /**
-     * Maximum number of items to return (1-100, default 50).
+     * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the returned count may be lower when remaining credits cannot cover the requested page. If zero paid results are affordable, the endpoint returns 402 insufficient_credits.
      */
     #[Optional]
     public ?int $limit;
@@ -71,14 +71,14 @@ final class ExtractionListParams implements BaseModel
      * @param ToolType|value-of<ToolType>|null $toolType
      */
     public static function with(
-        ?string $after = null,
+        ?string $cursor = null,
         ?int $limit = null,
         Status|string|null $status = null,
         ToolType|string|null $toolType = null,
     ): self {
         $self = new self;
 
-        null !== $after && $self['after'] = $after;
+        null !== $cursor && $self['cursor'] = $cursor;
         null !== $limit && $self['limit'] = $limit;
         null !== $status && $self['status'] = $status;
         null !== $toolType && $self['toolType'] = $toolType;
@@ -87,18 +87,18 @@ final class ExtractionListParams implements BaseModel
     }
 
     /**
-     * Cursor for keyset pagination.
+     * Cursor for keyset pagination from prior response next_cursor.
      */
-    public function withAfter(string $after): self
+    public function withCursor(string $cursor): self
     {
         $self = clone $this;
-        $self['after'] = $after;
+        $self['cursor'] = $cursor;
 
         return $self;
     }
 
     /**
-     * Maximum number of items to return (1-100, default 50).
+     * Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the returned count may be lower when remaining credits cannot cover the requested page. If zero paid results are affordable, the endpoint returns 402 insufficient_credits.
      */
     public function withLimit(int $limit): self
     {
