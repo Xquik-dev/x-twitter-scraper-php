@@ -47,7 +47,12 @@ final class Util
      */
     public static function get_object_vars(object $object): array
     {
-        return get_object_vars($object);
+        $properties = [];
+        foreach (get_object_vars($object) as $name => $value) {
+            $properties[(string) $name] = $value;
+        }
+
+        return $properties;
     }
 
     public static function machtype(): string
@@ -266,7 +271,6 @@ final class Util
         mixed $body
     ): RequestInterface {
         if ($body instanceof StreamInterface) {
-            /** @var RequestInterface */
             return $req->withBody($body);
         }
 
@@ -276,7 +280,6 @@ final class Util
                 $encoded = json_encode($body, flags: self::JSON_ENCODE_FLAGS);
                 $stream = $factory->createStream($encoded);
 
-                /** @var RequestInterface */
                 return $req->withBody($stream);
             }
         }
@@ -286,14 +289,12 @@ final class Util
             $encoded = implode('', iterator_to_array($gen, preserve_keys: false));
             $stream = $factory->createStream($encoded);
 
-            /** @var RequestInterface */
             return $req->withHeader('Content-Type', "{$contentType}; boundary={$boundary}")->withBody($stream);
         }
 
         if (is_resource($body)) {
             $stream = $factory->createStreamFromResource($body);
 
-            /** @var RequestInterface */
             return $req->withBody($stream);
         }
 
@@ -448,9 +449,7 @@ final class Util
         $contentLine = "Content-Type: %s\r\n\r\n";
 
         if ($val instanceof FileParam) {
-            $ct = $val->contentType ?? $contentType;
-
-            yield sprintf($contentLine, $ct);
+            yield sprintf($contentLine, $val->contentType);
             $data = $val->data;
             if (is_string($data)) {
                 yield $data;

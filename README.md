@@ -18,22 +18,12 @@ The REST API documentation can be found on [xquik.com](https://xquik.com).
 
 ## Installation
 
-To use this package, install via Composer by adding the following to your application's `composer.json`:
+Install the package from Packagist with Composer:
 
 <!-- x-release-please-start-version -->
 
-```json
-{
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:Xquik-dev/x-twitter-scraper-php.git"
-    }
-  ],
-  "require": {
-    "xquik/x-twitter-scraper": "dev-main"
-  }
-}
+```sh
+composer require xquik/x-twitter-scraper:^0.4.3
 ```
 
 <!-- x-release-please-end -->

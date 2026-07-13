@@ -110,8 +110,6 @@ trait SdkModel
 
     /**
      * @internal
-     *
-     * @param key-of<Shape> $offset
      */
     public function offsetExists(mixed $offset): bool
     {
@@ -139,8 +137,6 @@ trait SdkModel
 
     /**
      * @internal
-     *
-     * @param key-of<Shape> $offset
      */
     public function &offsetGet(mixed $offset): mixed
     {
@@ -166,8 +162,6 @@ trait SdkModel
 
     /**
      * @internal
-     *
-     * @param key-of<Shape> $offset
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
@@ -201,8 +195,6 @@ trait SdkModel
 
     /**
      * @internal
-     *
-     * @param key-of<Shape> $offset
      */
     public function offsetUnset(mixed $offset): void
     {

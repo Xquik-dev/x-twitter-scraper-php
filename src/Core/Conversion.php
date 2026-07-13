@@ -182,7 +182,19 @@ final class Conversion
                 }
 
                 if ($value instanceof \Generator) {
-                    return implode('', iterator_to_array($value));
+                    $parts = array_map(static function (mixed $part): string {
+                        if (is_scalar($part) || is_null($part) || is_resource($part)) {
+                            return strval($part);
+                        }
+
+                        if ($part instanceof \Stringable) {
+                            return strval($part);
+                        }
+
+                        throw new \TypeError('Generator yielded a non-stringable value');
+                    }, iterator_to_array($value));
+
+                    return implode('', $parts);
                 }
 
                 ++$state->no;
