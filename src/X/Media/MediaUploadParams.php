@@ -4,21 +4,17 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\Media;
 
-use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Core\FileParam;
 
 /**
  * Upload media.
  *
  * @see XTwitterScraper\Services\X\MediaService::upload()
  *
- * @phpstan-type MediaUploadParamsShape = array{
- *   account: string, file: string|FileParam, isLongVideo?: bool|null
- * }
+ * @phpstan-type MediaUploadParamsShape = array{account: string, url: string}
  */
 final class MediaUploadParams implements BaseModel
 {
@@ -27,32 +23,29 @@ final class MediaUploadParams implements BaseModel
     use SdkParams;
 
     /**
-     * X account (@username or ID) uploading media.
+     * X account (@username or ID) uploading media from URL.
      */
     #[Required]
     public string $account;
 
     /**
-     * Media file to upload.
+     * HTTPS URL to download and upload as media.
      */
     #[Required]
-    public string $file;
-
-    #[Optional('is_long_video')]
-    public ?bool $isLongVideo;
+    public string $url;
 
     /**
      * `new MediaUploadParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * MediaUploadParams::with(account: ..., file: ...)
+     * MediaUploadParams::with(account: ..., url: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new MediaUploadParams)->withAccount(...)->withFile(...)
+     * (new MediaUploadParams)->withAccount(...)->withURL(...)
      * ```
      */
     public function __construct()
@@ -65,23 +58,18 @@ final class MediaUploadParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(
-        string $account,
-        string|FileParam $file,
-        ?bool $isLongVideo = null
-    ): self {
+    public static function with(string $account, string $url): self
+    {
         $self = new self;
 
         $self['account'] = $account;
-        $self['file'] = $file;
-
-        null !== $isLongVideo && $self['isLongVideo'] = $isLongVideo;
+        $self['url'] = $url;
 
         return $self;
     }
 
     /**
-     * X account (@username or ID) uploading media.
+     * X account (@username or ID) uploading media from URL.
      */
     public function withAccount(string $account): self
     {
@@ -92,20 +80,12 @@ final class MediaUploadParams implements BaseModel
     }
 
     /**
-     * Media file to upload.
+     * HTTPS URL to download and upload as media.
      */
-    public function withFile(string|FileParam $file): self
+    public function withURL(string $url): self
     {
         $self = clone $this;
-        $self['file'] = $file;
-
-        return $self;
-    }
-
-    public function withIsLongVideo(bool $isLongVideo): self
-    {
-        $self = clone $this;
-        $self['isLongVideo'] = $isLongVideo;
+        $self['url'] = $url;
 
         return $self;
     }

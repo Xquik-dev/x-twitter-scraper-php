@@ -23,7 +23,7 @@ Install the package from Packagist with Composer:
 <!-- x-release-please-start-version -->
 
 ```sh
-composer require xquik/x-twitter-scraper:^0.4.3
+composer require xquik/x-twitter-scraper:^0.4.4
 ```
 
 <!-- x-release-please-end -->
@@ -66,7 +66,7 @@ use XTwitterScraper\Core\Exceptions\RateLimitException;
 use XTwitterScraper\Core\Exceptions\APIStatusException;
 
 try {
-  $paginatedTweets = $client->x->tweets->search(q: 'from:elonmusk');
+  $account = $client->account->retrieve();
 } catch (APIConnectionException $e) {
   echo "The server could not be reached", PHP_EOL;
   var_dump($e->getPrevious());
@@ -111,31 +111,25 @@ use XTwitterScraper\Client;
 $client = new Client(requestOptions: ['maxRetries' => 0]);
 
 // Or, configure per-request:
-$result = $client->x->tweets->search(
-  q: 'from:elonmusk', limit: 10, requestOptions: ['maxRetries' => 5]
-);
+$result = $client->account->retrieve(requestOptions: ['maxRetries' => 5]);
 ```
 
 ### File uploads
 
-Request parameters that correspond to file uploads can be passed as a resource returned by `fopen()`, a string of file contents, or a `FileParam` instance.
+Request parameters for file uploads accept a resource from `fopen()`, raw contents, or a `FileParam`.
 
 ```php
 <?php
 
 use XTwitterScraper\Core\FileParam;
 
-// Pass a string with filename and content type:
 $contents = file_get_contents('/path/to/file');
-// Pass a string with filename and content type:
 $response = $client->x->media->upload(
   file: FileParam::fromString($contents, filename: '/path/to/file', contentType: '…'),
 );
 
-// Pass in only a string (where applicable)
 $response = $client->x->media->upload(file: '…');
 
-// Pass an open resource:
 $fd = fopen('/path/to/file', 'r');
 try {
   $response = $client->x->media->upload(
@@ -159,9 +153,7 @@ Note: the `extra*` parameters of the same name overrides the documented paramete
 ```php
 <?php
 
-$paginatedTweets = $client->x->tweets->search(
-  q: 'from:elonmusk',
-  limit: 10,
+$account = $client->account->retrieve(
   requestOptions: [
     'extraQueryParams' => ['my_query_parameter' => 'value'],
     'extraBodyParams' => ['my_body_parameter' => 'value'],

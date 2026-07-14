@@ -46,7 +46,7 @@ final class RadarRetrieveTrendingTopicsParams implements BaseModel
     public ?string $category;
 
     /**
-     * Lookback window in hours (1-168, default 24).
+     * Lookback window in hours (1-72, default 6).
      */
     #[Optional]
     public ?int $hours;
@@ -58,7 +58,7 @@ final class RadarRetrieveTrendingTopicsParams implements BaseModel
     public ?int $limit;
 
     /**
-     * Region filter (us, global, etc.).
+     * Region filter. Use `global` or a region code such as `US`, `GB`, `TR`, or `ES`.
      */
     #[Optional]
     public ?string $region;
@@ -129,7 +129,7 @@ final class RadarRetrieveTrendingTopicsParams implements BaseModel
     }
 
     /**
-     * Lookback window in hours (1-168, default 24).
+     * Lookback window in hours (1-72, default 6).
      */
     public function withHours(int $hours): self
     {
@@ -151,7 +151,7 @@ final class RadarRetrieveTrendingTopicsParams implements BaseModel
     }
 
     /**
-     * Region filter (us, global, etc.).
+     * Region filter. Use `global` or a region code such as `US`, `GB`, `TR`, or `ES`.
      */
     public function withRegion(string $region): self
     {

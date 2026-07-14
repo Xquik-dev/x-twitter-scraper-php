@@ -34,7 +34,9 @@ final class ListsRawService implements ListsRawContract
      * List followers of an X List
      *
      * @param string $id List ID
-     * @param array{cursor?: string}|ListRetrieveFollowersParams $params
+     * @param array{
+     *   cursor?: string, pageSize?: int
+     * }|ListRetrieveFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedUsers>
@@ -67,7 +69,7 @@ final class ListsRawService implements ListsRawContract
      * List members of an X List
      *
      * @param string $id List ID for member lookup
-     * @param array{cursor?: string}|ListRetrieveMembersParams $params
+     * @param array{cursor?: string, pageSize?: int}|ListRetrieveMembersParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedUsers>
@@ -101,7 +103,11 @@ final class ListsRawService implements ListsRawContract
      *
      * @param string $id List ID for tweet lookup
      * @param array{
-     *   cursor?: string, includeReplies?: bool, sinceTime?: string, untilTime?: string
+     *   cursor?: string,
+     *   includeReplies?: bool,
+     *   pageSize?: int,
+     *   sinceTime?: string,
+     *   untilTime?: string,
      * }|ListRetrieveTweetsParams $params
      * @param RequestOpts|null $requestOptions
      *

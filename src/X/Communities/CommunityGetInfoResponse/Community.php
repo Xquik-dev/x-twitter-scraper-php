@@ -8,12 +8,14 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\Creator;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\PrimaryTopic;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\Rule;
 
 /**
  * Community info object.
  *
+ * @phpstan-import-type CreatorShape from \XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\Creator
  * @phpstan-import-type PrimaryTopicShape from \XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\PrimaryTopic
  * @phpstan-import-type RuleShape from \XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\Rule
  *
@@ -21,12 +23,17 @@ use XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\Rule;
  *   id: string,
  *   bannerURL?: string|null,
  *   createdAt?: string|null,
+ *   creator?: null|Creator|CreatorShape,
  *   description?: string|null,
+ *   invitesPolicy?: string|null,
+ *   isMember?: bool|null,
+ *   isNsfw?: bool|null,
  *   joinPolicy?: string|null,
  *   memberCount?: int|null,
  *   moderatorCount?: int|null,
  *   name?: string|null,
  *   primaryTopic?: null|PrimaryTopic|PrimaryTopicShape,
+ *   role?: string|null,
  *   rules?: list<Rule|RuleShape>|null,
  * }
  */
@@ -53,11 +60,32 @@ final class Community implements BaseModel
     #[Optional('created_at')]
     public ?string $createdAt;
 
+    #[Optional]
+    public ?Creator $creator;
+
     /**
      * About text for the community.
      */
     #[Optional]
     public ?string $description;
+
+    /**
+     * Invitation policy.
+     */
+    #[Optional('invites_policy')]
+    public ?string $invitesPolicy;
+
+    /**
+     * Whether the authenticated viewer is a member.
+     */
+    #[Optional('is_member')]
+    public ?bool $isMember;
+
+    /**
+     * Whether the community is marked sensitive.
+     */
+    #[Optional('is_nsfw')]
+    public ?bool $isNsfw;
 
     /**
      * Join policy (open or restricted).
@@ -88,6 +116,12 @@ final class Community implements BaseModel
      */
     #[Optional('primary_topic')]
     public ?PrimaryTopic $primaryTopic;
+
+    /**
+     * Authenticated viewer's community role.
+     */
+    #[Optional]
+    public ?string $role;
 
     /**
      * Community rules.
@@ -121,6 +155,7 @@ final class Community implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param Creator|CreatorShape|null $creator
      * @param PrimaryTopic|PrimaryTopicShape|null $primaryTopic
      * @param list<Rule|RuleShape>|null $rules
      */
@@ -128,12 +163,17 @@ final class Community implements BaseModel
         string $id,
         ?string $bannerURL = null,
         ?string $createdAt = null,
+        Creator|array|null $creator = null,
         ?string $description = null,
+        ?string $invitesPolicy = null,
+        ?bool $isMember = null,
+        ?bool $isNsfw = null,
         ?string $joinPolicy = null,
         ?int $memberCount = null,
         ?int $moderatorCount = null,
         ?string $name = null,
         PrimaryTopic|array|null $primaryTopic = null,
+        ?string $role = null,
         ?array $rules = null,
     ): self {
         $self = new self;
@@ -142,12 +182,17 @@ final class Community implements BaseModel
 
         null !== $bannerURL && $self['bannerURL'] = $bannerURL;
         null !== $createdAt && $self['createdAt'] = $createdAt;
+        null !== $creator && $self['creator'] = $creator;
         null !== $description && $self['description'] = $description;
+        null !== $invitesPolicy && $self['invitesPolicy'] = $invitesPolicy;
+        null !== $isMember && $self['isMember'] = $isMember;
+        null !== $isNsfw && $self['isNsfw'] = $isNsfw;
         null !== $joinPolicy && $self['joinPolicy'] = $joinPolicy;
         null !== $memberCount && $self['memberCount'] = $memberCount;
         null !== $moderatorCount && $self['moderatorCount'] = $moderatorCount;
         null !== $name && $self['name'] = $name;
         null !== $primaryTopic && $self['primaryTopic'] = $primaryTopic;
+        null !== $role && $self['role'] = $role;
         null !== $rules && $self['rules'] = $rules;
 
         return $self;
@@ -187,12 +232,56 @@ final class Community implements BaseModel
     }
 
     /**
+     * @param Creator|CreatorShape $creator
+     */
+    public function withCreator(Creator|array $creator): self
+    {
+        $self = clone $this;
+        $self['creator'] = $creator;
+
+        return $self;
+    }
+
+    /**
      * About text for the community.
      */
     public function withDescription(string $description): self
     {
         $self = clone $this;
         $self['description'] = $description;
+
+        return $self;
+    }
+
+    /**
+     * Invitation policy.
+     */
+    public function withInvitesPolicy(string $invitesPolicy): self
+    {
+        $self = clone $this;
+        $self['invitesPolicy'] = $invitesPolicy;
+
+        return $self;
+    }
+
+    /**
+     * Whether the authenticated viewer is a member.
+     */
+    public function withIsMember(bool $isMember): self
+    {
+        $self = clone $this;
+        $self['isMember'] = $isMember;
+
+        return $self;
+    }
+
+    /**
+     * Whether the community is marked sensitive.
+     */
+    public function withIsNsfw(bool $isNsfw): self
+    {
+        $self = clone $this;
+        $self['isNsfw'] = $isNsfw;
 
         return $self;
     }
@@ -250,6 +339,17 @@ final class Community implements BaseModel
     {
         $self = clone $this;
         $self['primaryTopic'] = $primaryTopic;
+
+        return $self;
+    }
+
+    /**
+     * Authenticated viewer's community role.
+     */
+    public function withRole(string $role): self
+    {
+        $self = clone $this;
+        $self['role'] = $role;
 
         return $self;
     }

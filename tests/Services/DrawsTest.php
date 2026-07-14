@@ -25,7 +25,11 @@ final class DrawsTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
+        $client = new Client(
+            apiKey: 'My API Key',
+            bearerToken: 'My Bearer Token',
+            baseUrl: $testUrl,
+        );
 
         $this->client = $client;
     }
@@ -37,7 +41,9 @@ final class DrawsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->draws->retrieve('id');
+        $result = $this->client->draws->retrieve(
+            'f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(DrawGetResponse::class, $result);
@@ -63,7 +69,27 @@ final class DrawsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->draws->export('id');
+        $result = $this->client->draws->export(
+            'f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345',
+            format: 'csv'
+        );
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertIsString($result);
+    }
+
+    #[Test]
+    public function testExportWithOptionalParams(): void
+    {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
+        $result = $this->client->draws->export(
+            'f4bd00a2-7b4e-4e59-8e1b-72e2c9f12345',
+            format: 'csv',
+            type: 'winners'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertIsString($result);

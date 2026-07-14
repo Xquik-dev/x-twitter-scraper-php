@@ -9,14 +9,19 @@ use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\X\Communities\CommunityRetrieveSearchParams\QueryType;
 
 /**
- * Search for communities by keyword.
+ * Returns tweets, not community records. Requires a Community ID.
  *
  * @see XTwitterScraper\Services\X\CommunitiesService::retrieveSearch()
  *
  * @phpstan-type CommunityRetrieveSearchParamsShape = array{
- *   q: string, cursor?: string|null, queryType?: string|null
+ *   communityID: string,
+ *   q: string,
+ *   cursor?: string|null,
+ *   pageSize?: int|null,
+ *   queryType?: null|QueryType|value-of<QueryType>,
  * }
  */
 final class CommunityRetrieveSearchParams implements BaseModel
@@ -24,6 +29,12 @@ final class CommunityRetrieveSearchParams implements BaseModel
     /** @use SdkModel<CommunityRetrieveSearchParamsShape> */
     use SdkModel;
     use SdkParams;
+
+    /**
+     * Numeric ID of the community whose posts to search.
+     */
+    #[Required]
+    public string $communityID;
 
     /**
      * Search query.
@@ -38,9 +49,17 @@ final class CommunityRetrieveSearchParams implements BaseModel
     public ?string $cursor;
 
     /**
-     * Sort order (Latest or Top).
+     * Maximum items requested from this page (1-100, default 20). The response can contain fewer items because the source returned fewer, filters removed items, or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is empty. The deprecated limit and count aliases remain accepted.
      */
     #[Optional]
+    public ?int $pageSize;
+
+    /**
+     * Sort order (Latest or Top).
+     *
+     * @var value-of<QueryType>|null $queryType
+     */
+    #[Optional(enum: QueryType::class)]
     public ?string $queryType;
 
     /**
@@ -48,13 +67,13 @@ final class CommunityRetrieveSearchParams implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * CommunityRetrieveSearchParams::with(q: ...)
+     * CommunityRetrieveSearchParams::with(communityID: ..., q: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new CommunityRetrieveSearchParams)->withQ(...)
+     * (new CommunityRetrieveSearchParams)->withCommunityID(...)->withQ(...)
      * ```
      */
     public function __construct()
@@ -66,18 +85,35 @@ final class CommunityRetrieveSearchParams implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param QueryType|value-of<QueryType>|null $queryType
      */
     public static function with(
+        string $communityID,
         string $q,
         ?string $cursor = null,
-        ?string $queryType = null
+        ?int $pageSize = null,
+        QueryType|string|null $queryType = null,
     ): self {
         $self = new self;
 
+        $self['communityID'] = $communityID;
         $self['q'] = $q;
 
         null !== $cursor && $self['cursor'] = $cursor;
+        null !== $pageSize && $self['pageSize'] = $pageSize;
         null !== $queryType && $self['queryType'] = $queryType;
+
+        return $self;
+    }
+
+    /**
+     * Numeric ID of the community whose posts to search.
+     */
+    public function withCommunityID(string $communityID): self
+    {
+        $self = clone $this;
+        $self['communityID'] = $communityID;
 
         return $self;
     }
@@ -105,9 +141,22 @@ final class CommunityRetrieveSearchParams implements BaseModel
     }
 
     /**
-     * Sort order (Latest or Top).
+     * Maximum items requested from this page (1-100, default 20). The response can contain fewer items because the source returned fewer, filters removed items, or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is empty. The deprecated limit and count aliases remain accepted.
      */
-    public function withQueryType(string $queryType): self
+    public function withPageSize(int $pageSize): self
+    {
+        $self = clone $this;
+        $self['pageSize'] = $pageSize;
+
+        return $self;
+    }
+
+    /**
+     * Sort order (Latest or Top).
+     *
+     * @param QueryType|value-of<QueryType> $queryType
+     */
+    public function withQueryType(QueryType|string $queryType): self
     {
         $self = clone $this;
         $self['queryType'] = $queryType;

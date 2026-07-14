@@ -35,7 +35,7 @@ interface MonitorsContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -48,7 +48,7 @@ interface MonitorsContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param list<EventType|value-of<EventType>> $eventTypes array of event types to subscribe to
      * @param RequestOpts|null $requestOptions
      *
@@ -75,7 +75,7 @@ interface MonitorsContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

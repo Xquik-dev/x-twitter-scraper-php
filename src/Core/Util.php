@@ -25,6 +25,8 @@ final class Util
 
     public const JSONL_CONTENT_TYPE = '/^application\/(:?x-(?:n|l)djson)|(:?(?:x-)?jsonl)/';
 
+    public const STREAMING_CONTENT_TYPE = ['/^text\/event-stream/', self::JSONL_CONTENT_TYPE];
+
     public static function getenv(string $key): ?string
     {
         if (array_key_exists($key, array: $_ENV)) {
@@ -48,8 +50,12 @@ final class Util
     public static function get_object_vars(object $object): array
     {
         $properties = [];
-        foreach (get_object_vars($object) as $name => $value) {
-            $properties[(string) $name] = $value;
+        foreach (get_object_vars($object) as $key => $value) {
+            if (!is_string($key)) {
+                throw new \LogicException('Object property names must be strings');
+            }
+
+            $properties[$key] = $value;
         }
 
         return $properties;
@@ -222,6 +228,16 @@ final class Util
         return $base->withQuery($qs);
     }
 
+    public static function isStreamingRequest(RequestInterface $request): bool
+    {
+        $accept = $request->getHeaderLine('Accept');
+
+        return !empty(array_filter(
+            self::STREAMING_CONTENT_TYPE,
+            static fn (string $pattern) => (bool) preg_match($pattern, subject: $accept),
+        ));
+    }
+
     /**
      * @param array<string,string|int|list<string|int>|null> $headers
      */
@@ -271,6 +287,7 @@ final class Util
         mixed $body
     ): RequestInterface {
         if ($body instanceof StreamInterface) {
+            /** @var RequestInterface */
             return $req->withBody($body);
         }
 
@@ -280,6 +297,7 @@ final class Util
                 $encoded = json_encode($body, flags: self::JSON_ENCODE_FLAGS);
                 $stream = $factory->createStream($encoded);
 
+                /** @var RequestInterface */
                 return $req->withBody($stream);
             }
         }
@@ -289,12 +307,14 @@ final class Util
             $encoded = implode('', iterator_to_array($gen, preserve_keys: false));
             $stream = $factory->createStream($encoded);
 
+            /** @var RequestInterface */
             return $req->withHeader('Content-Type', "{$contentType}; boundary={$boundary}")->withBody($stream);
         }
 
         if (is_resource($body)) {
             $stream = $factory->createStreamFromResource($body);
 
+            /** @var RequestInterface */
             return $req->withBody($stream);
         }
 

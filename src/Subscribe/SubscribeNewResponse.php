@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Subscribe;
 
-use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
@@ -12,7 +11,7 @@ use XTwitterScraper\Subscribe\SubscribeNewResponse\Status;
 
 /**
  * @phpstan-type SubscribeNewResponseShape = array{
- *   url: string, message?: string|null, status?: null|Status|value-of<Status>
+ *   message: string, status: Status|value-of<Status>, url: string
  * }
  */
 final class SubscribeNewResponse implements BaseModel
@@ -21,27 +20,27 @@ final class SubscribeNewResponse implements BaseModel
     use SdkModel;
 
     #[Required]
+    public string $message;
+
+    /** @var value-of<Status> $status */
+    #[Required(enum: Status::class)]
+    public string $status;
+
+    #[Required]
     public string $url;
-
-    #[Optional]
-    public ?string $message;
-
-    /** @var value-of<Status>|null $status */
-    #[Optional(enum: Status::class)]
-    public ?string $status;
 
     /**
      * `new SubscribeNewResponse()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * SubscribeNewResponse::with(url: ...)
+     * SubscribeNewResponse::with(message: ..., status: ..., url: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new SubscribeNewResponse)->withURL(...)
+     * (new SubscribeNewResponse)->withMessage(...)->withStatus(...)->withURL(...)
      * ```
      */
     public function __construct()
@@ -54,26 +53,17 @@ final class SubscribeNewResponse implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param Status|value-of<Status>|null $status
+     * @param Status|value-of<Status> $status
      */
     public static function with(
-        string $url,
-        ?string $message = null,
-        Status|string|null $status = null
+        string $message,
+        Status|string $status,
+        string $url
     ): self {
         $self = new self;
 
-        $self['url'] = $url;
-
-        null !== $message && $self['message'] = $message;
-        null !== $status && $self['status'] = $status;
-
-        return $self;
-    }
-
-    public function withURL(string $url): self
-    {
-        $self = clone $this;
+        $self['message'] = $message;
+        $self['status'] = $status;
         $self['url'] = $url;
 
         return $self;
@@ -94,6 +84,14 @@ final class SubscribeNewResponse implements BaseModel
     {
         $self = clone $this;
         $self['status'] = $status;
+
+        return $self;
+    }
+
+    public function withURL(string $url): self
+    {
+        $self = clone $this;
+        $self['url'] = $url;
 
         return $self;
     }

@@ -14,7 +14,9 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *
  * @see XTwitterScraper\Services\X\CommunitiesService::retrieveMembers()
  *
- * @phpstan-type CommunityRetrieveMembersParamsShape = array{cursor?: string|null}
+ * @phpstan-type CommunityRetrieveMembersParamsShape = array{
+ *   cursor?: string|null, pageSize?: int|null
+ * }
  */
 final class CommunityRetrieveMembersParams implements BaseModel
 {
@@ -28,6 +30,12 @@ final class CommunityRetrieveMembersParams implements BaseModel
     #[Optional]
     public ?string $cursor;
 
+    /**
+     * Items per page (20-200, default 20). This is an upper bound for paid authenticated calls: remaining credits can reduce the returned page size, and zero affordable results returns 402 insufficient_credits.
+     */
+    #[Optional]
+    public ?int $pageSize;
+
     public function __construct()
     {
         $this->initialize();
@@ -38,11 +46,14 @@ final class CommunityRetrieveMembersParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(?string $cursor = null): self
-    {
+    public static function with(
+        ?string $cursor = null,
+        ?int $pageSize = null
+    ): self {
         $self = new self;
 
         null !== $cursor && $self['cursor'] = $cursor;
+        null !== $pageSize && $self['pageSize'] = $pageSize;
 
         return $self;
     }
@@ -54,6 +65,17 @@ final class CommunityRetrieveMembersParams implements BaseModel
     {
         $self = clone $this;
         $self['cursor'] = $cursor;
+
+        return $self;
+    }
+
+    /**
+     * Items per page (20-200, default 20). This is an upper bound for paid authenticated calls: remaining credits can reduce the returned page size, and zero affordable results returns 402 insufficient_credits.
+     */
+    public function withPageSize(int $pageSize): self
+    {
+        $self = clone $this;
+        $self['pageSize'] = $pageSize;
 
         return $self;
     }

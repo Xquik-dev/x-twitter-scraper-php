@@ -16,6 +16,7 @@ use XTwitterScraper\Webhooks\WebhookDeactivateResponse;
 use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse;
 use XTwitterScraper\Webhooks\WebhookListResponse;
 use XTwitterScraper\Webhooks\WebhookNewResponse;
+use XTwitterScraper\Webhooks\WebhookResumeResponse;
 use XTwitterScraper\Webhooks\WebhookTestResponse;
 use XTwitterScraper\Webhooks\WebhookUpdateParams;
 
@@ -70,7 +71,7 @@ final class WebhooksRawService implements WebhooksRawContract
      *
      * Update webhook
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param array{
      *   eventTypes?: list<EventType|value-of<EventType>>,
      *   isActive?: bool,
@@ -130,7 +131,7 @@ final class WebhooksRawService implements WebhooksRawContract
      *
      * Deactivate webhook
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<WebhookDeactivateResponse>
@@ -155,7 +156,7 @@ final class WebhooksRawService implements WebhooksRawContract
      *
      * List webhook deliveries
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<WebhookListDeliveriesResponse>
@@ -178,9 +179,34 @@ final class WebhooksRawService implements WebhooksRawContract
     /**
      * @api
      *
+     * Test and resume webhook endpoint
+     *
+     * @param string $id resource ID returned by the matching create or list endpoint
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<WebhookResumeResponse>
+     *
+     * @throws APIException
+     */
+    public function resume(
+        string $id,
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse {
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'post',
+            path: ['webhooks/%1$s/resume', $id],
+            options: $requestOptions,
+            convert: WebhookResumeResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
      * Test webhook endpoint
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<WebhookTestResponse>

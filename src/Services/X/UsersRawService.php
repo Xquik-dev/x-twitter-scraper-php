@@ -7,25 +7,32 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\UsersRawContract;
 use XTwitterScraper\UserProfile;
+use XTwitterScraper\X\Users\UserGetBatchResponse;
+use XTwitterScraper\X\Users\UserRemoveFollowerParams;
+use XTwitterScraper\X\Users\UserRemoveFollowerResponse;
 use XTwitterScraper\X\Users\UserRetrieveBatchParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersYouKnowParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowingParams;
 use XTwitterScraper\X\Users\UserRetrieveLikesParams;
+use XTwitterScraper\X\Users\UserRetrieveLikesParams\MediaType;
+use XTwitterScraper\X\Users\UserRetrieveLikesParams\Quotes;
+use XTwitterScraper\X\Users\UserRetrieveLikesParams\Replies;
+use XTwitterScraper\X\Users\UserRetrieveLikesParams\Retweets;
 use XTwitterScraper\X\Users\UserRetrieveMediaParams;
 use XTwitterScraper\X\Users\UserRetrieveMentionsParams;
+use XTwitterScraper\X\Users\UserRetrieveRepliesParams;
 use XTwitterScraper\X\Users\UserRetrieveSearchParams;
 use XTwitterScraper\X\Users\UserRetrieveTweetsParams;
 use XTwitterScraper\X\Users\UserRetrieveVerifiedFollowersParams;
 
 /**
- * Look up, search, and explore user profiles and relationships.
- *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
 final class UsersRawService implements UsersRawContract
@@ -64,12 +71,45 @@ final class UsersRawService implements UsersRawContract
     /**
      * @api
      *
+     * Remove follower
+     *
+     * @param string $id User ID to remove from your followers
+     * @param array{account: string}|UserRemoveFollowerParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<UserRemoveFollowerResponse>
+     *
+     * @throws APIException
+     */
+    public function removeFollower(
+        string $id,
+        array|UserRemoveFollowerParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = UserRemoveFollowerParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'post',
+            path: ['x/users/%1$s/remove-follower', $id],
+            body: (object) $parsed,
+            options: $options,
+            convert: UserRemoveFollowerResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
      * Look up multiple users by IDs in one call
      *
      * @param array{ids: string}|UserRetrieveBatchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedUsers>
+     * @return BaseResponse<UserGetBatchResponse>
      *
      * @throws APIException
      */
@@ -88,7 +128,7 @@ final class UsersRawService implements UsersRawContract
             path: 'x/users/batch',
             query: $parsed,
             options: $options,
-            convert: PaginatedUsers::class,
+            convert: UserGetBatchResponse::class,
         );
     }
 
@@ -99,7 +139,7 @@ final class UsersRawService implements UsersRawContract
      *
      * @param string $id User ID or username
      * @param array{
-     *   cursor?: string, pageSize?: int
+     *   after?: string, cursor?: string, limit?: int, pageSize?: int
      * }|UserRetrieveFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -133,7 +173,9 @@ final class UsersRawService implements UsersRawContract
      * List mutual followers between you and a user
      *
      * @param string $id User ID for followers-you-know lookup
-     * @param array{cursor?: string}|UserRetrieveFollowersYouKnowParams $params
+     * @param array{
+     *   cursor?: string, pageSize?: int
+     * }|UserRetrieveFollowersYouKnowParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedUsers>
@@ -167,7 +209,7 @@ final class UsersRawService implements UsersRawContract
      *
      * @param string $id User ID or username for following lookup
      * @param array{
-     *   cursor?: string, pageSize?: int
+     *   after?: string, cursor?: string, limit?: int, pageSize?: int
      * }|UserRetrieveFollowingParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -200,8 +242,36 @@ final class UsersRawService implements UsersRawContract
      *
      * List tweets liked by a user
      *
-     * @param string $id User ID
-     * @param array{cursor?: string}|UserRetrieveLikesParams $params
+     * @param string $id User ID or username
+     * @param array{
+     *   anyWords?: string,
+     *   cashtags?: string,
+     *   conversationID?: string,
+     *   cursor?: string,
+     *   exactPhrase?: string,
+     *   excludeWords?: string,
+     *   fromUser?: string,
+     *   hashtags?: string,
+     *   inReplyToTweetID?: string,
+     *   language?: string,
+     *   mediaType?: MediaType|value-of<MediaType>,
+     *   mentioning?: string,
+     *   minFaves?: int,
+     *   minQuotes?: int,
+     *   minReplies?: int,
+     *   minRetweets?: int,
+     *   pageSize?: int,
+     *   quotes?: Quotes|value-of<Quotes>,
+     *   quotesOfTweetID?: string,
+     *   replies?: Replies|value-of<Replies>,
+     *   retweets?: Retweets|value-of<Retweets>,
+     *   retweetsOfTweetID?: string,
+     *   sinceDate?: string,
+     *   toUser?: string,
+     *   untilDate?: string,
+     *   url?: string,
+     *   verifiedOnly?: bool,
+     * }|UserRetrieveLikesParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedTweets>
@@ -222,7 +292,15 @@ final class UsersRawService implements UsersRawContract
         return $this->client->request(
             method: 'get',
             path: ['x/users/%1$s/likes', $id],
-            query: $parsed,
+            query: Util::array_transform_keys(
+                $parsed,
+                [
+                    'conversationID' => 'conversationId',
+                    'inReplyToTweetID' => 'inReplyToTweetId',
+                    'quotesOfTweetID' => 'quotesOfTweetId',
+                    'retweetsOfTweetID' => 'retweetsOfTweetId',
+                ],
+            ),
             options: $options,
             convert: PaginatedTweets::class,
         );
@@ -233,8 +311,36 @@ final class UsersRawService implements UsersRawContract
      *
      * List media tweets posted by a user
      *
-     * @param string $id User ID for media lookup
-     * @param array{cursor?: string}|UserRetrieveMediaParams $params
+     * @param string $id User ID or username for media lookup
+     * @param array{
+     *   anyWords?: string,
+     *   cashtags?: string,
+     *   conversationID?: string,
+     *   cursor?: string,
+     *   exactPhrase?: string,
+     *   excludeWords?: string,
+     *   fromUser?: string,
+     *   hashtags?: string,
+     *   inReplyToTweetID?: string,
+     *   language?: string,
+     *   mediaType?: UserRetrieveMediaParams\MediaType|value-of<UserRetrieveMediaParams\MediaType>,
+     *   mentioning?: string,
+     *   minFaves?: int,
+     *   minQuotes?: int,
+     *   minReplies?: int,
+     *   minRetweets?: int,
+     *   pageSize?: int,
+     *   quotes?: UserRetrieveMediaParams\Quotes|value-of<UserRetrieveMediaParams\Quotes>,
+     *   quotesOfTweetID?: string,
+     *   replies?: UserRetrieveMediaParams\Replies|value-of<UserRetrieveMediaParams\Replies>,
+     *   retweets?: UserRetrieveMediaParams\Retweets|value-of<UserRetrieveMediaParams\Retweets>,
+     *   retweetsOfTweetID?: string,
+     *   sinceDate?: string,
+     *   toUser?: string,
+     *   untilDate?: string,
+     *   url?: string,
+     *   verifiedOnly?: bool,
+     * }|UserRetrieveMediaParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedTweets>
@@ -255,7 +361,15 @@ final class UsersRawService implements UsersRawContract
         return $this->client->request(
             method: 'get',
             path: ['x/users/%1$s/media', $id],
-            query: $parsed,
+            query: Util::array_transform_keys(
+                $parsed,
+                [
+                    'conversationID' => 'conversationId',
+                    'inReplyToTweetID' => 'inReplyToTweetId',
+                    'quotesOfTweetID' => 'quotesOfTweetId',
+                    'retweetsOfTweetID' => 'retweetsOfTweetId',
+                ],
+            ),
             options: $options,
             convert: PaginatedTweets::class,
         );
@@ -268,7 +382,35 @@ final class UsersRawService implements UsersRawContract
      *
      * @param string $id User ID or username for mentions lookup
      * @param array{
-     *   cursor?: string, sinceTime?: string, untilTime?: string
+     *   anyWords?: string,
+     *   cashtags?: string,
+     *   conversationID?: string,
+     *   cursor?: string,
+     *   exactPhrase?: string,
+     *   excludeWords?: string,
+     *   fromUser?: string,
+     *   hashtags?: string,
+     *   inReplyToTweetID?: string,
+     *   language?: string,
+     *   mediaType?: UserRetrieveMentionsParams\MediaType|value-of<UserRetrieveMentionsParams\MediaType>,
+     *   mentioning?: string,
+     *   minFaves?: int,
+     *   minQuotes?: int,
+     *   minReplies?: int,
+     *   minRetweets?: int,
+     *   pageSize?: int,
+     *   quotes?: UserRetrieveMentionsParams\Quotes|value-of<UserRetrieveMentionsParams\Quotes>,
+     *   quotesOfTweetID?: string,
+     *   replies?: UserRetrieveMentionsParams\Replies|value-of<UserRetrieveMentionsParams\Replies>,
+     *   retweets?: UserRetrieveMentionsParams\Retweets|value-of<UserRetrieveMentionsParams\Retweets>,
+     *   retweetsOfTweetID?: string,
+     *   sinceDate?: string,
+     *   sinceTime?: string,
+     *   toUser?: string,
+     *   untilDate?: string,
+     *   untilTime?: string,
+     *   url?: string,
+     *   verifiedOnly?: bool,
      * }|UserRetrieveMentionsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -290,7 +432,85 @@ final class UsersRawService implements UsersRawContract
         return $this->client->request(
             method: 'get',
             path: ['x/users/%1$s/mentions', $id],
-            query: $parsed,
+            query: Util::array_transform_keys(
+                $parsed,
+                [
+                    'conversationID' => 'conversationId',
+                    'inReplyToTweetID' => 'inReplyToTweetId',
+                    'quotesOfTweetID' => 'quotesOfTweetId',
+                    'retweetsOfTweetID' => 'retweetsOfTweetId',
+                ],
+            ),
+            options: $options,
+            convert: PaginatedTweets::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns the user's timeline with replies included by default.
+     *
+     * @param string $id X user ID or username
+     * @param array{
+     *   anyWords?: string,
+     *   cashtags?: string,
+     *   conversationID?: string,
+     *   cursor?: string,
+     *   exactPhrase?: string,
+     *   excludeWords?: string,
+     *   fromUser?: string,
+     *   hashtags?: string,
+     *   includeParentTweet?: bool,
+     *   inReplyToTweetID?: string,
+     *   language?: string,
+     *   mediaType?: UserRetrieveRepliesParams\MediaType|value-of<UserRetrieveRepliesParams\MediaType>,
+     *   mentioning?: string,
+     *   minFaves?: int,
+     *   minQuotes?: int,
+     *   minReplies?: int,
+     *   minRetweets?: int,
+     *   pageSize?: int,
+     *   quotes?: UserRetrieveRepliesParams\Quotes|value-of<UserRetrieveRepliesParams\Quotes>,
+     *   quotesOfTweetID?: string,
+     *   replies?: UserRetrieveRepliesParams\Replies|value-of<UserRetrieveRepliesParams\Replies>,
+     *   retweets?: UserRetrieveRepliesParams\Retweets|value-of<UserRetrieveRepliesParams\Retweets>,
+     *   retweetsOfTweetID?: string,
+     *   sinceDate?: string,
+     *   toUser?: string,
+     *   untilDate?: string,
+     *   url?: string,
+     *   verifiedOnly?: bool,
+     * }|UserRetrieveRepliesParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<PaginatedTweets>
+     *
+     * @throws APIException
+     */
+    public function retrieveReplies(
+        string $id,
+        array|UserRetrieveRepliesParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = UserRetrieveRepliesParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: ['x/users/%1$s/replies', $id],
+            query: Util::array_transform_keys(
+                $parsed,
+                [
+                    'conversationID' => 'conversationId',
+                    'inReplyToTweetID' => 'inReplyToTweetId',
+                    'quotesOfTweetID' => 'quotesOfTweetId',
+                    'retweetsOfTweetID' => 'retweetsOfTweetId',
+                ],
+            ),
             options: $options,
             convert: PaginatedTweets::class,
         );
@@ -334,7 +554,35 @@ final class UsersRawService implements UsersRawContract
      *
      * @param string $id X user ID or username
      * @param array{
-     *   cursor?: string, includeParentTweet?: bool, includeReplies?: bool
+     *   anyWords?: string,
+     *   cashtags?: string,
+     *   conversationID?: string,
+     *   cursor?: string,
+     *   exactPhrase?: string,
+     *   excludeWords?: string,
+     *   fromUser?: string,
+     *   hashtags?: string,
+     *   includeParentTweet?: bool,
+     *   includeReplies?: bool,
+     *   inReplyToTweetID?: string,
+     *   language?: string,
+     *   mediaType?: UserRetrieveTweetsParams\MediaType|value-of<UserRetrieveTweetsParams\MediaType>,
+     *   mentioning?: string,
+     *   minFaves?: int,
+     *   minQuotes?: int,
+     *   minReplies?: int,
+     *   minRetweets?: int,
+     *   pageSize?: int,
+     *   quotes?: UserRetrieveTweetsParams\Quotes|value-of<UserRetrieveTweetsParams\Quotes>,
+     *   quotesOfTweetID?: string,
+     *   replies?: UserRetrieveTweetsParams\Replies|value-of<UserRetrieveTweetsParams\Replies>,
+     *   retweets?: UserRetrieveTweetsParams\Retweets|value-of<UserRetrieveTweetsParams\Retweets>,
+     *   retweetsOfTweetID?: string,
+     *   sinceDate?: string,
+     *   toUser?: string,
+     *   untilDate?: string,
+     *   url?: string,
+     *   verifiedOnly?: bool,
      * }|UserRetrieveTweetsParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -356,7 +604,15 @@ final class UsersRawService implements UsersRawContract
         return $this->client->request(
             method: 'get',
             path: ['x/users/%1$s/tweets', $id],
-            query: $parsed,
+            query: Util::array_transform_keys(
+                $parsed,
+                [
+                    'conversationID' => 'conversationId',
+                    'inReplyToTweetID' => 'inReplyToTweetId',
+                    'quotesOfTweetID' => 'quotesOfTweetId',
+                    'retweetsOfTweetID' => 'retweetsOfTweetId',
+                ],
+            ),
             options: $options,
             convert: PaginatedTweets::class,
         );
@@ -368,7 +624,9 @@ final class UsersRawService implements UsersRawContract
      * List verified followers of a user
      *
      * @param string $id User ID or username for verified followers
-     * @param array{cursor?: string}|UserRetrieveVerifiedFollowersParams $params
+     * @param array{
+     *   cursor?: string, pageSize?: int
+     * }|UserRetrieveVerifiedFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedUsers>

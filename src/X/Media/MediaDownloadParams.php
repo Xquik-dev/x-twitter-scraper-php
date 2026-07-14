@@ -15,7 +15,10 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\X\MediaService::download()
  *
  * @phpstan-type MediaDownloadParamsShape = array{
- *   tweetIDs?: list<string>|null, tweetInput?: string|null
+ *   tweetID?: string|null,
+ *   tweetIDs?: list<string>|null,
+ *   tweetInput?: string|null,
+ *   tweetURL?: string|null,
  * }
  */
 final class MediaDownloadParams implements BaseModel
@@ -25,7 +28,13 @@ final class MediaDownloadParams implements BaseModel
     use SdkParams;
 
     /**
-     * Array of tweet URLs or IDs (bulk, max 50).
+     * Numeric tweet ID alias for tweetInput.
+     */
+    #[Optional('tweetId')]
+    public ?string $tweetID;
+
+    /**
+     * Array of tweet URLs or IDs (bulk, max 50 string items).
      *
      * @var list<string>|null $tweetIDs
      */
@@ -37,6 +46,12 @@ final class MediaDownloadParams implements BaseModel
      */
     #[Optional]
     public ?string $tweetInput;
+
+    /**
+     * Tweet URL alias for tweetInput.
+     */
+    #[Optional('tweetUrl')]
+    public ?string $tweetURL;
 
     public function __construct()
     {
@@ -51,19 +66,34 @@ final class MediaDownloadParams implements BaseModel
      * @param list<string>|null $tweetIDs
      */
     public static function with(
+        ?string $tweetID = null,
         ?array $tweetIDs = null,
-        ?string $tweetInput = null
+        ?string $tweetInput = null,
+        ?string $tweetURL = null,
     ): self {
         $self = new self;
 
+        null !== $tweetID && $self['tweetID'] = $tweetID;
         null !== $tweetIDs && $self['tweetIDs'] = $tweetIDs;
         null !== $tweetInput && $self['tweetInput'] = $tweetInput;
+        null !== $tweetURL && $self['tweetURL'] = $tweetURL;
 
         return $self;
     }
 
     /**
-     * Array of tweet URLs or IDs (bulk, max 50).
+     * Numeric tweet ID alias for tweetInput.
+     */
+    public function withTweetID(string $tweetID): self
+    {
+        $self = clone $this;
+        $self['tweetID'] = $tweetID;
+
+        return $self;
+    }
+
+    /**
+     * Array of tweet URLs or IDs (bulk, max 50 string items).
      *
      * @param list<string> $tweetIDs
      */
@@ -82,6 +112,17 @@ final class MediaDownloadParams implements BaseModel
     {
         $self = clone $this;
         $self['tweetInput'] = $tweetInput;
+
+        return $self;
+    }
+
+    /**
+     * Tweet URL alias for tweetInput.
+     */
+    public function withTweetURL(string $tweetURL): self
+    {
+        $self = clone $this;
+        $self['tweetURL'] = $tweetURL;
 
         return $self;
     }

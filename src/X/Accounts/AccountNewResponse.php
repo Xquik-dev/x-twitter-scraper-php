@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\Accounts;
 
-use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\Accounts\AccountNewResponse\Health;
 
 /**
- * Sanitized X account summary returned by connect and reauth. Includes an optional `loginCountry` field surfaced only when the declared proxy region had no Driver capacity and the login fell back to a single US consumer device for this one-time action. Future activity continues to use the selected `proxy_country`; the field is omitted on normal logins.
+ * Sanitized X account summary returned by connect and reauth.
  *
  * @phpstan-type AccountNewResponseShape = array{
  *   id: string,
@@ -20,7 +19,6 @@ use XTwitterScraper\X\Accounts\AccountNewResponse\Health;
  *   status: string,
  *   xUserID: string,
  *   xUsername: string,
- *   loginCountry?: string|null,
  * }
  */
 final class AccountNewResponse implements BaseModel
@@ -46,12 +44,6 @@ final class AccountNewResponse implements BaseModel
 
     #[Required]
     public string $xUsername;
-
-    /**
-     * ISO-3166-1 alpha-2 country code of the Driver consumer device used for this login. Present only when the US fallback was triggered because Driver had no capacity in the declared region. Omitted otherwise.
-     */
-    #[Optional]
-    public ?string $loginCountry;
 
     /**
      * `new AccountNewResponse()` is missing required properties by the API.
@@ -99,7 +91,6 @@ final class AccountNewResponse implements BaseModel
         string $status,
         string $xUserID,
         string $xUsername,
-        ?string $loginCountry = null,
     ): self {
         $self = new self;
 
@@ -109,8 +100,6 @@ final class AccountNewResponse implements BaseModel
         $self['status'] = $status;
         $self['xUserID'] = $xUserID;
         $self['xUsername'] = $xUsername;
-
-        null !== $loginCountry && $self['loginCountry'] = $loginCountry;
 
         return $self;
     }
@@ -162,17 +151,6 @@ final class AccountNewResponse implements BaseModel
     {
         $self = clone $this;
         $self['xUsername'] = $xUsername;
-
-        return $self;
-    }
-
-    /**
-     * ISO-3166-1 alpha-2 country code of the Driver consumer device used for this login. Present only when the US fallback was triggered because Driver had no capacity in the declared region. Omitted otherwise.
-     */
-    public function withLoginCountry(string $loginCountry): self
-    {
-        $self = clone $this;
-        $self['loginCountry'] = $loginCountry;
 
         return $self;
     }

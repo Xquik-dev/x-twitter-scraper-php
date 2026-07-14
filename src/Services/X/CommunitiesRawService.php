@@ -7,6 +7,7 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
@@ -19,6 +20,7 @@ use XTwitterScraper\X\Communities\CommunityNewResponse;
 use XTwitterScraper\X\Communities\CommunityRetrieveMembersParams;
 use XTwitterScraper\X\Communities\CommunityRetrieveModeratorsParams;
 use XTwitterScraper\X\Communities\CommunityRetrieveSearchParams;
+use XTwitterScraper\X\Communities\CommunityRetrieveSearchParams\QueryType;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -69,7 +71,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
      *
      * Delete community
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param array{
      *   account: string, communityName: string
      * }|CommunityDeleteParams $params
@@ -130,7 +132,9 @@ final class CommunitiesRawService implements CommunitiesRawContract
      * List members of a community
      *
      * @param string $id Community ID for member lookup
-     * @param array{cursor?: string}|CommunityRetrieveMembersParams $params
+     * @param array{
+     *   cursor?: string, pageSize?: int
+     * }|CommunityRetrieveMembersParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedUsers>
@@ -193,10 +197,14 @@ final class CommunitiesRawService implements CommunitiesRawContract
     /**
      * @api
      *
-     * Search for communities by keyword
+     * Returns tweets, not community records. Requires a Community ID.
      *
      * @param array{
-     *   q: string, cursor?: string, queryType?: string
+     *   communityID: string,
+     *   q: string,
+     *   cursor?: string,
+     *   pageSize?: int,
+     *   queryType?: QueryType|value-of<QueryType>,
      * }|CommunityRetrieveSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -217,7 +225,10 @@ final class CommunitiesRawService implements CommunitiesRawContract
         return $this->client->request(
             method: 'get',
             path: 'x/communities/search',
-            query: $parsed,
+            query: Util::array_transform_keys(
+                $parsed,
+                ['communityID' => 'communityId']
+            ),
             options: $options,
             convert: PaginatedTweets::class,
         );

@@ -23,7 +23,11 @@ final class TweetsTest extends TestCase
         parent::setUp();
 
         $testUrl = Util::getenv('TEST_API_BASE_URL') ?: 'http://127.0.0.1:4010';
-        $client = new Client(apiKey: 'My API Key', baseUrl: $testUrl);
+        $client = new Client(
+            apiKey: 'My API Key',
+            bearerToken: 'My Bearer Token',
+            baseUrl: $testUrl,
+        );
 
         $this->client = $client;
     }
@@ -35,7 +39,10 @@ final class TweetsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->communities->tweets->list(q: 'q');
+        $result = $this->client->x->communities->tweets->list(
+            communityID: '321669910225',
+            q: 'q'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(PaginatedTweets::class, $result);
@@ -49,9 +56,11 @@ final class TweetsTest extends TestCase
         }
 
         $result = $this->client->x->communities->tweets->list(
+            communityID: '321669910225',
             q: 'q',
             cursor: 'cursor',
-            queryType: 'queryType'
+            pageSize: 1,
+            queryType: 'Latest',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

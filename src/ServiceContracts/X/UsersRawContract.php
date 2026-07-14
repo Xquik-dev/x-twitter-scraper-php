@@ -10,6 +10,9 @@ use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\UserProfile;
+use XTwitterScraper\X\Users\UserGetBatchResponse;
+use XTwitterScraper\X\Users\UserRemoveFollowerParams;
+use XTwitterScraper\X\Users\UserRemoveFollowerResponse;
 use XTwitterScraper\X\Users\UserRetrieveBatchParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersParams;
 use XTwitterScraper\X\Users\UserRetrieveFollowersYouKnowParams;
@@ -17,6 +20,7 @@ use XTwitterScraper\X\Users\UserRetrieveFollowingParams;
 use XTwitterScraper\X\Users\UserRetrieveLikesParams;
 use XTwitterScraper\X\Users\UserRetrieveMediaParams;
 use XTwitterScraper\X\Users\UserRetrieveMentionsParams;
+use XTwitterScraper\X\Users\UserRetrieveRepliesParams;
 use XTwitterScraper\X\Users\UserRetrieveSearchParams;
 use XTwitterScraper\X\Users\UserRetrieveTweetsParams;
 use XTwitterScraper\X\Users\UserRetrieveVerifiedFollowersParams;
@@ -44,10 +48,27 @@ interface UsersRawContract
     /**
      * @api
      *
+     * @param string $id User ID to remove from your followers
+     * @param array<string,mixed>|UserRemoveFollowerParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<UserRemoveFollowerResponse>
+     *
+     * @throws APIException
+     */
+    public function removeFollower(
+        string $id,
+        array|UserRemoveFollowerParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
      * @param array<string,mixed>|UserRetrieveBatchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedUsers>
+     * @return BaseResponse<UserGetBatchResponse>
      *
      * @throws APIException
      */
@@ -110,7 +131,7 @@ interface UsersRawContract
     /**
      * @api
      *
-     * @param string $id User ID
+     * @param string $id User ID or username
      * @param array<string,mixed>|UserRetrieveLikesParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -127,7 +148,7 @@ interface UsersRawContract
     /**
      * @api
      *
-     * @param string $id User ID for media lookup
+     * @param string $id User ID or username for media lookup
      * @param array<string,mixed>|UserRetrieveMediaParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -155,6 +176,23 @@ interface UsersRawContract
     public function retrieveMentions(
         string $id,
         array|UserRetrieveMentionsParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param string $id X user ID or username
+     * @param array<string,mixed>|UserRetrieveRepliesParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<PaginatedTweets>
+     *
+     * @throws APIException
+     */
+    public function retrieveReplies(
+        string $id,
+        array|UserRetrieveRepliesParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 

@@ -41,7 +41,7 @@ interface CommunitiesRawContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param array<string,mixed>|CommunityDeleteParams $params
      * @param RequestOpts|null $requestOptions
      *

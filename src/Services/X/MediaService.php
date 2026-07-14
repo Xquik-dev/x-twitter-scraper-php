@@ -6,7 +6,6 @@ namespace XTwitterScraper\Services\X;
 
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\Core\FileParam;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\MediaContract;
@@ -38,19 +37,28 @@ final class MediaService implements MediaContract
      *
      * Download images and videos from tweets
      *
-     * @param list<string> $tweetIDs Array of tweet URLs or IDs (bulk, max 50)
+     * @param string $tweetID Numeric tweet ID alias for tweetInput
+     * @param list<string> $tweetIDs Array of tweet URLs or IDs (bulk, max 50 string items)
      * @param string $tweetInput Tweet URL or ID (single tweet)
+     * @param string $tweetURL Tweet URL alias for tweetInput
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function download(
+        ?string $tweetID = null,
         ?array $tweetIDs = null,
         ?string $tweetInput = null,
+        ?string $tweetURL = null,
         RequestOptions|array|null $requestOptions = null,
     ): MediaDownloadResponse {
         $params = Util::removeNulls(
-            ['tweetIDs' => $tweetIDs, 'tweetInput' => $tweetInput]
+            [
+                'tweetID' => $tweetID,
+                'tweetIDs' => $tweetIDs,
+                'tweetInput' => $tweetInput,
+                'tweetURL' => $tweetURL,
+            ],
         );
 
         // @phpstan-ignore-next-line argument.type
@@ -64,21 +72,18 @@ final class MediaService implements MediaContract
      *
      * Upload media
      *
-     * @param string $account X account (@username or ID) uploading media
-     * @param string|FileParam $file Media file to upload
+     * @param string $account X account (@username or ID) uploading media from URL
+     * @param string $url HTTPS URL to download and upload as media
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function upload(
         string $account,
-        string|FileParam $file,
-        ?bool $isLongVideo = null,
+        string $url,
         RequestOptions|array|null $requestOptions = null,
     ): MediaUploadResponse {
-        $params = Util::removeNulls(
-            ['account' => $account, 'file' => $file, 'isLongVideo' => $isLongVideo]
-        );
+        $params = Util::removeNulls(['account' => $account, 'url' => $url]);
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->upload(params: $params, requestOptions: $requestOptions);

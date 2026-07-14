@@ -11,6 +11,7 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Communities\CommunityDeleteResponse;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse;
 use XTwitterScraper\X\Communities\CommunityNewResponse;
+use XTwitterScraper\X\Communities\CommunityRetrieveSearchParams\QueryType;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -37,7 +38,7 @@ interface CommunitiesContract
     /**
      * @api
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id resource ID returned by the matching create or list endpoint
      * @param string $account X account (@username or ID) deleting the community
      * @param string $communityName Community name for confirmation
      * @param RequestOpts|null $requestOptions
@@ -69,6 +70,7 @@ interface CommunitiesContract
      *
      * @param string $id Community ID for member lookup
      * @param string $cursor Pagination cursor
+     * @param int $pageSize Items per page (20-200, default 20). This is an upper bound for paid authenticated calls: remaining credits can reduce the returned page size, and zero affordable results returns 402 insufficient_credits.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -76,6 +78,7 @@ interface CommunitiesContract
     public function retrieveMembers(
         string $id,
         ?string $cursor = null,
+        int $pageSize = 20,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers;
 
@@ -97,17 +100,21 @@ interface CommunitiesContract
     /**
      * @api
      *
+     * @param string $communityID Numeric ID of the community whose posts to search
      * @param string $q Search query
      * @param string $cursor Pagination cursor for community search
-     * @param string $queryType Sort order (Latest or Top)
+     * @param int $pageSize Maximum items requested from this page (1-100, default 20). The response can contain fewer items because the source returned fewer, filters removed items, or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is empty. The deprecated limit and count aliases remain accepted.
+     * @param QueryType|value-of<QueryType> $queryType Sort order (Latest or Top)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function retrieveSearch(
+        string $communityID,
         string $q,
         ?string $cursor = null,
-        ?string $queryType = null,
+        int $pageSize = 20,
+        QueryType|string $queryType = 'Latest',
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 }

@@ -34,6 +34,9 @@ final class DrawDetail implements BaseModel
     /** @use SdkModel<DrawDetailShape> */
     use SdkModel;
 
+    /**
+     * Draw public ID.
+     */
     #[Required]
     public string $id;
 
@@ -164,6 +167,9 @@ final class DrawDetail implements BaseModel
         return $self;
     }
 
+    /**
+     * Draw public ID.
+     */
     public function withID(string $id): self
     {
         $self = clone $this;

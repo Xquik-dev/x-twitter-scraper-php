@@ -6,8 +6,10 @@ namespace XTwitterScraper\Services;
 
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\SubscribeContract;
+use XTwitterScraper\Subscribe\SubscribeCreateParams\Tier;
 use XTwitterScraper\Subscribe\SubscribeNewResponse;
 
 /**
@@ -33,17 +35,21 @@ final class SubscribeService implements SubscribeContract
     /**
      * @api
      *
-     * Get checkout or billing URL
+     * Create a subscription checkout or billing-management URL only after the user confirms. The request never completes payment by itself.
      *
+     * @param Tier|value-of<Tier> $tier subscription tier to pre-select
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function create(
+        Tier|string|null $tier = null,
         RequestOptions|array|null $requestOptions = null
     ): SubscribeNewResponse {
+        $params = Util::removeNulls(['tier' => $tier]);
+
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->create(requestOptions: $requestOptions);
+        $response = $this->raw->create(params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

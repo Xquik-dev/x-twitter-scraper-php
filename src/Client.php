@@ -7,15 +7,16 @@ namespace XTwitterScraper;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
 use XTwitterScraper\Core\BaseClient;
+use XTwitterScraper\Core\Implementation\StreamingHttpClient;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Services\AccountService;
-use XTwitterScraper\Services\APIKeysService;
 use XTwitterScraper\Services\ComposeService;
 use XTwitterScraper\Services\CreditsService;
 use XTwitterScraper\Services\DraftsService;
 use XTwitterScraper\Services\DrawsService;
 use XTwitterScraper\Services\EventsService;
 use XTwitterScraper\Services\ExtractionsService;
+use XTwitterScraper\Services\GuestWalletsService;
 use XTwitterScraper\Services\MonitorsService;
 use XTwitterScraper\Services\RadarService;
 use XTwitterScraper\Services\StylesService;
@@ -39,11 +40,6 @@ class Client extends BaseClient
      * @api
      */
     public AccountService $account;
-
-    /**
-     * @api
-     */
-    public APIKeysService $apiKeys;
 
     /**
      * @api
@@ -116,6 +112,11 @@ class Client extends BaseClient
     public CreditsService $credits;
 
     /**
+     * @api
+     */
+    public GuestWalletsService $guestWallets;
+
+    /**
      * @param RequestOpts|null $requestOptions
      */
     public function __construct(
@@ -145,24 +146,41 @@ class Client extends BaseClient
             $requestOptions,
         );
 
+        if (is_null($options->streamingTransporter)) {
+            assert(!is_null($options->transporter));
+            $options->streamingTransporter = new StreamingHttpClient($options->transporter);
+        }
+
+        /** @var array<string, string|null> $headers */
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'User-Agent' => sprintf('x-twitter-scraper/PHP %s', VERSION),
+            'X-Stainless-Lang' => 'php',
+            'X-Stainless-Package-Version' => '0.4.0',
+            'X-Stainless-Arch' => Util::machtype(),
+            'X-Stainless-OS' => Util::ostype(),
+            'X-Stainless-Runtime' => php_sapi_name(),
+            'X-Stainless-Runtime-Version' => phpversion(),
+        ];
+
+        $customHeadersEnv = Util::getenv('X_TWITTER_SCRAPER_CUSTOM_HEADERS');
+        if (null !== $customHeadersEnv) {
+            foreach (explode("\n", $customHeadersEnv) as $line) {
+                $colon = strpos($line, ':');
+                if (false !== $colon) {
+                    $headers[trim(substr($line, 0, $colon))] = trim(substr($line, $colon + 1));
+                }
+            }
+        }
+
         parent::__construct(
-            headers: [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-                'User-Agent' => sprintf('x-twitter-scraper/PHP %s', VERSION),
-                'X-Stainless-Lang' => 'php',
-                'X-Stainless-Package-Version' => '0.0.1',
-                'X-Stainless-Arch' => Util::machtype(),
-                'X-Stainless-OS' => Util::ostype(),
-                'X-Stainless-Runtime' => php_sapi_name(),
-                'X-Stainless-Runtime-Version' => phpversion(),
-            ],
+            headers: $headers,
             baseUrl: $baseUrl,
             options: $options
         );
 
         $this->account = new AccountService($this);
-        $this->apiKeys = new APIKeysService($this);
         $this->subscribe = new SubscribeService($this);
         $this->compose = new ComposeService($this);
         $this->drafts = new DraftsService($this);
@@ -177,18 +195,26 @@ class Client extends BaseClient
         $this->trends = new TrendsService($this);
         $this->support = new SupportService($this);
         $this->credits = new CreditsService($this);
+        $this->guestWallets = new GuestWalletsService($this);
     }
 
-    /** @return array<string,string> */
-    protected function authHeaders(): array
+    /**
+     * @param array{apiKey?: bool, oauthBearer?: bool} $security
+     *
+     * @return array<string,string>
+     */
+    protected function authHeaders(array $security): array
     {
-        return [...$this->apiKeyScheme(), ...$this->oauthBearer()];
+        return [
+            ...($security['apiKey'] ?? false) ? $this->apiKeyScheme() : [],
+            ...($security['oauthBearer'] ?? false) ? $this->oauthBearer() : [],
+        ];
     }
 
     /** @return array<string,string> */
     protected function apiKeyScheme(): array
     {
-        return $this->apiKey ? ['X-Api-Key' => $this->apiKey] : [];
+        return $this->apiKey ? ['x-api-key' => $this->apiKey] : [];
     }
 
     /** @return array<string,string> */
@@ -206,6 +232,7 @@ class Client extends BaseClient
      * @param array<string,mixed> $query
      * @param array<string,string|int|list<string|int>|null> $headers
      * @param RequestOpts|null $opts
+     * @param array{apiKey?: bool, oauthBearer?: bool}|null $security
      *
      * @return array{NormalizedRequest, RequestOptions}
      */
@@ -216,14 +243,21 @@ class Client extends BaseClient
         array $headers,
         mixed $body,
         RequestOptions|array|null $opts,
+        ?array $security = null,
     ): array {
         return parent::buildRequest(
             method: $method,
             path: $path,
             query: $query,
-            headers: [...$this->authHeaders(), ...$headers],
+            headers: [
+                ...$this->authHeaders(
+                    security: ($security ?? ['apiKey' => true, 'oauthBearer' => true])
+                ),
+                ...$headers,
+            ],
             body: $body,
             opts: $opts,
+            security: $security,
         );
     }
 }

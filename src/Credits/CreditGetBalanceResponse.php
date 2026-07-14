@@ -10,10 +10,12 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
  * @phpstan-type CreditGetBalanceResponseShape = array{
+ *   autoTopupAmountDollars: float,
  *   autoTopupEnabled: bool,
- *   balance: int,
- *   lifetimePurchased: int,
- *   lifetimeUsed: int,
+ *   autoTopupThreshold: string,
+ *   balance: string,
+ *   lifetimePurchased: string,
+ *   lifetimeUsed: string,
  * }
  */
 final class CreditGetBalanceResponse implements BaseModel
@@ -21,17 +23,38 @@ final class CreditGetBalanceResponse implements BaseModel
     /** @use SdkModel<CreditGetBalanceResponseShape> */
     use SdkModel;
 
+    /**
+     * Configured dollar amount for each automatic top-up.
+     */
+    #[Required('auto_topup_amount_dollars')]
+    public float $autoTopupAmountDollars;
+
     #[Required('auto_topup_enabled')]
     public bool $autoTopupEnabled;
 
+    /**
+     * Credit balance threshold that triggers automatic top-up when enabled, represented as a bigint string.
+     */
+    #[Required('auto_topup_threshold')]
+    public string $autoTopupThreshold;
+
+    /**
+     * Current credit balance as a bigint string to preserve precision above Number.MAX_SAFE_INTEGER.
+     */
     #[Required]
-    public int $balance;
+    public string $balance;
 
+    /**
+     * Lifetime purchased credits as a bigint string.
+     */
     #[Required('lifetime_purchased')]
-    public int $lifetimePurchased;
+    public string $lifetimePurchased;
 
+    /**
+     * Lifetime consumed credits as a bigint string.
+     */
     #[Required('lifetime_used')]
-    public int $lifetimeUsed;
+    public string $lifetimeUsed;
 
     /**
      * `new CreditGetBalanceResponse()` is missing required properties by the API.
@@ -39,7 +62,12 @@ final class CreditGetBalanceResponse implements BaseModel
      * To enforce required parameters use
      * ```
      * CreditGetBalanceResponse::with(
-     *   autoTopupEnabled: ..., balance: ..., lifetimePurchased: ..., lifetimeUsed: ...
+     *   autoTopupAmountDollars: ...,
+     *   autoTopupEnabled: ...,
+     *   autoTopupThreshold: ...,
+     *   balance: ...,
+     *   lifetimePurchased: ...,
+     *   lifetimeUsed: ...,
      * )
      * ```
      *
@@ -47,7 +75,9 @@ final class CreditGetBalanceResponse implements BaseModel
      *
      * ```
      * (new CreditGetBalanceResponse)
+     *   ->withAutoTopupAmountDollars(...)
      *   ->withAutoTopupEnabled(...)
+     *   ->withAutoTopupThreshold(...)
      *   ->withBalance(...)
      *   ->withLifetimePurchased(...)
      *   ->withLifetimeUsed(...)
@@ -64,17 +94,33 @@ final class CreditGetBalanceResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      */
     public static function with(
+        float $autoTopupAmountDollars,
         bool $autoTopupEnabled,
-        int $balance,
-        int $lifetimePurchased,
-        int $lifetimeUsed,
+        string $autoTopupThreshold,
+        string $balance,
+        string $lifetimePurchased,
+        string $lifetimeUsed,
     ): self {
         $self = new self;
 
+        $self['autoTopupAmountDollars'] = $autoTopupAmountDollars;
         $self['autoTopupEnabled'] = $autoTopupEnabled;
+        $self['autoTopupThreshold'] = $autoTopupThreshold;
         $self['balance'] = $balance;
         $self['lifetimePurchased'] = $lifetimePurchased;
         $self['lifetimeUsed'] = $lifetimeUsed;
+
+        return $self;
+    }
+
+    /**
+     * Configured dollar amount for each automatic top-up.
+     */
+    public function withAutoTopupAmountDollars(
+        float $autoTopupAmountDollars
+    ): self {
+        $self = clone $this;
+        $self['autoTopupAmountDollars'] = $autoTopupAmountDollars;
 
         return $self;
     }
@@ -87,7 +133,21 @@ final class CreditGetBalanceResponse implements BaseModel
         return $self;
     }
 
-    public function withBalance(int $balance): self
+    /**
+     * Credit balance threshold that triggers automatic top-up when enabled, represented as a bigint string.
+     */
+    public function withAutoTopupThreshold(string $autoTopupThreshold): self
+    {
+        $self = clone $this;
+        $self['autoTopupThreshold'] = $autoTopupThreshold;
+
+        return $self;
+    }
+
+    /**
+     * Current credit balance as a bigint string to preserve precision above Number.MAX_SAFE_INTEGER.
+     */
+    public function withBalance(string $balance): self
     {
         $self = clone $this;
         $self['balance'] = $balance;
@@ -95,7 +155,10 @@ final class CreditGetBalanceResponse implements BaseModel
         return $self;
     }
 
-    public function withLifetimePurchased(int $lifetimePurchased): self
+    /**
+     * Lifetime purchased credits as a bigint string.
+     */
+    public function withLifetimePurchased(string $lifetimePurchased): self
     {
         $self = clone $this;
         $self['lifetimePurchased'] = $lifetimePurchased;
@@ -103,7 +166,10 @@ final class CreditGetBalanceResponse implements BaseModel
         return $self;
     }
 
-    public function withLifetimeUsed(int $lifetimeUsed): self
+    /**
+     * Lifetime consumed credits as a bigint string.
+     */
+    public function withLifetimeUsed(string $lifetimeUsed): self
     {
         $self = clone $this;
         $self['lifetimeUsed'] = $lifetimeUsed;

@@ -14,7 +14,9 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *
  * @see XTwitterScraper\Services\X\TweetsService::getThread()
  *
- * @phpstan-type TweetGetThreadParamsShape = array{cursor?: string|null}
+ * @phpstan-type TweetGetThreadParamsShape = array{
+ *   cursor?: string|null, pageSize?: int|null
+ * }
  */
 final class TweetGetThreadParams implements BaseModel
 {
@@ -28,6 +30,12 @@ final class TweetGetThreadParams implements BaseModel
     #[Optional]
     public ?string $cursor;
 
+    /**
+     * Maximum items requested from this page (1-100, default 20). The response can contain fewer items because the source returned fewer, filters removed items, or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is empty. The deprecated limit and count aliases remain accepted.
+     */
+    #[Optional]
+    public ?int $pageSize;
+
     public function __construct()
     {
         $this->initialize();
@@ -38,11 +46,14 @@ final class TweetGetThreadParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(?string $cursor = null): self
-    {
+    public static function with(
+        ?string $cursor = null,
+        ?int $pageSize = null
+    ): self {
         $self = new self;
 
         null !== $cursor && $self['cursor'] = $cursor;
+        null !== $pageSize && $self['pageSize'] = $pageSize;
 
         return $self;
     }
@@ -54,6 +65,17 @@ final class TweetGetThreadParams implements BaseModel
     {
         $self = clone $this;
         $self['cursor'] = $cursor;
+
+        return $self;
+    }
+
+    /**
+     * Maximum items requested from this page (1-100, default 20). The response can contain fewer items because the source returned fewer, filters removed items, or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is empty. The deprecated limit and count aliases remain accepted.
+     */
+    public function withPageSize(int $pageSize): self
+    {
+        $self = clone $this;
+        $self['pageSize'] = $pageSize;
 
         return $self;
     }

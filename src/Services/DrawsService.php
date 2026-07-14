@@ -40,7 +40,7 @@ final class DrawsService implements DrawsContract
      *
      * Get draw details
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id draw public ID returned by create and list draw responses
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -60,18 +60,18 @@ final class DrawsService implements DrawsContract
      *
      * List draws
      *
-     * @param string $after Cursor for keyset pagination
-     * @param int $limit Maximum number of items to return (1-100, default 50)
+     * @param string $cursor Cursor for keyset pagination from prior response next_cursor
+     * @param int $limit Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the returned count may be lower when remaining credits cannot cover the requested page. If zero paid results are affordable, the endpoint returns 402 insufficient_credits.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function list(
-        ?string $after = null,
+        ?string $cursor = null,
         int $limit = 50,
         RequestOptions|array|null $requestOptions = null,
     ): DrawListResponse {
-        $params = Util::removeNulls(['after' => $after, 'limit' => $limit]);
+        $params = Util::removeNulls(['cursor' => $cursor, 'limit' => $limit]);
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->list(params: $params, requestOptions: $requestOptions);
@@ -84,7 +84,7 @@ final class DrawsService implements DrawsContract
      *
      * Export draw data
      *
-     * @param string $id Resource ID (stringified bigint)
+     * @param string $id draw public ID returned by create and list draw responses
      * @param Format|value-of<Format> $format Export output format
      * @param Type|value-of<Type> $type Export winners or all entries
      * @param RequestOpts|null $requestOptions
@@ -93,7 +93,7 @@ final class DrawsService implements DrawsContract
      */
     public function export(
         string $id,
-        Format|string $format = 'csv',
+        Format|string $format,
         Type|string $type = 'winners',
         RequestOptions|array|null $requestOptions = null,
     ): string {
@@ -108,7 +108,7 @@ final class DrawsService implements DrawsContract
     /**
      * @api
      *
-     * Run giveaway draw
+     * Runs a giveaway draw from a source tweet. The draw first checks the minimum credits needed to inspect the source tweet and at least one candidate. Remaining credits cap how many replies and retweeters can be inspected before filters and winner selection run.
      *
      * @param list<string> $requiredHashtags
      * @param list<string> $requiredKeywords

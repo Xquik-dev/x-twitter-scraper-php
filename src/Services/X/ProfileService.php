@@ -6,7 +6,6 @@ namespace XTwitterScraper\Services\X;
 
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\Core\FileParam;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\ProfileContract;
@@ -76,18 +75,18 @@ final class ProfileService implements ProfileContract
      *
      * Update profile avatar
      *
-     * @param string $account X account (@username or ID) for avatar update
-     * @param string|FileParam $file Avatar image (max 716KB)
+     * @param string $account X account (@username or ID) receiving avatar from URL
+     * @param string $url HTTPS URL to the avatar image to download
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function updateAvatar(
         string $account,
-        string|FileParam $file,
+        string $url,
         RequestOptions|array|null $requestOptions = null,
     ): ProfileUpdateAvatarResponse {
-        $params = Util::removeNulls(['account' => $account, 'file' => $file]);
+        $params = Util::removeNulls(['account' => $account, 'url' => $url]);
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->updateAvatar(params: $params, requestOptions: $requestOptions);
@@ -100,18 +99,18 @@ final class ProfileService implements ProfileContract
      *
      * Update profile banner
      *
-     * @param string $account X account (@username or ID) for banner update
-     * @param string|FileParam $file Banner image (max 2MB)
+     * @param string $account X account (@username or ID) receiving banner from URL
+     * @param string $url HTTPS URL to the banner image to download
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function updateBanner(
         string $account,
-        string|FileParam $file,
+        string $url,
         RequestOptions|array|null $requestOptions = null,
     ): ProfileUpdateBannerResponse {
-        $params = Util::removeNulls(['account' => $account, 'file' => $file]);
+        $params = Util::removeNulls(['account' => $account, 'url' => $url]);
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->updateBanner(params: $params, requestOptions: $requestOptions);

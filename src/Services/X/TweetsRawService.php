@@ -7,6 +7,7 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
@@ -16,6 +17,10 @@ use XTwitterScraper\X\Tweets\TweetDeleteParams;
 use XTwitterScraper\X\Tweets\TweetDeleteResponse;
 use XTwitterScraper\X\Tweets\TweetGetFavoritersParams;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams;
+use XTwitterScraper\X\Tweets\TweetGetQuotesParams\MediaType;
+use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Quotes;
+use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Replies;
+use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Retweets;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams;
 use XTwitterScraper\X\Tweets\TweetGetResponse;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersParams;
@@ -47,7 +52,6 @@ final class TweetsRawService implements TweetsRawContract
      *   communityID?: string,
      *   isNoteTweet?: bool,
      *   media?: list<string>,
-     *   mediaIDs?: list<string>,
      *   replyToTweetID?: string,
      *   text?: string,
      * }|TweetCreateParams $params
@@ -81,7 +85,7 @@ final class TweetsRawService implements TweetsRawContract
      *
      * Get tweet with full text, author, metrics and media
      *
-     * @param string $id Tweet ID
+     * @param string $id Numeric tweet ID, 15-20 digits
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<TweetGetResponse>
@@ -171,7 +175,7 @@ final class TweetsRawService implements TweetsRawContract
      * List users who liked a tweet
      *
      * @param string $id Tweet ID to get favoriters
-     * @param array{cursor?: string}|TweetGetFavoritersParams $params
+     * @param array{cursor?: string, pageSize?: int}|TweetGetFavoritersParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedUsers>
@@ -203,9 +207,38 @@ final class TweetsRawService implements TweetsRawContract
      *
      * List quote tweets of a tweet
      *
-     * @param string $id Tweet ID to get quotes
+     * @param string $id Numeric tweet ID to get quotes, 15-20 digits
      * @param array{
-     *   cursor?: string, includeReplies?: bool, sinceTime?: string, untilTime?: string
+     *   anyWords?: string,
+     *   cashtags?: string,
+     *   conversationID?: string,
+     *   cursor?: string,
+     *   exactPhrase?: string,
+     *   excludeWords?: string,
+     *   fromUser?: string,
+     *   hashtags?: string,
+     *   includeReplies?: bool,
+     *   inReplyToTweetID?: string,
+     *   language?: string,
+     *   mediaType?: MediaType|value-of<MediaType>,
+     *   mentioning?: string,
+     *   minFaves?: int,
+     *   minQuotes?: int,
+     *   minReplies?: int,
+     *   minRetweets?: int,
+     *   pageSize?: int,
+     *   quotes?: Quotes|value-of<Quotes>,
+     *   quotesOfTweetID?: string,
+     *   replies?: Replies|value-of<Replies>,
+     *   retweets?: Retweets|value-of<Retweets>,
+     *   retweetsOfTweetID?: string,
+     *   sinceDate?: string,
+     *   sinceTime?: string,
+     *   toUser?: string,
+     *   untilDate?: string,
+     *   untilTime?: string,
+     *   url?: string,
+     *   verifiedOnly?: bool,
      * }|TweetGetQuotesParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -227,7 +260,15 @@ final class TweetsRawService implements TweetsRawContract
         return $this->client->request(
             method: 'get',
             path: ['x/tweets/%1$s/quotes', $id],
-            query: $parsed,
+            query: Util::array_transform_keys(
+                $parsed,
+                [
+                    'conversationID' => 'conversationId',
+                    'inReplyToTweetID' => 'inReplyToTweetId',
+                    'quotesOfTweetID' => 'quotesOfTweetId',
+                    'retweetsOfTweetID' => 'retweetsOfTweetId',
+                ],
+            ),
             options: $options,
             convert: PaginatedTweets::class,
         );
@@ -240,7 +281,35 @@ final class TweetsRawService implements TweetsRawContract
      *
      * @param string $id Tweet ID to get replies
      * @param array{
-     *   cursor?: string, sinceTime?: string, untilTime?: string
+     *   anyWords?: string,
+     *   cashtags?: string,
+     *   conversationID?: string,
+     *   cursor?: string,
+     *   exactPhrase?: string,
+     *   excludeWords?: string,
+     *   fromUser?: string,
+     *   hashtags?: string,
+     *   inReplyToTweetID?: string,
+     *   language?: string,
+     *   mediaType?: TweetGetRepliesParams\MediaType|value-of<TweetGetRepliesParams\MediaType>,
+     *   mentioning?: string,
+     *   minFaves?: int,
+     *   minQuotes?: int,
+     *   minReplies?: int,
+     *   minRetweets?: int,
+     *   pageSize?: int,
+     *   quotes?: TweetGetRepliesParams\Quotes|value-of<TweetGetRepliesParams\Quotes>,
+     *   quotesOfTweetID?: string,
+     *   replies?: TweetGetRepliesParams\Replies|value-of<TweetGetRepliesParams\Replies>,
+     *   retweets?: TweetGetRepliesParams\Retweets|value-of<TweetGetRepliesParams\Retweets>,
+     *   retweetsOfTweetID?: string,
+     *   sinceDate?: string,
+     *   sinceTime?: string,
+     *   toUser?: string,
+     *   untilDate?: string,
+     *   untilTime?: string,
+     *   url?: string,
+     *   verifiedOnly?: bool,
      * }|TweetGetRepliesParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -262,7 +331,15 @@ final class TweetsRawService implements TweetsRawContract
         return $this->client->request(
             method: 'get',
             path: ['x/tweets/%1$s/replies', $id],
-            query: $parsed,
+            query: Util::array_transform_keys(
+                $parsed,
+                [
+                    'conversationID' => 'conversationId',
+                    'inReplyToTweetID' => 'inReplyToTweetId',
+                    'quotesOfTweetID' => 'quotesOfTweetId',
+                    'retweetsOfTweetID' => 'retweetsOfTweetId',
+                ],
+            ),
             options: $options,
             convert: PaginatedTweets::class,
         );
@@ -274,7 +351,7 @@ final class TweetsRawService implements TweetsRawContract
      * List users who retweeted a tweet
      *
      * @param string $id Tweet ID to get retweeters
-     * @param array{cursor?: string}|TweetGetRetweetersParams $params
+     * @param array{cursor?: string, pageSize?: int}|TweetGetRetweetersParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedUsers>
@@ -307,7 +384,7 @@ final class TweetsRawService implements TweetsRawContract
      * Get full conversation thread for a tweet
      *
      * @param string $id Tweet ID to get thread context
-     * @param array{cursor?: string}|TweetGetThreadParams $params
+     * @param array{cursor?: string, pageSize?: int}|TweetGetThreadParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedTweets>
@@ -337,15 +414,46 @@ final class TweetsRawService implements TweetsRawContract
     /**
      * @api
      *
-     * Search tweets with X query operators and pagination
+     * Search tweets by query, Tweet ID, X status URL, or account date window
      *
      * @param array{
      *   q: string,
+     *   advancedQuery?: string,
+     *   anyWords?: string,
+     *   boundingBox?: string,
+     *   cashtags?: string,
+     *   conversationID?: string,
      *   cursor?: string,
+     *   exactPhrase?: string,
+     *   excludeWords?: string,
+     *   fromUser?: string,
+     *   hashtags?: string,
+     *   inReplyToTweetID?: string,
+     *   language?: string,
      *   limit?: int,
+     *   listID?: string,
+     *   mediaType?: TweetSearchParams\MediaType|value-of<TweetSearchParams\MediaType>,
+     *   mentioning?: string,
+     *   minFaves?: int,
+     *   minQuotes?: int,
+     *   minReplies?: int,
+     *   minRetweets?: int,
+     *   place?: string,
+     *   placeCountry?: string,
+     *   pointRadius?: string,
      *   queryType?: QueryType|value-of<QueryType>,
+     *   quotes?: TweetSearchParams\Quotes|value-of<TweetSearchParams\Quotes>,
+     *   quotesOfTweetID?: string,
+     *   replies?: TweetSearchParams\Replies|value-of<TweetSearchParams\Replies>,
+     *   retweets?: TweetSearchParams\Retweets|value-of<TweetSearchParams\Retweets>,
+     *   retweetsOfTweetID?: string,
+     *   sinceDate?: string,
      *   sinceTime?: string,
+     *   toUser?: string,
+     *   untilDate?: string,
      *   untilTime?: string,
+     *   url?: string,
+     *   verifiedOnly?: bool,
      * }|TweetSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -366,7 +474,16 @@ final class TweetsRawService implements TweetsRawContract
         return $this->client->request(
             method: 'get',
             path: 'x/tweets/search',
-            query: $parsed,
+            query: Util::array_transform_keys(
+                $parsed,
+                [
+                    'conversationID' => 'conversationId',
+                    'inReplyToTweetID' => 'inReplyToTweetId',
+                    'listID' => 'listId',
+                    'quotesOfTweetID' => 'quotesOfTweetId',
+                    'retweetsOfTweetID' => 'retweetsOfTweetId',
+                ],
+            ),
             options: $options,
             convert: PaginatedTweets::class,
         );

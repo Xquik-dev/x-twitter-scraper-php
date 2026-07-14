@@ -7,7 +7,6 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
-use XTwitterScraper\Core\FileParam;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\ProfileRawContract;
 use XTwitterScraper\X\Profile\ProfileUpdateAvatarParams;
@@ -72,9 +71,7 @@ final class ProfileRawService implements ProfileRawContract
      *
      * Update profile avatar
      *
-     * @param array{
-     *   account: string, file: string|FileParam
-     * }|ProfileUpdateAvatarParams $params
+     * @param array{account: string, url: string}|ProfileUpdateAvatarParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<ProfileUpdateAvatarResponse>
@@ -106,9 +103,7 @@ final class ProfileRawService implements ProfileRawContract
      *
      * Update profile banner
      *
-     * @param array{
-     *   account: string, file: string|FileParam
-     * }|ProfileUpdateBannerParams $params
+     * @param array{account: string, url: string}|ProfileUpdateBannerParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<ProfileUpdateBannerResponse>

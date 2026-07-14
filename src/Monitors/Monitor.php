@@ -17,6 +17,7 @@ use XTwitterScraper\EventType;
  *   createdAt: \DateTimeInterface,
  *   eventTypes: list<EventType|value-of<EventType>>,
  *   isActive: bool,
+ *   nextBillingAt: \DateTimeInterface,
  *   username: string,
  *   xUserID: string,
  * }
@@ -43,6 +44,12 @@ final class Monitor implements BaseModel
     #[Required]
     public bool $isActive;
 
+    /**
+     * Next hourly credit charge time for this account monitor.
+     */
+    #[Required]
+    public \DateTimeInterface $nextBillingAt;
+
     #[Required]
     public string $username;
 
@@ -59,6 +66,7 @@ final class Monitor implements BaseModel
      *   createdAt: ...,
      *   eventTypes: ...,
      *   isActive: ...,
+     *   nextBillingAt: ...,
      *   username: ...,
      *   xUserID: ...,
      * )
@@ -72,6 +80,7 @@ final class Monitor implements BaseModel
      *   ->withCreatedAt(...)
      *   ->withEventTypes(...)
      *   ->withIsActive(...)
+     *   ->withNextBillingAt(...)
      *   ->withUsername(...)
      *   ->withXUserID(...)
      * ```
@@ -93,6 +102,7 @@ final class Monitor implements BaseModel
         \DateTimeInterface $createdAt,
         array $eventTypes,
         bool $isActive,
+        \DateTimeInterface $nextBillingAt,
         string $username,
         string $xUserID,
     ): self {
@@ -102,6 +112,7 @@ final class Monitor implements BaseModel
         $self['createdAt'] = $createdAt;
         $self['eventTypes'] = $eventTypes;
         $self['isActive'] = $isActive;
+        $self['nextBillingAt'] = $nextBillingAt;
         $self['username'] = $username;
         $self['xUserID'] = $xUserID;
 
@@ -141,6 +152,17 @@ final class Monitor implements BaseModel
     {
         $self = clone $this;
         $self['isActive'] = $isActive;
+
+        return $self;
+    }
+
+    /**
+     * Next hourly credit charge time for this account monitor.
+     */
+    public function withNextBillingAt(\DateTimeInterface $nextBillingAt): self
+    {
+        $self = clone $this;
+        $self['nextBillingAt'] = $nextBillingAt;
 
         return $self;
     }

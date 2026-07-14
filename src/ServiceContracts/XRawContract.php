@@ -23,7 +23,7 @@ interface XRawContract
     /**
      * @api
      *
-     * @param string $tweetID Tweet ID of the article
+     * @param string $tweetID Numeric tweet ID of the article, 15-20 digits. If you have a tweet URL, use the final status ID.
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<XGetArticleResponse>

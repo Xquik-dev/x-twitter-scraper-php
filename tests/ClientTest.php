@@ -29,10 +29,11 @@ class ClientTest extends TestCase
         $client = new \XTwitterScraper\Client(
             baseUrl: 'http://localhost',
             apiKey: 'My API Key',
+            bearerToken: 'My Bearer Token',
             requestOptions: ['transporter' => $transporter],
         );
 
-        $client->x->tweets->search(q: 'q');
+        $client->account->retrieve();
 
         $this->assertNotFalse($requested = $transporter->getRequests()[0] ?? false);
 

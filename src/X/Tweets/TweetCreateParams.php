@@ -21,7 +21,6 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   communityID?: string|null,
  *   isNoteTweet?: bool|null,
  *   media?: list<string>|null,
- *   mediaIDs?: list<string>|null,
  *   replyToTweetID?: string|null,
  *   text?: string|null,
  * }
@@ -48,20 +47,12 @@ final class TweetCreateParams implements BaseModel
     public ?bool $isNoteTweet;
 
     /**
-     * Array of media URLs to attach (mutually exclusive with media_ids).
+     * Array of public media URLs to attach. Supports up to 4 images or exactly 1 MP4 video up to 100 MB. Each URL must be publicly reachable. Attached media adds 2 credits per started MB across all files.
      *
      * @var list<string>|null $media
      */
     #[Optional(list: 'string')]
     public ?array $media;
-
-    /**
-     * Array of media IDs to attach (mutually exclusive with media).
-     *
-     * @var list<string>|null $mediaIDs
-     */
-    #[Optional('media_ids', list: 'string')]
-    public ?array $mediaIDs;
 
     #[Optional('reply_to_tweet_id')]
     public ?string $replyToTweetID;
@@ -97,7 +88,6 @@ final class TweetCreateParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param list<string>|null $media
-     * @param list<string>|null $mediaIDs
      */
     public static function with(
         string $account,
@@ -105,7 +95,6 @@ final class TweetCreateParams implements BaseModel
         ?string $communityID = null,
         ?bool $isNoteTweet = null,
         ?array $media = null,
-        ?array $mediaIDs = null,
         ?string $replyToTweetID = null,
         ?string $text = null,
     ): self {
@@ -117,7 +106,6 @@ final class TweetCreateParams implements BaseModel
         null !== $communityID && $self['communityID'] = $communityID;
         null !== $isNoteTweet && $self['isNoteTweet'] = $isNoteTweet;
         null !== $media && $self['media'] = $media;
-        null !== $mediaIDs && $self['mediaIDs'] = $mediaIDs;
         null !== $replyToTweetID && $self['replyToTweetID'] = $replyToTweetID;
         null !== $text && $self['text'] = $text;
 
@@ -160,7 +148,7 @@ final class TweetCreateParams implements BaseModel
     }
 
     /**
-     * Array of media URLs to attach (mutually exclusive with media_ids).
+     * Array of public media URLs to attach. Supports up to 4 images or exactly 1 MP4 video up to 100 MB. Each URL must be publicly reachable. Attached media adds 2 credits per started MB across all files.
      *
      * @param list<string> $media
      */
@@ -168,19 +156,6 @@ final class TweetCreateParams implements BaseModel
     {
         $self = clone $this;
         $self['media'] = $media;
-
-        return $self;
-    }
-
-    /**
-     * Array of media IDs to attach (mutually exclusive with media).
-     *
-     * @param list<string> $mediaIDs
-     */
-    public function withMediaIDs(array $mediaIDs): self
-    {
-        $self = clone $this;
-        $self['mediaIDs'] = $mediaIDs;
 
         return $self;
     }

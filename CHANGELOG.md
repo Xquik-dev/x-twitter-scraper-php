@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.4 (2026-07-14)
+
+Full Changelog: [v0.4.3...v0.4.4](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.4.3...v0.4.4)
+
+### Features
+
+* regenerate the SDK from the finalized API contract
+* add guest wallets, credit top-ups, keyword monitors, webhook resume, account challenges, and write-action status
+* refresh current read and write request and response types
+
+### Security
+
+* retain protected release tags and remove unused long-lived Packagist credential checks
+
 ## 0.4.3 (2026-07-14)
 
 Full Changelog: [v0.4.2...v0.4.3](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.4.2...v0.4.3)

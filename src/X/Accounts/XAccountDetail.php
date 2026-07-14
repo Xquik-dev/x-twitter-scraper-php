@@ -11,7 +11,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\Accounts\XAccountDetail\Health;
 
 /**
- * Full X account details including proxy, cookies, and update timestamp.
+ * Full X account details with status, cookies, and update timestamp.
  *
  * @phpstan-type XAccountDetailShape = array{
  *   id: string,
@@ -21,7 +21,6 @@ use XTwitterScraper\X\Accounts\XAccountDetail\Health;
  *   xUserID: string,
  *   xUsername: string,
  *   cookiesObtainedAt?: \DateTimeInterface|null,
- *   proxyCountry?: string|null,
  *   updatedAt?: \DateTimeInterface|null,
  * }
  */
@@ -51,9 +50,6 @@ final class XAccountDetail implements BaseModel
 
     #[Optional]
     public ?\DateTimeInterface $cookiesObtainedAt;
-
-    #[Optional]
-    public ?string $proxyCountry;
 
     #[Optional]
     public ?\DateTimeInterface $updatedAt;
@@ -105,7 +101,6 @@ final class XAccountDetail implements BaseModel
         string $xUserID,
         string $xUsername,
         ?\DateTimeInterface $cookiesObtainedAt = null,
-        ?string $proxyCountry = null,
         ?\DateTimeInterface $updatedAt = null,
     ): self {
         $self = new self;
@@ -118,7 +113,6 @@ final class XAccountDetail implements BaseModel
         $self['xUsername'] = $xUsername;
 
         null !== $cookiesObtainedAt && $self['cookiesObtainedAt'] = $cookiesObtainedAt;
-        null !== $proxyCountry && $self['proxyCountry'] = $proxyCountry;
         null !== $updatedAt && $self['updatedAt'] = $updatedAt;
 
         return $self;
@@ -180,14 +174,6 @@ final class XAccountDetail implements BaseModel
     ): self {
         $self = clone $this;
         $self['cookiesObtainedAt'] = $cookiesObtainedAt;
-
-        return $self;
-    }
-
-    public function withProxyCountry(string $proxyCountry): self
-    {
-        $self = clone $this;
-        $self['proxyCountry'] = $proxyCountry;
 
         return $self;
     }

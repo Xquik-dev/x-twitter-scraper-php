@@ -45,7 +45,7 @@ interface TweetsRawContract
     /**
      * @api
      *
-     * @param string $id Tweet ID
+     * @param string $id Numeric tweet ID, 15-20 digits
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<TweetGetResponse>
@@ -109,7 +109,7 @@ interface TweetsRawContract
     /**
      * @api
      *
-     * @param string $id Tweet ID to get quotes
+     * @param string $id Numeric tweet ID to get quotes, 15-20 digits
      * @param array<string,mixed>|TweetGetQuotesParams $params
      * @param RequestOpts|null $requestOptions
      *

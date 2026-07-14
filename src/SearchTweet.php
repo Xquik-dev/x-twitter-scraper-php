@@ -8,25 +8,44 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\SearchTweet\Author;
 
 /**
- * Tweet returned from search results with inline author info.
+ * Tweet returned from search results with inline author info. A zero metric can mean X did not report the count.
  *
- * @phpstan-import-type AuthorShape from \XTwitterScraper\SearchTweet\Author
+ * @phpstan-import-type UserProfileShape from \XTwitterScraper\UserProfile
+ * @phpstan-import-type ContentDisclosureShape from \XTwitterScraper\ContentDisclosure
+ * @phpstan-import-type TweetMediaShape from \XTwitterScraper\TweetMedia
+ * @phpstan-import-type EmbeddedTweetShape from \XTwitterScraper\EmbeddedTweet
  *
  * @phpstan-type SearchTweetShape = array{
  *   id: string,
+ *   bookmarkCount: int,
+ *   likeCount: int,
+ *   quoteCount: int,
+ *   replyCount: int,
+ *   retweetCount: int,
  *   text: string,
- *   author?: null|Author|AuthorShape,
- *   bookmarkCount?: int|null,
+ *   viewCount: int,
+ *   author?: null|UserProfile|UserProfileShape,
+ *   contentDisclosure?: null|ContentDisclosure|ContentDisclosureShape,
+ *   conversationID?: string|null,
  *   createdAt?: string|null,
+ *   displayTextRange?: list<int>|null,
+ *   entities?: array<string,mixed>|null,
+ *   inReplyToID?: string|null,
+ *   inReplyToUserID?: string|null,
+ *   inReplyToUsername?: string|null,
+ *   isLimitedReply?: bool|null,
  *   isNoteTweet?: bool|null,
- *   likeCount?: int|null,
- *   quoteCount?: int|null,
- *   replyCount?: int|null,
- *   retweetCount?: int|null,
- *   viewCount?: int|null,
+ *   isQuoteStatus?: bool|null,
+ *   isReply?: bool|null,
+ *   lang?: string|null,
+ *   media?: list<TweetMedia|TweetMediaShape>|null,
+ *   quotedTweet?: null|EmbeddedTweet|EmbeddedTweetShape,
+ *   retweetedTweet?: null|EmbeddedTweet|EmbeddedTweetShape,
+ *   source?: string|null,
+ *   type?: string|null,
+ *   url?: string|null,
  * }
  */
 final class SearchTweet implements BaseModel
@@ -38,16 +57,86 @@ final class SearchTweet implements BaseModel
     public string $id;
 
     #[Required]
+    public int $bookmarkCount;
+
+    #[Required]
+    public int $likeCount;
+
+    #[Required]
+    public int $quoteCount;
+
+    #[Required]
+    public int $replyCount;
+
+    #[Required]
+    public int $retweetCount;
+
+    #[Required]
     public string $text;
 
-    #[Optional]
-    public ?Author $author;
+    #[Required]
+    public int $viewCount;
 
+    /**
+     * X user profile with bio, follower counts, and verification status.
+     */
     #[Optional]
-    public ?int $bookmarkCount;
+    public ?UserProfile $author;
+
+    /**
+     * Content disclosure metadata shown by X when a tweet is labeled as paid partnership content or AI-generated media.
+     */
+    #[Optional]
+    public ?ContentDisclosure $contentDisclosure;
+
+    /**
+     * Root tweet ID for the search result conversation.
+     */
+    #[Optional('conversationId')]
+    public ?string $conversationID;
 
     #[Optional]
     public ?string $createdAt;
+
+    /**
+     * Start and end offsets for rendered tweet text.
+     *
+     * @var list<int>|null $displayTextRange
+     */
+    #[Optional(list: 'int')]
+    public ?array $displayTextRange;
+
+    /**
+     * Parsed search-result entities including URLs, mentions, hashtags, and media markers.
+     *
+     * @var array<string,mixed>|null $entities
+     */
+    #[Optional(map: 'mixed')]
+    public ?array $entities;
+
+    /**
+     * Tweet ID being replied to.
+     */
+    #[Optional('inReplyToId')]
+    public ?string $inReplyToID;
+
+    /**
+     * User ID being replied to.
+     */
+    #[Optional('inReplyToUserId')]
+    public ?string $inReplyToUserID;
+
+    /**
+     * Username being replied to.
+     */
+    #[Optional]
+    public ?string $inReplyToUsername;
+
+    /**
+     * Whether the tweet has limited reply permissions.
+     */
+    #[Optional]
+    public ?bool $isLimitedReply;
 
     /**
      * True for Note Tweets (long-form content, up to 25,000 characters).
@@ -55,33 +144,88 @@ final class SearchTweet implements BaseModel
     #[Optional]
     public ?bool $isNoteTweet;
 
+    /**
+     * True when this search result quotes another tweet.
+     */
     #[Optional]
-    public ?int $likeCount;
+    public ?bool $isQuoteStatus;
+
+    /**
+     * True when this search result is a reply.
+     */
+    #[Optional]
+    public ?bool $isReply;
+
+    /**
+     * Tweet language code.
+     */
+    #[Optional]
+    public ?string $lang;
+
+    /**
+     * Search-result media attachments, omitted when no media is present.
+     *
+     * @var list<TweetMedia>|null $media
+     */
+    #[Optional(list: TweetMedia::class)]
+    public ?array $media;
+
+    /**
+     * Quoted or retweeted tweet context. Every object includes id, text, and engagement metrics. A zero metric can mean X did not report the count. Author, media, and conversation fields appear when available.
+     */
+    #[Optional('quoted_tweet')]
+    public ?EmbeddedTweet $quotedTweet;
+
+    /**
+     * Quoted or retweeted tweet context. Every object includes id, text, and engagement metrics. A zero metric can mean X did not report the count. Author, media, and conversation fields appear when available.
+     */
+    #[Optional('retweeted_tweet')]
+    public ?EmbeddedTweet $retweetedTweet;
+
+    /**
+     * Client application used to post the tweet.
+     */
+    #[Optional]
+    public ?string $source;
 
     #[Optional]
-    public ?int $quoteCount;
+    public ?string $type;
 
+    /**
+     * Tweet permalink URL.
+     */
     #[Optional]
-    public ?int $replyCount;
-
-    #[Optional]
-    public ?int $retweetCount;
-
-    #[Optional]
-    public ?int $viewCount;
+    public ?string $url;
 
     /**
      * `new SearchTweet()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * SearchTweet::with(id: ..., text: ...)
+     * SearchTweet::with(
+     *   id: ...,
+     *   bookmarkCount: ...,
+     *   likeCount: ...,
+     *   quoteCount: ...,
+     *   replyCount: ...,
+     *   retweetCount: ...,
+     *   text: ...,
+     *   viewCount: ...,
+     * )
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new SearchTweet)->withID(...)->withText(...)
+     * (new SearchTweet)
+     *   ->withID(...)
+     *   ->withBookmarkCount(...)
+     *   ->withLikeCount(...)
+     *   ->withQuoteCount(...)
+     *   ->withReplyCount(...)
+     *   ->withRetweetCount(...)
+     *   ->withText(...)
+     *   ->withViewCount(...)
      * ```
      */
     public function __construct()
@@ -94,35 +238,75 @@ final class SearchTweet implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param Author|AuthorShape|null $author
+     * @param UserProfile|UserProfileShape|null $author
+     * @param ContentDisclosure|ContentDisclosureShape|null $contentDisclosure
+     * @param list<int>|null $displayTextRange
+     * @param array<string,mixed>|null $entities
+     * @param list<TweetMedia|TweetMediaShape>|null $media
+     * @param EmbeddedTweet|EmbeddedTweetShape|null $quotedTweet
+     * @param EmbeddedTweet|EmbeddedTweetShape|null $retweetedTweet
      */
     public static function with(
         string $id,
+        int $bookmarkCount,
+        int $likeCount,
+        int $quoteCount,
+        int $replyCount,
+        int $retweetCount,
         string $text,
-        Author|array|null $author = null,
-        ?int $bookmarkCount = null,
+        int $viewCount,
+        UserProfile|array|null $author = null,
+        ContentDisclosure|array|null $contentDisclosure = null,
+        ?string $conversationID = null,
         ?string $createdAt = null,
+        ?array $displayTextRange = null,
+        ?array $entities = null,
+        ?string $inReplyToID = null,
+        ?string $inReplyToUserID = null,
+        ?string $inReplyToUsername = null,
+        ?bool $isLimitedReply = null,
         ?bool $isNoteTweet = null,
-        ?int $likeCount = null,
-        ?int $quoteCount = null,
-        ?int $replyCount = null,
-        ?int $retweetCount = null,
-        ?int $viewCount = null,
+        ?bool $isQuoteStatus = null,
+        ?bool $isReply = null,
+        ?string $lang = null,
+        ?array $media = null,
+        EmbeddedTweet|array|null $quotedTweet = null,
+        EmbeddedTweet|array|null $retweetedTweet = null,
+        ?string $source = null,
+        ?string $type = null,
+        ?string $url = null,
     ): self {
         $self = new self;
 
         $self['id'] = $id;
+        $self['bookmarkCount'] = $bookmarkCount;
+        $self['likeCount'] = $likeCount;
+        $self['quoteCount'] = $quoteCount;
+        $self['replyCount'] = $replyCount;
+        $self['retweetCount'] = $retweetCount;
         $self['text'] = $text;
+        $self['viewCount'] = $viewCount;
 
         null !== $author && $self['author'] = $author;
-        null !== $bookmarkCount && $self['bookmarkCount'] = $bookmarkCount;
+        null !== $contentDisclosure && $self['contentDisclosure'] = $contentDisclosure;
+        null !== $conversationID && $self['conversationID'] = $conversationID;
         null !== $createdAt && $self['createdAt'] = $createdAt;
+        null !== $displayTextRange && $self['displayTextRange'] = $displayTextRange;
+        null !== $entities && $self['entities'] = $entities;
+        null !== $inReplyToID && $self['inReplyToID'] = $inReplyToID;
+        null !== $inReplyToUserID && $self['inReplyToUserID'] = $inReplyToUserID;
+        null !== $inReplyToUsername && $self['inReplyToUsername'] = $inReplyToUsername;
+        null !== $isLimitedReply && $self['isLimitedReply'] = $isLimitedReply;
         null !== $isNoteTweet && $self['isNoteTweet'] = $isNoteTweet;
-        null !== $likeCount && $self['likeCount'] = $likeCount;
-        null !== $quoteCount && $self['quoteCount'] = $quoteCount;
-        null !== $replyCount && $self['replyCount'] = $replyCount;
-        null !== $retweetCount && $self['retweetCount'] = $retweetCount;
-        null !== $viewCount && $self['viewCount'] = $viewCount;
+        null !== $isQuoteStatus && $self['isQuoteStatus'] = $isQuoteStatus;
+        null !== $isReply && $self['isReply'] = $isReply;
+        null !== $lang && $self['lang'] = $lang;
+        null !== $media && $self['media'] = $media;
+        null !== $quotedTweet && $self['quotedTweet'] = $quotedTweet;
+        null !== $retweetedTweet && $self['retweetedTweet'] = $retweetedTweet;
+        null !== $source && $self['source'] = $source;
+        null !== $type && $self['type'] = $type;
+        null !== $url && $self['url'] = $url;
 
         return $self;
     }
@@ -135,48 +319,10 @@ final class SearchTweet implements BaseModel
         return $self;
     }
 
-    public function withText(string $text): self
-    {
-        $self = clone $this;
-        $self['text'] = $text;
-
-        return $self;
-    }
-
-    /**
-     * @param Author|AuthorShape $author
-     */
-    public function withAuthor(Author|array $author): self
-    {
-        $self = clone $this;
-        $self['author'] = $author;
-
-        return $self;
-    }
-
     public function withBookmarkCount(int $bookmarkCount): self
     {
         $self = clone $this;
         $self['bookmarkCount'] = $bookmarkCount;
-
-        return $self;
-    }
-
-    public function withCreatedAt(string $createdAt): self
-    {
-        $self = clone $this;
-        $self['createdAt'] = $createdAt;
-
-        return $self;
-    }
-
-    /**
-     * True for Note Tweets (long-form content, up to 25,000 characters).
-     */
-    public function withIsNoteTweet(bool $isNoteTweet): self
-    {
-        $self = clone $this;
-        $self['isNoteTweet'] = $isNoteTweet;
 
         return $self;
     }
@@ -213,10 +359,248 @@ final class SearchTweet implements BaseModel
         return $self;
     }
 
+    public function withText(string $text): self
+    {
+        $self = clone $this;
+        $self['text'] = $text;
+
+        return $self;
+    }
+
     public function withViewCount(int $viewCount): self
     {
         $self = clone $this;
         $self['viewCount'] = $viewCount;
+
+        return $self;
+    }
+
+    /**
+     * X user profile with bio, follower counts, and verification status.
+     *
+     * @param UserProfile|UserProfileShape $author
+     */
+    public function withAuthor(UserProfile|array $author): self
+    {
+        $self = clone $this;
+        $self['author'] = $author;
+
+        return $self;
+    }
+
+    /**
+     * Content disclosure metadata shown by X when a tweet is labeled as paid partnership content or AI-generated media.
+     *
+     * @param ContentDisclosure|ContentDisclosureShape $contentDisclosure
+     */
+    public function withContentDisclosure(
+        ContentDisclosure|array $contentDisclosure
+    ): self {
+        $self = clone $this;
+        $self['contentDisclosure'] = $contentDisclosure;
+
+        return $self;
+    }
+
+    /**
+     * Root tweet ID for the search result conversation.
+     */
+    public function withConversationID(string $conversationID): self
+    {
+        $self = clone $this;
+        $self['conversationID'] = $conversationID;
+
+        return $self;
+    }
+
+    public function withCreatedAt(string $createdAt): self
+    {
+        $self = clone $this;
+        $self['createdAt'] = $createdAt;
+
+        return $self;
+    }
+
+    /**
+     * Start and end offsets for rendered tweet text.
+     *
+     * @param list<int> $displayTextRange
+     */
+    public function withDisplayTextRange(array $displayTextRange): self
+    {
+        $self = clone $this;
+        $self['displayTextRange'] = $displayTextRange;
+
+        return $self;
+    }
+
+    /**
+     * Parsed search-result entities including URLs, mentions, hashtags, and media markers.
+     *
+     * @param array<string,mixed> $entities
+     */
+    public function withEntities(array $entities): self
+    {
+        $self = clone $this;
+        $self['entities'] = $entities;
+
+        return $self;
+    }
+
+    /**
+     * Tweet ID being replied to.
+     */
+    public function withInReplyToID(string $inReplyToID): self
+    {
+        $self = clone $this;
+        $self['inReplyToID'] = $inReplyToID;
+
+        return $self;
+    }
+
+    /**
+     * User ID being replied to.
+     */
+    public function withInReplyToUserID(string $inReplyToUserID): self
+    {
+        $self = clone $this;
+        $self['inReplyToUserID'] = $inReplyToUserID;
+
+        return $self;
+    }
+
+    /**
+     * Username being replied to.
+     */
+    public function withInReplyToUsername(string $inReplyToUsername): self
+    {
+        $self = clone $this;
+        $self['inReplyToUsername'] = $inReplyToUsername;
+
+        return $self;
+    }
+
+    /**
+     * Whether the tweet has limited reply permissions.
+     */
+    public function withIsLimitedReply(bool $isLimitedReply): self
+    {
+        $self = clone $this;
+        $self['isLimitedReply'] = $isLimitedReply;
+
+        return $self;
+    }
+
+    /**
+     * True for Note Tweets (long-form content, up to 25,000 characters).
+     */
+    public function withIsNoteTweet(bool $isNoteTweet): self
+    {
+        $self = clone $this;
+        $self['isNoteTweet'] = $isNoteTweet;
+
+        return $self;
+    }
+
+    /**
+     * True when this search result quotes another tweet.
+     */
+    public function withIsQuoteStatus(bool $isQuoteStatus): self
+    {
+        $self = clone $this;
+        $self['isQuoteStatus'] = $isQuoteStatus;
+
+        return $self;
+    }
+
+    /**
+     * True when this search result is a reply.
+     */
+    public function withIsReply(bool $isReply): self
+    {
+        $self = clone $this;
+        $self['isReply'] = $isReply;
+
+        return $self;
+    }
+
+    /**
+     * Tweet language code.
+     */
+    public function withLang(string $lang): self
+    {
+        $self = clone $this;
+        $self['lang'] = $lang;
+
+        return $self;
+    }
+
+    /**
+     * Search-result media attachments, omitted when no media is present.
+     *
+     * @param list<TweetMedia|TweetMediaShape> $media
+     */
+    public function withMedia(array $media): self
+    {
+        $self = clone $this;
+        $self['media'] = $media;
+
+        return $self;
+    }
+
+    /**
+     * Quoted or retweeted tweet context. Every object includes id, text, and engagement metrics. A zero metric can mean X did not report the count. Author, media, and conversation fields appear when available.
+     *
+     * @param EmbeddedTweet|EmbeddedTweetShape $quotedTweet
+     */
+    public function withQuotedTweet(EmbeddedTweet|array $quotedTweet): self
+    {
+        $self = clone $this;
+        $self['quotedTweet'] = $quotedTweet;
+
+        return $self;
+    }
+
+    /**
+     * Quoted or retweeted tweet context. Every object includes id, text, and engagement metrics. A zero metric can mean X did not report the count. Author, media, and conversation fields appear when available.
+     *
+     * @param EmbeddedTweet|EmbeddedTweetShape $retweetedTweet
+     */
+    public function withRetweetedTweet(
+        EmbeddedTweet|array $retweetedTweet
+    ): self {
+        $self = clone $this;
+        $self['retweetedTweet'] = $retweetedTweet;
+
+        return $self;
+    }
+
+    /**
+     * Client application used to post the tweet.
+     */
+    public function withSource(string $source): self
+    {
+        $self = clone $this;
+        $self['source'] = $source;
+
+        return $self;
+    }
+
+    public function withType(string $type): self
+    {
+        $self = clone $this;
+        $self['type'] = $type;
+
+        return $self;
+    }
+
+    /**
+     * Tweet permalink URL.
+     */
+    public function withURL(string $url): self
+    {
+        $self = clone $this;
+        $self['url'] = $url;
 
         return $self;
     }
