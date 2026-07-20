@@ -217,7 +217,7 @@ abstract class BaseClient
                 $span = time() - $date->getTimestamp();
 
                 return max(0.0, $span);
-            } catch (\DateMalformedStringException) {
+            } catch (\Exception) {
             }
         }
 
