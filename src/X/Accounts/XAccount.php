@@ -36,7 +36,7 @@ final class XAccount implements BaseModel
     public \DateTimeInterface $createdAt;
 
     /**
-     * Derived login/cookie health. `healthy` = cookies valid. `needsReauth` = user must submit fresh credentials. `locked` = X locked the account; unlock on x.com first. `suspended` = X banned the account. `recovering` = past cooldown, will auto-retry on next use. `temporaryIssue` = transient backend problem; retry shortly.
+     * Derived connection health. `healthy` = session active. `needsReauth` = user must submit fresh credentials. `locked` = X locked the account; unlock on x.com first. `suspended` = X banned the account. `recovering` = past cooldown, will auto-retry on next use. `temporaryIssue` = temporary connection problem; retry shortly.
      *
      * @var value-of<Health> $health
      */
@@ -141,7 +141,7 @@ final class XAccount implements BaseModel
     }
 
     /**
-     * Derived login/cookie health. `healthy` = cookies valid. `needsReauth` = user must submit fresh credentials. `locked` = X locked the account; unlock on x.com first. `suspended` = X banned the account. `recovering` = past cooldown, will auto-retry on next use. `temporaryIssue` = transient backend problem; retry shortly.
+     * Derived connection health. `healthy` = session active. `needsReauth` = user must submit fresh credentials. `locked` = X locked the account; unlock on x.com first. `suspended` = X banned the account. `recovering` = past cooldown, will auto-retry on next use. `temporaryIssue` = temporary connection problem; retry shortly.
      *
      * @param Health|value-of<Health> $health
      */
