@@ -14,7 +14,9 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *
  * @see XTwitterScraper\Services\X\Tweets\RetweetService::create()
  *
- * @phpstan-type RetweetCreateParamsShape = array{account: string}
+ * @phpstan-type RetweetCreateParamsShape = array{
+ *   account: string, idempotencyKey: string
+ * }
  */
 final class RetweetCreateParams implements BaseModel
 {
@@ -28,18 +30,21 @@ final class RetweetCreateParams implements BaseModel
     #[Required]
     public string $account;
 
+    #[Required]
+    public string $idempotencyKey;
+
     /**
      * `new RetweetCreateParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * RetweetCreateParams::with(account: ...)
+     * RetweetCreateParams::with(account: ..., idempotencyKey: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new RetweetCreateParams)->withAccount(...)
+     * (new RetweetCreateParams)->withAccount(...)->withIdempotencyKey(...)
      * ```
      */
     public function __construct()
@@ -52,11 +57,12 @@ final class RetweetCreateParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $account): self
+    public static function with(string $account, string $idempotencyKey): self
     {
         $self = new self;
 
         $self['account'] = $account;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }
@@ -68,6 +74,14 @@ final class RetweetCreateParams implements BaseModel
     {
         $self = clone $this;
         $self['account'] = $account;
+
+        return $self;
+    }
+
+    public function withIdempotencyKey(string $idempotencyKey): self
+    {
+        $self = clone $this;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }

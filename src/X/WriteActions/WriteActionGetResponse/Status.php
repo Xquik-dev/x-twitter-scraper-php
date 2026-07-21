@@ -6,9 +6,15 @@ namespace XTwitterScraper\X\WriteActions\WriteActionGetResponse;
 
 enum Status: string
 {
+    case ACCEPTED = 'accepted';
+
+    case DISPATCHING = 'dispatching';
+
+    case PENDING_CONFIRMATION = 'pending_confirmation';
+
     case SUCCESS = 'success';
 
     case FAILED = 'failed';
 
-    case PENDING_CONFIRMATION = 'pending_confirmation';
+    case EXPIRED = 'expired';
 }

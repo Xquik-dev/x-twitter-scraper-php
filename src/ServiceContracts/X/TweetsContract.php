@@ -25,16 +25,20 @@ interface TweetsContract
     /**
      * @api
      *
-     * @param string $account X account (@username or account ID)
-     * @param list<string> $media Array of public media URLs to attach. Supports up to 4 images or exactly 1 MP4 video up to 100 MB. Each URL must be publicly reachable. Attached media adds 2 credits per started MB across all files.
-     * @param string $text Tweet text (optional when media is provided)
+     * @param string $account Body param: X account (@username or account ID)
+     * @param string $idempotencyKey Header param: Generate one unique value for each intended write. Reuse it only when retrying the exact same account, action, target, and payload. A reused key returns the original action. Reusing it with different input returns 409. Replay protection remains active for at least 90 days.
+     * @param string $communityID Body param
+     * @param bool $isNoteTweet Body param
+     * @param list<string> $media Body param: Array of public media URLs to attach. Supports up to 4 images or exactly 1 MP4 video up to 100 MB. Each URL must be publicly reachable. Attached media adds 2 credits per started MB across all files.
+     * @param string $replyToTweetID Body param
+     * @param string $text Body param: Tweet text (optional when media is provided)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function create(
         string $account,
-        ?string $attachmentURL = null,
+        string $idempotencyKey,
         ?string $communityID = null,
         ?bool $isNoteTweet = null,
         ?array $media = null,
@@ -72,8 +76,9 @@ interface TweetsContract
     /**
      * @api
      *
-     * @param string $id Tweet ID to delete
-     * @param string $account X account identifier (@username or account ID)
+     * @param string $id Path param: Tweet ID to delete
+     * @param string $account Body param: X account identifier (@username or account ID)
+     * @param string $idempotencyKey Header param: Generate one unique value for each intended write. Reuse it only when retrying the exact same account, action, target, and payload. A reused key returns the original action. Reusing it with different input returns 409. Replay protection remains active for at least 90 days.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -81,6 +86,7 @@ interface TweetsContract
     public function delete(
         string $id,
         string $account,
+        string $idempotencyKey,
         RequestOptions|array|null $requestOptions = null,
     ): TweetDeleteResponse;
 

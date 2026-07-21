@@ -48,7 +48,7 @@ final class TweetsRawService implements TweetsRawContract
      *
      * @param array{
      *   account: string,
-     *   attachmentURL?: string,
+     *   idempotencyKey: string,
      *   communityID?: string,
      *   isNoteTweet?: bool,
      *   media?: list<string>,
@@ -69,12 +69,20 @@ final class TweetsRawService implements TweetsRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
             path: 'x/tweets',
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: TweetNewResponse::class,
         );
@@ -141,8 +149,8 @@ final class TweetsRawService implements TweetsRawContract
      *
      * Delete tweet
      *
-     * @param string $id Tweet ID to delete
-     * @param array{account: string}|TweetDeleteParams $params
+     * @param string $id Path param: Tweet ID to delete
+     * @param array{account: string, idempotencyKey: string}|TweetDeleteParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<TweetDeleteResponse>
@@ -158,12 +166,20 @@ final class TweetsRawService implements TweetsRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'delete',
             path: ['x/tweets/%1$s', $id],
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: TweetDeleteResponse::class,
         );
@@ -172,7 +188,7 @@ final class TweetsRawService implements TweetsRawContract
     /**
      * @api
      *
-     * List users who liked a tweet
+     * Returns liker profiles that X makes visible for the post. X can withhold liker identities even when the post reports likes. In that case this endpoint returns 424 `favoriters_unavailable` instead of a misleading empty success.
      *
      * @param string $id Tweet ID to get favoriters
      * @param array{cursor?: string, pageSize?: int}|TweetGetFavoritersParams $params
@@ -277,7 +293,7 @@ final class TweetsRawService implements TweetsRawContract
     /**
      * @api
      *
-     * List replies to a tweet
+     * Returns visible replies. For an unfiltered first page, Xquik compares a terminal page with the post's reported reply count. If the page is visibly incomplete, the endpoint returns 424 `replies_incomplete` instead of presenting partial coverage as complete. Use tweet search with a `conversation_id:{id}` query as the broader fallback.
      *
      * @param string $id Tweet ID to get replies
      * @param array{

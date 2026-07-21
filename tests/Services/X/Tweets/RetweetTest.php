@@ -42,7 +42,8 @@ final class RetweetTest extends TestCase
 
         $result = $this->client->x->tweets->retweet->create(
             'id',
-            account: '@elonmusk'
+            account: '@elonmusk',
+            idempotencyKey: 'Idempotency-Key'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -58,7 +59,8 @@ final class RetweetTest extends TestCase
 
         $result = $this->client->x->tweets->retweet->create(
             'id',
-            account: '@elonmusk'
+            account: '@elonmusk',
+            idempotencyKey: 'Idempotency-Key'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -74,7 +76,8 @@ final class RetweetTest extends TestCase
 
         $result = $this->client->x->tweets->retweet->delete(
             'id',
-            account: '@elonmusk'
+            account: '@elonmusk',
+            idempotencyKey: 'Idempotency-Key'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -90,7 +93,8 @@ final class RetweetTest extends TestCase
 
         $result = $this->client->x->tweets->retweet->delete(
             'id',
-            account: '@elonmusk'
+            account: '@elonmusk',
+            idempotencyKey: 'Idempotency-Key'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

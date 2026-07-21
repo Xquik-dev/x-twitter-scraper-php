@@ -20,7 +20,7 @@ interface RetweetRawContract
     /**
      * @api
      *
-     * @param string $id Tweet ID to retweet
+     * @param string $id Path param: Tweet ID to retweet
      * @param array<string,mixed>|RetweetCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -37,7 +37,7 @@ interface RetweetRawContract
     /**
      * @api
      *
-     * @param string $id Tweet ID to unretweet
+     * @param string $id Path param: Tweet ID to unretweet
      * @param array<string,mixed>|RetweetDeleteParams $params
      * @param RequestOpts|null $requestOptions
      *

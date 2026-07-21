@@ -69,8 +69,9 @@ final class UsersService implements UsersContract
      *
      * Remove follower
      *
-     * @param string $id User ID to remove from your followers
-     * @param string $account X account identifier (@username or account ID)
+     * @param string $id Path param: User ID to remove from your followers
+     * @param string $account Body param: X account identifier (@username or account ID)
+     * @param string $idempotencyKey Header param: Generate one unique value for each intended write. Reuse it only when retrying the exact same account, action, target, and payload. A reused key returns the original action. Reusing it with different input returns 409. Replay protection remains active for at least 90 days.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -78,9 +79,12 @@ final class UsersService implements UsersContract
     public function removeFollower(
         string $id,
         string $account,
+        string $idempotencyKey,
         RequestOptions|array|null $requestOptions = null,
     ): UserRemoveFollowerResponse {
-        $params = Util::removeNulls(['account' => $account]);
+        $params = Util::removeNulls(
+            ['account' => $account, 'idempotencyKey' => $idempotencyKey]
+        );
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->removeFollower($id, params: $params, requestOptions: $requestOptions);

@@ -20,7 +20,7 @@ interface JoinRawContract
     /**
      * @api
      *
-     * @param string $id resource ID returned by the matching create or list endpoint
+     * @param string $id path param: Resource ID returned by the matching create or list endpoint
      * @param array<string,mixed>|JoinCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -37,7 +37,7 @@ interface JoinRawContract
     /**
      * @api
      *
-     * @param string $id resource ID returned by the matching create or list endpoint
+     * @param string $id path param: Resource ID returned by the matching create or list endpoint
      * @param array<string,mixed>|JoinDeleteAllParams $params
      * @param RequestOpts|null $requestOptions
      *

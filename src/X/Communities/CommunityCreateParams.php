@@ -16,7 +16,10 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\X\CommunitiesService::create()
  *
  * @phpstan-type CommunityCreateParamsShape = array{
- *   account: string, name: string, description?: string|null
+ *   account: string,
+ *   name: string,
+ *   idempotencyKey: string,
+ *   description?: string|null,
  * }
  */
 final class CommunityCreateParams implements BaseModel
@@ -37,6 +40,9 @@ final class CommunityCreateParams implements BaseModel
     #[Required]
     public string $name;
 
+    #[Required]
+    public string $idempotencyKey;
+
     /**
      * Community description.
      */
@@ -48,13 +54,16 @@ final class CommunityCreateParams implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * CommunityCreateParams::with(account: ..., name: ...)
+     * CommunityCreateParams::with(account: ..., name: ..., idempotencyKey: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new CommunityCreateParams)->withAccount(...)->withName(...)
+     * (new CommunityCreateParams)
+     *   ->withAccount(...)
+     *   ->withName(...)
+     *   ->withIdempotencyKey(...)
      * ```
      */
     public function __construct()
@@ -70,12 +79,14 @@ final class CommunityCreateParams implements BaseModel
     public static function with(
         string $account,
         string $name,
-        ?string $description = null
+        string $idempotencyKey,
+        ?string $description = null,
     ): self {
         $self = new self;
 
         $self['account'] = $account;
         $self['name'] = $name;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         null !== $description && $self['description'] = $description;
 
@@ -100,6 +111,14 @@ final class CommunityCreateParams implements BaseModel
     {
         $self = clone $this;
         $self['name'] = $name;
+
+        return $self;
+    }
+
+    public function withIdempotencyKey(string $idempotencyKey): self
+    {
+        $self = clone $this;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }

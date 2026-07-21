@@ -73,8 +73,10 @@ final class UsersRawService implements UsersRawContract
      *
      * Remove follower
      *
-     * @param string $id User ID to remove from your followers
-     * @param array{account: string}|UserRemoveFollowerParams $params
+     * @param string $id Path param: User ID to remove from your followers
+     * @param array{
+     *   account: string, idempotencyKey: string
+     * }|UserRemoveFollowerParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<UserRemoveFollowerResponse>
@@ -90,12 +92,20 @@ final class UsersRawService implements UsersRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
             path: ['x/users/%1$s/remove-follower', $id],
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: UserRemoveFollowerResponse::class,
         );

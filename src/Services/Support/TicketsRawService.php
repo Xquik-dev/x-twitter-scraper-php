@@ -7,6 +7,7 @@ namespace XTwitterScraper\Services\Support;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\Support\TicketsRawContract;
 use XTwitterScraper\Support\Tickets\TicketCreateParams;
@@ -37,7 +38,9 @@ final class TicketsRawService implements TicketsRawContract
      *
      * Create a support ticket
      *
-     * @param array{body: string, subject: string}|TicketCreateParams $params
+     * @param array{
+     *   body: string, subject: string, idempotencyKey?: string
+     * }|TicketCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<TicketNewResponse>
@@ -52,12 +55,20 @@ final class TicketsRawService implements TicketsRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
             path: 'support/tickets',
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: TicketNewResponse::class,
         );
@@ -149,8 +160,8 @@ final class TicketsRawService implements TicketsRawContract
      *
      * Reply to a support ticket
      *
-     * @param string $id Support ticket public ID for the reply
-     * @param array{body: string}|TicketReplyParams $params
+     * @param string $id Path param: Support ticket public ID for the reply
+     * @param array{body: string, idempotencyKey?: string}|TicketReplyParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<TicketReplyResponse>
@@ -166,12 +177,20 @@ final class TicketsRawService implements TicketsRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
             path: ['support/tickets/%1$s/messages', $id],
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: TicketReplyResponse::class,
         );

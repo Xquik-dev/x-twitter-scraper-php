@@ -7,6 +7,7 @@ namespace XTwitterScraper\Services\X\Users;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\Users\FollowRawContract;
 use XTwitterScraper\X\Users\Follow\FollowCreateParams;
@@ -32,8 +33,8 @@ final class FollowRawService implements FollowRawContract
      *
      * Follow user
      *
-     * @param string $id User ID to follow
-     * @param array{account: string}|FollowCreateParams $params
+     * @param string $id Path param: User ID to follow
+     * @param array{account: string, idempotencyKey: string}|FollowCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<FollowNewResponse>
@@ -49,12 +50,20 @@ final class FollowRawService implements FollowRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
             path: ['x/users/%1$s/follow', $id],
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: FollowNewResponse::class,
         );
@@ -65,8 +74,10 @@ final class FollowRawService implements FollowRawContract
      *
      * Unfollow user
      *
-     * @param string $id User ID to unfollow
-     * @param array{account: string}|FollowDeleteAllParams $params
+     * @param string $id Path param: User ID to unfollow
+     * @param array{
+     *   account: string, idempotencyKey: string
+     * }|FollowDeleteAllParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<FollowDeleteAllResponse>
@@ -82,12 +93,20 @@ final class FollowRawService implements FollowRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'delete',
             path: ['x/users/%1$s/follow', $id],
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: FollowDeleteAllResponse::class,
         );

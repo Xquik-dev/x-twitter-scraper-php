@@ -13,8 +13,6 @@ use XTwitterScraper\X\Media\MediaDownloadResponse;
 use XTwitterScraper\X\Media\MediaUploadResponse;
 
 /**
- * Media upload and download.
- *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
 final class MediaService implements MediaContract
@@ -72,8 +70,9 @@ final class MediaService implements MediaContract
      *
      * Upload media
      *
-     * @param string $account X account (@username or ID) uploading media from URL
-     * @param string $url HTTPS URL to download and upload as media
+     * @param string $account Body param: X account (@username or ID) uploading media from URL
+     * @param string $url Body param: HTTPS URL to download and upload as media
+     * @param string $idempotencyKey Header param: Generate one unique value for each intended write. Reuse it only when retrying the exact same account, action, target, and payload. A reused key returns the original action. Reusing it with different input returns 409. Replay protection remains active for at least 90 days.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -81,9 +80,16 @@ final class MediaService implements MediaContract
     public function upload(
         string $account,
         string $url,
+        string $idempotencyKey,
         RequestOptions|array|null $requestOptions = null,
     ): MediaUploadResponse {
-        $params = Util::removeNulls(['account' => $account, 'url' => $url]);
+        $params = Util::removeNulls(
+            [
+                'account' => $account,
+                'url' => $url,
+                'idempotencyKey' => $idempotencyKey,
+            ],
+        );
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->upload(params: $params, requestOptions: $requestOptions);

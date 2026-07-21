@@ -20,7 +20,7 @@ interface LikeRawContract
     /**
      * @api
      *
-     * @param string $id Tweet ID to like
+     * @param string $id Path param: Tweet ID to like
      * @param array<string,mixed>|LikeCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -37,7 +37,7 @@ interface LikeRawContract
     /**
      * @api
      *
-     * @param string $id Tweet ID to unlike
+     * @param string $id Path param: Tweet ID to unlike
      * @param array<string,mixed>|LikeDeleteParams $params
      * @param RequestOpts|null $requestOptions
      *

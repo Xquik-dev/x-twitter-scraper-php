@@ -17,6 +17,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *
  * @phpstan-type ProfileUpdateParamsShape = array{
  *   account: string,
+ *   idempotencyKey: string,
  *   description?: string|null,
  *   location?: string|null,
  *   name?: string|null,
@@ -34,6 +35,9 @@ final class ProfileUpdateParams implements BaseModel
      */
     #[Required]
     public string $account;
+
+    #[Required]
+    public string $idempotencyKey;
 
     /**
      * Bio description.
@@ -61,13 +65,13 @@ final class ProfileUpdateParams implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * ProfileUpdateParams::with(account: ...)
+     * ProfileUpdateParams::with(account: ..., idempotencyKey: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new ProfileUpdateParams)->withAccount(...)
+     * (new ProfileUpdateParams)->withAccount(...)->withIdempotencyKey(...)
      * ```
      */
     public function __construct()
@@ -82,6 +86,7 @@ final class ProfileUpdateParams implements BaseModel
      */
     public static function with(
         string $account,
+        string $idempotencyKey,
         ?string $description = null,
         ?string $location = null,
         ?string $name = null,
@@ -90,6 +95,7 @@ final class ProfileUpdateParams implements BaseModel
         $self = new self;
 
         $self['account'] = $account;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         null !== $description && $self['description'] = $description;
         null !== $location && $self['location'] = $location;
@@ -106,6 +112,14 @@ final class ProfileUpdateParams implements BaseModel
     {
         $self = clone $this;
         $self['account'] = $account;
+
+        return $self;
+    }
+
+    public function withIdempotencyKey(string $idempotencyKey): self
+    {
+        $self = clone $this;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }
