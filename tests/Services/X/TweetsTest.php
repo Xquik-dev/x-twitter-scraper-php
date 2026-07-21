@@ -43,7 +43,10 @@ final class TweetsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->tweets->create(account: '@elonmusk');
+        $result = $this->client->x->tweets->create(
+            account: '@elonmusk',
+            idempotencyKey: 'Idempotency-Key'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TweetNewResponse::class, $result);
@@ -58,7 +61,7 @@ final class TweetsTest extends TestCase
 
         $result = $this->client->x->tweets->create(
             account: '@elonmusk',
-            attachmentURL: 'https://x.com/elonmusk/status/1234567890',
+            idempotencyKey: 'Idempotency-Key',
             communityID: '1500000000000000000',
             isNoteTweet: false,
             media: ['https://example.com/video.mp4'],
@@ -116,7 +119,11 @@ final class TweetsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->tweets->delete('id', account: '@elonmusk');
+        $result = $this->client->x->tweets->delete(
+            'id',
+            account: '@elonmusk',
+            idempotencyKey: 'Idempotency-Key'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TweetDeleteResponse::class, $result);
@@ -129,7 +136,11 @@ final class TweetsTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->tweets->delete('id', account: '@elonmusk');
+        $result = $this->client->x->tweets->delete(
+            'id',
+            account: '@elonmusk',
+            idempotencyKey: 'Idempotency-Key'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(TweetDeleteResponse::class, $result);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
@@ -16,7 +17,13 @@ use XTwitterScraper\Error\Error\StructuredError;
  * @phpstan-import-type ErrorVariants from \XTwitterScraper\Error\Error
  * @phpstan-import-type ErrorShape from \XTwitterScraper\Error\Error as ErrorShape1
  *
- * @phpstan-type ErrorShape = array{error: ErrorShape1}
+ * @phpstan-type ErrorShape = array{
+ *   error: ErrorShape1,
+ *   message?: string|null,
+ *   reason?: string|null,
+ *   retryAfter?: int|null,
+ *   retryAfterMs?: int|null,
+ * }
  */
 final class Error implements BaseModel
 {
@@ -26,6 +33,30 @@ final class Error implements BaseModel
     /** @var ErrorVariants $error */
     #[Required(union: Error\Error::class)]
     public StructuredError|string $error;
+
+    /**
+     * Human-readable error guidance.
+     */
+    #[Optional]
+    public ?string $message;
+
+    /**
+     * Machine-readable reason for a login cooldown.
+     */
+    #[Optional]
+    public ?string $reason;
+
+    /**
+     * Required wait in seconds.
+     */
+    #[Optional]
+    public ?int $retryAfter;
+
+    /**
+     * Required wait in milliseconds.
+     */
+    #[Optional]
+    public ?int $retryAfterMs;
 
     /**
      * `new Error()` is missing required properties by the API.
@@ -54,11 +85,20 @@ final class Error implements BaseModel
      * @param ErrorShape1 $error
      */
     public static function with(
-        LegacyErrorCode|StructuredError|array|string $error
+        LegacyErrorCode|StructuredError|array|string $error,
+        ?string $message = null,
+        ?string $reason = null,
+        ?int $retryAfter = null,
+        ?int $retryAfterMs = null,
     ): self {
         $self = new self;
 
         $self['error'] = $error;
+
+        null !== $message && $self['message'] = $message;
+        null !== $reason && $self['reason'] = $reason;
+        null !== $retryAfter && $self['retryAfter'] = $retryAfter;
+        null !== $retryAfterMs && $self['retryAfterMs'] = $retryAfterMs;
 
         return $self;
     }
@@ -71,6 +111,50 @@ final class Error implements BaseModel
     ): self {
         $self = clone $this;
         $self['error'] = $error;
+
+        return $self;
+    }
+
+    /**
+     * Human-readable error guidance.
+     */
+    public function withMessage(string $message): self
+    {
+        $self = clone $this;
+        $self['message'] = $message;
+
+        return $self;
+    }
+
+    /**
+     * Machine-readable reason for a login cooldown.
+     */
+    public function withReason(string $reason): self
+    {
+        $self = clone $this;
+        $self['reason'] = $reason;
+
+        return $self;
+    }
+
+    /**
+     * Required wait in seconds.
+     */
+    public function withRetryAfter(int $retryAfter): self
+    {
+        $self = clone $this;
+        $self['retryAfter'] = $retryAfter;
+
+        return $self;
+    }
+
+    /**
+     * Required wait in milliseconds.
+     */
+    public function withRetryAfterMs(int $retryAfterMs): self
+    {
+        $self = clone $this;
+        $self['retryAfterMs'] = $retryAfterMs;
 
         return $self;
     }

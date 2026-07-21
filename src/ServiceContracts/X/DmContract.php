@@ -36,9 +36,11 @@ interface DmContract
     /**
      * @api
      *
-     * @param string $userID Recipient user ID
-     * @param string $account X account (@username or ID) sending the DM
-     * @param list<string> $mediaIDs optional array containing exactly 1 uploaded media ID
+     * @param string $userID Path param: Recipient user ID
+     * @param string $account Body param: X account (@username or ID) sending the DM
+     * @param string $text Body param
+     * @param string $idempotencyKey Header param: Generate one unique value for each intended write. Reuse it only when retrying the exact same account, action, target, and payload. A reused key returns the original action. Reusing it with different input returns 409. Replay protection remains active for at least 90 days.
+     * @param list<string> $mediaIDs body param: Optional array containing exactly 1 uploaded media ID
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -47,6 +49,7 @@ interface DmContract
         string $userID,
         string $account,
         string $text,
+        string $idempotencyKey,
         ?array $mediaIDs = null,
         RequestOptions|array|null $requestOptions = null,
     ): DmSendResponse;

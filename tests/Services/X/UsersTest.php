@@ -58,7 +58,8 @@ final class UsersTest extends TestCase
 
         $result = $this->client->x->users->removeFollower(
             'id',
-            account: '@elonmusk'
+            account: '@elonmusk',
+            idempotencyKey: 'Idempotency-Key'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -74,7 +75,8 @@ final class UsersTest extends TestCase
 
         $result = $this->client->x->users->removeFollower(
             'id',
-            account: '@elonmusk'
+            account: '@elonmusk',
+            idempotencyKey: 'Idempotency-Key'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

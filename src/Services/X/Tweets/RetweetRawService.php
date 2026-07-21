@@ -7,6 +7,7 @@ namespace XTwitterScraper\Services\X\Tweets;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\Tweets\RetweetRawContract;
 use XTwitterScraper\X\Tweets\Retweet\RetweetCreateParams;
@@ -32,8 +33,10 @@ final class RetweetRawService implements RetweetRawContract
      *
      * Retweet
      *
-     * @param string $id Tweet ID to retweet
-     * @param array{account: string}|RetweetCreateParams $params
+     * @param string $id Path param: Tweet ID to retweet
+     * @param array{
+     *   account: string, idempotencyKey: string
+     * }|RetweetCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<RetweetNewResponse>
@@ -49,12 +52,20 @@ final class RetweetRawService implements RetweetRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
             path: ['x/tweets/%1$s/retweet', $id],
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: RetweetNewResponse::class,
         );
@@ -65,8 +76,10 @@ final class RetweetRawService implements RetweetRawContract
      *
      * Unretweet
      *
-     * @param string $id Tweet ID to unretweet
-     * @param array{account: string}|RetweetDeleteParams $params
+     * @param string $id Path param: Tweet ID to unretweet
+     * @param array{
+     *   account: string, idempotencyKey: string
+     * }|RetweetDeleteParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<RetweetDeleteResponse>
@@ -82,12 +95,20 @@ final class RetweetRawService implements RetweetRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'delete',
             path: ['x/tweets/%1$s/retweet', $id],
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: RetweetDeleteResponse::class,
         );

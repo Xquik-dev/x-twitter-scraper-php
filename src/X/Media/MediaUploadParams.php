@@ -14,7 +14,9 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *
  * @see XTwitterScraper\Services\X\MediaService::upload()
  *
- * @phpstan-type MediaUploadParamsShape = array{account: string, url: string}
+ * @phpstan-type MediaUploadParamsShape = array{
+ *   account: string, url: string, idempotencyKey: string
+ * }
  */
 final class MediaUploadParams implements BaseModel
 {
@@ -34,18 +36,21 @@ final class MediaUploadParams implements BaseModel
     #[Required]
     public string $url;
 
+    #[Required]
+    public string $idempotencyKey;
+
     /**
      * `new MediaUploadParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * MediaUploadParams::with(account: ..., url: ...)
+     * MediaUploadParams::with(account: ..., url: ..., idempotencyKey: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new MediaUploadParams)->withAccount(...)->withURL(...)
+     * (new MediaUploadParams)->withAccount(...)->withURL(...)->withIdempotencyKey(...)
      * ```
      */
     public function __construct()
@@ -58,12 +63,16 @@ final class MediaUploadParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $account, string $url): self
-    {
+    public static function with(
+        string $account,
+        string $url,
+        string $idempotencyKey
+    ): self {
         $self = new self;
 
         $self['account'] = $account;
         $self['url'] = $url;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }
@@ -86,6 +95,14 @@ final class MediaUploadParams implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    public function withIdempotencyKey(string $idempotencyKey): self
+    {
+        $self = clone $this;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }

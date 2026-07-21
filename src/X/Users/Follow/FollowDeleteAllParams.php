@@ -14,7 +14,9 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *
  * @see XTwitterScraper\Services\X\Users\FollowService::deleteAll()
  *
- * @phpstan-type FollowDeleteAllParamsShape = array{account: string}
+ * @phpstan-type FollowDeleteAllParamsShape = array{
+ *   account: string, idempotencyKey: string
+ * }
  */
 final class FollowDeleteAllParams implements BaseModel
 {
@@ -28,18 +30,21 @@ final class FollowDeleteAllParams implements BaseModel
     #[Required]
     public string $account;
 
+    #[Required]
+    public string $idempotencyKey;
+
     /**
      * `new FollowDeleteAllParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * FollowDeleteAllParams::with(account: ...)
+     * FollowDeleteAllParams::with(account: ..., idempotencyKey: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new FollowDeleteAllParams)->withAccount(...)
+     * (new FollowDeleteAllParams)->withAccount(...)->withIdempotencyKey(...)
      * ```
      */
     public function __construct()
@@ -52,11 +57,12 @@ final class FollowDeleteAllParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $account): self
+    public static function with(string $account, string $idempotencyKey): self
     {
         $self = new self;
 
         $self['account'] = $account;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }
@@ -68,6 +74,14 @@ final class FollowDeleteAllParams implements BaseModel
     {
         $self = clone $this;
         $self['account'] = $account;
+
+        return $self;
+    }
+
+    public function withIdempotencyKey(string $idempotencyKey): self
+    {
+        $self = clone $this;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }

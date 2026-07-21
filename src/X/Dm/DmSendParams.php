@@ -16,7 +16,10 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\X\DmService::send()
  *
  * @phpstan-type DmSendParamsShape = array{
- *   account: string, text: string, mediaIDs?: list<string>|null
+ *   account: string,
+ *   text: string,
+ *   idempotencyKey: string,
+ *   mediaIDs?: list<string>|null,
  * }
  */
 final class DmSendParams implements BaseModel
@@ -34,6 +37,9 @@ final class DmSendParams implements BaseModel
     #[Required]
     public string $text;
 
+    #[Required]
+    public string $idempotencyKey;
+
     /**
      * Optional array containing exactly 1 uploaded media ID.
      *
@@ -47,13 +53,13 @@ final class DmSendParams implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * DmSendParams::with(account: ..., text: ...)
+     * DmSendParams::with(account: ..., text: ..., idempotencyKey: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new DmSendParams)->withAccount(...)->withText(...)
+     * (new DmSendParams)->withAccount(...)->withText(...)->withIdempotencyKey(...)
      * ```
      */
     public function __construct()
@@ -71,12 +77,14 @@ final class DmSendParams implements BaseModel
     public static function with(
         string $account,
         string $text,
-        ?array $mediaIDs = null
+        string $idempotencyKey,
+        ?array $mediaIDs = null,
     ): self {
         $self = new self;
 
         $self['account'] = $account;
         $self['text'] = $text;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         null !== $mediaIDs && $self['mediaIDs'] = $mediaIDs;
 
@@ -98,6 +106,14 @@ final class DmSendParams implements BaseModel
     {
         $self = clone $this;
         $self['text'] = $text;
+
+        return $self;
+    }
+
+    public function withIdempotencyKey(string $idempotencyKey): self
+    {
+        $self = clone $this;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }

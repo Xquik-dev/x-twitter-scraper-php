@@ -17,7 +17,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *
  * @phpstan-type TweetCreateParamsShape = array{
  *   account: string,
- *   attachmentURL?: string|null,
+ *   idempotencyKey: string,
  *   communityID?: string|null,
  *   isNoteTweet?: bool|null,
  *   media?: list<string>|null,
@@ -37,8 +37,8 @@ final class TweetCreateParams implements BaseModel
     #[Required]
     public string $account;
 
-    #[Optional('attachment_url')]
-    public ?string $attachmentURL;
+    #[Required]
+    public string $idempotencyKey;
 
     #[Optional('community_id')]
     public ?string $communityID;
@@ -68,13 +68,13 @@ final class TweetCreateParams implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * TweetCreateParams::with(account: ...)
+     * TweetCreateParams::with(account: ..., idempotencyKey: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new TweetCreateParams)->withAccount(...)
+     * (new TweetCreateParams)->withAccount(...)->withIdempotencyKey(...)
      * ```
      */
     public function __construct()
@@ -91,7 +91,7 @@ final class TweetCreateParams implements BaseModel
      */
     public static function with(
         string $account,
-        ?string $attachmentURL = null,
+        string $idempotencyKey,
         ?string $communityID = null,
         ?bool $isNoteTweet = null,
         ?array $media = null,
@@ -101,8 +101,8 @@ final class TweetCreateParams implements BaseModel
         $self = new self;
 
         $self['account'] = $account;
+        $self['idempotencyKey'] = $idempotencyKey;
 
-        null !== $attachmentURL && $self['attachmentURL'] = $attachmentURL;
         null !== $communityID && $self['communityID'] = $communityID;
         null !== $isNoteTweet && $self['isNoteTweet'] = $isNoteTweet;
         null !== $media && $self['media'] = $media;
@@ -123,10 +123,10 @@ final class TweetCreateParams implements BaseModel
         return $self;
     }
 
-    public function withAttachmentURL(string $attachmentURL): self
+    public function withIdempotencyKey(string $idempotencyKey): self
     {
         $self = clone $this;
-        $self['attachmentURL'] = $attachmentURL;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }

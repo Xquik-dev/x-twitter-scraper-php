@@ -37,8 +37,9 @@ final class RetweetService implements RetweetContract
      *
      * Retweet
      *
-     * @param string $id Tweet ID to retweet
-     * @param string $account X account identifier (@username or account ID)
+     * @param string $id Path param: Tweet ID to retweet
+     * @param string $account Body param: X account identifier (@username or account ID)
+     * @param string $idempotencyKey Header param: Generate one unique value for each intended write. Reuse it only when retrying the exact same account, action, target, and payload. A reused key returns the original action. Reusing it with different input returns 409. Replay protection remains active for at least 90 days.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -46,9 +47,12 @@ final class RetweetService implements RetweetContract
     public function create(
         string $id,
         string $account,
+        string $idempotencyKey,
         RequestOptions|array|null $requestOptions = null,
     ): RetweetNewResponse {
-        $params = Util::removeNulls(['account' => $account]);
+        $params = Util::removeNulls(
+            ['account' => $account, 'idempotencyKey' => $idempotencyKey]
+        );
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->create($id, params: $params, requestOptions: $requestOptions);
@@ -61,8 +65,9 @@ final class RetweetService implements RetweetContract
      *
      * Unretweet
      *
-     * @param string $id Tweet ID to unretweet
-     * @param string $account X account identifier (@username or account ID)
+     * @param string $id Path param: Tweet ID to unretweet
+     * @param string $account Body param: X account identifier (@username or account ID)
+     * @param string $idempotencyKey Header param: Generate one unique value for each intended write. Reuse it only when retrying the exact same account, action, target, and payload. A reused key returns the original action. Reusing it with different input returns 409. Replay protection remains active for at least 90 days.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -70,9 +75,12 @@ final class RetweetService implements RetweetContract
     public function delete(
         string $id,
         string $account,
+        string $idempotencyKey,
         RequestOptions|array|null $requestOptions = null,
     ): RetweetDeleteResponse {
-        $params = Util::removeNulls(['account' => $account]);
+        $params = Util::removeNulls(
+            ['account' => $account, 'idempotencyKey' => $idempotencyKey]
+        );
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->delete($id, params: $params, requestOptions: $requestOptions);

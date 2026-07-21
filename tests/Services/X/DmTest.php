@@ -77,7 +77,8 @@ final class DmTest extends TestCase
         $result = $this->client->x->dm->send(
             'userId',
             account: '@elonmusk',
-            text: 'Example text content'
+            text: 'Example text content',
+            idempotencyKey: 'Idempotency-Key',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -95,6 +96,7 @@ final class DmTest extends TestCase
             'userId',
             account: '@elonmusk',
             text: 'Example text content',
+            idempotencyKey: 'Idempotency-Key',
             mediaIDs: ['1234567890123456789'],
         );
 

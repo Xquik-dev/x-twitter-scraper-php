@@ -14,7 +14,9 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *
  * @see XTwitterScraper\Services\X\Communities\JoinService::deleteAll()
  *
- * @phpstan-type JoinDeleteAllParamsShape = array{account: string}
+ * @phpstan-type JoinDeleteAllParamsShape = array{
+ *   account: string, idempotencyKey: string
+ * }
  */
 final class JoinDeleteAllParams implements BaseModel
 {
@@ -28,18 +30,21 @@ final class JoinDeleteAllParams implements BaseModel
     #[Required]
     public string $account;
 
+    #[Required]
+    public string $idempotencyKey;
+
     /**
      * `new JoinDeleteAllParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * JoinDeleteAllParams::with(account: ...)
+     * JoinDeleteAllParams::with(account: ..., idempotencyKey: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new JoinDeleteAllParams)->withAccount(...)
+     * (new JoinDeleteAllParams)->withAccount(...)->withIdempotencyKey(...)
      * ```
      */
     public function __construct()
@@ -52,11 +57,12 @@ final class JoinDeleteAllParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $account): self
+    public static function with(string $account, string $idempotencyKey): self
     {
         $self = new self;
 
         $self['account'] = $account;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }
@@ -68,6 +74,14 @@ final class JoinDeleteAllParams implements BaseModel
     {
         $self = clone $this;
         $self['account'] = $account;
+
+        return $self;
+    }
+
+    public function withIdempotencyKey(string $idempotencyKey): self
+    {
+        $self = clone $this;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }

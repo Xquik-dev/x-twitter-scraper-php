@@ -84,7 +84,7 @@ interface TicketsRawContract
     /**
      * @api
      *
-     * @param string $id Support ticket public ID for the reply
+     * @param string $id Path param: Support ticket public ID for the reply
      * @param array<string,mixed>|TicketReplyParams $params
      * @param RequestOpts|null $requestOptions
      *

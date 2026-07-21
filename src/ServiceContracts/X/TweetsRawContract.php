@@ -75,7 +75,7 @@ interface TweetsRawContract
     /**
      * @api
      *
-     * @param string $id Tweet ID to delete
+     * @param string $id Path param: Tweet ID to delete
      * @param array<string,mixed>|TweetDeleteParams $params
      * @param RequestOpts|null $requestOptions
      *

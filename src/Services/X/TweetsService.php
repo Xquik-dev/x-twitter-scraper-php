@@ -57,16 +57,20 @@ final class TweetsService implements TweetsContract
      *
      * Create tweet
      *
-     * @param string $account X account (@username or account ID)
-     * @param list<string> $media Array of public media URLs to attach. Supports up to 4 images or exactly 1 MP4 video up to 100 MB. Each URL must be publicly reachable. Attached media adds 2 credits per started MB across all files.
-     * @param string $text Tweet text (optional when media is provided)
+     * @param string $account Body param: X account (@username or account ID)
+     * @param string $idempotencyKey Header param: Generate one unique value for each intended write. Reuse it only when retrying the exact same account, action, target, and payload. A reused key returns the original action. Reusing it with different input returns 409. Replay protection remains active for at least 90 days.
+     * @param string $communityID Body param
+     * @param bool $isNoteTweet Body param
+     * @param list<string> $media Body param: Array of public media URLs to attach. Supports up to 4 images or exactly 1 MP4 video up to 100 MB. Each URL must be publicly reachable. Attached media adds 2 credits per started MB across all files.
+     * @param string $replyToTweetID Body param
+     * @param string $text Body param: Tweet text (optional when media is provided)
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function create(
         string $account,
-        ?string $attachmentURL = null,
+        string $idempotencyKey,
         ?string $communityID = null,
         ?bool $isNoteTweet = null,
         ?array $media = null,
@@ -77,7 +81,7 @@ final class TweetsService implements TweetsContract
         $params = Util::removeNulls(
             [
                 'account' => $account,
-                'attachmentURL' => $attachmentURL,
+                'idempotencyKey' => $idempotencyKey,
                 'communityID' => $communityID,
                 'isNoteTweet' => $isNoteTweet,
                 'media' => $media,
@@ -139,8 +143,9 @@ final class TweetsService implements TweetsContract
      *
      * Delete tweet
      *
-     * @param string $id Tweet ID to delete
-     * @param string $account X account identifier (@username or account ID)
+     * @param string $id Path param: Tweet ID to delete
+     * @param string $account Body param: X account identifier (@username or account ID)
+     * @param string $idempotencyKey Header param: Generate one unique value for each intended write. Reuse it only when retrying the exact same account, action, target, and payload. A reused key returns the original action. Reusing it with different input returns 409. Replay protection remains active for at least 90 days.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -148,9 +153,12 @@ final class TweetsService implements TweetsContract
     public function delete(
         string $id,
         string $account,
+        string $idempotencyKey,
         RequestOptions|array|null $requestOptions = null,
     ): TweetDeleteResponse {
-        $params = Util::removeNulls(['account' => $account]);
+        $params = Util::removeNulls(
+            ['account' => $account, 'idempotencyKey' => $idempotencyKey]
+        );
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->delete($id, params: $params, requestOptions: $requestOptions);
@@ -161,7 +169,7 @@ final class TweetsService implements TweetsContract
     /**
      * @api
      *
-     * List users who liked a tweet
+     * Returns liker profiles that X makes visible for the post. X can withhold liker identities even when the post reports likes. In that case this endpoint returns 424 `favoriters_unavailable` instead of a misleading empty success.
      *
      * @param string $id Tweet ID to get favoriters
      * @param string $cursor Pagination cursor for favoriters
@@ -302,7 +310,7 @@ final class TweetsService implements TweetsContract
     /**
      * @api
      *
-     * List replies to a tweet
+     * Returns visible replies. For an unfiltered first page, Xquik compares a terminal page with the post's reported reply count. If the page is visibly incomplete, the endpoint returns 424 `replies_incomplete` instead of presenting partial coverage as complete. Use tweet search with a `conversation_id:{id}` query as the broader fallback.
      *
      * @param string $id Tweet ID to get replies
      * @param string $anyWords Words or quoted phrases where any one can match. Separate with spaces, commas, or lines.

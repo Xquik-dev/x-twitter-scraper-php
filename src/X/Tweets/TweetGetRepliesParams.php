@@ -14,7 +14,7 @@ use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Replies;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Retweets;
 
 /**
- * List replies to a tweet.
+ * Returns visible replies. For an unfiltered first page, Xquik compares a terminal page with the post's reported reply count. If the page is visibly incomplete, the endpoint returns 424 `replies_incomplete` instead of presenting partial coverage as complete. Use tweet search with a `conversation_id:{id}` query as the broader fallback.
  *
  * @see XTwitterScraper\Services\X\TweetsService::getReplies()
  *

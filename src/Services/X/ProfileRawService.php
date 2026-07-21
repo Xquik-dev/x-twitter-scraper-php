@@ -7,6 +7,7 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\ProfileRawContract;
 use XTwitterScraper\X\Profile\ProfileUpdateAvatarParams;
@@ -36,6 +37,7 @@ final class ProfileRawService implements ProfileRawContract
      *
      * @param array{
      *   account: string,
+     *   idempotencyKey: string,
      *   description?: string,
      *   location?: string,
      *   name?: string,
@@ -55,12 +57,20 @@ final class ProfileRawService implements ProfileRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'patch',
             path: 'x/profile',
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: ProfileUpdateResponse::class,
         );
@@ -71,7 +81,9 @@ final class ProfileRawService implements ProfileRawContract
      *
      * Update profile avatar
      *
-     * @param array{account: string, url: string}|ProfileUpdateAvatarParams $params
+     * @param array{
+     *   account: string, url: string, idempotencyKey: string
+     * }|ProfileUpdateAvatarParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<ProfileUpdateAvatarResponse>
@@ -86,13 +98,26 @@ final class ProfileRawService implements ProfileRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'patch',
             path: 'x/profile/avatar',
-            headers: ['Content-Type' => 'multipart/form-data'],
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                [
+                    'Content-Type' => 'multipart/form-data',
+                    ...array_intersect_key(
+                        $parsed,
+                        array_flip(array_keys($header_params))
+                    ),
+                ],
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: ProfileUpdateAvatarResponse::class,
         );
@@ -103,7 +128,9 @@ final class ProfileRawService implements ProfileRawContract
      *
      * Update profile banner
      *
-     * @param array{account: string, url: string}|ProfileUpdateBannerParams $params
+     * @param array{
+     *   account: string, url: string, idempotencyKey: string
+     * }|ProfileUpdateBannerParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<ProfileUpdateBannerResponse>
@@ -118,13 +145,26 @@ final class ProfileRawService implements ProfileRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'patch',
             path: 'x/profile/banner',
-            headers: ['Content-Type' => 'multipart/form-data'],
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                [
+                    'Content-Type' => 'multipart/form-data',
+                    ...array_intersect_key(
+                        $parsed,
+                        array_flip(array_keys($header_params))
+                    ),
+                ],
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: ProfileUpdateBannerResponse::class,
         );

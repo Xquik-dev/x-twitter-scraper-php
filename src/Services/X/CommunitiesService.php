@@ -53,9 +53,10 @@ final class CommunitiesService implements CommunitiesContract
      *
      * Create community
      *
-     * @param string $account X account (@username or ID) creating the community
-     * @param string $name Community name
-     * @param string $description Community description
+     * @param string $account Body param: X account (@username or ID) creating the community
+     * @param string $name Body param: Community name
+     * @param string $idempotencyKey Header param: Generate one unique value for each intended write. Reuse it only when retrying the exact same account, action, target, and payload. A reused key returns the original action. Reusing it with different input returns 409. Replay protection remains active for at least 90 days.
+     * @param string $description Body param: Community description
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -63,11 +64,17 @@ final class CommunitiesService implements CommunitiesContract
     public function create(
         string $account,
         string $name,
+        string $idempotencyKey,
         ?string $description = null,
         RequestOptions|array|null $requestOptions = null,
     ): CommunityNewResponse {
         $params = Util::removeNulls(
-            ['account' => $account, 'name' => $name, 'description' => $description]
+            [
+                'account' => $account,
+                'name' => $name,
+                'idempotencyKey' => $idempotencyKey,
+                'description' => $description,
+            ],
         );
 
         // @phpstan-ignore-next-line argument.type
@@ -81,9 +88,10 @@ final class CommunitiesService implements CommunitiesContract
      *
      * Delete community
      *
-     * @param string $id resource ID returned by the matching create or list endpoint
-     * @param string $account X account (@username or ID) deleting the community
-     * @param string $communityName Community name for confirmation
+     * @param string $id path param: Resource ID returned by the matching create or list endpoint
+     * @param string $account Body param: X account (@username or ID) deleting the community
+     * @param string $communityName Body param: Community name for confirmation
+     * @param string $idempotencyKey Header param: Generate one unique value for each intended write. Reuse it only when retrying the exact same account, action, target, and payload. A reused key returns the original action. Reusing it with different input returns 409. Replay protection remains active for at least 90 days.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -92,10 +100,15 @@ final class CommunitiesService implements CommunitiesContract
         string $id,
         string $account,
         string $communityName,
+        string $idempotencyKey,
         RequestOptions|array|null $requestOptions = null,
     ): CommunityDeleteResponse {
         $params = Util::removeNulls(
-            ['account' => $account, 'communityName' => $communityName]
+            [
+                'account' => $account,
+                'communityName' => $communityName,
+                'idempotencyKey' => $idempotencyKey,
+            ],
         );
 
         // @phpstan-ignore-next-line argument.type

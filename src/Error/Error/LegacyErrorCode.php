@@ -137,6 +137,4 @@ enum LegacyErrorCode: string
     case X_WRITE_AMBIGUOUS = 'x_write_ambiguous';
 
     case X_WRITE_FAILED = 'x_write_failed';
-
-    case X_WRITE_UNCONFIRMED = 'x_write_unconfirmed';
 }

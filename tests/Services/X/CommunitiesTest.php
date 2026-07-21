@@ -45,7 +45,8 @@ final class CommunitiesTest extends TestCase
 
         $result = $this->client->x->communities->create(
             account: '@elonmusk',
-            name: 'Example Name'
+            name: 'Example Name',
+            idempotencyKey: 'Idempotency-Key',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -62,6 +63,7 @@ final class CommunitiesTest extends TestCase
         $result = $this->client->x->communities->create(
             account: '@elonmusk',
             name: 'Example Name',
+            idempotencyKey: 'Idempotency-Key',
             description: 'A community for Tesla enthusiasts',
         );
 
@@ -79,7 +81,8 @@ final class CommunitiesTest extends TestCase
         $result = $this->client->x->communities->delete(
             'id',
             account: '@elonmusk',
-            communityName: 'Tesla Fans'
+            communityName: 'Tesla Fans',
+            idempotencyKey: 'Idempotency-Key',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -96,7 +99,8 @@ final class CommunitiesTest extends TestCase
         $result = $this->client->x->communities->delete(
             'id',
             account: '@elonmusk',
-            communityName: 'Tesla Fans'
+            communityName: 'Tesla Fans',
+            idempotencyKey: 'Idempotency-Key',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

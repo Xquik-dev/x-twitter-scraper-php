@@ -41,6 +41,9 @@ final class TicketsService implements TicketsContract
      *
      * Create a support ticket
      *
+     * @param string $body Body param
+     * @param string $subject Body param
+     * @param string $idempotencyKey Header param: Generate one random value per ticket or reply. Reuse it only when retrying identical text and attachments. Never log this value.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -48,9 +51,16 @@ final class TicketsService implements TicketsContract
     public function create(
         string $body,
         string $subject,
+        ?string $idempotencyKey = null,
         RequestOptions|array|null $requestOptions = null,
     ): TicketNewResponse {
-        $params = Util::removeNulls(['body' => $body, 'subject' => $subject]);
+        $params = Util::removeNulls(
+            [
+                'body' => $body,
+                'subject' => $subject,
+                'idempotencyKey' => $idempotencyKey,
+            ],
+        );
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->create(params: $params, requestOptions: $requestOptions);
@@ -125,7 +135,9 @@ final class TicketsService implements TicketsContract
      *
      * Reply to a support ticket
      *
-     * @param string $id Support ticket public ID for the reply
+     * @param string $id Path param: Support ticket public ID for the reply
+     * @param string $body Body param
+     * @param string $idempotencyKey Header param: Generate one random value per ticket or reply. Reuse it only when retrying identical text and attachments. Never log this value.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -133,9 +145,12 @@ final class TicketsService implements TicketsContract
     public function reply(
         string $id,
         string $body,
-        RequestOptions|array|null $requestOptions = null
+        ?string $idempotencyKey = null,
+        RequestOptions|array|null $requestOptions = null,
     ): TicketReplyResponse {
-        $params = Util::removeNulls(['body' => $body]);
+        $params = Util::removeNulls(
+            ['body' => $body, 'idempotencyKey' => $idempotencyKey]
+        );
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->reply($id, params: $params, requestOptions: $requestOptions);

@@ -15,7 +15,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\X\ProfileService::updateBanner()
  *
  * @phpstan-type ProfileUpdateBannerParamsShape = array{
- *   account: string, url: string
+ *   account: string, url: string, idempotencyKey: string
  * }
  */
 final class ProfileUpdateBannerParams implements BaseModel
@@ -36,18 +36,24 @@ final class ProfileUpdateBannerParams implements BaseModel
     #[Required]
     public string $url;
 
+    #[Required]
+    public string $idempotencyKey;
+
     /**
      * `new ProfileUpdateBannerParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * ProfileUpdateBannerParams::with(account: ..., url: ...)
+     * ProfileUpdateBannerParams::with(account: ..., url: ..., idempotencyKey: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new ProfileUpdateBannerParams)->withAccount(...)->withURL(...)
+     * (new ProfileUpdateBannerParams)
+     *   ->withAccount(...)
+     *   ->withURL(...)
+     *   ->withIdempotencyKey(...)
      * ```
      */
     public function __construct()
@@ -60,12 +66,16 @@ final class ProfileUpdateBannerParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $account, string $url): self
-    {
+    public static function with(
+        string $account,
+        string $url,
+        string $idempotencyKey
+    ): self {
         $self = new self;
 
         $self['account'] = $account;
         $self['url'] = $url;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }
@@ -88,6 +98,14 @@ final class ProfileUpdateBannerParams implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    public function withIdempotencyKey(string $idempotencyKey): self
+    {
+        $self = clone $this;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }
