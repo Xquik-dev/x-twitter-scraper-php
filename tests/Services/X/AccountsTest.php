@@ -45,9 +45,9 @@ final class AccountsTest extends TestCase
         }
 
         $result = $this->client->x->accounts->create(
-            email: 'user@example.com',
-            password: 's3cur3Pa$$w0rd',
-            username: 'elonmusk',
+            email: 'account@example.invalid',
+            password: '<ACCOUNT_PASSWORD>',
+            username: 'your_x_username',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -62,10 +62,10 @@ final class AccountsTest extends TestCase
         }
 
         $result = $this->client->x->accounts->create(
-            email: 'user@example.com',
-            password: 's3cur3Pa$$w0rd',
-            username: 'elonmusk',
-            totpSecret: 'JBSWY3DPEHPK3PXP',
+            email: 'account@example.invalid',
+            password: '<ACCOUNT_PASSWORD>',
+            username: 'your_x_username',
+            totpSecret: '<TOTP_SECRET>',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -133,7 +133,7 @@ final class AccountsTest extends TestCase
 
         $result = $this->client->x->accounts->reauth(
             'id',
-            password: 'password_value'
+            password: '<ACCOUNT_PASSWORD>'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -149,9 +149,9 @@ final class AccountsTest extends TestCase
 
         $result = $this->client->x->accounts->reauth(
             'id',
-            password: 'password_value',
-            email: 'user@example.com',
-            totpSecret: 'totp_secret_value',
+            password: '<ACCOUNT_PASSWORD>',
+            email: 'account@example.invalid',
+            totpSecret: '<TOTP_SECRET>',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
