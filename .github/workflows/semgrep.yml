@@ -40,9 +40,12 @@ jobs:
         run: python -m pip install --disable-pip-version-check --no-input "semgrep==1.170.0"
 
       - name: Run Semgrep
+        # This upstream rule flags every non-string assert. PHP 8.1+ does not
+        # evaluate assertion strings as code, and this SDK uses boolean invariants.
         run: >-
           semgrep scan
           --config .semgrep-rules/php
+          --exclude-rule semgrep-rules.php.lang.security.assert-use
           --error
           --metrics=off
           --sarif
