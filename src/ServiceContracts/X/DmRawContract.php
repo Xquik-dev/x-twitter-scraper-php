@@ -37,7 +37,7 @@ interface DmRawContract
     /**
      * @api
      *
-     * @param string $userID Recipient user ID
+     * @param string $userID Path param: Recipient user ID
      * @param array<string,mixed>|DmSendParams $params
      * @param RequestOpts|null $requestOptions
      *

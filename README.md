@@ -1,21 +1,10 @@
-# X (Twitter) Scraper PHP SDK: Tweet Search, Profile Tweets, Followers & Posting
+# Xquik PHP SDK
 
-> **Xquik is an independent third-party service.** Not affiliated with X Corp.
-> "Twitter" and "X" are trademarks of X Corp.
-
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13737/badge)](https://www.bestpractices.dev/projects/13737)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg?url=https%3A%2F%2Fgithub.com%2FXquik-dev%2Fx-twitter-scraper-php)](https://deepwiki.com/Xquik-dev/x-twitter-scraper-php)
-[![Skills.sh x-twitter-scraper Skill](https://skills.sh/b/xquik-dev/x-twitter-scraper)](https://skills.sh/xquik-dev/x-twitter-scraper)
-
-The Xquik PHP SDK is a Twitter API SDK and X API alternative for tweet search, advanced Twitter search queries, profile tweets, user lookup, follower export, media download, media upload, monitoring, webhooks, and posting automation.
-
-Use it from PHP 8.1.0+ applications to get tweets from profiles, search tweets by keyword or operator query, send tweets, post replies, like, repost, follow, DM, run giveaway draws, and automate X workflows.
-
-It is generated with [Stainless](https://www.stainless.com/).
+Use the Xquik API from PHP 8.1+.
 
 ## Documentation
 
-The REST API documentation can be found on [xquik.com](https://xquik.com).
+Read the [PHP SDK guide](https://docs.xquik.com/sdks/php) or [API guide](https://docs.xquik.com/api-reference/overview).
 
 ## Installation
 
@@ -24,7 +13,7 @@ Install the package from Packagist with Composer:
 <!-- x-release-please-start-version -->
 
 ```sh
-composer require xquik/x-twitter-scraper:^0.4.5
+composer require xquik/x-twitter-scraper:^0.5.0
 ```
 
 <!-- x-release-please-end -->
@@ -115,32 +104,6 @@ $client = new Client(requestOptions: ['maxRetries' => 0]);
 $result = $client->account->retrieve(requestOptions: ['maxRetries' => 5]);
 ```
 
-### File uploads
-
-Request parameters for file uploads accept a resource from `fopen()`, raw contents, or a `FileParam`.
-
-```php
-<?php
-
-use XTwitterScraper\Core\FileParam;
-
-$contents = file_get_contents('/path/to/file');
-$response = $client->x->media->upload(
-  file: FileParam::fromString($contents, filename: '/path/to/file', contentType: '…'),
-);
-
-$response = $client->x->media->upload(file: '…');
-
-$fd = fopen('/path/to/file', 'r');
-try {
-  $response = $client->x->media->upload(
-    file: FileParam::fromResource($fd, filename: '/path/to/file', contentType: '…'),
-  );
-} finally {
-  fclose($fd);
-}
-```
-
 ## Advanced concepts
 
 ### Making custom or undocumented requests
@@ -196,3 +159,5 @@ PHP 8.1.0 or higher.
 ## Contributing
 
 See [the contributing documentation](https://github.com/Xquik-dev/x-twitter-scraper-php/tree/main/CONTRIBUTING.md).
+
+Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.

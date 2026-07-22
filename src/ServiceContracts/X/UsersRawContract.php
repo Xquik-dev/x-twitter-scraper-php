@@ -48,7 +48,7 @@ interface UsersRawContract
     /**
      * @api
      *
-     * @param string $id User ID to remove from your followers
+     * @param string $id Path param: User ID to remove from your followers
      * @param array<string,mixed>|UserRemoveFollowerParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -80,7 +80,7 @@ interface UsersRawContract
     /**
      * @api
      *
-     * @param string $id User ID or username
+     * @param string $id target user ID or username for follower lookup
      * @param array<string,mixed>|UserRetrieveFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -182,7 +182,7 @@ interface UsersRawContract
     /**
      * @api
      *
-     * @param string $id X user ID or username
+     * @param string $id target user ID or username for the replies timeline
      * @param array<string,mixed>|UserRetrieveRepliesParams $params
      * @param RequestOpts|null $requestOptions
      *

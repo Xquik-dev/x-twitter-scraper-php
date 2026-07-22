@@ -39,7 +39,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
      * Create community
      *
      * @param array{
-     *   account: string, name: string, description?: string
+     *   account: string, name: string, idempotencyKey: string, description?: string
      * }|CommunityCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -55,12 +55,20 @@ final class CommunitiesRawService implements CommunitiesRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
             path: 'x/communities',
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: CommunityNewResponse::class,
         );
@@ -71,9 +79,9 @@ final class CommunitiesRawService implements CommunitiesRawContract
      *
      * Delete community
      *
-     * @param string $id resource ID returned by the matching create or list endpoint
+     * @param string $id path param: Resource ID returned by the matching create or list endpoint
      * @param array{
-     *   account: string, communityName: string
+     *   account: string, communityName: string, idempotencyKey: string
      * }|CommunityDeleteParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -90,12 +98,20 @@ final class CommunitiesRawService implements CommunitiesRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'delete',
             path: ['x/communities/%1$s', $id],
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: CommunityDeleteResponse::class,
         );

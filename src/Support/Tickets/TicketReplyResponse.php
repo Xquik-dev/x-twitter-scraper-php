@@ -4,21 +4,44 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Support\Tickets;
 
-use XTwitterScraper\Core\Attributes\Optional;
+use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Support\Tickets\TicketReplyResponse\Attachment;
 
 /**
- * @phpstan-type TicketReplyResponseShape = array{publicID?: string|null}
+ * @phpstan-import-type AttachmentShape from \XTwitterScraper\Support\Tickets\TicketReplyResponse\Attachment
+ *
+ * @phpstan-type TicketReplyResponseShape = array{
+ *   attachments: list<Attachment|AttachmentShape>, publicID: string
+ * }
  */
 final class TicketReplyResponse implements BaseModel
 {
     /** @use SdkModel<TicketReplyResponseShape> */
     use SdkModel;
 
-    #[Optional('publicId')]
-    public ?string $publicID;
+    /** @var list<Attachment> $attachments */
+    #[Required(list: Attachment::class)]
+    public array $attachments;
 
+    #[Required('publicId')]
+    public string $publicID;
+
+    /**
+     * `new TicketReplyResponse()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * TicketReplyResponse::with(attachments: ..., publicID: ...)
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new TicketReplyResponse)->withAttachments(...)->withPublicID(...)
+     * ```
+     */
     public function __construct()
     {
         $this->initialize();
@@ -28,12 +51,26 @@ final class TicketReplyResponse implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param list<Attachment|AttachmentShape> $attachments
      */
-    public static function with(?string $publicID = null): self
+    public static function with(array $attachments, string $publicID): self
     {
         $self = new self;
 
-        null !== $publicID && $self['publicID'] = $publicID;
+        $self['attachments'] = $attachments;
+        $self['publicID'] = $publicID;
+
+        return $self;
+    }
+
+    /**
+     * @param list<Attachment|AttachmentShape> $attachments
+     */
+    public function withAttachments(array $attachments): self
+    {
+        $self = clone $this;
+        $self['attachments'] = $attachments;
 
         return $self;
     }

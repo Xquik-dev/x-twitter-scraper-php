@@ -7,6 +7,7 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\MediaRawContract;
 use XTwitterScraper\X\Media\MediaDownloadParams;
@@ -15,8 +16,6 @@ use XTwitterScraper\X\Media\MediaUploadParams;
 use XTwitterScraper\X\Media\MediaUploadResponse;
 
 /**
- * Media upload and download.
- *
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
  */
 final class MediaRawService implements MediaRawContract
@@ -68,7 +67,9 @@ final class MediaRawService implements MediaRawContract
      *
      * Upload media
      *
-     * @param array{account: string, url: string}|MediaUploadParams $params
+     * @param array{
+     *   account: string, url: string, idempotencyKey: string
+     * }|MediaUploadParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MediaUploadResponse>
@@ -83,13 +84,26 @@ final class MediaRawService implements MediaRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
             path: 'x/media',
-            headers: ['Content-Type' => 'multipart/form-data'],
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                [
+                    'Content-Type' => 'multipart/form-data',
+                    ...array_intersect_key(
+                        $parsed,
+                        array_flip(array_keys($header_params))
+                    ),
+                ],
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: MediaUploadResponse::class,
         );

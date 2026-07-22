@@ -41,7 +41,7 @@ final class AccountConnectionChallengesTest extends TestCase
 
         $result = $this->client->x->accountConnectionChallenges->submit(
             'id',
-            emailCode: '123456'
+            emailCode: '<EMAIL_VERIFICATION_CODE>'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -60,7 +60,7 @@ final class AccountConnectionChallengesTest extends TestCase
 
         $result = $this->client->x->accountConnectionChallenges->submit(
             'id',
-            emailCode: '123456'
+            emailCode: '<EMAIL_VERIFICATION_CODE>'
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

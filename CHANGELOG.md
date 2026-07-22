@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.0 (2026-07-22)
+
+Full Changelog: [v0.4.5...v0.5.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.4.5...v0.5.0)
+
+### Features
+
+* **api:** propagate durable write actions ([afddb86](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/afddb8663ad3e9e0e8de7a2175274ca2cbaff165))
+* **api:** propagate production write-action contract ([487bbf4](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/487bbf4cb2f9ca1d710792f6592b40d2765703fd))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([88e3023](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/88e302385fe98069491c61343e0b7258b6ee40ac))
+* support setting headers via env ([e4c47e9](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/e4c47e992777392836bcd365b5e1cd1b4dfc2b30))
+
+
+### Bug Fixes
+
+* guzzle requires special handling to enable streaming ([519f14f](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/519f14fe3534a4105441447b383383834622e0ea))
+
 ## 0.4.4 (2026-07-14)
 
 Full Changelog: [v0.4.3...v0.4.4](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.4.3...v0.4.4)

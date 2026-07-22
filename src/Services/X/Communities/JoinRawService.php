@@ -7,6 +7,7 @@ namespace XTwitterScraper\Services\X\Communities;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\Communities\JoinRawContract;
 use XTwitterScraper\X\Communities\Join\JoinCreateParams;
@@ -32,8 +33,8 @@ final class JoinRawService implements JoinRawContract
      *
      * Join community
      *
-     * @param string $id resource ID returned by the matching create or list endpoint
-     * @param array{account: string}|JoinCreateParams $params
+     * @param string $id path param: Resource ID returned by the matching create or list endpoint
+     * @param array{account: string, idempotencyKey: string}|JoinCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<JoinNewResponse>
@@ -49,12 +50,20 @@ final class JoinRawService implements JoinRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
             path: ['x/communities/%1$s/join', $id],
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: JoinNewResponse::class,
         );
@@ -65,8 +74,10 @@ final class JoinRawService implements JoinRawContract
      *
      * Leave community
      *
-     * @param string $id resource ID returned by the matching create or list endpoint
-     * @param array{account: string}|JoinDeleteAllParams $params
+     * @param string $id path param: Resource ID returned by the matching create or list endpoint
+     * @param array{
+     *   account: string, idempotencyKey: string
+     * }|JoinDeleteAllParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<JoinDeleteAllResponse>
@@ -82,12 +93,20 @@ final class JoinRawService implements JoinRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'delete',
             path: ['x/communities/%1$s/join', $id],
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: JoinDeleteAllResponse::class,
         );

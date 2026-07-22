@@ -62,6 +62,7 @@ final class TicketsTest extends TestCase
         $result = $this->client->support->tickets->create(
             body: 'I am unable to connect my X account. Please help.',
             subject: 'Cannot connect X account',
+            idempotencyKey: 'Idempotency-Key',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -153,7 +154,8 @@ final class TicketsTest extends TestCase
 
         $result = $this->client->support->tickets->reply(
             'tkt_a1b2c3d4e5f6a1b2c3d4e5f6',
-            body: 'Thank you for the update.'
+            body: 'Thank you for the update.',
+            idempotencyKey: 'Idempotency-Key',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

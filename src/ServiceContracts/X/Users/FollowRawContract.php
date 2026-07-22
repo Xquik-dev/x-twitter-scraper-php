@@ -20,7 +20,7 @@ interface FollowRawContract
     /**
      * @api
      *
-     * @param string $id User ID to follow
+     * @param string $id Path param: User ID to follow
      * @param array<string,mixed>|FollowCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -37,7 +37,7 @@ interface FollowRawContract
     /**
      * @api
      *
-     * @param string $id User ID to unfollow
+     * @param string $id Path param: User ID to unfollow
      * @param array<string,mixed>|FollowDeleteAllParams $params
      * @param RequestOpts|null $requestOptions
      *

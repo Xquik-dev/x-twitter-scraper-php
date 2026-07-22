@@ -66,9 +66,9 @@ final class DmRawService implements DmRawContract
      *
      * Send direct message
      *
-     * @param string $userID Recipient user ID
+     * @param string $userID Path param: Recipient user ID
      * @param array{
-     *   account: string, text: string, mediaIDs?: list<string>
+     *   account: string, text: string, idempotencyKey: string, mediaIDs?: list<string>
      * }|DmSendParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -85,12 +85,20 @@ final class DmRawService implements DmRawContract
             $params,
             $requestOptions,
         );
+        $header_params = ['idempotencyKey' => 'Idempotency-Key'];
 
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
             path: ['x/dm/%1$s', $userID],
-            body: (object) $parsed,
+            headers: Util::array_transform_keys(
+                array_intersect_key($parsed, array_flip(array_keys($header_params))),
+                $header_params,
+            ),
+            body: (object) array_diff_key(
+                $parsed,
+                array_flip(array_keys($header_params))
+            ),
             options: $options,
             convert: DmSendResponse::class,
         );

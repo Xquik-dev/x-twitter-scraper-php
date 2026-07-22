@@ -41,7 +41,10 @@ final class ProfileTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->x->profile->update(account: '@elonmusk');
+        $result = $this->client->x->profile->update(
+            account: '@elonmusk',
+            idempotencyKey: 'Idempotency-Key'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(ProfileUpdateResponse::class, $result);
@@ -56,6 +59,7 @@ final class ProfileTest extends TestCase
 
         $result = $this->client->x->profile->update(
             account: '@elonmusk',
+            idempotencyKey: 'Idempotency-Key',
             description: 'description_value',
             location: 'location_value',
             name: 'Example Name',
@@ -75,7 +79,8 @@ final class ProfileTest extends TestCase
 
         $result = $this->client->x->profile->updateAvatar(
             account: '@elonmusk',
-            url: 'https://example.com/avatar.png'
+            url: 'https://example.com/avatar.png',
+            idempotencyKey: 'Idempotency-Key',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -91,7 +96,8 @@ final class ProfileTest extends TestCase
 
         $result = $this->client->x->profile->updateAvatar(
             account: '@elonmusk',
-            url: 'https://example.com/avatar.png'
+            url: 'https://example.com/avatar.png',
+            idempotencyKey: 'Idempotency-Key',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -107,7 +113,8 @@ final class ProfileTest extends TestCase
 
         $result = $this->client->x->profile->updateBanner(
             account: '@elonmusk',
-            url: 'https://example.com/banner.png'
+            url: 'https://example.com/banner.png',
+            idempotencyKey: 'Idempotency-Key',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -123,7 +130,8 @@ final class ProfileTest extends TestCase
 
         $result = $this->client->x->profile->updateBanner(
             account: '@elonmusk',
-            url: 'https://example.com/banner.png'
+            url: 'https://example.com/banner.png',
+            idempotencyKey: 'Idempotency-Key',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

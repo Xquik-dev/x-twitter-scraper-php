@@ -86,6 +86,72 @@ enum LegacyErrorCode: string
 
     case USER_NOT_FOUND = 'user_not_found';
 
+    case BODY_TOO_LARGE = 'body_too_large';
+
+    case CHECKOUT_UNAVAILABLE = 'checkout_unavailable';
+
+    case CONNECTION_CHALLENGE_EXPIRED = 'connection_challenge_expired';
+
+    case CONNECTION_CHALLENGE_INACTIVE = 'connection_challenge_inactive';
+
+    case DRAFT_NOT_FOUND = 'draft_not_found';
+
+    case FAVORITERS_UNAVAILABLE = 'favoriters_unavailable';
+
+    case FORBIDDEN = 'forbidden';
+
+    case GUEST_WALLET_UNAVAILABLE = 'guest_wallet_unavailable';
+
+    case GUEST_WALLETS_DISABLED = 'guest_wallets_disabled';
+
+    case GUEST_WALLETS_UNAVAILABLE = 'guest_wallets_unavailable';
+
+    case IDEMPOTENCY_CONFLICT = 'idempotency_conflict';
+
+    case IDEMPOTENCY_KEY_CONFLICT = 'idempotency_key_conflict';
+
+    case INVALID_COMMUNITY_ID = 'invalid_community_id';
+
+    case INVALID_IDEMPOTENCY_KEY = 'invalid_idempotency_key';
+
+    case INVALID_LIST_ID = 'invalid_list_id';
+
+    case INVALID_PAYMENT_AMOUNT = 'invalid_payment_amount';
+
+    case INVALID_RANGE = 'invalid_range';
+
+    case LOGIN_RATE_LIMITED = 'login_rate_limited';
+
+    case MISSING_IDEMPOTENCY_KEY = 'missing_idempotency_key';
+
+    case MISSING_IDS = 'missing_ids';
+
+    case NO_CACHED_STYLE = 'no_cached_style';
+
+    case PASSKEY_REQUIRED = 'passkey_required';
+
+    case RATE_LIMITED = 'rate_limited';
+
+    case READ_REQUEST_TIMEOUT = 'read_request_timeout';
+
+    case REPLIES_INCOMPLETE = 'replies_incomplete';
+
+    case SUPPORT_MEDIA_RATE_LIMIT = 'support_media_rate_limit';
+
+    case SUPPORT_REQUEST_RATE_LIMIT = 'support_request_rate_limit';
+
+    case TOO_MANY_IDS = 'too_many_ids';
+
+    case UNKNOWN_FIELD = 'unknown_field';
+
+    case UNSUPPORTED_MEDIA_TYPE = 'unsupported_media_type';
+
+    case WEBHOOK_INACTIVE = 'webhook_inactive';
+
+    case WRITE_TRACKING_UNAVAILABLE = 'write_tracking_unavailable';
+
+    case X_WRITE_UNCONFIRMED = 'x_write_unconfirmed';
+
     case X_ACCOUNT_FEATURE_REQUIRED = 'x_account_feature_required';
 
     case X_ACCOUNT_PROTECTED = 'x_account_protected';
@@ -137,6 +203,4 @@ enum LegacyErrorCode: string
     case X_WRITE_AMBIGUOUS = 'x_write_ambiguous';
 
     case X_WRITE_FAILED = 'x_write_failed';
-
-    case X_WRITE_UNCONFIRMED = 'x_write_unconfirmed';
 }

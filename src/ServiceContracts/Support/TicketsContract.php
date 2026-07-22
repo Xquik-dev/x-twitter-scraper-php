@@ -21,6 +21,9 @@ interface TicketsContract
     /**
      * @api
      *
+     * @param string $body Body param
+     * @param string $subject Body param
+     * @param string $idempotencyKey Header param: Generate one random value per ticket or reply. Reuse it only when retrying identical text and attachments. Never log this value.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -28,6 +31,7 @@ interface TicketsContract
     public function create(
         string $body,
         string $subject,
+        ?string $idempotencyKey = null,
         RequestOptions|array|null $requestOptions = null,
     ): TicketNewResponse;
 
@@ -73,7 +77,9 @@ interface TicketsContract
     /**
      * @api
      *
-     * @param string $id Support ticket public ID for the reply
+     * @param string $id Path param: Support ticket public ID for the reply
+     * @param string $body Body param
+     * @param string $idempotencyKey Header param: Generate one random value per ticket or reply. Reuse it only when retrying identical text and attachments. Never log this value.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -81,6 +87,7 @@ interface TicketsContract
     public function reply(
         string $id,
         string $body,
-        RequestOptions|array|null $requestOptions = null
+        ?string $idempotencyKey = null,
+        RequestOptions|array|null $requestOptions = null,
     ): TicketReplyResponse;
 }

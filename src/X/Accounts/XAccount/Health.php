@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace XTwitterScraper\X\Accounts\XAccount;
 
 /**
- * Derived login/cookie health. `healthy` = cookies valid. `needsReauth` = user must submit fresh credentials. `locked` = X locked the account; unlock on x.com first. `suspended` = X banned the account. `recovering` = past cooldown, will auto-retry on next use. `temporaryIssue` = transient backend problem; retry shortly.
+ * Derived connection health. `healthy` = session active. `needsReauth` = user must submit fresh credentials. `locked` = X locked the account; unlock on x.com first. `suspended` = X banned the account. `recovering` = past cooldown, will auto-retry on next use. `temporaryIssue` = temporary connection problem; retry shortly.
  */
 enum Health: string
 {

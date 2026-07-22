@@ -11,7 +11,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\Accounts\XAccountDetail\Health;
 
 /**
- * Full X account details with status, cookies, and update timestamp.
+ * Connected X account details with health and timestamp metadata.
  *
  * @phpstan-type XAccountDetailShape = array{
  *   id: string,

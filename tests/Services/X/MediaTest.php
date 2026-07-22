@@ -55,7 +55,8 @@ final class MediaTest extends TestCase
 
         $result = $this->client->x->media->upload(
             account: '@elonmusk',
-            url: 'https://example.com/image.png'
+            url: 'https://example.com/image.png',
+            idempotencyKey: 'Idempotency-Key',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -71,7 +72,8 @@ final class MediaTest extends TestCase
 
         $result = $this->client->x->media->upload(
             account: '@elonmusk',
-            url: 'https://example.com/image.png'
+            url: 'https://example.com/image.png',
+            idempotencyKey: 'Idempotency-Key',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

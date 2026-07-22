@@ -78,7 +78,7 @@ final class CreditsService implements CreditsContract
      *
      * Get top-up billing status
      *
-     * @param string $sessionID billing session ID returned by the top-up billing flow
+     * @param string $sessionID top-up session ID to inspect
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

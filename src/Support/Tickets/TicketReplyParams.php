@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Support\Tickets;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
@@ -14,7 +15,9 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *
  * @see XTwitterScraper\Services\Support\TicketsService::reply()
  *
- * @phpstan-type TicketReplyParamsShape = array{body: string}
+ * @phpstan-type TicketReplyParamsShape = array{
+ *   body: string, idempotencyKey?: string|null
+ * }
  */
 final class TicketReplyParams implements BaseModel
 {
@@ -24,6 +27,9 @@ final class TicketReplyParams implements BaseModel
 
     #[Required]
     public string $body;
+
+    #[Optional]
+    public ?string $idempotencyKey;
 
     /**
      * `new TicketReplyParams()` is missing required properties by the API.
@@ -49,11 +55,15 @@ final class TicketReplyParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $body): self
-    {
+    public static function with(
+        string $body,
+        ?string $idempotencyKey = null
+    ): self {
         $self = new self;
 
         $self['body'] = $body;
+
+        null !== $idempotencyKey && $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }
@@ -62,6 +72,14 @@ final class TicketReplyParams implements BaseModel
     {
         $self = clone $this;
         $self['body'] = $body;
+
+        return $self;
+    }
+
+    public function withIdempotencyKey(string $idempotencyKey): self
+    {
+        $self = clone $this;
+        $self['idempotencyKey'] = $idempotencyKey;
 
         return $self;
     }
