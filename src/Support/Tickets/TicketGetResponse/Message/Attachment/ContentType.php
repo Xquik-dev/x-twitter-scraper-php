@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Support\Tickets\TicketGetResponse\Message\Attachment;
 
+/**
+ * Validated media type.
+ */
 enum ContentType: string
 {
     case IMAGE_JPEG = 'image/jpeg';

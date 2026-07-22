@@ -47,7 +47,7 @@ final class Error implements BaseModel
     public ?string $reason;
 
     /**
-     * Required wait in seconds.
+     * Seconds until the next permitted request.
      */
     #[Optional]
     public ?int $retryAfter;
@@ -138,7 +138,7 @@ final class Error implements BaseModel
     }
 
     /**
-     * Required wait in seconds.
+     * Seconds until the next permitted request.
      */
     public function withRetryAfter(int $retryAfter): self
     {

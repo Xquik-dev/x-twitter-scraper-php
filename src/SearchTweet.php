@@ -99,7 +99,7 @@ final class SearchTweet implements BaseModel
     public ?string $createdAt;
 
     /**
-     * Start and end offsets for rendered tweet text.
+     * Rendered text's start and end offsets.
      *
      * @var list<int>|null $displayTextRange
      */
@@ -115,19 +115,19 @@ final class SearchTweet implements BaseModel
     public ?array $entities;
 
     /**
-     * Tweet ID being replied to.
+     * ID of the tweet this result replies to.
      */
     #[Optional('inReplyToId')]
     public ?string $inReplyToID;
 
     /**
-     * User ID being replied to.
+     * ID of the user this result replies to.
      */
     #[Optional('inReplyToUserId')]
     public ?string $inReplyToUserID;
 
     /**
-     * Username being replied to.
+     * Username this result replies to.
      */
     #[Optional]
     public ?string $inReplyToUsername;
@@ -157,7 +157,7 @@ final class SearchTweet implements BaseModel
     public ?bool $isReply;
 
     /**
-     * Tweet language code.
+     * Search result language code.
      */
     #[Optional]
     public ?string $lang;
@@ -192,7 +192,7 @@ final class SearchTweet implements BaseModel
     public ?string $type;
 
     /**
-     * Tweet permalink URL.
+     * Search result permalink.
      */
     #[Optional]
     public ?string $url;
@@ -422,7 +422,7 @@ final class SearchTweet implements BaseModel
     }
 
     /**
-     * Start and end offsets for rendered tweet text.
+     * Rendered text's start and end offsets.
      *
      * @param list<int> $displayTextRange
      */
@@ -448,7 +448,7 @@ final class SearchTweet implements BaseModel
     }
 
     /**
-     * Tweet ID being replied to.
+     * ID of the tweet this result replies to.
      */
     public function withInReplyToID(string $inReplyToID): self
     {
@@ -459,7 +459,7 @@ final class SearchTweet implements BaseModel
     }
 
     /**
-     * User ID being replied to.
+     * ID of the user this result replies to.
      */
     public function withInReplyToUserID(string $inReplyToUserID): self
     {
@@ -470,7 +470,7 @@ final class SearchTweet implements BaseModel
     }
 
     /**
-     * Username being replied to.
+     * Username this result replies to.
      */
     public function withInReplyToUsername(string $inReplyToUsername): self
     {
@@ -525,7 +525,7 @@ final class SearchTweet implements BaseModel
     }
 
     /**
-     * Tweet language code.
+     * Search result language code.
      */
     public function withLang(string $lang): self
     {
@@ -595,7 +595,7 @@ final class SearchTweet implements BaseModel
     }
 
     /**
-     * Tweet permalink URL.
+     * Search result permalink.
      */
     public function withURL(string $url): self
     {

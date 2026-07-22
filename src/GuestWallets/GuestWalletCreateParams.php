@@ -29,7 +29,7 @@ final class GuestWalletCreateParams implements BaseModel
     public string $currency = 'usd';
 
     /**
-     * Confirmed USD amount in cents.
+     * USD cents accepted for this checkout.
      */
     #[Required('amount_minor')]
     public int $amountMinor;
@@ -83,7 +83,7 @@ final class GuestWalletCreateParams implements BaseModel
     }
 
     /**
-     * Confirmed USD amount in cents.
+     * USD cents accepted for this checkout.
      */
     public function withAmountMinor(int $amountMinor): self
     {

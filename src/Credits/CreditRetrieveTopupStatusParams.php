@@ -23,7 +23,7 @@ final class CreditRetrieveTopupStatusParams implements BaseModel
     use SdkParams;
 
     /**
-     * Billing session ID returned by the top-up billing flow.
+     * Top-up session ID to inspect.
      */
     #[Required]
     public string $sessionID;
@@ -62,7 +62,7 @@ final class CreditRetrieveTopupStatusParams implements BaseModel
     }
 
     /**
-     * Billing session ID returned by the top-up billing flow.
+     * Top-up session ID to inspect.
      */
     public function withSessionID(string $sessionID): self
     {
