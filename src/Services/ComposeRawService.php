@@ -8,8 +8,10 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Compose\ComposeCreateParams;
 use XTwitterScraper\Compose\ComposeCreateParams\Goal;
 use XTwitterScraper\Compose\ComposeCreateParams\MediaType;
-use XTwitterScraper\Compose\ComposeCreateParams\Step;
 use XTwitterScraper\Compose\ComposeNewResponse;
+use XTwitterScraper\Compose\ComposeNewResponse\ComposePrepareResult;
+use XTwitterScraper\Compose\ComposeNewResponse\ComposeRefineResult;
+use XTwitterScraper\Compose\ComposeNewResponse\ComposeScoreResult;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
@@ -31,24 +33,24 @@ final class ComposeRawService implements ComposeRawContract
     /**
      * @api
      *
-     * Compose, refine, or score a tweet
+     * Run one step of Xquik's three-step writing workflow. Compose returns questions and editorial rules. Refine returns goal-specific guidance. Score applies deterministic text checks. It does not predict reach or expose X ranking weights.
      *
      * @param array{
-     *   step: Step|value-of<Step>,
+     *   step?: 'score',
+     *   topic: string,
+     *   goal: Goal|value-of<Goal>,
+     *   styleUsername?: string,
+     *   tone: string,
      *   additionalContext?: string,
      *   callToAction?: string,
-     *   draft?: string,
-     *   goal?: Goal|value-of<Goal>,
+     *   mediaType?: MediaType|value-of<MediaType>,
+     *   draft: string,
      *   hasLink?: bool,
      *   hasMedia?: bool,
-     *   mediaType?: MediaType|value-of<MediaType>,
-     *   styleUsername?: string,
-     *   tone?: string,
-     *   topic?: string,
      * }|ComposeCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<ComposeNewResponse>
+     * @return BaseResponse<ComposePrepareResult|ComposeRefineResult|ComposeScoreResult,>
      *
      * @throws APIException
      */

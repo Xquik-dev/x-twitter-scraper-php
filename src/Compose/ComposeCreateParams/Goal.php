@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace XTwitterScraper\Compose\ComposeCreateParams;
 
 /**
- * Optimization goal.
+ * Editorial goal for the guidance.
  */
 enum Goal: string
 {

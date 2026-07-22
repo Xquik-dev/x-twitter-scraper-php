@@ -7,7 +7,6 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
-use XTwitterScraper\Compose\ComposeNewResponse;
 use XTwitterScraper\Core\Util;
 
 /**
@@ -39,10 +38,15 @@ final class ComposeTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->compose->create(step: 'compose');
+        $result = $this->client->compose->create(
+            topic: 'x',
+            goal: 'engagement',
+            tone: 'professional',
+            draft: 'x'
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(ComposeNewResponse::class, $result);
+        $this->assertNotNull($result);
     }
 
     #[Test]
@@ -53,20 +57,20 @@ final class ComposeTest extends TestCase
         }
 
         $result = $this->client->compose->create(
-            step: 'compose',
-            additionalContext: 'https://x.com/elonmusk/status/1234567890',
-            callToAction: 'Follow for more',
-            draft: 'AI is changing everything. Here\'s why.',
+            step: 'score',
+            topic: 'x',
             goal: 'engagement',
-            hasLink: false,
-            hasMedia: false,
-            mediaType: 'none',
-            styleUsername: 'elonmusk',
+            styleUsername: 'x',
             tone: 'professional',
-            topic: 'AI trends in 2025',
+            additionalContext: 'x',
+            callToAction: 'x',
+            mediaType: 'photo',
+            draft: 'x',
+            hasLink: true,
+            hasMedia: true,
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(ComposeNewResponse::class, $result);
+        $this->assertNotNull($result);
     }
 }
