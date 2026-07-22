@@ -14,6 +14,13 @@ on:
       - 'stl-preview-head/**'
       - 'stl-preview-base/**'
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     timeout-minutes: 10
@@ -27,7 +34,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
         with:
-          php-version: '8.3'
+          php-version: "8.3"
 
       - name: Run Bootstrap
         run: ./scripts/bootstrap
@@ -45,7 +52,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
         with:
-          php-version: '8.3'
+          php-version: "8.3"
 
       - name: Run bootstrap
         run: ./scripts/bootstrap

@@ -182,7 +182,13 @@ final class Conversion
                 }
 
                 if ($value instanceof \Generator) {
-                    return implode('', iterator_to_array($value));
+                    return implode(
+                        '',
+                        array_map(
+                            static fn (mixed $item): string => Util::strVal($item),
+                            iterator_to_array($value),
+                        ),
+                    );
                 }
 
                 ++$state->no;

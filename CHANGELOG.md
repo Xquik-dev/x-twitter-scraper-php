@@ -1,5 +1,61 @@
 # Changelog
 
+## 0.4.4 (2026-07-14)
+
+Full Changelog: [v0.4.3...v0.4.4](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.4.3...v0.4.4)
+
+### Features
+
+* regenerate the SDK from the finalized API contract
+* add guest wallets, credit top-ups, keyword monitors, webhook resume, account challenges, and write-action status
+* refresh current read and write request and response types
+
+### Security
+
+* retain protected release tags and remove unused long-lived Packagist credential checks
+
+## 0.4.3 (2026-07-14)
+
+Full Changelog: [v0.4.2...v0.4.3](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.4.2...v0.4.3)
+
+### Security
+
+* protect release tags from updates and deletion
+* remove unused long-lived Packagist credential checks
+* update audited development dependencies
+
+### Documentation
+
+* install the stable Packagist package instead of the development branch
+
+## 0.4.2 (2026-05-10)
+
+Full Changelog: [v0.4.1...v0.4.2](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.4.1...v0.4.2)
+
+### Documentation
+
+* add Skills.sh badge ([424dd9b](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/424dd9bb147181b06df392d86c7a3aafc2167b8b))
+* add DeepWiki badge and Context7 claim file ([05deaee](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/05deaee5db03c1c5f1052e6cb7d5afb9a8572e84))
+
+### Chores
+
+* improve PHP package metadata ([e4c398d](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/e4c398d350f7b3f49bfc995e295ac57486d8668d))
+* improve PHP package support metadata ([4d944ca](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/4d944ca6012f67f7a03212b21c49e84b9ab9907a))
+* improve PHP Context7 config ([1aa153c](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/1aa153c94bd562cda843dd7dab1018d8e54a1904))
+
+## 0.4.1 (2026-04-25)
+
+Full Changelog: [v0.4.0...v0.4.1](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.4.0...v0.4.1)
+
+### Bug Fixes
+
+* escape ampersand in OpenAPI summaries for C# XML docs ([210ef0f](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/210ef0f5474ce59757f40de783503d6ca8e6bb4b))
+
+
+### Documentation
+
+* add Contributor Covenant 2.1 Code of Conduct ([#2192](https://github.com/Xquik-dev/x-twitter-scraper-php/issues/2192)) ([9b5a580](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/9b5a580eb39c479709602e6be3dc9c83bdb57cef))
+
 ## 0.4.0 (2026-04-22)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.3.0...v0.4.0)

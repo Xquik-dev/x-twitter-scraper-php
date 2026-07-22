@@ -1,31 +1,19 @@
-# Xquik API library
+# Xquik PHP SDK
 
-The Xquik library provides convenient access to the X Twitter Scraper REST API from any PHP 8.1.0+ application.
-
-It is generated with [Stainless](https://www.stainless.com/).
+Use the Xquik API from PHP 8.1+.
 
 ## Documentation
 
-The REST API documentation can be found on [xquik.com](https://xquik.com).
+Read the [PHP SDK guide](https://docs.xquik.com/sdks/php) or [API guide](https://docs.xquik.com/api-reference/overview).
 
 ## Installation
 
-To use this package, install via Composer by adding the following to your application's `composer.json`:
+Install the package from Packagist with Composer:
 
 <!-- x-release-please-start-version -->
 
-```json
-{
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:Xquik-dev/x-twitter-scraper-php.git"
-    }
-  ],
-  "require": {
-    "xquik/x-twitter-scraper": "dev-main"
-  }
-}
+```sh
+composer require xquik/x-twitter-scraper:^0.4.5
 ```
 
 <!-- x-release-please-end -->
@@ -171,3 +159,5 @@ PHP 8.1.0 or higher.
 ## Contributing
 
 See [the contributing documentation](https://github.com/Xquik-dev/x-twitter-scraper-php/tree/main/CONTRIBUTING.md).
+
+Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
