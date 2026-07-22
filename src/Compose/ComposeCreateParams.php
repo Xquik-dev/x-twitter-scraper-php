@@ -100,7 +100,7 @@ final class ComposeCreateParams implements BaseModel
     public ?bool $hasLink;
 
     /**
-     * @deprecated
+     * @deprecated Ignored. Remove this field. Use hasLink for a separate link card.
      *
      * Accepted for backward compatibility. Text checks ignore this field.
      */
