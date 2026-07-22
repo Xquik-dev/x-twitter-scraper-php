@@ -37,13 +37,13 @@ final class MonitorBilling implements BaseModel
     public string $activeHourlyBurn;
 
     /**
-     * Estimated daily credits for 1 active instant monitor.
+     * Rounded daily estimate for 1 active monitor.
      */
     #[Required]
     public string $creditsPerActiveMonitorDay;
 
     /**
-     * Hourly credits charged for 1 active instant monitor.
+     * Hourly credits charged for 1 active monitor.
      */
     #[Required]
     public string $creditsPerActiveMonitorHour;
@@ -150,7 +150,7 @@ final class MonitorBilling implements BaseModel
     }
 
     /**
-     * Estimated daily credits for 1 active instant monitor.
+     * Rounded daily estimate for 1 active monitor.
      */
     public function withCreditsPerActiveMonitorDay(
         string $creditsPerActiveMonitorDay
@@ -162,7 +162,7 @@ final class MonitorBilling implements BaseModel
     }
 
     /**
-     * Hourly credits charged for 1 active instant monitor.
+     * Hourly credits charged for 1 active monitor.
      */
     public function withCreditsPerActiveMonitorHour(
         string $creditsPerActiveMonitorHour

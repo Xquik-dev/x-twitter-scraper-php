@@ -7,8 +7,9 @@ namespace XTwitterScraper\Services;
 use XTwitterScraper\Client;
 use XTwitterScraper\Compose\ComposeCreateParams\Goal;
 use XTwitterScraper\Compose\ComposeCreateParams\MediaType;
-use XTwitterScraper\Compose\ComposeCreateParams\Step;
-use XTwitterScraper\Compose\ComposeNewResponse;
+use XTwitterScraper\Compose\ComposeNewResponse\ComposePrepareResult;
+use XTwitterScraper\Compose\ComposeNewResponse\ComposeRefineResult;
+use XTwitterScraper\Compose\ComposeNewResponse\ComposeScoreResult;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
@@ -37,50 +38,50 @@ final class ComposeService implements ComposeContract
     /**
      * @api
      *
-     * Compose, refine, or score a tweet
+     * Run one step of Xquik's three-step writing workflow. Compose returns questions and editorial rules. Refine returns goal-specific guidance. Score applies deterministic text checks. It does not predict reach or expose X ranking weights.
      *
-     * @param Step|value-of<Step> $step Workflow step
-     * @param string $additionalContext Extra context or URLs (refine)
-     * @param string $callToAction Desired call to action (refine)
-     * @param string $draft Tweet draft text to evaluate (score)
-     * @param Goal|value-of<Goal> $goal Optimization goal
-     * @param bool $hasLink Whether a link is attached (score)
-     * @param bool $hasMedia Whether media is attached (score)
-     * @param MediaType|value-of<MediaType> $mediaType Media type (refine)
-     * @param string $styleUsername Cached style username for voice matching (compose)
-     * @param string $tone Desired tone (refine)
-     * @param string $topic Tweet topic (compose, refine)
+     * @param string $topic subject for the post
+     * @param Goal|value-of<Goal> $goal editorial goal for the guidance
+     * @param string $tone requested writing tone
+     * @param string $draft full post text for deterministic editorial checks
+     * @param 'score' $step
+     * @param string $styleUsername username from a style analysis saved to this account
+     * @param string $additionalContext audience, constraints, sources, or other writing context
+     * @param string $callToAction specific action the draft should request
+     * @param MediaType|value-of<MediaType> $mediaType planned media type
+     * @param bool $hasLink true when a separate link card is attached
+     * @param bool $hasMedia Accepted for backward compatibility. Text checks ignore this field.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function create(
-        Step|string $step,
+        string $topic,
+        Goal|string $goal,
+        string $tone,
+        string $draft,
+        string $step = 'score',
+        ?string $styleUsername = null,
         ?string $additionalContext = null,
         ?string $callToAction = null,
-        ?string $draft = null,
-        Goal|string|null $goal = null,
-        ?bool $hasLink = null,
-        ?bool $hasMedia = null,
         MediaType|string|null $mediaType = null,
-        ?string $styleUsername = null,
-        ?string $tone = null,
-        ?string $topic = null,
+        bool $hasLink = false,
+        ?bool $hasMedia = null,
         RequestOptions|array|null $requestOptions = null,
-    ): ComposeNewResponse {
+    ): ComposePrepareResult|ComposeRefineResult|ComposeScoreResult {
         $params = Util::removeNulls(
             [
                 'step' => $step,
-                'additionalContext' => $additionalContext,
-                'callToAction' => $callToAction,
-                'draft' => $draft,
+                'topic' => $topic,
                 'goal' => $goal,
-                'hasLink' => $hasLink,
-                'hasMedia' => $hasMedia,
-                'mediaType' => $mediaType,
                 'styleUsername' => $styleUsername,
                 'tone' => $tone,
-                'topic' => $topic,
+                'additionalContext' => $additionalContext,
+                'callToAction' => $callToAction,
+                'mediaType' => $mediaType,
+                'draft' => $draft,
+                'hasLink' => $hasLink,
+                'hasMedia' => $hasMedia,
             ],
         );
 
