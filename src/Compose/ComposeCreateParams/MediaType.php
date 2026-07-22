@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace XTwitterScraper\Compose\ComposeCreateParams;
 
 /**
- * Media type (refine).
+ * Planned media type.
  */
 enum MediaType: string
 {

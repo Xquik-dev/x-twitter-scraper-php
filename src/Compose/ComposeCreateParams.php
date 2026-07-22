@@ -6,7 +6,6 @@ namespace XTwitterScraper\Compose;
 
 use XTwitterScraper\Compose\ComposeCreateParams\Goal;
 use XTwitterScraper\Compose\ComposeCreateParams\MediaType;
-use XTwitterScraper\Compose\ComposeCreateParams\Step;
 use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
@@ -14,22 +13,22 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Compose, refine, or score a tweet.
+ * Run one step of Xquik's three-step writing workflow. Compose returns questions and editorial rules. Refine returns goal-specific guidance. Score applies deterministic text checks. It does not predict reach or expose X ranking weights.
  *
  * @see XTwitterScraper\Services\ComposeService::create()
  *
  * @phpstan-type ComposeCreateParamsShape = array{
- *   step: Step|value-of<Step>,
+ *   step: 'score',
+ *   topic: string,
+ *   goal: Goal|value-of<Goal>,
+ *   styleUsername?: string|null,
+ *   tone: string,
  *   additionalContext?: string|null,
  *   callToAction?: string|null,
- *   draft?: string|null,
- *   goal?: null|Goal|value-of<Goal>,
+ *   mediaType?: null|MediaType|value-of<MediaType>,
+ *   draft: string,
  *   hasLink?: bool|null,
  *   hasMedia?: bool|null,
- *   mediaType?: null|MediaType|value-of<MediaType>,
- *   styleUsername?: string|null,
- *   tone?: string|null,
- *   topic?: string|null,
  * }
  */
 final class ComposeCreateParams implements BaseModel
@@ -38,54 +37,50 @@ final class ComposeCreateParams implements BaseModel
     use SdkModel;
     use SdkParams;
 
-    /**
-     * Workflow step.
-     *
-     * @var value-of<Step> $step
-     */
-    #[Required(enum: Step::class)]
-    public string $step;
+    /** @var 'score' $step */
+    #[Required]
+    public string $step = 'score';
 
     /**
-     * Extra context or URLs (refine).
+     * Subject for the post.
+     */
+    #[Required]
+    public string $topic;
+
+    /**
+     * Editorial goal for the guidance.
+     *
+     * @var value-of<Goal> $goal
+     */
+    #[Required(enum: Goal::class)]
+    public string $goal;
+
+    /**
+     * Username from a style analysis saved to this account.
+     */
+    #[Optional]
+    public ?string $styleUsername;
+
+    /**
+     * Requested writing tone.
+     */
+    #[Required]
+    public string $tone;
+
+    /**
+     * Audience, constraints, sources, or other writing context.
      */
     #[Optional]
     public ?string $additionalContext;
 
     /**
-     * Desired call to action (refine).
+     * Specific action the draft should request.
      */
     #[Optional]
     public ?string $callToAction;
 
     /**
-     * Tweet draft text to evaluate (score).
-     */
-    #[Optional]
-    public ?string $draft;
-
-    /**
-     * Optimization goal.
-     *
-     * @var value-of<Goal>|null $goal
-     */
-    #[Optional(enum: Goal::class)]
-    public ?string $goal;
-
-    /**
-     * Whether a link is attached (score).
-     */
-    #[Optional]
-    public ?bool $hasLink;
-
-    /**
-     * Whether media is attached (score).
-     */
-    #[Optional]
-    public ?bool $hasMedia;
-
-    /**
-     * Media type (refine).
+     * Planned media type.
      *
      * @var value-of<MediaType>|null $mediaType
      */
@@ -93,35 +88,41 @@ final class ComposeCreateParams implements BaseModel
     public ?string $mediaType;
 
     /**
-     * Cached style username for voice matching (compose).
+     * Full post text for deterministic editorial checks.
      */
-    #[Optional]
-    public ?string $styleUsername;
+    #[Required]
+    public string $draft;
 
     /**
-     * Desired tone (refine).
+     * True when a separate link card is attached.
      */
     #[Optional]
-    public ?string $tone;
+    public ?bool $hasLink;
 
     /**
-     * Tweet topic (compose, refine).
+     * @deprecated Ignored. Remove this field. Use hasLink for a separate link card.
+     *
+     * Accepted for backward compatibility. Text checks ignore this field.
      */
     #[Optional]
-    public ?string $topic;
+    public ?bool $hasMedia;
 
     /**
      * `new ComposeCreateParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * ComposeCreateParams::with(step: ...)
+     * ComposeCreateParams::with(topic: ..., goal: ..., tone: ..., draft: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new ComposeCreateParams)->withStep(...)
+     * (new ComposeCreateParams)
+     *   ->withTopic(...)
+     *   ->withGoal(...)
+     *   ->withTone(...)
+     *   ->withDraft(...)
      * ```
      */
     public function __construct()
@@ -134,89 +135,62 @@ final class ComposeCreateParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param Step|value-of<Step> $step
-     * @param Goal|value-of<Goal>|null $goal
+     * @param Goal|value-of<Goal> $goal
      * @param MediaType|value-of<MediaType>|null $mediaType
      */
     public static function with(
-        Step|string $step,
+        string $topic,
+        Goal|string $goal,
+        string $tone,
+        string $draft,
+        ?string $styleUsername = null,
         ?string $additionalContext = null,
         ?string $callToAction = null,
-        ?string $draft = null,
-        Goal|string|null $goal = null,
+        MediaType|string|null $mediaType = null,
         ?bool $hasLink = null,
         ?bool $hasMedia = null,
-        MediaType|string|null $mediaType = null,
-        ?string $styleUsername = null,
-        ?string $tone = null,
-        ?string $topic = null,
     ): self {
         $self = new self;
 
-        $self['step'] = $step;
-
-        null !== $additionalContext && $self['additionalContext'] = $additionalContext;
-        null !== $callToAction && $self['callToAction'] = $callToAction;
-        null !== $draft && $self['draft'] = $draft;
-        null !== $goal && $self['goal'] = $goal;
-        null !== $hasLink && $self['hasLink'] = $hasLink;
-        null !== $hasMedia && $self['hasMedia'] = $hasMedia;
-        null !== $mediaType && $self['mediaType'] = $mediaType;
-        null !== $styleUsername && $self['styleUsername'] = $styleUsername;
-        null !== $tone && $self['tone'] = $tone;
-        null !== $topic && $self['topic'] = $topic;
-
-        return $self;
-    }
-
-    /**
-     * Workflow step.
-     *
-     * @param Step|value-of<Step> $step
-     */
-    public function withStep(Step|string $step): self
-    {
-        $self = clone $this;
-        $self['step'] = $step;
-
-        return $self;
-    }
-
-    /**
-     * Extra context or URLs (refine).
-     */
-    public function withAdditionalContext(string $additionalContext): self
-    {
-        $self = clone $this;
-        $self['additionalContext'] = $additionalContext;
-
-        return $self;
-    }
-
-    /**
-     * Desired call to action (refine).
-     */
-    public function withCallToAction(string $callToAction): self
-    {
-        $self = clone $this;
-        $self['callToAction'] = $callToAction;
-
-        return $self;
-    }
-
-    /**
-     * Tweet draft text to evaluate (score).
-     */
-    public function withDraft(string $draft): self
-    {
-        $self = clone $this;
+        $self['topic'] = $topic;
+        $self['goal'] = $goal;
+        $self['tone'] = $tone;
         $self['draft'] = $draft;
 
+        null !== $styleUsername && $self['styleUsername'] = $styleUsername;
+        null !== $additionalContext && $self['additionalContext'] = $additionalContext;
+        null !== $callToAction && $self['callToAction'] = $callToAction;
+        null !== $mediaType && $self['mediaType'] = $mediaType;
+        null !== $hasLink && $self['hasLink'] = $hasLink;
+        null !== $hasMedia && $self['hasMedia'] = $hasMedia;
+
         return $self;
     }
 
     /**
-     * Optimization goal.
+     * @param 'score' $step
+     */
+    public function withStep(string $step): self
+    {
+        $self = clone $this;
+        $self['step'] = $step;
+
+        return $self;
+    }
+
+    /**
+     * Subject for the post.
+     */
+    public function withTopic(string $topic): self
+    {
+        $self = clone $this;
+        $self['topic'] = $topic;
+
+        return $self;
+    }
+
+    /**
+     * Editorial goal for the guidance.
      *
      * @param Goal|value-of<Goal> $goal
      */
@@ -229,29 +203,51 @@ final class ComposeCreateParams implements BaseModel
     }
 
     /**
-     * Whether a link is attached (score).
+     * Username from a style analysis saved to this account.
      */
-    public function withHasLink(bool $hasLink): self
+    public function withStyleUsername(string $styleUsername): self
     {
         $self = clone $this;
-        $self['hasLink'] = $hasLink;
+        $self['styleUsername'] = $styleUsername;
 
         return $self;
     }
 
     /**
-     * Whether media is attached (score).
+     * Requested writing tone.
      */
-    public function withHasMedia(bool $hasMedia): self
+    public function withTone(string $tone): self
     {
         $self = clone $this;
-        $self['hasMedia'] = $hasMedia;
+        $self['tone'] = $tone;
 
         return $self;
     }
 
     /**
-     * Media type (refine).
+     * Audience, constraints, sources, or other writing context.
+     */
+    public function withAdditionalContext(string $additionalContext): self
+    {
+        $self = clone $this;
+        $self['additionalContext'] = $additionalContext;
+
+        return $self;
+    }
+
+    /**
+     * Specific action the draft should request.
+     */
+    public function withCallToAction(string $callToAction): self
+    {
+        $self = clone $this;
+        $self['callToAction'] = $callToAction;
+
+        return $self;
+    }
+
+    /**
+     * Planned media type.
      *
      * @param MediaType|value-of<MediaType> $mediaType
      */
@@ -264,34 +260,34 @@ final class ComposeCreateParams implements BaseModel
     }
 
     /**
-     * Cached style username for voice matching (compose).
+     * Full post text for deterministic editorial checks.
      */
-    public function withStyleUsername(string $styleUsername): self
+    public function withDraft(string $draft): self
     {
         $self = clone $this;
-        $self['styleUsername'] = $styleUsername;
+        $self['draft'] = $draft;
 
         return $self;
     }
 
     /**
-     * Desired tone (refine).
+     * True when a separate link card is attached.
      */
-    public function withTone(string $tone): self
+    public function withHasLink(bool $hasLink): self
     {
         $self = clone $this;
-        $self['tone'] = $tone;
+        $self['hasLink'] = $hasLink;
 
         return $self;
     }
 
     /**
-     * Tweet topic (compose, refine).
+     * Accepted for backward compatibility. Text checks ignore this field.
      */
-    public function withTopic(string $topic): self
+    public function withHasMedia(bool $hasMedia): self
     {
         $self = clone $this;
-        $self['topic'] = $topic;
+        $self['hasMedia'] = $hasMedia;
 
         return $self;
     }

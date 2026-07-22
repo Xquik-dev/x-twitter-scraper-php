@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.1 (2026-07-22)
+
+Full Changelog: [v0.5.0...v0.5.1](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.5.0...v0.5.1)
+
+### Chores
+
+* sync generated SDK contracts ([247b21a](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/247b21a20435958c66659218499a06e7eb785135))
+* verify final public contract ([8df42fa](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/8df42fa7aa17df8bbb210ffc972dfd0cb4022732))
+
 ## 0.5.0 (2026-07-22)
 
 Full Changelog: [v0.4.5...v0.5.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.4.5...v0.5.0)

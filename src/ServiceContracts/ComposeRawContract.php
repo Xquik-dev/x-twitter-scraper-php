@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Compose\ComposeCreateParams;
-use XTwitterScraper\Compose\ComposeNewResponse;
+use XTwitterScraper\Compose\ComposeNewResponse\ComposePrepareResult;
+use XTwitterScraper\Compose\ComposeNewResponse\ComposeRefineResult;
+use XTwitterScraper\Compose\ComposeNewResponse\ComposeScoreResult;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
@@ -21,7 +23,7 @@ interface ComposeRawContract
      * @param array<string,mixed>|ComposeCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<ComposeNewResponse>
+     * @return BaseResponse<ComposePrepareResult|ComposeRefineResult|ComposeScoreResult,>
      *
      * @throws APIException
      */
