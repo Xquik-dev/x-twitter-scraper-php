@@ -10,6 +10,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\Support\Tickets\TicketNewResponse\Attachment\Status;
 
 /**
+ * Attachment identifier and initial processing state.
+ *
  * @phpstan-type AttachmentShape = array{
  *   publicID: string, status: Status|value-of<Status>
  * }

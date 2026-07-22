@@ -38,7 +38,7 @@ final class GuestWalletsService implements GuestWalletsContract
      *
      * Create a one-use Stripe-hosted checkout after the user explicitly confirms a $10-$250 USD amount. This request creates no charge by itself. The user opens checkout_url on Stripe. This endpoint returns the paid-read API key without requiring an Xquik account, email, dashboard, or Xquik web page. An idempotent replay returns the same key.
      *
-     * @param int $amountMinor body param: Confirmed USD amount in cents
+     * @param int $amountMinor body param: USD cents accepted for this checkout
      * @param string $idempotencyKey Header param: Generate a cryptographically random UUID v4. Reuse it only to retry the same wallet and amount request. Initial wallet creation can recover the API key from this value, so store it as a secret and never log it.
      * @param 'usd' $currency Body param
      * @param RequestOpts|null $requestOptions
@@ -88,7 +88,7 @@ final class GuestWalletsService implements GuestWalletsContract
      *
      * Create a one-use Stripe-hosted checkout for an existing paid-read guest key after the user explicitly confirms a $10-$250 USD amount. The key remains the same. This request creates no charge by itself and never redirects through an Xquik web page.
      *
-     * @param int $amountMinor body param: Confirmed USD amount in cents
+     * @param int $amountMinor body param: USD cents accepted for this checkout
      * @param string $idempotencyKey Header param: Generate a cryptographically random UUID v4. Reuse it only to retry the same wallet and amount request. Initial wallet creation can recover the API key from this value, so store it as a secret and never log it.
      * @param 'usd' $currency Body param
      * @param RequestOpts|null $requestOptions

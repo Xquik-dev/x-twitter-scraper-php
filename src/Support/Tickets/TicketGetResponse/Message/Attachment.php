@@ -12,6 +12,8 @@ use XTwitterScraper\Support\Tickets\TicketGetResponse\Message\Attachment\Kind;
 use XTwitterScraper\Support\Tickets\TicketGetResponse\Message\Attachment\Status;
 
 /**
+ * Downloadable image or video attached to a support message.
+ *
  * @phpstan-type AttachmentShape = array{
  *   contentType: ContentType|value-of<ContentType>,
  *   filename: string,
@@ -27,14 +29,22 @@ final class Attachment implements BaseModel
     /** @use SdkModel<AttachmentShape> */
     use SdkModel;
 
-    /** @var value-of<ContentType> $contentType */
+    /**
+     * Validated media type.
+     *
+     * @var value-of<ContentType> $contentType
+     */
     #[Required(enum: ContentType::class)]
     public string $contentType;
 
     #[Required]
     public string $filename;
 
-    /** @var value-of<Kind> $kind */
+    /**
+     * Attachment media class.
+     *
+     * @var value-of<Kind> $kind
+     */
     #[Required(enum: Kind::class)]
     public string $kind;
 
@@ -44,7 +54,11 @@ final class Attachment implements BaseModel
     #[Required]
     public int $sizeBytes;
 
-    /** @var value-of<Status> $status */
+    /**
+     * Storage processing state.
+     *
+     * @var value-of<Status> $status
+     */
     #[Required(enum: Status::class)]
     public string $status;
 
@@ -117,6 +131,8 @@ final class Attachment implements BaseModel
     }
 
     /**
+     * Validated media type.
+     *
      * @param ContentType|value-of<ContentType> $contentType
      */
     public function withContentType(ContentType|string $contentType): self
@@ -136,6 +152,8 @@ final class Attachment implements BaseModel
     }
 
     /**
+     * Attachment media class.
+     *
      * @param Kind|value-of<Kind> $kind
      */
     public function withKind(Kind|string $kind): self
@@ -163,6 +181,8 @@ final class Attachment implements BaseModel
     }
 
     /**
+     * Storage processing state.
+     *
      * @param Status|value-of<Status> $status
      */
     public function withStatus(Status|string $status): self

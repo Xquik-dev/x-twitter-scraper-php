@@ -147,7 +147,7 @@ final class UsersRawService implements UsersRawContract
      *
      * List followers of a user
      *
-     * @param string $id User ID or username
+     * @param string $id target user ID or username for follower lookup
      * @param array{
      *   after?: string, cursor?: string, limit?: int, pageSize?: int
      * }|UserRetrieveFollowersParams $params
@@ -461,7 +461,7 @@ final class UsersRawService implements UsersRawContract
      *
      * Returns the user's timeline with replies included by default.
      *
-     * @param string $id X user ID or username
+     * @param string $id target user ID or username for the replies timeline
      * @param array{
      *   anyWords?: string,
      *   cashtags?: string,

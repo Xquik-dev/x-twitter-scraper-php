@@ -104,7 +104,7 @@ final class UserRetrieveRepliesParams implements BaseModel
     public ?string $hashtags;
 
     /**
-     * Include parent tweet for replies.
+     * Include each reply's parent tweet.
      */
     #[Optional]
     public ?bool $includeParentTweet;
@@ -399,7 +399,7 @@ final class UserRetrieveRepliesParams implements BaseModel
     }
 
     /**
-     * Include parent tweet for replies.
+     * Include each reply's parent tweet.
      */
     public function withIncludeParentTweet(bool $includeParentTweet): self
     {

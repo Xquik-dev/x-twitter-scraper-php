@@ -135,11 +135,11 @@ final class ExtractionsService implements ExtractionsContract
      * @param int $resultsLimit Maximum number of results to estimate. When set, the estimate caps projected results to this value.
      * @param Retweets|value-of<Retweets> $retweets Retweet mode used for estimation (tweet_search_extractor)
      * @param string $retweetsOfTweetID Estimate only retweets of this tweet ID (tweet_search_extractor)
-     * @param string $searchQuery required for tweet_search_extractor & community_search
+     * @param string $searchQuery query used to price tweet_search_extractor or community_search
      * @param string $sinceDate Estimate start date in YYYY-MM-DD format (tweet_search_extractor)
-     * @param string $targetCommunityID required for community_post_extractor & community_search
-     * @param string $targetListID required for list_follower_explorer, list_member_extractor & list_post_extractor
-     * @param string $targetSpaceID required for space_explorer
+     * @param string $targetCommunityID community ID used to price community_post_extractor or community_search
+     * @param string $targetListID list ID used to price list_follower_explorer, list_member_extractor, or list_post_extractor
+     * @param string $targetSpaceID space ID used to price space_explorer
      * @param string $toUser Estimate replies sent to this username (tweet_search_extractor)
      * @param string $untilDate Estimate end date in YYYY-MM-DD format (tweet_search_extractor)
      * @param string $url URL substring or domain filter used for estimation (tweet_search_extractor)

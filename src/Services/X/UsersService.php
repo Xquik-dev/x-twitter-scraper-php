@@ -119,7 +119,7 @@ final class UsersService implements UsersContract
      *
      * List followers of a user
      *
-     * @param string $id User ID or username
+     * @param string $id target user ID or username for follower lookup
      * @param string $after Legacy cursor alias. Prefer cursor.
      * @param string $cursor Pagination cursor for followers list
      * @param int $limit Legacy integer page size alias for following lists. Prefer pageSize.
@@ -183,7 +183,7 @@ final class UsersService implements UsersContract
      * List accounts a user follows
      *
      * @param string $id User ID or username for following lookup
-     * @param string $after Legacy cursor alias. Prefer cursor.
+     * @param string $after Deprecated following cursor alias. Prefer cursor.
      * @param string $cursor Pagination cursor for following list
      * @param int $limit Legacy page size alias. Prefer pageSize.
      * @param int $pageSize Maximum user profiles requested from this page (20-200, default 200). The response can contain fewer profiles because the source returned fewer or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true. The deprecated limit and count aliases remain accepted.
@@ -543,7 +543,7 @@ final class UsersService implements UsersContract
      *
      * Returns the user's timeline with replies included by default.
      *
-     * @param string $id X user ID or username
+     * @param string $id target user ID or username for the replies timeline
      * @param string $anyWords Words or quoted phrases where any one can match. Separate with spaces, commas, or lines.
      * @param string $cashtags cashtags separated by spaces, commas, or lines
      * @param string $conversationID conversation ID filter
@@ -552,7 +552,7 @@ final class UsersService implements UsersContract
      * @param string $excludeWords Words or quoted phrases to exclude. Separate with spaces, commas, or lines.
      * @param string $fromUser filter by author username
      * @param string $hashtags hashtags separated by spaces, commas, or lines
-     * @param bool $includeParentTweet Include parent tweet for replies
+     * @param bool $includeParentTweet include each reply's parent tweet
      * @param string $inReplyToTweetID only replies to this tweet ID
      * @param string $language Language code filter, e.g. en or tr.
      * @param \XTwitterScraper\X\Users\UserRetrieveRepliesParams\MediaType|value-of<\XTwitterScraper\X\Users\UserRetrieveRepliesParams\MediaType> $mediaType filter by media type

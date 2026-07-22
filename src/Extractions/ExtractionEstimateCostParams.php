@@ -247,7 +247,7 @@ final class ExtractionEstimateCostParams implements BaseModel
     public ?string $retweetsOfTweetID;
 
     /**
-     * Required for tweet_search_extractor & community_search.
+     * Query used to price tweet_search_extractor or community_search.
      */
     #[Optional]
     public ?string $searchQuery;
@@ -259,19 +259,19 @@ final class ExtractionEstimateCostParams implements BaseModel
     public ?string $sinceDate;
 
     /**
-     * Required for community_post_extractor & community_search.
+     * Community ID used to price community_post_extractor or community_search.
      */
     #[Optional('targetCommunityId')]
     public ?string $targetCommunityID;
 
     /**
-     * Required for list_follower_explorer, list_member_extractor & list_post_extractor.
+     * List ID used to price list_follower_explorer, list_member_extractor, or list_post_extractor.
      */
     #[Optional('targetListId')]
     public ?string $targetListID;
 
     /**
-     * Required for space_explorer.
+     * Space ID used to price space_explorer.
      */
     #[Optional('targetSpaceId')]
     public ?string $targetSpaceID;
@@ -742,7 +742,7 @@ final class ExtractionEstimateCostParams implements BaseModel
     }
 
     /**
-     * Required for tweet_search_extractor & community_search.
+     * Query used to price tweet_search_extractor or community_search.
      */
     public function withSearchQuery(string $searchQuery): self
     {
@@ -764,7 +764,7 @@ final class ExtractionEstimateCostParams implements BaseModel
     }
 
     /**
-     * Required for community_post_extractor & community_search.
+     * Community ID used to price community_post_extractor or community_search.
      */
     public function withTargetCommunityID(string $targetCommunityID): self
     {
@@ -775,7 +775,7 @@ final class ExtractionEstimateCostParams implements BaseModel
     }
 
     /**
-     * Required for list_follower_explorer, list_member_extractor & list_post_extractor.
+     * List ID used to price list_follower_explorer, list_member_extractor, or list_post_extractor.
      */
     public function withTargetListID(string $targetListID): self
     {
@@ -786,7 +786,7 @@ final class ExtractionEstimateCostParams implements BaseModel
     }
 
     /**
-     * Required for space_explorer.
+     * Space ID used to price space_explorer.
      */
     public function withTargetSpaceID(string $targetSpaceID): self
     {

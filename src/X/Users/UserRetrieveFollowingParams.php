@@ -28,7 +28,7 @@ final class UserRetrieveFollowingParams implements BaseModel
     use SdkParams;
 
     /**
-     * Legacy cursor alias. Prefer cursor.
+     * Deprecated following cursor alias. Prefer cursor.
      */
     #[Optional]
     public ?string $after;
@@ -78,7 +78,7 @@ final class UserRetrieveFollowingParams implements BaseModel
     }
 
     /**
-     * Legacy cursor alias. Prefer cursor.
+     * Deprecated following cursor alias. Prefer cursor.
      */
     public function withAfter(string $after): self
     {
