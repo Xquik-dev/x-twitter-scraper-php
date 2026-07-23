@@ -24,7 +24,7 @@ concurrency:
 jobs:
   refresh:
     name: Refresh Context7 docs
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: context7
     steps:
       - name: Trigger Context7 refresh

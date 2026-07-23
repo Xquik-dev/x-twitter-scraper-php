@@ -2,10 +2,8 @@
 
 namespace Tests\Services;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Subscribe\SubscribeNewResponse;
@@ -13,7 +11,6 @@ use XTwitterScraper\Subscribe\SubscribeNewResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class SubscribeTest extends TestCase
 {
     protected Client $client;
@@ -35,10 +32,6 @@ final class SubscribeTest extends TestCase
     #[Test]
     public function testCreate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->subscribe->create();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

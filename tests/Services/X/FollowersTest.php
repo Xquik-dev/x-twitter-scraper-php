@@ -2,10 +2,8 @@
 
 namespace Tests\Services\X;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\Followers\FollowerCheckResponse;
@@ -13,7 +11,6 @@ use XTwitterScraper\X\Followers\FollowerCheckResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class FollowersTest extends TestCase
 {
     protected Client $client;
@@ -35,10 +32,6 @@ final class FollowersTest extends TestCase
     #[Test]
     public function testCheck(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->followers->check(
             source: 'source',
             target: 'target'
@@ -51,10 +44,6 @@ final class FollowersTest extends TestCase
     #[Test]
     public function testCheckWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->followers->check(
             source: 'source',
             target: 'target'

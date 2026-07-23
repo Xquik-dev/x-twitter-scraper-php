@@ -2,10 +2,8 @@
 
 namespace Tests\Services\X\Tweets;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\Tweets\Like\LikeDeleteResponse;
@@ -14,7 +12,6 @@ use XTwitterScraper\X\Tweets\Like\LikeNewResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class LikeTest extends TestCase
 {
     protected Client $client;
@@ -36,10 +33,6 @@ final class LikeTest extends TestCase
     #[Test]
     public function testCreate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->like->create(
             'id',
             account: '@elonmusk',
@@ -53,10 +46,6 @@ final class LikeTest extends TestCase
     #[Test]
     public function testCreateWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->like->create(
             'id',
             account: '@elonmusk',
@@ -70,10 +59,6 @@ final class LikeTest extends TestCase
     #[Test]
     public function testDelete(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->like->delete(
             'id',
             account: '@elonmusk',
@@ -87,10 +72,6 @@ final class LikeTest extends TestCase
     #[Test]
     public function testDeleteWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->like->delete(
             'id',
             account: '@elonmusk',

@@ -21,9 +21,9 @@ final class Util
 
     public const JSON_ENCODE_FLAGS = JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
 
-    public const JSON_CONTENT_TYPE = '/^application\/(?:vnd(?:.[^.]+)*+)?json(?!l)/';
+    public const JSON_CONTENT_TYPE = '/^application\/(?:[^;+\s]+\+)?json(?!l)(?:\s*;|$)/i';
 
-    public const JSONL_CONTENT_TYPE = '/^application\/(:?x-(?:n|l)djson)|(:?(?:x-)?jsonl)/';
+    public const JSONL_CONTENT_TYPE = '/^application\/(?:x-(?:n|l)djson|(?:x-)?jsonl)(?:\s*;|$)/i';
 
     public const STREAMING_CONTENT_TYPE = ['/^text\/event-stream/', self::JSONL_CONTENT_TYPE];
 
@@ -142,6 +142,56 @@ final class Util
         return $mapped;
     }
 
+    public static function mergeBody(mixed $body, mixed $extraBody): mixed
+    {
+        if ($extraBody instanceof \stdClass) {
+            $extraBody = self::get_object_vars($extraBody);
+        }
+
+        if (!is_array($extraBody) || [] === $extraBody || array_is_list($extraBody)) {
+            return $body;
+        }
+
+        if ($body instanceof \stdClass) {
+            $body = self::get_object_vars($body);
+        }
+
+        if (is_null($body)) {
+            return $extraBody;
+        }
+
+        if (!is_array($body) || array_is_list($body)) {
+            return $body;
+        }
+
+        return [...$body, ...$extraBody];
+    }
+
+    public static function bodyCanRetry(mixed $body): bool
+    {
+        if (is_resource($body) || $body instanceof \Traversable) {
+            return false;
+        }
+
+        if ($body instanceof FileParam) {
+            return !is_resource($body->data);
+        }
+
+        if ($body instanceof \stdClass) {
+            $body = self::get_object_vars($body);
+        }
+
+        if (is_array($body)) {
+            foreach ($body as $value) {
+                if (!self::bodyCanRetry($value)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     /**
      * @param string|int|list<string|int>|callable $key
      */
@@ -153,12 +203,16 @@ final class Util
             return $key($array);
         }
 
+        if (is_array($key) && empty($key)) {
+            return $array;
+        }
+
         if (is_array($array)) {
             if ((is_string($key) || is_int($key)) && array_key_exists($key, array: $array)) {
                 return $array[$key];
             }
 
-            if (is_array($key) && !empty($key)) {
+            if (is_array($key)) {
                 if (array_key_exists($fst = $key[0], array: $array)) {
                     return self::dig($array[$fst], key: array_slice($key, 1));
                 }
@@ -169,7 +223,7 @@ final class Util
     }
 
     /**
-     * @param string|list<string> $path
+     * @param string|list<mixed> $path
      */
     public static function parsePath(string|array $path): string
     {
@@ -182,6 +236,9 @@ final class Util
         }
 
         [$template] = $path;
+        if (!is_string($template)) {
+            throw new \InvalidArgumentException('Path templates must be strings.');
+        }
         $mapped = array_map(static fn ($s) => rawurlencode(self::strVal($s)), array: array_slice($path, 1));
 
         return sprintf($template, ...$mapped);
@@ -205,7 +262,9 @@ final class Util
         if ($port = $parsed['port'] ?? null) {
             $base = $base->withPort($port);
         }
-        if (($user = $parsed['user'] ?? null) || ($pass = $parsed['pass'] ?? null)) {
+        $user = $parsed['user'] ?? null;
+        $pass = $parsed['pass'] ?? null;
+        if ($user || $pass) {
             $base = $base->withUserInfo($user ?? '', $pass ?? null);
         }
         if ($path = $parsed['path'] ?? null) {
@@ -287,7 +346,7 @@ final class Util
         mixed $body
     ): RequestInterface {
         if ($body instanceof StreamInterface) {
-            /** @var RequestInterface */
+            // @var RequestInterface
             return $req->withBody($body);
         }
 
@@ -297,7 +356,7 @@ final class Util
                 $encoded = json_encode($body, flags: self::JSON_ENCODE_FLAGS);
                 $stream = $factory->createStream($encoded);
 
-                /** @var RequestInterface */
+                // @var RequestInterface
                 return $req->withBody($stream);
             }
         }
@@ -307,14 +366,14 @@ final class Util
             $encoded = implode('', iterator_to_array($gen, preserve_keys: false));
             $stream = $factory->createStream($encoded);
 
-            /** @var RequestInterface */
+            // @var RequestInterface
             return $req->withHeader('Content-Type', "{$contentType}; boundary={$boundary}")->withBody($stream);
         }
 
         if (is_resource($body)) {
             $stream = $factory->createStreamFromResource($body);
 
-            /** @var RequestInterface */
+            // @var RequestInterface
             return $req->withBody($stream);
         }
 

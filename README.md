@@ -1,8 +1,21 @@
 # X (Twitter) Scraper PHP SDK: Tweet Search, Timelines, Followers & Posting
 
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13737/badge)](https://www.bestpractices.dev/projects/13737)
+[![CI](https://github.com/Xquik-dev/x-twitter-scraper-php/actions/workflows/ci.yml/badge.svg)](https://github.com/Xquik-dev/x-twitter-scraper-php/actions/workflows/ci.yml)
 
-Use Xquik's typed PHP client for X data and confirmed actions.
+Use Xquik's typed Composer SDK as an X API alternative.
+
+Search tweets, read timelines, export followers, and deliver webhooks.
+
+Confirmed methods also support posting and other account actions.
+
+## Is This A Twitter API Alternative?
+
+This package calls Xquik's documented REST API.
+
+It does not call or emulate the official X API.
+
+Use it for supported X data and automation workflows from PHP.
 
 ## Documentation
 
@@ -15,12 +28,18 @@ Use the linked SDK guide for typed method names.
 | Customer Question | REST Route | Workflow Note |
 | --- | --- | --- |
 | How do I search tweets? | `GET /x/tweets/search` | Use keyword or advanced operator queries. |
-| How do I read a profile timeline? | `GET /x/users/{id}/tweets` | Paginate bounded results. |
-| How do I scrape followers? | `GET /x/users/{id}/followers` | Use an extraction for complete datasets. |
-| How do I scrape following accounts? | `GET /x/users/{id}/following` | Use an extraction for complete datasets. |
+| How do I extract a profile timeline? | `GET /x/users/{id}/tweets` | Paginate bounded X timeline results. |
+| How do I scrape X followers? | `GET /x/users/{id}/followers` | Use an extraction for complete datasets. |
+| How do I scrape X following accounts? | `GET /x/users/{id}/following` | Use an extraction for complete datasets. |
 | How do I read my home timeline? | `GET /x/timeline` | Approve this private read. |
+| How do I read lists or communities? | `/x/lists/*`, `/x/communities/*` | Use the typed nested services. |
+| How do I export large X datasets? | `POST /extractions` | Poll status, then download results. |
 | How do I monitor an account? | `POST /monitors` | Deliver events through HMAC webhooks. |
 | How do I post or reply? | `POST /x/tweets` | Confirm the account and payload. |
+
+The [API reference](https://docs.xquik.com/api-reference/overview) lists every route.
+
+The SDK exposes matching typed services and request models.
 
 ## Installation
 
@@ -50,7 +69,7 @@ $client = new Client(
 
 $paginatedTweets = $client->x->tweets->search(q: 'from:elonmusk', limit: 10);
 
-var_dump($paginatedTweets->has_next_page);
+var_dump($paginatedTweets->hasNextPage);
 ```
 
 ### Value Objects
@@ -172,8 +191,10 @@ This package considers improvements to the (non-runtime) PHPDoc type definitions
 
 PHP 8.1.0 or higher.
 
-## Contributing
+## Project Policies
 
-See [the contributing documentation](https://github.com/Xquik-dev/x-twitter-scraper-php/tree/main/CONTRIBUTING.md).
+Read [Contributing](CONTRIBUTING.md), [Governance](GOVERNANCE.md), and [Security](SECURITY.md).
+
+See [OpenSSF evidence](OPENSSF.md) for verified controls and remaining blockers.
 
 Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.

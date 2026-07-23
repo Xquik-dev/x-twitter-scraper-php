@@ -1,61 +1,182 @@
 name: CI
+
 on:
   push:
     branches:
-      - '**'
-      - '!integrated/**'
-      - '!stl-preview-head/**'
-      - '!stl-preview-base/**'
-      - '!generated'
-      - '!codegen/**'
-      - 'codegen/stl/**'
+      - "**"
+      - "!integrated/**"
+      - "!stl-preview-head/**"
+      - "!stl-preview-base/**"
+      - "!generated"
+      - "!codegen/**"
+      - "codegen/stl/**"
   pull_request:
     branches-ignore:
-      - 'stl-preview-head/**'
-      - 'stl-preview-base/**'
+      - "stl-preview-head/**"
+      - "stl-preview-base/**"
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   lint:
-    timeout-minutes: 10
-    name: lint
-    runs-on: ${{ startsWith(github.repository, 'stainless-sdks/') && 'depot-ubuntu-24.04' || 'ubuntu-latest' }}
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.fork
-
+    name: Lint & Licensing
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
-          php-version: "8.3"
+          php-version: "8.5"
+          coverage: none
+          extensions: curl, mbstring, xml, zip
+          tools: composer:2.10.2
 
-      - name: Run Bootstrap
+      - name: Install locked dependencies
         run: ./scripts/bootstrap
 
-      - name: Run lints
+      - name: Check PHP
         run: ./scripts/lint
-  test:
+
+      - name: Check shell scripts
+        run: >-
+          shellcheck
+          scripts/audit
+          scripts/bootstrap
+          scripts/build-archive
+          scripts/check-reproducible
+          scripts/clean
+          scripts/coverage
+          scripts/format
+          scripts/lint
+          scripts/test
+
+      - name: Check workflows
+        run: go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
+
+      - name: Check repository licensing
+        uses: fsfe/reuse-action@676e2d560c9a403aa252096d99fcab3e1132b0f5 # v6.0.0
+
+  runtime:
+    name: Runtime PHP ${{ matrix.php }}
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
-    name: test
-    runs-on: ${{ startsWith(github.repository, 'stainless-sdks/') && 'depot-ubuntu-24.04' || 'ubuntu-latest' }}
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.fork
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["8.1", "8.2"]
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
-          php-version: "8.3"
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer:2.10.2
 
-      - name: Run bootstrap
+      - name: Install production dependencies
+        run: >-
+          composer install
+          --no-dev
+          --no-interaction
+          --no-progress
+          --prefer-dist
+          --optimize-autoloader
+
+      - name: Check production platform requirements
+        run: composer check-platform-reqs --no-dev
+
+      - name: Check PHP syntax
+        run: find src -name "*.php" -print0 | xargs -0 -n1 php -l
+
+  test:
+    name: Tests PHP ${{ matrix.php }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["8.3", "8.4", "8.5"]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          extensions: curl, mbstring, xml, zip
+          tools: composer:2.10.2
+
+      - name: Install locked dependencies
         run: ./scripts/bootstrap
 
       - name: Run tests
         run: ./scripts/test
+
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: "8.5"
+          coverage: xdebug
+          extensions: curl, mbstring, xml, zip
+          tools: composer:2.10.2
+
+      - name: Install locked dependencies
+        run: ./scripts/bootstrap
+
+      - name: Enforce coverage
+        run: ./scripts/coverage
+
+  supply-chain:
+    name: Dependency & Build Security
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: "8.5"
+          coverage: none
+          extensions: zip
+          tools: composer:2.10.2
+
+      - name: Install locked dependencies
+        run: ./scripts/bootstrap
+
+      - name: Audit dependencies and licenses
+        run: ./scripts/audit
+
+      - name: Verify reproducible distribution
+        run: ./scripts/check-reproducible

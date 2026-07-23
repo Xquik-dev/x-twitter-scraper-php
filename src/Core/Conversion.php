@@ -23,6 +23,16 @@ final class Conversion
 
         if (is_object($value)) {
             if ($value instanceof FileParam) {
+                if (is_resource($value->data)) {
+                    $state->canRetry = false;
+                }
+
+                return $value;
+            }
+
+            if ($value instanceof \Traversable) {
+                $state->canRetry = false;
+
                 return $value;
             }
 
@@ -45,6 +55,10 @@ final class Conversion
             $acc = get_object_vars($value);
 
             return empty($acc) ? (object) $acc : self::dump_unknown($acc, state: $state);
+        }
+
+        if (is_resource($value)) {
+            $state->canRetry = false;
         }
 
         return $value;
@@ -152,7 +166,7 @@ final class Conversion
                 return $value;
 
             case 'float':
-                if (is_numeric($value)) {
+                if (is_float($value) || is_int($value)) {
                     ++$state->yes;
 
                     return (float) $value;

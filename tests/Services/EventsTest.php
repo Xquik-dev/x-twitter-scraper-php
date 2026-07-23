@@ -2,10 +2,8 @@
 
 namespace Tests\Services;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Events\EventDetail;
@@ -14,7 +12,6 @@ use XTwitterScraper\Events\EventListResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class EventsTest extends TestCase
 {
     protected Client $client;
@@ -36,10 +33,6 @@ final class EventsTest extends TestCase
     #[Test]
     public function testRetrieve(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->events->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -49,10 +42,6 @@ final class EventsTest extends TestCase
     #[Test]
     public function testList(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->events->list();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

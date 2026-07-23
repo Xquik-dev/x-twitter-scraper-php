@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
 
+echo "==> Checking PHP formatting"
+./vendor/bin/php-cs-fixer fix --dry-run --diff
+
 echo "==> Running PHPStan"
-exec -- ./vendor/bin/phpstan analyse --memory-limit=12G
+exec ./vendor/bin/phpstan analyse --memory-limit=12G
