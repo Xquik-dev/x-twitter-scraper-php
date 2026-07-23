@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.2 (2026-07-23)
+
+Full Changelog: [v0.5.1...v0.5.2](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.5.1...v0.5.2)
+
+### Documentation
+
+* map common X data tasks ([#10](https://github.com/Xquik-dev/x-twitter-scraper-php/issues/10)) ([e89b0e7](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/e89b0e7c66f391bf1c1330f14bdf56b68a8d6316))
+
 ## 0.5.1 (2026-07-22)
 
 Full Changelog: [v0.5.0...v0.5.1](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.5.0...v0.5.1)
