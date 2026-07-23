@@ -112,7 +112,7 @@ abstract class BaseClient
     /**
      * @internal
      *
-     * @param string|list<string> $path
+     * @param string|list<mixed> $path
      * @param array<string,mixed> $query
      * @param array<string,string|int|list<string|int>|null> $headers
      * @param RequestOpts|null $opts
@@ -142,6 +142,10 @@ abstract class BaseClient
         $idempotencyHeaders = $this->idempotencyHeader && !array_key_exists($this->idempotencyHeader, array: $headers)
             ? [$this->idempotencyHeader => $this->generateIdempotencyKey()]
             : [];
+        $body = Util::mergeBody($body, extraBody: $options->extraBodyParams);
+        if (!Util::bodyCanRetry($body)) {
+            $options = $options->withMaxRetries(0);
+        }
 
         /** @var array<string,string|list<string>|null> $mergedHeaders */
         $mergedHeaders = [
@@ -175,8 +179,29 @@ abstract class BaseClient
         }
 
         $uri = Util::joinUri($req->getUri(), path: $location);
+        if (!$this->sameOrigin($req->getUri(), $uri) || $req->getUri()->getUserInfo() !== $uri->getUserInfo()) {
+            throw new APIConnectionException($req, message: 'Cross-origin redirect blocked');
+        }
 
         return $req->withUri($uri);
+    }
+
+    /**
+     * @internal
+     */
+    protected function sameOrigin(UriInterface $left, UriInterface $right): bool
+    {
+        $leftScheme = strtolower($left->getScheme());
+        $rightScheme = strtolower($right->getScheme());
+        $defaultPort = static fn (string $scheme): ?int => match ($scheme) {
+            'http' => 80,
+            'https' => 443,
+            default => null,
+        };
+
+        return $leftScheme === $rightScheme
+            && strtolower($left->getHost()) === strtolower($right->getHost())
+            && ($left->getPort() ?? $defaultPort($leftScheme)) === ($right->getPort() ?? $defaultPort($rightScheme));
     }
 
     /**
@@ -192,7 +217,7 @@ abstract class BaseClient
         }
 
         $code = $rsp?->getStatusCode();
-        if (408 == $code || 409 == $code || 429 == $code || $code >= 500) {
+        if (is_null($code) || 408 == $code || 409 == $code || 429 == $code || $code >= 500) {
             return true;
         }
 
@@ -214,14 +239,14 @@ abstract class BaseClient
 
             try {
                 $date = new \DateTimeImmutable($header);
-                $span = time() - $date->getTimestamp();
+                $span = $date->getTimestamp() - time();
 
                 return max(0.0, $span);
             } catch (\Exception) {
             }
         }
 
-        $scale = $retryCount ** 2;
+        $scale = 2 ** $retryCount;
         $jitter = 1 - (0.25 * mt_rand() / mt_getrandmax());
         $naive = $opts->initialRetryDelay * $scale * $jitter;
 

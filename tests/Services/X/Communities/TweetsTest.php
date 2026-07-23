@@ -2,10 +2,8 @@
 
 namespace Tests\Services\X\Communities;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
@@ -13,7 +11,6 @@ use XTwitterScraper\PaginatedTweets;
 /**
  * @internal
  */
-#[CoversNothing]
 final class TweetsTest extends TestCase
 {
     protected Client $client;
@@ -35,10 +32,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testList(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->communities->tweets->list(
             communityID: '321669910225',
             q: 'q'
@@ -51,10 +44,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testListWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->communities->tweets->list(
             communityID: '321669910225',
             q: 'q',
@@ -70,10 +59,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testListByCommunity(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->communities->tweets->listByCommunity('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

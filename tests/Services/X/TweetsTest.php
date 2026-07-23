@@ -2,10 +2,8 @@
 
 namespace Tests\Services\X;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
@@ -17,7 +15,6 @@ use XTwitterScraper\X\Tweets\TweetNewResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class TweetsTest extends TestCase
 {
     protected Client $client;
@@ -39,10 +36,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testCreate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->create(
             account: '@elonmusk',
             idempotencyKey: 'Idempotency-Key'
@@ -55,10 +48,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testCreateWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->create(
             account: '@elonmusk',
             idempotencyKey: 'Idempotency-Key',
@@ -76,10 +65,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testRetrieve(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -89,10 +74,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testList(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->list(ids: 'ids');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -102,10 +83,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testListWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->list(ids: 'ids');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -115,10 +92,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testDelete(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->delete(
             'id',
             account: '@elonmusk',
@@ -132,10 +105,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testDeleteWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->delete(
             'id',
             account: '@elonmusk',
@@ -149,10 +118,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testGetFavoriters(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->getFavoriters('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -162,10 +127,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testGetQuotes(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->getQuotes('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -175,10 +136,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testGetReplies(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->getReplies('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -188,10 +145,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testGetRetweeters(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->getRetweeters('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -201,10 +154,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testGetThread(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->getThread('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -214,10 +163,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testSearch(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->search(q: 'q');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -227,10 +172,6 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testSearchWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->tweets->search(
             q: 'q',
             advancedQuery: 'advancedQuery',

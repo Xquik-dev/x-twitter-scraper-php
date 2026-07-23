@@ -1,9 +1,59 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
-cd "$(dirname "$0")/.."
+cd -- "$(dirname -- "$0")/.."
 
+test_api_base_url="${TEST_API_BASE_URL:-http://127.0.0.1:4010}"
+if [[ ! "$test_api_base_url" =~ ^http://127\.0\.0\.1:([1-9][0-9]{0,4})$ ]]; then
+  echo "TEST_API_BASE_URL must use literal loopback IPv4 over HTTP." >&2
+  exit 1
+fi
 
+test_api_port="${BASH_REMATCH[1]}"
+if ((test_api_port > 65535)); then
+  echo "TEST_API_BASE_URL uses an invalid port." >&2
+  exit 1
+fi
 
-exec -- ./vendor/bin/pest --colors=always
+mock_log="$(mktemp "${TMPDIR:-/tmp}/xquik-php-mock.XXXXXX")"
+mock_pid=""
+
+cleanup() {
+  if [[ -n "$mock_pid" ]]; then
+    kill "$mock_pid" 2>/dev/null || true
+    wait "$mock_pid" 2>/dev/null || true
+  fi
+  rm -f -- "$mock_log"
+}
+trap cleanup EXIT
+
+echo "==> Starting the loopback mock API"
+php -S "127.0.0.1:${test_api_port}" tests/mock-api-router.php >"$mock_log" 2>&1 &
+mock_pid="$!"
+
+mock_ready=false
+for _ in {1..50}; do
+  if curl --fail --silent "$test_api_base_url/" >/dev/null 2>&1; then
+    mock_ready=true
+    break
+  fi
+  if ! kill -0 "$mock_pid" 2>/dev/null; then
+    break
+  fi
+  sleep 0.1
+done
+
+if [[ "$mock_ready" != true ]]; then
+  echo "Loopback mock API failed to start." >&2
+  cat "$mock_log" >&2
+  exit 1
+fi
+
+export TEST_API_BASE_URL="$test_api_base_url"
+
+echo "==> Running PHPUnit"
+php -d "memory_limit=${PHPUNIT_MEMORY_LIMIT:-512M}" \
+  ./vendor/bin/phpunit \
+  --colors=always \
+  "$@"

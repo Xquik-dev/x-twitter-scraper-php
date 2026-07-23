@@ -4,7 +4,6 @@ namespace Tests\Core;
 
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Mock\Client as MockClient;
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -14,10 +13,7 @@ use XTwitterScraper\RequestOptions;
 
 /**
  * @internal
- *
- * @coversNothing
  */
-#[CoversNothing]
 class StreamingTransportTest extends TestCase
 {
     #[Test]

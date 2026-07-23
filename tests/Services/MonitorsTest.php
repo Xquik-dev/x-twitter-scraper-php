@@ -2,10 +2,8 @@
 
 namespace Tests\Services;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\EventType;
@@ -17,7 +15,6 @@ use XTwitterScraper\Monitors\MonitorNewResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class MonitorsTest extends TestCase
 {
     protected Client $client;
@@ -39,10 +36,6 @@ final class MonitorsTest extends TestCase
     #[Test]
     public function testCreate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->monitors->create(
             eventTypes: [EventType::TWEET_NEW, EventType::TWEET_REPLY],
             username: 'elonmusk',
@@ -55,10 +48,6 @@ final class MonitorsTest extends TestCase
     #[Test]
     public function testCreateWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->monitors->create(
             eventTypes: [EventType::TWEET_NEW, EventType::TWEET_REPLY],
             username: 'elonmusk',
@@ -71,10 +60,6 @@ final class MonitorsTest extends TestCase
     #[Test]
     public function testRetrieve(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->monitors->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -84,10 +69,6 @@ final class MonitorsTest extends TestCase
     #[Test]
     public function testUpdate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->monitors->update('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -97,10 +78,6 @@ final class MonitorsTest extends TestCase
     #[Test]
     public function testList(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->monitors->list();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -110,10 +87,6 @@ final class MonitorsTest extends TestCase
     #[Test]
     public function testDeactivate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->monitors->deactivate('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

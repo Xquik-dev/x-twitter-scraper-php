@@ -9,8 +9,6 @@ use XTwitterScraper\Core\Util;
 
 /**
  * @internal
- *
- * @coversNothing
  */
 class ClientTest extends TestCase
 {

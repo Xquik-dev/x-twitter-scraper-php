@@ -2,10 +2,8 @@
 
 namespace Tests\Services\X\Communities;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\Communities\Join\JoinDeleteAllResponse;
@@ -14,7 +12,6 @@ use XTwitterScraper\X\Communities\Join\JoinNewResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class JoinTest extends TestCase
 {
     protected Client $client;
@@ -36,10 +33,6 @@ final class JoinTest extends TestCase
     #[Test]
     public function testCreate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->communities->join->create(
             'id',
             account: '@elonmusk',
@@ -53,10 +46,6 @@ final class JoinTest extends TestCase
     #[Test]
     public function testCreateWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->communities->join->create(
             'id',
             account: '@elonmusk',
@@ -70,10 +59,6 @@ final class JoinTest extends TestCase
     #[Test]
     public function testDeleteAll(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->communities->join->deleteAll(
             'id',
             account: '@elonmusk',
@@ -87,10 +72,6 @@ final class JoinTest extends TestCase
     #[Test]
     public function testDeleteAllWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->communities->join->deleteAll(
             'id',
             account: '@elonmusk',

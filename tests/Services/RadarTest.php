@@ -2,10 +2,8 @@
 
 namespace Tests\Services;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Radar\RadarGetTrendingTopicsResponse;
@@ -13,7 +11,6 @@ use XTwitterScraper\Radar\RadarGetTrendingTopicsResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class RadarTest extends TestCase
 {
     protected Client $client;
@@ -35,10 +32,6 @@ final class RadarTest extends TestCase
     #[Test]
     public function testRetrieveTrendingTopics(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->radar->retrieveTrendingTopics();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

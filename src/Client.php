@@ -228,7 +228,7 @@ class Client extends BaseClient
     /**
      * @internal
      *
-     * @param string|list<string> $path
+     * @param string|list<mixed> $path
      * @param array<string,mixed> $query
      * @param array<string,string|int|list<string|int>|null> $headers
      * @param RequestOpts|null $opts

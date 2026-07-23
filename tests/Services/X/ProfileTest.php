@@ -2,10 +2,8 @@
 
 namespace Tests\Services\X;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\Profile\ProfileUpdateAvatarResponse;
@@ -15,7 +13,6 @@ use XTwitterScraper\X\Profile\ProfileUpdateResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class ProfileTest extends TestCase
 {
     protected Client $client;
@@ -37,10 +34,6 @@ final class ProfileTest extends TestCase
     #[Test]
     public function testUpdate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->profile->update(
             account: '@elonmusk',
             idempotencyKey: 'Idempotency-Key'
@@ -53,10 +46,6 @@ final class ProfileTest extends TestCase
     #[Test]
     public function testUpdateWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->profile->update(
             account: '@elonmusk',
             idempotencyKey: 'Idempotency-Key',
@@ -73,10 +62,6 @@ final class ProfileTest extends TestCase
     #[Test]
     public function testUpdateAvatar(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->profile->updateAvatar(
             account: '@elonmusk',
             url: 'https://example.com/avatar.png',
@@ -90,10 +75,6 @@ final class ProfileTest extends TestCase
     #[Test]
     public function testUpdateAvatarWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->profile->updateAvatar(
             account: '@elonmusk',
             url: 'https://example.com/avatar.png',
@@ -107,10 +88,6 @@ final class ProfileTest extends TestCase
     #[Test]
     public function testUpdateBanner(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->profile->updateBanner(
             account: '@elonmusk',
             url: 'https://example.com/banner.png',
@@ -124,10 +101,6 @@ final class ProfileTest extends TestCase
     #[Test]
     public function testUpdateBannerWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->profile->updateBanner(
             account: '@elonmusk',
             url: 'https://example.com/banner.png',

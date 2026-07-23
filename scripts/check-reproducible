@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+cd -- "$(dirname -- "$0")/.."
+
+reproducibility_workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-reproducibility.XXXXXX")"
+trap 'rm -rf -- "$reproducibility_workspace"' EXIT
+
+echo "==> Building source distributions twice"
+./scripts/build-archive "$reproducibility_workspace/first.zip"
+./scripts/build-archive "$reproducibility_workspace/second.zip"
+cmp "$reproducibility_workspace/first.zip" "$reproducibility_workspace/second.zip"
+
+archive_listing="$(unzip -Z1 "$reproducibility_workspace/first.zip")"
+for required_file in LICENSE composer.json src/Client.php; do
+  if ! grep -Fxq "$required_file" <<<"$archive_listing"; then
+    echo "Source distribution omits $required_file." >&2
+    exit 1
+  fi
+done
+
+for excluded_prefix in .github/ scripts/ tests/ vendor/; do
+  if grep -Fq "$excluded_prefix" <<<"$archive_listing"; then
+    echo "Source distribution includes $excluded_prefix." >&2
+    exit 1
+  fi
+done
+
+echo "Composer source distribution is reproducible."

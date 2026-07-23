@@ -2,13 +2,15 @@
 
 namespace Tests\Core;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
+use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Core\FileParam;
+use XTwitterScraper\RequestOptions;
 
 class Dog implements BaseModel
 {
@@ -48,11 +50,53 @@ class Dog implements BaseModel
 }
 
 /**
- * @internal
- *
- * @coversNothing
+ * @phpstan-type KennelShape = array{dog: Dog, dogs: list<Dog>}
  */
-#[CoversNothing]
+class Kennel implements BaseModel
+{
+    /** @use SdkModel<KennelShape> */
+    use SdkModel;
+
+    #[Required]
+    public Dog $dog;
+
+    /** @var list<Dog> */
+    #[Required(list: Dog::class)]
+    public array $dogs;
+
+    /**
+     * @param list<Dog> $dogs
+     */
+    public function __construct(Dog $dog, array $dogs)
+    {
+        $this->initialize();
+        $this->dog = $dog;
+        $this->dogs = $dogs;
+    }
+}
+
+/**
+ * @phpstan-type UploadParamsShape = array{file: FileParam}
+ */
+class UploadParams implements BaseModel
+{
+    /** @use SdkModel<UploadParamsShape> */
+    use SdkModel;
+    use SdkParams;
+
+    #[Required]
+    public FileParam $file;
+
+    public function __construct(FileParam $file)
+    {
+        $this->initialize();
+        $this->file = $file;
+    }
+}
+
+/**
+ * @internal
+ */
 class ModelTest extends TestCase
 {
     #[Test]
@@ -140,5 +184,121 @@ class ModelTest extends TestCase
             '{"name":"Bob","age_years":12,"friends":null,"owner":null}',
             json_encode($model)
         );
+    }
+
+    #[Test]
+    public function testNativeSerializationDebugAndStringRepresentations(): void
+    {
+        $model = new Dog(name: 'Bob', ageYears: 12, owner: 'Eve', friends: ['Alice']);
+        $serialized = serialize($model);
+        $restored = unserialize($serialized);
+
+        $this->assertInstanceOf(Dog::class, $restored);
+        $this->assertSame($model->toProperties(), $restored->toProperties());
+        $this->assertSame($model->__serialize(), $model->__debugInfo());
+        $this->assertStringContainsString('"name": "Bob"', (string) $model);
+        $this->assertSame(Dog::converter(), Dog::converter());
+    }
+
+    #[Test]
+    public function testNestedModelsSerializeRecursively(): void
+    {
+        $dog = new Dog(name: 'Bob', ageYears: 12, owner: null);
+        $kennel = new Kennel($dog, [$dog]);
+
+        $this->assertSame([
+            'dog' => ['name' => 'Bob', 'ageYears' => 12, 'owner' => null],
+            'dogs' => [['name' => 'Bob', 'ageYears' => 12, 'owner' => null]],
+        ], $kennel->__serialize());
+        $this->assertSame([
+            'dog' => ['name' => 'Bob', 'age_years' => 12, 'owner' => null],
+            'dogs' => [['name' => 'Bob', 'age_years' => 12, 'owner' => null]],
+        ], $kennel->jsonSerialize());
+    }
+
+    #[Test]
+    public function testUnknownAndIncongruentPayloadValuesRemainAccessible(): void
+    {
+        $model = Dog::fromArray([
+            'name' => 'Bob',
+            'ageYears' => 'not-an-integer',
+            'owner' => null,
+            'unknown' => 'preserved',
+        ]);
+
+        $this->assertSame('not-an-integer', $model['ageYears']);
+        $this->assertSame('preserved', $model['unknown']);
+        $this->assertTrue($model->offsetExists('unknown'));
+        $this->assertFalse($model->offsetExists('missing'));
+        $this->assertNull($model['missing']);
+
+        try {
+            $unused = $model->ageYears;
+            $this->fail('Expected incongruent native property access to fail.');
+        } catch (\Exception $exception) {
+            $this->assertStringContainsString('array access', $exception->getMessage());
+        }
+
+        $model['ageYears'] = 13;
+        $this->assertSame(13, $model->ageYears);
+        $model->offsetUnset('unknown');
+        $this->assertFalse($model->offsetExists('unknown'));
+    }
+
+    #[Test]
+    public function testMissingMagicPropertyReportsTheModelType(): void
+    {
+        $model = new Dog(name: 'Bob', ageYears: 12, owner: null);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Property 'missing' does not exist");
+        $model->__get('missing');
+    }
+
+    #[Test]
+    public function testArrayAccessRejectsNonStringOffsets(): void
+    {
+        $model = new Dog(name: 'Bob', ageYears: 12, owner: null);
+        $operations = [
+            ['offsetExists', [1]],
+            ['offsetGet', [1]],
+            ['offsetSet', [1, 'value']],
+            ['offsetUnset', [1]],
+        ];
+
+        foreach ($operations as [$methodName, $arguments]) {
+            try {
+                $method = new \ReflectionMethod($model, $methodName);
+                $method->invokeArgs($model, $arguments);
+                $this->fail('Expected the non-string offset to fail.');
+            } catch (\InvalidArgumentException) {
+                $this->addToAssertionCount(1);
+            }
+        }
+    }
+
+    #[Test]
+    public function testRequestParamsDisableRetriesForOneShotInputs(): void
+    {
+        $safe = new UploadParams(FileParam::fromString('content', 'file.txt'));
+        [$safeBody, $safeOptions] = UploadParams::parseRequest(
+            $safe,
+            RequestOptions::with(maxRetries: 5),
+        );
+        $this->assertInstanceOf(FileParam::class, $safeBody['file']);
+        $this->assertSame(5, $safeOptions->maxRetries);
+
+        $resource = fopen('php://temp', 'w+');
+        $this->assertIsResource($resource);
+        fwrite($resource, 'content');
+        rewind($resource);
+        $oneShot = new UploadParams(FileParam::fromResource($resource, 'file.txt'));
+        [$oneShotBody, $oneShotOptions] = UploadParams::parseRequest(
+            $oneShot,
+            RequestOptions::with(maxRetries: 5),
+        );
+        $this->assertInstanceOf(FileParam::class, $oneShotBody['file']);
+        $this->assertSame(0, $oneShotOptions->maxRetries);
+        fclose($resource);
     }
 }

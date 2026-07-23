@@ -22,10 +22,16 @@ class APIStatusException extends APIException
         $this->response = $response;
         $this->status = $response->getStatusCode();
 
-        $summary = Util::prettyEncodeJson(['status' => $this->status, 'body' => Util::decodeJson($response->getBody())]);
+        try {
+            $body = Util::decodeJson((string) $response->getBody());
+        } catch (\JsonException) {
+            $body = null;
+        }
+        $this->body = $body;
+        $summary = Util::prettyEncodeJson(['status' => $this->status, 'body' => $body]);
 
         if ('' != $message) {
-            $summary .= $message.PHP_EOL.$summary;
+            $summary = $message.PHP_EOL.$summary;
         }
 
         parent::__construct(request: $request, message: $summary, previous: $previous);

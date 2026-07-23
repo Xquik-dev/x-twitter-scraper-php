@@ -2,10 +2,8 @@
 
 namespace Tests\Services\X;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\Dm\DmGetHistoryResponse;
@@ -14,7 +12,6 @@ use XTwitterScraper\X\Dm\DmSendResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class DmTest extends TestCase
 {
     protected Client $client;
@@ -36,10 +33,6 @@ final class DmTest extends TestCase
     #[Test]
     public function testRetrieveHistory(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->dm->retrieveHistory(
             'userId',
             account: 'account'
@@ -52,10 +45,6 @@ final class DmTest extends TestCase
     #[Test]
     public function testRetrieveHistoryWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->dm->retrieveHistory(
             'userId',
             account: 'account',
@@ -70,10 +59,6 @@ final class DmTest extends TestCase
     #[Test]
     public function testSend(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->dm->send(
             'userId',
             account: '@elonmusk',
@@ -88,10 +73,6 @@ final class DmTest extends TestCase
     #[Test]
     public function testSendWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->dm->send(
             'userId',
             account: '@elonmusk',

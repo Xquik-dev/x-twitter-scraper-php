@@ -33,7 +33,7 @@ final class ScorerWeight implements BaseModel
     /**
      * X does not publish the production weight.
      *
-     * @var null|null $weight
+     * @var null $weight
      */
     #[Required]
     public null $weight;
@@ -62,7 +62,7 @@ final class ScorerWeight implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param null|null $weight
+     * @param null $weight
      */
     public static function with(
         string $context,
@@ -103,7 +103,7 @@ final class ScorerWeight implements BaseModel
     /**
      * X does not publish the production weight.
      *
-     * @param null|null $weight
+     * @param null $weight
      */
     public function withWeight(null $weight): self
     {

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+cd -- "$(dirname -- "$0")/.."
+
+if [[ "$#" -ne 1 ]]; then
+  echo "Usage: ./scripts/build-archive <output.zip>" >&2
+  exit 2
+fi
+
+output_archive="$1"
+archive_workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-archive.XXXXXX")"
+trap 'rm -rf -- "$archive_workspace"' EXIT
+
+mkdir -p -- "$(dirname -- "$output_archive")"
+composer archive \
+  --format=zip \
+  --dir="$archive_workspace" \
+  --file=source \
+  --no-interaction
+
+php scripts/normalize-archive.php "$archive_workspace/source.zip" "$output_archive"

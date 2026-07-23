@@ -7,12 +7,16 @@
 >
   <source>
     <include>
-      <directory suffix=".php">./src</directory>
+      <directory suffix=".php">./src/Core</directory>
+      <directory suffix=".php">./src/Services</directory>
+      <file>./src/Client.php</file>
+      <file>./src/RequestOptions.php</file>
     </include>
   </source>
   <testsuites>
     <testsuite name="default">
       <directory suffix=".php">./tests</directory>
+      <exclude>./tests/mock-api-router.php</exclude>
     </testsuite>
   </testsuites>
 </phpunit>

@@ -2,10 +2,8 @@
 
 namespace Tests\Services\X;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
@@ -14,7 +12,6 @@ use XTwitterScraper\X\Bookmarks\BookmarkGetFoldersResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class BookmarksTest extends TestCase
 {
     protected Client $client;
@@ -36,10 +33,6 @@ final class BookmarksTest extends TestCase
     #[Test]
     public function testList(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->bookmarks->list();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -49,10 +42,6 @@ final class BookmarksTest extends TestCase
     #[Test]
     public function testRetrieveFolders(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->bookmarks->retrieveFolders();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

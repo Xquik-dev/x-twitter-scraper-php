@@ -2,10 +2,8 @@
 
 namespace Tests\Services;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Styles\StyleCompareResponse;
@@ -16,7 +14,6 @@ use XTwitterScraper\Styles\StyleProfile;
 /**
  * @internal
  */
-#[CoversNothing]
 final class StylesTest extends TestCase
 {
     protected Client $client;
@@ -38,10 +35,6 @@ final class StylesTest extends TestCase
     #[Test]
     public function testRetrieve(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->styles->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -51,10 +44,6 @@ final class StylesTest extends TestCase
     #[Test]
     public function testUpdate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->styles->update(
             'id',
             label: 'Professional Voice',
@@ -68,10 +57,6 @@ final class StylesTest extends TestCase
     #[Test]
     public function testUpdateWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->styles->update(
             'id',
             label: 'Professional Voice',
@@ -85,10 +70,6 @@ final class StylesTest extends TestCase
     #[Test]
     public function testList(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->styles->list();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -98,10 +79,6 @@ final class StylesTest extends TestCase
     #[Test]
     public function testDelete(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->styles->delete('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -111,10 +88,6 @@ final class StylesTest extends TestCase
     #[Test]
     public function testAnalyze(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->styles->analyze(username: 'elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -124,10 +97,6 @@ final class StylesTest extends TestCase
     #[Test]
     public function testAnalyzeWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->styles->analyze(username: 'elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -137,10 +106,6 @@ final class StylesTest extends TestCase
     #[Test]
     public function testCompare(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->styles->compare(
             username1: 'username1',
             username2: 'username2'
@@ -153,10 +118,6 @@ final class StylesTest extends TestCase
     #[Test]
     public function testCompareWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->styles->compare(
             username1: 'username1',
             username2: 'username2'
@@ -169,10 +130,6 @@ final class StylesTest extends TestCase
     #[Test]
     public function testGetPerformance(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->styles->getPerformance('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

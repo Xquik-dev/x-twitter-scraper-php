@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+cd -- "$(dirname -- "$0")/.."
+
+echo "==> Validating locked Composer metadata"
+composer validate --strict --no-check-publish
+
+echo "==> Auditing locked dependencies"
+composer audit --locked --abandoned=fail --format=plain
+
+echo "==> Checking dependency license policy"
+composer licenses --format=json | php scripts/verify-licenses.php

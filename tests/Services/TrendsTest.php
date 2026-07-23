@@ -2,10 +2,8 @@
 
 namespace Tests\Services;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Trends\TrendListResponse;
@@ -13,7 +11,6 @@ use XTwitterScraper\Trends\TrendListResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class TrendsTest extends TestCase
 {
     protected Client $client;
@@ -35,10 +32,6 @@ final class TrendsTest extends TestCase
     #[Test]
     public function testList(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->trends->list();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

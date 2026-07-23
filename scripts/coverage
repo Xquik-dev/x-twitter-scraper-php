@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+cd -- "$(dirname -- "$0")/.."
+
+coverage_workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-coverage.XXXXXX")"
+trap 'rm -rf -- "$coverage_workspace"' EXIT
+
+if ! php -r 'exit(extension_loaded("xdebug") ? 0 : 1);'; then
+  echo "Xdebug is required for branch coverage." >&2
+  exit 1
+fi
+
+echo "==> Measuring runtime core and service coverage"
+XDEBUG_MODE=coverage PHPUNIT_MEMORY_LIMIT=1G ./scripts/test \
+  --path-coverage \
+  --coverage-cobertura="$coverage_workspace/cobertura.xml"
+
+php scripts/verify-coverage.php "$coverage_workspace/cobertura.xml"

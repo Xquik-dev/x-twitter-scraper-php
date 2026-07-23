@@ -2,10 +2,8 @@
 
 namespace Tests\Services;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\GuestWallets\GuestWalletGetStatusResponse;
@@ -15,7 +13,6 @@ use XTwitterScraper\GuestWallets\GuestWalletTopupResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class GuestWalletsTest extends TestCase
 {
     protected Client $client;
@@ -37,10 +34,6 @@ final class GuestWalletsTest extends TestCase
     #[Test]
     public function testCreate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->guestWallets->create(
             amountMinor: 1000,
             idempotencyKey: 'e1cb97D8-dDF3-4AaA-ad0a-49E4A0d1CfAa'
@@ -53,10 +46,6 @@ final class GuestWalletsTest extends TestCase
     #[Test]
     public function testCreateWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->guestWallets->create(
             amountMinor: 1000,
             currency: 'usd',
@@ -70,10 +59,6 @@ final class GuestWalletsTest extends TestCase
     #[Test]
     public function testRetrieveStatus(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->guestWallets->retrieveStatus();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -83,10 +68,6 @@ final class GuestWalletsTest extends TestCase
     #[Test]
     public function testTopup(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->guestWallets->topup(
             amountMinor: 1000,
             idempotencyKey: 'e1cb97D8-dDF3-4AaA-ad0a-49E4A0d1CfAa'
@@ -99,10 +80,6 @@ final class GuestWalletsTest extends TestCase
     #[Test]
     public function testTopupWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->guestWallets->topup(
             amountMinor: 1000,
             currency: 'usd',

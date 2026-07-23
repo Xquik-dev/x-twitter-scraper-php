@@ -2,10 +2,8 @@
 
 namespace Tests\Services;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Drafts\DraftDetail;
@@ -14,7 +12,6 @@ use XTwitterScraper\Drafts\DraftListResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class DraftsTest extends TestCase
 {
     protected Client $client;
@@ -36,10 +33,6 @@ final class DraftsTest extends TestCase
     #[Test]
     public function testCreate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->drafts->create(
             text: 'AI is the future of productivity'
         );
@@ -51,10 +44,6 @@ final class DraftsTest extends TestCase
     #[Test]
     public function testCreateWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->drafts->create(
             text: 'AI is the future of productivity',
             goal: 'engagement',
@@ -68,10 +57,6 @@ final class DraftsTest extends TestCase
     #[Test]
     public function testRetrieve(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->drafts->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -81,10 +66,6 @@ final class DraftsTest extends TestCase
     #[Test]
     public function testList(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->drafts->list();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -94,10 +75,6 @@ final class DraftsTest extends TestCase
     #[Test]
     public function testDelete(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->drafts->delete('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

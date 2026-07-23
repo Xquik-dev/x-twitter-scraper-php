@@ -2,10 +2,8 @@
 
 namespace Tests\Services;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\EventType;
@@ -20,7 +18,6 @@ use XTwitterScraper\Webhooks\WebhookTestResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class WebhooksTest extends TestCase
 {
     protected Client $client;
@@ -42,10 +39,6 @@ final class WebhooksTest extends TestCase
     #[Test]
     public function testCreate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->webhooks->create(
             eventTypes: [EventType::TWEET_NEW, EventType::TWEET_REPLY],
             url: 'https://example.com/webhook',
@@ -58,10 +51,6 @@ final class WebhooksTest extends TestCase
     #[Test]
     public function testCreateWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->webhooks->create(
             eventTypes: [EventType::TWEET_NEW, EventType::TWEET_REPLY],
             url: 'https://example.com/webhook',
@@ -74,10 +63,6 @@ final class WebhooksTest extends TestCase
     #[Test]
     public function testUpdate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->webhooks->update('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -87,10 +72,6 @@ final class WebhooksTest extends TestCase
     #[Test]
     public function testList(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->webhooks->list();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -100,10 +81,6 @@ final class WebhooksTest extends TestCase
     #[Test]
     public function testDeactivate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->webhooks->deactivate('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -113,10 +90,6 @@ final class WebhooksTest extends TestCase
     #[Test]
     public function testListDeliveries(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->webhooks->listDeliveries('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -126,10 +99,6 @@ final class WebhooksTest extends TestCase
     #[Test]
     public function testResume(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->webhooks->resume('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -139,10 +108,6 @@ final class WebhooksTest extends TestCase
     #[Test]
     public function testTest(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->webhooks->test('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

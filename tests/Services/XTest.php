@@ -2,10 +2,8 @@
 
 namespace Tests\Services;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
@@ -16,7 +14,6 @@ use XTwitterScraper\X\XGetTrendsResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class XTest extends TestCase
 {
     protected Client $client;
@@ -38,10 +35,6 @@ final class XTest extends TestCase
     #[Test]
     public function testGetArticle(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->getArticle('tweetId');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -51,10 +44,6 @@ final class XTest extends TestCase
     #[Test]
     public function testGetHomeTimeline(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->getHomeTimeline();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -64,10 +53,6 @@ final class XTest extends TestCase
     #[Test]
     public function testGetNotifications(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->getNotifications();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -77,10 +62,6 @@ final class XTest extends TestCase
     #[Test]
     public function testGetTrends(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->getTrends();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType

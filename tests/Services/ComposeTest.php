@@ -2,17 +2,14 @@
 
 namespace Tests\Services;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 
 /**
  * @internal
  */
-#[CoversNothing]
 final class ComposeTest extends TestCase
 {
     protected Client $client;
@@ -34,10 +31,6 @@ final class ComposeTest extends TestCase
     #[Test]
     public function testCreate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->compose->create(
             topic: 'x',
             goal: 'engagement',
@@ -52,10 +45,6 @@ final class ComposeTest extends TestCase
     #[Test]
     public function testCreateWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->compose->create(
             step: 'score',
             topic: 'x',

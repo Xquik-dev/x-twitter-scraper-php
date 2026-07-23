@@ -128,6 +128,8 @@ final class ModelOf implements Converter
      */
     public function from(array $data): BaseModel
     {
+        $class = $this->class->getName();
+        $class::converter();
         $instance = $this->class->newInstanceWithoutConstructor();
         // @phpstan-ignore-next-line
         $instance->__unserialize($data);

@@ -2,10 +2,8 @@
 
 namespace Tests\Services\X;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\AccountConnectionChallenges\AccountConnectionChallengeSubmitResponse;
@@ -13,7 +11,6 @@ use XTwitterScraper\X\AccountConnectionChallenges\AccountConnectionChallengeSubm
 /**
  * @internal
  */
-#[CoversNothing]
 final class AccountConnectionChallengesTest extends TestCase
 {
     protected Client $client;
@@ -35,10 +32,6 @@ final class AccountConnectionChallengesTest extends TestCase
     #[Test]
     public function testSubmit(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->accountConnectionChallenges->submit(
             'id',
             emailCode: '<EMAIL_VERIFICATION_CODE>'
@@ -54,10 +47,6 @@ final class AccountConnectionChallengesTest extends TestCase
     #[Test]
     public function testSubmitWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->accountConnectionChallenges->submit(
             'id',
             emailCode: '<EMAIL_VERIFICATION_CODE>'

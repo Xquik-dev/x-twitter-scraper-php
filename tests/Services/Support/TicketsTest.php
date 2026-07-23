@@ -2,10 +2,8 @@
 
 namespace Tests\Services\Support;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Support\Tickets\TicketGetResponse;
@@ -17,7 +15,6 @@ use XTwitterScraper\Support\Tickets\TicketUpdateResponse;
 /**
  * @internal
  */
-#[CoversNothing]
 final class TicketsTest extends TestCase
 {
     protected Client $client;
@@ -39,10 +36,6 @@ final class TicketsTest extends TestCase
     #[Test]
     public function testCreate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->support->tickets->create(
             body: 'I am unable to connect my X account. Please help.',
             subject: 'Cannot connect X account',
@@ -55,10 +48,6 @@ final class TicketsTest extends TestCase
     #[Test]
     public function testCreateWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->support->tickets->create(
             body: 'I am unable to connect my X account. Please help.',
             subject: 'Cannot connect X account',
@@ -72,10 +61,6 @@ final class TicketsTest extends TestCase
     #[Test]
     public function testRetrieve(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->support->tickets->retrieve(
             'tkt_a1b2c3d4e5f6a1b2c3d4e5f6'
         );
@@ -87,10 +72,6 @@ final class TicketsTest extends TestCase
     #[Test]
     public function testUpdate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->support->tickets->update(
             'tkt_a1b2c3d4e5f6a1b2c3d4e5f6',
             status: 'resolved'
@@ -103,10 +84,6 @@ final class TicketsTest extends TestCase
     #[Test]
     public function testUpdateWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->support->tickets->update(
             'tkt_a1b2c3d4e5f6a1b2c3d4e5f6',
             status: 'resolved'
@@ -119,10 +96,6 @@ final class TicketsTest extends TestCase
     #[Test]
     public function testList(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->support->tickets->list();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -132,10 +105,6 @@ final class TicketsTest extends TestCase
     #[Test]
     public function testReply(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->support->tickets->reply(
             'tkt_a1b2c3d4e5f6a1b2c3d4e5f6',
             body: 'Thank you for the update.'
@@ -148,10 +117,6 @@ final class TicketsTest extends TestCase
     #[Test]
     public function testReplyWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->support->tickets->reply(
             'tkt_a1b2c3d4e5f6a1b2c3d4e5f6',
             body: 'Thank you for the update.',

@@ -2,10 +2,8 @@
 
 namespace Tests\Services\X;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\Accounts\AccountBulkRetryResponse;
@@ -18,7 +16,6 @@ use XTwitterScraper\X\Accounts\XAccountDetail;
 /**
  * @internal
  */
-#[CoversNothing]
 final class AccountsTest extends TestCase
 {
     protected Client $client;
@@ -40,10 +37,6 @@ final class AccountsTest extends TestCase
     #[Test]
     public function testCreate(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->accounts->create(
             email: 'account@example.invalid',
             password: '<ACCOUNT_PASSWORD>',
@@ -57,10 +50,6 @@ final class AccountsTest extends TestCase
     #[Test]
     public function testCreateWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->accounts->create(
             email: 'account@example.invalid',
             password: '<ACCOUNT_PASSWORD>',
@@ -75,10 +64,6 @@ final class AccountsTest extends TestCase
     #[Test]
     public function testRetrieve(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->accounts->retrieve('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -88,10 +73,6 @@ final class AccountsTest extends TestCase
     #[Test]
     public function testList(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->accounts->list();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -101,10 +82,6 @@ final class AccountsTest extends TestCase
     #[Test]
     public function testDelete(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->accounts->delete('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -114,10 +91,6 @@ final class AccountsTest extends TestCase
     #[Test]
     public function testBulkRetry(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->accounts->bulkRetry();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -127,10 +100,6 @@ final class AccountsTest extends TestCase
     #[Test]
     public function testReauth(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->accounts->reauth(
             'id',
             password: '<ACCOUNT_PASSWORD>'
@@ -143,10 +112,6 @@ final class AccountsTest extends TestCase
     #[Test]
     public function testReauthWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->x->accounts->reauth(
             'id',
             password: '<ACCOUNT_PASSWORD>',

@@ -2,10 +2,8 @@
 
 namespace Tests\Services;
 
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Tests\UnsupportedMockTests;
 use XTwitterScraper\Account\AccountGetResponse;
 use XTwitterScraper\Account\AccountSetXUsernameResponse;
 use XTwitterScraper\Account\AccountUpdateLocaleResponse;
@@ -15,7 +13,6 @@ use XTwitterScraper\Core\Util;
 /**
  * @internal
  */
-#[CoversNothing]
 final class AccountTest extends TestCase
 {
     protected Client $client;
@@ -37,10 +34,6 @@ final class AccountTest extends TestCase
     #[Test]
     public function testRetrieve(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->account->retrieve();
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -50,10 +43,6 @@ final class AccountTest extends TestCase
     #[Test]
     public function testSetXUsername(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->account->setXUsername(username: 'elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -63,10 +52,6 @@ final class AccountTest extends TestCase
     #[Test]
     public function testSetXUsernameWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->account->setXUsername(username: 'elonmusk');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -76,10 +61,6 @@ final class AccountTest extends TestCase
     #[Test]
     public function testUpdateLocale(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->account->updateLocale(locale: 'en');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
@@ -89,10 +70,6 @@ final class AccountTest extends TestCase
     #[Test]
     public function testUpdateLocaleWithOptionalParams(): void
     {
-        if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Mock server tests are disabled');
-        }
-
         $result = $this->client->account->updateLocale(locale: 'en');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
