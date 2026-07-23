@@ -1,10 +1,26 @@
-# Xquik PHP SDK
+# X (Twitter) Scraper PHP SDK: Tweet Search, Timelines, Followers & Posting
 
-Use the Xquik API from PHP 8.1+.
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13737/badge)](https://www.bestpractices.dev/projects/13737)
+
+Use Xquik's typed PHP client for X data and confirmed actions.
 
 ## Documentation
 
 Read the [PHP SDK guide](https://docs.xquik.com/sdks/php) or [API guide](https://docs.xquik.com/api-reference/overview).
+
+## Common X Data Tasks
+
+Use the linked SDK guide for typed method names.
+
+| Customer Question | REST Route | Workflow Note |
+| --- | --- | --- |
+| How do I search tweets? | `GET /x/tweets/search` | Use keyword or advanced operator queries. |
+| How do I read a profile timeline? | `GET /x/users/{id}/tweets` | Paginate bounded results. |
+| How do I scrape followers? | `GET /x/users/{id}/followers` | Use an extraction for complete datasets. |
+| How do I scrape following accounts? | `GET /x/users/{id}/following` | Use an extraction for complete datasets. |
+| How do I read my home timeline? | `GET /x/timeline` | Approve this private read. |
+| How do I monitor an account? | `POST /monitors` | Deliver events through HMAC webhooks. |
+| How do I post or reply? | `POST /x/tweets` | Confirm the account and payload. |
 
 ## Installation
 
