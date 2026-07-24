@@ -17,6 +17,12 @@ It does not call or emulate the official X API.
 
 Use it for supported X data and automation workflows from PHP.
 
+## Choose the PHP SDK
+
+Choose this client for Composer applications using typed value objects and retries.
+Reuse its client inside framework-based or standalone PHP services.
+Use REST when Composer installation is unavailable.
+
 ## Documentation
 
 Read the [PHP SDK guide](https://docs.xquik.com/sdks/php) or [API guide](https://docs.xquik.com/api-reference/overview).
