@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.6.0 (2026-07-24)
+
+Full Changelog: [v0.5.2...v0.6.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.5.2...v0.6.0)
+
+### Features
+
+* add OpenSSF Gold quality gates ([fda56c5](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/fda56c5a3e3b2f5b0005a7374705a0a962aab584))
+
+
+### Bug Fixes
+
+* avoid unstable generator path tracing ([1755e16](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/1755e16e6ea7fdd0446a1eac97884bc5d60ccd6c))
+* isolate branch coverage collection ([3f1e5c5](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/3f1e5c565f4011c2f941dd4cdc60853a6f017107))
+* stabilize branch coverage runtime ([99db293](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/99db2933865163aec3510b6c4224a670ffd2d1ea))
+* use hardened coverage merger ([a906de5](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/a906de52321403dea7e77557be81d1ff7ef4ed52))
+
+
+### Chores
+
+* add per-file license evidence ([a1ac8ac](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/a1ac8ac6d7e85ff26f0480cf87e4897d6b9b1e7a))
+
+
+### Documentation
+
+* clarify repository discovery ([c533705](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/c5337050bca2786a7b1c1460950063832ffb93b2))
+
 ## 0.5.2 (2026-07-23)
 
 Full Changelog: [v0.5.1...v0.5.2](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.5.1...v0.5.2)
