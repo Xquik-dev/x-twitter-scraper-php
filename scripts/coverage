@@ -24,10 +24,15 @@ run_coverage_file() {
   coverage_index=$((coverage_index + 1))
   coverage_part="$coverage_workspace/coverage-${coverage_index}.cov"
   coverage_command=(./scripts/test --coverage-php="$coverage_part")
-  # Xdebug can crash while tracing generator paths in this focused test.
-  if [[ "$test_file" != "tests/Core/SdkPageTest.php" ]]; then
-    coverage_command+=(--path-coverage)
-  fi
+  # Xdebug can crash while tracing generator paths in these focused tests.
+  case "$test_file" in
+    tests/Core/SdkPageTest.php | \
+      tests/Core/UtilTest.php)
+      ;;
+    *)
+      coverage_command+=(--path-coverage)
+      ;;
+  esac
   coverage_command+=("$test_file")
 
   echo "==> Collecting coverage file ${coverage_index}"
