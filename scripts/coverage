@@ -13,8 +13,39 @@ if ! php -r 'exit(extension_loaded("xdebug") ? 0 : 1);'; then
 fi
 
 echo "==> Measuring runtime core and service coverage"
-XDEBUG_MODE=coverage PHPUNIT_MEMORY_LIMIT=1G ./scripts/test \
-  --path-coverage \
-  --coverage-cobertura="$coverage_workspace/cobertura.xml"
+coverage_parts=()
+batch_files=()
+batch_index=0
+coverage_batch_size=8
+
+run_coverage_batch() {
+  batch_index=$((batch_index + 1))
+  coverage_part="$coverage_workspace/coverage-${batch_index}.php"
+  coverage_parts+=("$coverage_part")
+
+  echo "==> Collecting coverage batch ${batch_index}"
+  XDEBUG_MODE=coverage PHPUNIT_MEMORY_LIMIT=1G ./scripts/test \
+    --path-coverage \
+    --coverage-php="$coverage_part" \
+    "${batch_files[@]}"
+
+  batch_files=()
+}
+
+while IFS= read -r test_file; do
+  batch_files+=("$test_file")
+  # Bound Xdebug path data to prevent native crashes on large suites.
+  if ((${#batch_files[@]} == coverage_batch_size)); then
+    run_coverage_batch
+  fi
+done < <(find tests -type f -name '*Test.php' | LC_ALL=C sort)
+
+if ((${#batch_files[@]} > 0)); then
+  run_coverage_batch
+fi
+
+php scripts/merge-coverage.php \
+  "$coverage_workspace/cobertura.xml" \
+  "${coverage_parts[@]}"
 
 php scripts/verify-coverage.php "$coverage_workspace/cobertura.xml"

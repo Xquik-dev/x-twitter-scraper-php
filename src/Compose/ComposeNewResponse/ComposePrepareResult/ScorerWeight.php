@@ -10,7 +10,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
  * @phpstan-type ScorerWeightShape = array{
- *   context: string, signal: string, weight: null|null
+ *   context: string, signal: string, weight: null
  * }
  */
 final class ScorerWeight implements BaseModel
@@ -33,10 +33,10 @@ final class ScorerWeight implements BaseModel
     /**
      * X does not publish the production weight.
      *
-     * @var null $weight
+     * @var null
      */
-    #[Required]
-    public null $weight;
+    #[Required(type: 'null')]
+    public mixed $weight;
 
     /**
      * `new ScorerWeight()` is missing required properties by the API.
@@ -67,8 +67,10 @@ final class ScorerWeight implements BaseModel
     public static function with(
         string $context,
         string $signal,
-        null $weight
+        mixed $weight
     ): self {
+        self::ensureNullWeight($weight);
+
         $self = new self;
 
         $self['context'] = $context;
@@ -105,11 +107,20 @@ final class ScorerWeight implements BaseModel
      *
      * @param null $weight
      */
-    public function withWeight(null $weight): self
+    public function withWeight(mixed $weight): self
     {
+        self::ensureNullWeight($weight);
+
         $self = clone $this;
         $self['weight'] = $weight;
 
         return $self;
+    }
+
+    private static function ensureNullWeight(mixed $weight): void
+    {
+        if (null !== $weight) {
+            throw new \TypeError('Scorer weight must be null.');
+        }
     }
 }

@@ -33,11 +33,11 @@ No OpenSSF-defined ineligibility applies.
 | CI | Pull requests and pushes run pinned, least-privilege workflows |
 | Two-factor authentication | The Xquik-dev organization requires 2FA |
 
-The current suite runs 239 tests with 676 assertions and no skips.
+The current suite runs 240 tests with 681 assertions and no skips.
 
 It covers 3,404 of 3,432 executable lines, or 99.18%.
 
-It covers 1,096 of 1,228 branches, or 89.25%.
+It covers 1,113 of 1,264 branches, or 88.05%.
 
 Dynamic coverage includes the client, runtime core, and service facades.
 
