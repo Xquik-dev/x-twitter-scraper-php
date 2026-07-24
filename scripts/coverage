@@ -14,36 +14,32 @@ if ! php -r 'exit(extension_loaded("xdebug") ? 0 : 1);'; then
 fi
 
 echo "==> Measuring runtime core and service coverage"
-batch_files=()
-batch_index=0
-coverage_batch_size=8
+coverage_index=0
 
-run_coverage_batch() {
-  batch_index=$((batch_index + 1))
-  coverage_part="$coverage_workspace/coverage-${batch_index}.cov"
+run_coverage_file() {
+  local test_file="$1"
+  local coverage_part
+  local -a coverage_command
 
-  echo "==> Collecting coverage batch ${batch_index}"
-  XDEBUG_MODE=coverage PHPUNIT_MEMORY_LIMIT=1G ./scripts/test \
-    --path-coverage \
-    --coverage-php="$coverage_part" \
-    "${batch_files[@]}"
+  coverage_index=$((coverage_index + 1))
+  coverage_part="$coverage_workspace/coverage-${coverage_index}.cov"
+  coverage_command=(./scripts/test --coverage-php="$coverage_part")
+  # Xdebug can crash while tracing generator paths in this focused test.
+  if [[ "$test_file" != "tests/Core/SdkPageTest.php" ]]; then
+    coverage_command+=(--path-coverage)
+  fi
+  coverage_command+=("$test_file")
 
-  batch_files=()
+  echo "==> Collecting coverage file ${coverage_index}"
+  XDEBUG_MODE=coverage PHPUNIT_MEMORY_LIMIT=1G "${coverage_command[@]}"
 }
 
 while IFS= read -r test_file; do
-  batch_files+=("$test_file")
-  # Bound Xdebug path data to prevent native crashes on large suites.
-  if ((${#batch_files[@]} == coverage_batch_size)); then
-    run_coverage_batch
-  fi
+  # Isolate Xdebug path data to prevent native crashes across test files.
+  run_coverage_file "$test_file"
 done < <(find tests -type f -name '*Test.php' | LC_ALL=C sort)
 
-if ((${#batch_files[@]} > 0)); then
-  run_coverage_batch
-fi
-
-vendor/bin/phpcov merge \
+php -d memory_limit=1G vendor/bin/phpcov merge \
   --cobertura "$coverage_workspace/cobertura.xml" \
   "$coverage_workspace"
 
