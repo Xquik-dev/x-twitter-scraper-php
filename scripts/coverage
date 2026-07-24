@@ -5,6 +5,7 @@ set -euo pipefail
 cd -- "$(dirname -- "$0")/.."
 
 coverage_workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-coverage.XXXXXX")"
+chmod 700 "$coverage_workspace"
 trap 'rm -rf -- "$coverage_workspace"' EXIT
 
 if ! php -r 'exit(extension_loaded("xdebug") ? 0 : 1);'; then
@@ -13,15 +14,13 @@ if ! php -r 'exit(extension_loaded("xdebug") ? 0 : 1);'; then
 fi
 
 echo "==> Measuring runtime core and service coverage"
-coverage_parts=()
 batch_files=()
 batch_index=0
 coverage_batch_size=8
 
 run_coverage_batch() {
   batch_index=$((batch_index + 1))
-  coverage_part="$coverage_workspace/coverage-${batch_index}.php"
-  coverage_parts+=("$coverage_part")
+  coverage_part="$coverage_workspace/coverage-${batch_index}.cov"
 
   echo "==> Collecting coverage batch ${batch_index}"
   XDEBUG_MODE=coverage PHPUNIT_MEMORY_LIMIT=1G ./scripts/test \
@@ -44,8 +43,8 @@ if ((${#batch_files[@]} > 0)); then
   run_coverage_batch
 fi
 
-php scripts/merge-coverage.php \
-  "$coverage_workspace/cobertura.xml" \
-  "${coverage_parts[@]}"
+vendor/bin/phpcov merge \
+  --cobertura "$coverage_workspace/cobertura.xml" \
+  "$coverage_workspace"
 
 php scripts/verify-coverage.php "$coverage_workspace/cobertura.xml"
