@@ -37,7 +37,7 @@ The current suite runs 240 tests with 681 assertions and no skips.
 
 It covers 3,404 of 3,432 executable lines, or 99.18%.
 
-It covers 1,113 of 1,264 branches, or 88.05%.
+It covers 1,040 of 1,252 branches, or 83.07%.
 
 Dynamic coverage includes the client, runtime core, and service facades.
 
@@ -47,7 +47,17 @@ PHPStan checks every generated DTO at its strictest level.
 
 The loopback service suite also parses generated response models.
 
-REUSE validates license metadata for all 830 repository files.
+REUSE validates license metadata for all 831 repository files.
+
+## Outstanding Silver Blocker
+
+The release workflow now creates SLSA provenance for exact Composer archives.
+
+It also attaches each archive and Sigstore bundle to GitHub Releases.
+
+Run one post-merge release and verify its public artifact.
+
+Keep `signed_releases` Unmet until that verification succeeds.
 
 ## Outstanding Gold Blockers
 
@@ -76,6 +86,9 @@ Run these evidence commands before releases:
 ./scripts/audit
 reuse lint
 ./scripts/check-reproducible
+gh attestation verify ARCHIVE \
+  --repo Xquik-dev/x-twitter-scraper-php \
+  --signer-workflow Xquik-dev/x-twitter-scraper-php/.github/workflows/release-provenance.yml
 ```
 
 Reassess the register before every major release.

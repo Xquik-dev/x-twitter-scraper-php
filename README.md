@@ -53,6 +53,31 @@ composer require xquik/x-twitter-scraper:^0.5.2
 
 <!-- x-release-please-end -->
 
+## Verify a Release
+
+Composer users install through Packagist.
+
+Verify Xquik's matching project archive before upgrading:
+
+```sh
+release_tag=vVERSION
+archive="x-twitter-scraper-php-$release_tag.zip"
+
+gh release download "$release_tag" \
+  --repo Xquik-dev/x-twitter-scraper-php \
+  --pattern "$archive"
+
+gh attestation verify "$archive" \
+  --repo Xquik-dev/x-twitter-scraper-php \
+  --signer-workflow Xquik-dev/x-twitter-scraper-php/.github/workflows/release-provenance.yml \
+  --source-ref "refs/tags/$release_tag" \
+  --deny-self-hosted-runners
+```
+
+Require the Xquik-dev repository and expected release workflow.
+
+GitHub verifies the archive digest, signer identity, and transparency proof.
+
 ## Usage
 
 This library uses named parameters to specify optional arguments.

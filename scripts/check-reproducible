@@ -31,4 +31,16 @@ for excluded_prefix in .github/ scripts/ tests/ vendor/; do
   fi
 done
 
+for excluded_entry in .env .git .php-cs-fixer.cache auth.json; do
+  if grep -Fxq "$excluded_entry" <<<"$archive_listing"; then
+    echo "Source distribution includes $excluded_entry." >&2
+    exit 1
+  fi
+done
+
+if grep -Eq '^\.env\.' <<<"$archive_listing"; then
+  echo "Source distribution includes an environment file." >&2
+  exit 1
+fi
+
 echo "Composer source distribution is reproducible."
