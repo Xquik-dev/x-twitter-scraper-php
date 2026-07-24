@@ -3,7 +3,6 @@
 namespace Tests\Core;
 
 use Http\Discovery\Psr17FactoryDiscovery;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
@@ -13,7 +12,6 @@ use XTwitterScraper\Core\Util;
 /**
  * @internal
  */
-#[RunTestsInSeparateProcesses]
 class UtilTest extends TestCase
 {
     #[Test]

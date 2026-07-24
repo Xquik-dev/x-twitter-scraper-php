@@ -4,6 +4,7 @@ namespace Tests\Core;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use XTwitterScraper\Compose\ComposeNewResponse\ComposePrepareResult\ScorerWeight;
 use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
@@ -99,6 +100,34 @@ class UploadParams implements BaseModel
  */
 class ModelTest extends TestCase
 {
+    #[Test]
+    public function testNullOnlyGeneratedPropertiesRemainPhp81Compatible(): void
+    {
+        $weight = ScorerWeight::with(context: 'ranking', signal: 'reply', weight: null);
+        $expected = ['context' => 'ranking', 'signal' => 'reply', 'weight' => null];
+        $this->assertSame($expected, $weight->toProperties());
+        $this->assertSame($expected, $weight->withWeight(null)->toProperties());
+        $this->assertSame($expected, ScorerWeight::fromArray([
+            'context' => 'ranking',
+            'signal' => 'reply',
+            'weight' => 'not-published',
+        ])->toProperties());
+
+        $factory = new \ReflectionMethod(ScorerWeight::class, 'with');
+        $setter = new \ReflectionMethod(ScorerWeight::class, 'withWeight');
+        foreach ([
+            static fn (): mixed => $factory->invoke(null, 'ranking', 'reply', 1),
+            static fn (): mixed => $setter->invoke($weight, 1),
+        ] as $operation) {
+            try {
+                $operation();
+                $this->fail('Expected a non-null scorer weight to fail.');
+            } catch (\TypeError $exception) {
+                $this->assertSame('Scorer weight must be null.', $exception->getMessage());
+            }
+        }
+    }
+
     #[Test]
     public function testBasicGetAndSet(): void
     {
