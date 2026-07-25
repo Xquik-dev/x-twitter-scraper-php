@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.7.0 (2026-07-25)
+
+Full Changelog: [v0.6.1...v0.7.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.6.1...v0.7.0)
+
+### Features
+
+* add OpenSSF Gold quality gates ([fda56c5](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/fda56c5a3e3b2f5b0005a7374705a0a962aab584))
+* **api:** api update ([caea052](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/caea05264accc0211005799ca50dbac73df70b45))
+* **api:** api update ([65f8519](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/65f851931946da17c1d8c41873fc68e36d7a88d4))
+* **api:** api update ([103737b](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/103737bd4aa8809ac50637b94ddb26bce6358c9b))
+
+
+### Bug Fixes
+
+* avoid unstable generator path tracing ([1755e16](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/1755e16e6ea7fdd0446a1eac97884bc5d60ccd6c))
+* isolate branch coverage collection ([3f1e5c5](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/3f1e5c565f4011c2f941dd4cdc60853a6f017107))
+* publish assets before immutable release ([#16](https://github.com/Xquik-dev/x-twitter-scraper-php/issues/16)) ([874c706](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/874c706cf948f94eec4c9b4eae8ed8f6f6d8fb17))
+* stabilize branch coverage runtime ([99db293](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/99db2933865163aec3510b6c4224a670ffd2d1ea))
+* use hardened coverage merger ([a906de5](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/a906de52321403dea7e77557be81d1ff7ef4ed52))
+
+
+### Chores
+
+* add FUNDING.yml pointing to xquik.com ([0251ac6](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/0251ac619d5a046713ef91f9c99a14e4fb667c7c))
+* add per-file license evidence ([a1ac8ac](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/a1ac8ac6d7e85ff26f0480cf87e4897d6b9b1e7a))
+* improve PHP package metadata ([e4c398d](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/e4c398df407b425e5ec5b2b6a4379a522f9af8b6))
+* prepare v0.4.5 ([8f72f00](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/8f72f0089a7c6b261d038c7861b07ad80574e820))
+
+
+### Documentation
+
+* add Contributor Covenant 2.1 Code of Conduct ([#2192](https://github.com/Xquik-dev/x-twitter-scraper-php/issues/2192)) ([9b5a580](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/9b5a580eb39c479709602e6be3dc9c83bdb57cef))
+* add DeepWiki badge ([05deaee](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/05deaee83f76ff3ae7f124ae1be90cbaa2d51240))
+* clarify repository discovery ([c533705](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/c5337050bca2786a7b1c1460950063832ffb93b2))
+* map common X data tasks ([#10](https://github.com/Xquik-dev/x-twitter-scraper-php/issues/10)) ([e89b0e7](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/e89b0e7c66f391bf1c1330f14bdf56b68a8d6316))
+
 ## 0.6.1 (2026-07-24)
 
 Full Changelog: [v0.6.0...v0.6.1](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.6.0...v0.6.1)
