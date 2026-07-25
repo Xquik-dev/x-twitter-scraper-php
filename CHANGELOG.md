@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.1 (2026-07-24)
+
+Full Changelog: [v0.6.0...v0.6.1](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.6.0...v0.6.1)
+
+### Bug Fixes
+
+* publish assets before immutable release ([#16](https://github.com/Xquik-dev/x-twitter-scraper-php/issues/16)) ([874c706](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/874c706cf948f94eec4c9b4eae8ed8f6f6d8fb17))
+
 ## 0.6.0 (2026-07-24)
 
 Full Changelog: [v0.5.2...v0.6.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.5.2...v0.6.0)
