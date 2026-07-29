@@ -13,7 +13,6 @@ use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\Accounts\AccountBulkRetryResponse;
 use XTwitterScraper\X\Accounts\AccountDeleteResponse;
 use XTwitterScraper\X\Accounts\AccountListResponse;
-use XTwitterScraper\X\Accounts\AccountNewResponse;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
 use XTwitterScraper\X\Accounts\XAccountDetail;
 
@@ -44,11 +43,12 @@ final class AccountsTest extends TestCase
         $result = $this->client->x->accounts->create(
             email: 'account@example.invalid',
             password: '<ACCOUNT_PASSWORD>',
+            totpSecret: '<TOTP_SECRET>',
             username: 'your_x_username',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(AccountNewResponse::class, $result);
+        $this->assertIsNotResource($result);
     }
 
     #[Test]
@@ -57,12 +57,12 @@ final class AccountsTest extends TestCase
         $result = $this->client->x->accounts->create(
             email: 'account@example.invalid',
             password: '<ACCOUNT_PASSWORD>',
-            username: 'your_x_username',
             totpSecret: '<TOTP_SECRET>',
+            username: 'your_x_username',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(AccountNewResponse::class, $result);
+        $this->assertIsNotResource($result);
     }
 
     #[Test]

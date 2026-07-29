@@ -14,6 +14,7 @@ use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\XContract;
+use XTwitterScraper\Services\X\AccountConnectionAttemptsService;
 use XTwitterScraper\Services\X\AccountConnectionChallengesService;
 use XTwitterScraper\Services\X\AccountsService;
 use XTwitterScraper\Services\X\BookmarksService;
@@ -94,6 +95,11 @@ final class XService implements XContract
     /**
      * @api
      */
+    public AccountConnectionAttemptsService $accountConnectionAttempts;
+
+    /**
+     * @api
+     */
     public BookmarksService $bookmarks;
 
     /**
@@ -117,6 +123,7 @@ final class XService implements XContract
         $this->communities = new CommunitiesService($client);
         $this->accounts = new AccountsService($client);
         $this->accountConnectionChallenges = new AccountConnectionChallengesService($client);
+        $this->accountConnectionAttempts = new AccountConnectionAttemptsService($client);
         $this->bookmarks = new BookmarksService($client);
         $this->lists = new ListsService($client);
     }

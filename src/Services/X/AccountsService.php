@@ -16,7 +16,6 @@ use XTwitterScraper\ServiceContracts\X\AccountsContract;
 use XTwitterScraper\X\Accounts\AccountBulkRetryResponse;
 use XTwitterScraper\X\Accounts\AccountDeleteResponse;
 use XTwitterScraper\X\Accounts\AccountListResponse;
-use XTwitterScraper\X\Accounts\AccountNewResponse;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
 use XTwitterScraper\X\Accounts\XAccountDetail;
 
@@ -47,8 +46,8 @@ final class AccountsService implements AccountsContract
      *
      * @param string $email Account email
      * @param string $password Account password
+     * @param string $totpSecret Authenticator App TOTP secret required for durable login
      * @param string $username X username
-     * @param string $totpSecret TOTP secret for 2FA
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -56,16 +55,16 @@ final class AccountsService implements AccountsContract
     public function create(
         string $email,
         string $password,
+        string $totpSecret,
         string $username,
-        ?string $totpSecret = null,
         RequestOptions|array|null $requestOptions = null,
-    ): AccountNewResponse {
+    ): mixed {
         $params = Util::removeNulls(
             [
                 'email' => $email,
                 'password' => $password,
-                'username' => $username,
                 'totpSecret' => $totpSecret,
+                'username' => $username,
             ],
         );
 
@@ -159,7 +158,7 @@ final class AccountsService implements AccountsContract
      * @param string $id resource ID returned by the matching create or list endpoint
      * @param string $password Updated account password
      * @param string $email Email for the X account (updates stored email)
-     * @param string $totpSecret TOTP secret for 2FA re-authentication
+     * @param string $totpSecret Replacement Authenticator App TOTP secret. Omit it to reuse the saved secret.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
