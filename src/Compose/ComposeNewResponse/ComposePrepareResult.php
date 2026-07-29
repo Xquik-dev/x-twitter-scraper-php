@@ -6,6 +6,7 @@ namespace XTwitterScraper\Compose\ComposeNewResponse;
 
 use XTwitterScraper\Compose\ComposeNewResponse\ComposePrepareResult\ContentRule;
 use XTwitterScraper\Compose\ComposeNewResponse\ComposePrepareResult\EngagementMultiplier;
+use XTwitterScraper\Compose\ComposeNewResponse\ComposePrepareResult\RadarRecommendation;
 use XTwitterScraper\Compose\ComposeNewResponse\ComposePrepareResult\SavedStyle;
 use XTwitterScraper\Compose\ComposeNewResponse\ComposePrepareResult\ScorerWeight;
 use XTwitterScraper\Core\Attributes\Optional;
@@ -16,6 +17,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 /**
  * @phpstan-import-type ContentRuleShape from \XTwitterScraper\Compose\ComposeNewResponse\ComposePrepareResult\ContentRule
  * @phpstan-import-type EngagementMultiplierShape from \XTwitterScraper\Compose\ComposeNewResponse\ComposePrepareResult\EngagementMultiplier
+ * @phpstan-import-type RadarRecommendationShape from \XTwitterScraper\Compose\ComposeNewResponse\ComposePrepareResult\RadarRecommendation
  * @phpstan-import-type ScorerWeightShape from \XTwitterScraper\Compose\ComposeNewResponse\ComposePrepareResult\ScorerWeight
  * @phpstan-import-type SavedStyleShape from \XTwitterScraper\Compose\ComposeNewResponse\ComposePrepareResult\SavedStyle
  *
@@ -26,6 +28,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   followUpQuestions: list<string>,
  *   intentURL: string,
  *   nextStep: string,
+ *   radarRecommendations: list<RadarRecommendation|RadarRecommendationShape>,
  *   scorerWeights: list<ScorerWeight|ScorerWeightShape>,
  *   source: string,
  *   topPenalties: list<string>,
@@ -73,6 +76,14 @@ final class ComposePrepareResult implements BaseModel
 
     #[Required]
     public string $nextStep;
+
+    /**
+     * Sources and guidance for researching a fresh post angle.
+     *
+     * @var list<RadarRecommendation> $radarRecommendations
+     */
+    #[Required(list: RadarRecommendation::class)]
+    public array $radarRecommendations;
 
     /**
      * Published signal names with unpublished weights as null.
@@ -130,6 +141,7 @@ final class ComposePrepareResult implements BaseModel
      *   followUpQuestions: ...,
      *   intentURL: ...,
      *   nextStep: ...,
+     *   radarRecommendations: ...,
      *   scorerWeights: ...,
      *   source: ...,
      *   topPenalties: ...,
@@ -146,6 +158,7 @@ final class ComposePrepareResult implements BaseModel
      *   ->withFollowUpQuestions(...)
      *   ->withIntentURL(...)
      *   ->withNextStep(...)
+     *   ->withRadarRecommendations(...)
      *   ->withScorerWeights(...)
      *   ->withSource(...)
      *   ->withTopPenalties(...)
@@ -164,6 +177,7 @@ final class ComposePrepareResult implements BaseModel
      * @param list<ContentRule|ContentRuleShape> $contentRules
      * @param list<EngagementMultiplier|EngagementMultiplierShape> $engagementMultipliers
      * @param list<string> $followUpQuestions
+     * @param list<RadarRecommendation|RadarRecommendationShape> $radarRecommendations
      * @param list<ScorerWeight|ScorerWeightShape> $scorerWeights
      * @param list<string> $topPenalties
      * @param list<SavedStyle|SavedStyleShape>|null $savedStyles
@@ -176,6 +190,7 @@ final class ComposePrepareResult implements BaseModel
         array $followUpQuestions,
         string $intentURL,
         string $nextStep,
+        array $radarRecommendations,
         array $scorerWeights,
         string $source,
         array $topPenalties,
@@ -191,6 +206,7 @@ final class ComposePrepareResult implements BaseModel
         $self['followUpQuestions'] = $followUpQuestions;
         $self['intentURL'] = $intentURL;
         $self['nextStep'] = $nextStep;
+        $self['radarRecommendations'] = $radarRecommendations;
         $self['scorerWeights'] = $scorerWeights;
         $self['source'] = $source;
         $self['topPenalties'] = $topPenalties;
@@ -266,6 +282,19 @@ final class ComposePrepareResult implements BaseModel
     {
         $self = clone $this;
         $self['nextStep'] = $nextStep;
+
+        return $self;
+    }
+
+    /**
+     * Sources and guidance for researching a fresh post angle.
+     *
+     * @param list<RadarRecommendation|RadarRecommendationShape> $radarRecommendations
+     */
+    public function withRadarRecommendations(array $radarRecommendations): self
+    {
+        $self = clone $this;
+        $self['radarRecommendations'] = $radarRecommendations;
 
         return $self;
     }

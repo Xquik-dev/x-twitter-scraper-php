@@ -9,17 +9,20 @@ use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\Radar\RadarItem\Category;
+use XTwitterScraper\Radar\RadarItem\Metadata;
 use XTwitterScraper\Radar\RadarItem\Source;
 
 /**
  * Trending topic with score, category, source, region, language, and source-specific metadata.
+ *
+ * @phpstan-import-type MetadataShape from \XTwitterScraper\Radar\RadarItem\Metadata
  *
  * @phpstan-type RadarItemShape = array{
  *   id: string,
  *   category: Category|value-of<Category>,
  *   createdAt: \DateTimeInterface,
  *   language: string,
- *   metadata: array<string,mixed>,
+ *   metadata: Metadata|MetadataShape,
  *   publishedAt: \DateTimeInterface,
  *   region: string,
  *   score: float,
@@ -49,23 +52,40 @@ final class RadarItem implements BaseModel
     #[Required]
     public \DateTimeInterface $createdAt;
 
+    /**
+     * BCP-47 language code. und means the source did not identify a language.
+     */
     #[Required]
     public string $language;
 
     /**
      * Source-specific fields. Shape varies per source:
-     * - reddit: { subreddit: string, author: string }
+     * - reddit: { author, authorId?, subreddit, subredditId?,
+     *   subredditSubscribers?, sourceFormat, score?, upvoteRatio?,
+     *   estimatedUpvotes?, estimatedDownvotes?, numberComments?,
+     *   numberCrossposts?, selftext?, contentUrl?, domain?, postHint?,
+     *   linkFlairText?, distinguished?, totalAwardsReceived?, viewCount?,
+     *   editedAt?, galleryImageUrls?, redditVideo?, archived?, contestMode?,
+     *   isCrosspostable?, isMeta?, isNsfw?, isOriginalContent?,
+     *   isRobotIndexable?, isSelf?, isSpoiler?, isVideo?, locked?,
+     *   stickied? }. `score` is Reddit's public net score. Exact public
+     *   upvote and downvote counts are not available. Estimated counts
+     *   derive from the public score and upvote ratio, which Reddit may
+     *   fuzz. Comment bodies are not included. Current items combine
+     *   public listing discovery with server-rendered post data and use
+     *   `sourceFormat: html`; `json` and `rss` remain for legacy rows.
      * - github: { starsToday: number }
      * - hacker_news: { points: number, numberComments: number }
      * - google_trends: { approxTraffic: number }
      * - polymarket: { volume24hr: number }
      * - wikipedia: { views: number }
-     * - trustmrr: { mrr, growthPercent, last30Days, total, customers, activeSubscriptions, onSale, xHandle?, category?, askingPrice?, country?, growthMrrPercent?, multiple?, paymentProvider?, rank? }
-     *
-     * @var array<string,mixed> $metadata
+     * - trustmrr: { mrr, growthPercent, last30Days, total, customers, activeSubscriptions, onSale, xHandle?, category?, askingPrice?, country?, foundedDate?, googleSearchImpressionsLast30Days?, growthMrrPercent?, multiple?, paymentProvider?, profitMarginLast30Days?, rank?, revenuePerVisitor?, targetAudience?, visitorsLast30Days? }
+     * For the startup growth source, xHandle is the founder's X username
+     * without @. The rank field is the source's revenue rank. Result order
+     * represents reported 30-day revenue-growth rank.
      */
-    #[Required(map: 'mixed')]
-    public array $metadata;
+    #[Required]
+    public Metadata $metadata;
 
     #[Required]
     public \DateTimeInterface $publishedAt;
@@ -92,6 +112,9 @@ final class RadarItem implements BaseModel
     #[Optional]
     public ?string $description;
 
+    /**
+     * Source image. Startup growth items return the logo here.
+     */
     #[Optional('imageUrl')]
     public ?string $imageURL;
 
@@ -146,7 +169,7 @@ final class RadarItem implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Category|value-of<Category> $category
-     * @param array<string,mixed> $metadata
+     * @param Metadata|MetadataShape $metadata
      * @param Source|value-of<Source> $source
      */
     public static function with(
@@ -154,7 +177,7 @@ final class RadarItem implements BaseModel
         Category|string $category,
         \DateTimeInterface $createdAt,
         string $language,
-        array $metadata,
+        Metadata|array $metadata,
         \DateTimeInterface $publishedAt,
         string $region,
         float $score,
@@ -216,6 +239,9 @@ final class RadarItem implements BaseModel
         return $self;
     }
 
+    /**
+     * BCP-47 language code. und means the source did not identify a language.
+     */
     public function withLanguage(string $language): self
     {
         $self = clone $this;
@@ -226,17 +252,33 @@ final class RadarItem implements BaseModel
 
     /**
      * Source-specific fields. Shape varies per source:
-     * - reddit: { subreddit: string, author: string }
+     * - reddit: { author, authorId?, subreddit, subredditId?,
+     *   subredditSubscribers?, sourceFormat, score?, upvoteRatio?,
+     *   estimatedUpvotes?, estimatedDownvotes?, numberComments?,
+     *   numberCrossposts?, selftext?, contentUrl?, domain?, postHint?,
+     *   linkFlairText?, distinguished?, totalAwardsReceived?, viewCount?,
+     *   editedAt?, galleryImageUrls?, redditVideo?, archived?, contestMode?,
+     *   isCrosspostable?, isMeta?, isNsfw?, isOriginalContent?,
+     *   isRobotIndexable?, isSelf?, isSpoiler?, isVideo?, locked?,
+     *   stickied? }. `score` is Reddit's public net score. Exact public
+     *   upvote and downvote counts are not available. Estimated counts
+     *   derive from the public score and upvote ratio, which Reddit may
+     *   fuzz. Comment bodies are not included. Current items combine
+     *   public listing discovery with server-rendered post data and use
+     *   `sourceFormat: html`; `json` and `rss` remain for legacy rows.
      * - github: { starsToday: number }
      * - hacker_news: { points: number, numberComments: number }
      * - google_trends: { approxTraffic: number }
      * - polymarket: { volume24hr: number }
      * - wikipedia: { views: number }
-     * - trustmrr: { mrr, growthPercent, last30Days, total, customers, activeSubscriptions, onSale, xHandle?, category?, askingPrice?, country?, growthMrrPercent?, multiple?, paymentProvider?, rank? }
+     * - trustmrr: { mrr, growthPercent, last30Days, total, customers, activeSubscriptions, onSale, xHandle?, category?, askingPrice?, country?, foundedDate?, googleSearchImpressionsLast30Days?, growthMrrPercent?, multiple?, paymentProvider?, profitMarginLast30Days?, rank?, revenuePerVisitor?, targetAudience?, visitorsLast30Days? }
+     * For the startup growth source, xHandle is the founder's X username
+     * without @. The rank field is the source's revenue rank. Result order
+     * represents reported 30-day revenue-growth rank.
      *
-     * @param array<string,mixed> $metadata
+     * @param Metadata|MetadataShape $metadata
      */
-    public function withMetadata(array $metadata): self
+    public function withMetadata(Metadata|array $metadata): self
     {
         $self = clone $this;
         $self['metadata'] = $metadata;
@@ -306,6 +348,9 @@ final class RadarItem implements BaseModel
         return $self;
     }
 
+    /**
+     * Source image. Startup growth items return the logo here.
+     */
     public function withImageURL(string $imageURL): self
     {
         $self = clone $this;

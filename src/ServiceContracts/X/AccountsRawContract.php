@@ -11,7 +11,6 @@ use XTwitterScraper\X\Accounts\AccountBulkRetryResponse;
 use XTwitterScraper\X\Accounts\AccountCreateParams;
 use XTwitterScraper\X\Accounts\AccountDeleteResponse;
 use XTwitterScraper\X\Accounts\AccountListResponse;
-use XTwitterScraper\X\Accounts\AccountNewResponse;
 use XTwitterScraper\X\Accounts\AccountReauthParams;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
 use XTwitterScraper\X\Accounts\XAccountDetail;
@@ -27,7 +26,7 @@ interface AccountsRawContract
      * @param array<string,mixed>|AccountCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<AccountNewResponse>
+     * @return BaseResponse<mixed>
      *
      * @throws APIException
      */

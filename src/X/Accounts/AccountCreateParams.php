@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\Accounts;
 
-use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
@@ -16,7 +15,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\X\AccountsService::create()
  *
  * @phpstan-type AccountCreateParamsShape = array{
- *   email: string, password: string, username: string, totpSecret?: string|null
+ *   email: string, password: string, totpSecret: string, username: string
  * }
  */
 final class AccountCreateParams implements BaseModel
@@ -38,29 +37,35 @@ final class AccountCreateParams implements BaseModel
     public string $password;
 
     /**
+     * Authenticator App TOTP secret required for durable login.
+     */
+    #[Required('totp_secret')]
+    public string $totpSecret;
+
+    /**
      * X username.
      */
     #[Required]
     public string $username;
 
     /**
-     * TOTP secret for 2FA.
-     */
-    #[Optional('totp_secret')]
-    public ?string $totpSecret;
-
-    /**
      * `new AccountCreateParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * AccountCreateParams::with(email: ..., password: ..., username: ...)
+     * AccountCreateParams::with(
+     *   email: ..., password: ..., totpSecret: ..., username: ...
+     * )
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new AccountCreateParams)->withEmail(...)->withPassword(...)->withUsername(...)
+     * (new AccountCreateParams)
+     *   ->withEmail(...)
+     *   ->withPassword(...)
+     *   ->withTotpSecret(...)
+     *   ->withUsername(...)
      * ```
      */
     public function __construct()
@@ -76,16 +81,15 @@ final class AccountCreateParams implements BaseModel
     public static function with(
         string $email,
         string $password,
-        string $username,
-        ?string $totpSecret = null
+        string $totpSecret,
+        string $username
     ): self {
         $self = new self;
 
         $self['email'] = $email;
         $self['password'] = $password;
+        $self['totpSecret'] = $totpSecret;
         $self['username'] = $username;
-
-        null !== $totpSecret && $self['totpSecret'] = $totpSecret;
 
         return $self;
     }
@@ -113,23 +117,23 @@ final class AccountCreateParams implements BaseModel
     }
 
     /**
+     * Authenticator App TOTP secret required for durable login.
+     */
+    public function withTotpSecret(string $totpSecret): self
+    {
+        $self = clone $this;
+        $self['totpSecret'] = $totpSecret;
+
+        return $self;
+    }
+
+    /**
      * X username.
      */
     public function withUsername(string $username): self
     {
         $self = clone $this;
         $self['username'] = $username;
-
-        return $self;
-    }
-
-    /**
-     * TOTP secret for 2FA.
-     */
-    public function withTotpSecret(string $totpSecret): self
-    {
-        $self = clone $this;
-        $self['totpSecret'] = $totpSecret;
 
         return $self;
     }
