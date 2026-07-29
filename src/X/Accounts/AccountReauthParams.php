@@ -42,7 +42,7 @@ final class AccountReauthParams implements BaseModel
     public ?string $email;
 
     /**
-     * TOTP secret for 2FA re-authentication.
+     * Replacement Authenticator App TOTP secret. Omit it to reuse the saved secret.
      */
     #[Optional('totp_secret')]
     public ?string $totpSecret;
@@ -109,7 +109,7 @@ final class AccountReauthParams implements BaseModel
     }
 
     /**
-     * TOTP secret for 2FA re-authentication.
+     * Replacement Authenticator App TOTP secret. Omit it to reuse the saved secret.
      */
     public function withTotpSecret(string $totpSecret): self
     {
