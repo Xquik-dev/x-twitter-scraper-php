@@ -54,7 +54,7 @@ Install the package from Packagist with Composer:
 <!-- x-release-please-start-version -->
 
 ```sh
-composer require xquik/x-twitter-scraper:^0.7.0
+composer require xquik/x-twitter-scraper:^0.8.0
 ```
 
 <!-- x-release-please-end -->
