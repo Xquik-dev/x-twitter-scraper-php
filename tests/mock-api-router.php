@@ -30,6 +30,19 @@ if ('/compose' === $path) {
     exit;
 }
 
+if ('/x/accounts' === $path && 'POST' === ($_SERVER['REQUEST_METHOD'] ?? '')) {
+    echo json_encode([
+        'id' => 'xacct_test',
+        'createdAt' => '2026-07-31T12:00:00Z',
+        'health' => 'healthy',
+        'status' => 'active',
+        'xUserId' => '1234567890',
+        'xUsername' => 'test_account',
+    ], JSON_THROW_ON_ERROR);
+
+    exit;
+}
+
 if (is_string($path) && preg_match('#^/(draws|extractions)/[^/]+/export$#', $path)) {
     header('Content-Type: text/csv');
     echo "id\nexample\n";
