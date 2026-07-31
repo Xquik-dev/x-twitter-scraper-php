@@ -22,6 +22,8 @@ use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Quotes;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Replies;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Retweets;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams;
+use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Mode;
+use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
 use XTwitterScraper\X\Tweets\TweetGetResponse;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersParams;
 use XTwitterScraper\X\Tweets\TweetGetThreadParams;
@@ -293,7 +295,7 @@ final class TweetsRawService implements TweetsRawContract
     /**
      * @api
      *
-     * Returns visible replies. For an unfiltered first page, Xquik compares a terminal page with the post's reported reply count. If the page is visibly incomplete, the endpoint returns 424 `replies_incomplete` instead of presenting partial coverage as complete. Use tweet search with a `conversation_id:{id}` query as the broader fallback.
+     * Returns direct replies. Complete mode merges available timeline views, supported rankings, every forward cursor module, labeled hidden-content branches, exact-parent time partitions scaled to the reported reply count, and search. It separates nested replies and returns 424 below 80% coverage.
      *
      * @param string $id Tweet ID to get replies
      * @param array{
@@ -307,12 +309,14 @@ final class TweetsRawService implements TweetsRawContract
      *   hashtags?: string,
      *   inReplyToTweetID?: string,
      *   language?: string,
+     *   limit?: int,
      *   mediaType?: TweetGetRepliesParams\MediaType|value-of<TweetGetRepliesParams\MediaType>,
      *   mentioning?: string,
      *   minFaves?: int,
      *   minQuotes?: int,
      *   minReplies?: int,
      *   minRetweets?: int,
+     *   mode?: Mode|value-of<Mode>,
      *   pageSize?: int,
      *   quotes?: TweetGetRepliesParams\Quotes|value-of<TweetGetRepliesParams\Quotes>,
      *   quotesOfTweetID?: string,
@@ -329,7 +333,7 @@ final class TweetsRawService implements TweetsRawContract
      * }|TweetGetRepliesParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<TweetGetRepliesResponse>
      *
      * @throws APIException
      */
@@ -357,7 +361,7 @@ final class TweetsRawService implements TweetsRawContract
                 ],
             ),
             options: $options,
-            convert: PaginatedTweets::class,
+            convert: TweetGetRepliesResponse::class,
         );
     }
 

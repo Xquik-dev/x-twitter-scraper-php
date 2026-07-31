@@ -13,6 +13,10 @@ use XTwitterScraper\X\Accounts\AccountBulkRetryResponse;
 use XTwitterScraper\X\Accounts\AccountCreateParams;
 use XTwitterScraper\X\Accounts\AccountDeleteResponse;
 use XTwitterScraper\X\Accounts\AccountListResponse;
+use XTwitterScraper\X\Accounts\AccountNewResponse;
+use XTwitterScraper\X\Accounts\AccountNewResponse\SanitizedXAccount;
+use XTwitterScraper\X\Accounts\AccountNewResponse\XAccountConnectionAttemptPending;
+use XTwitterScraper\X\Accounts\AccountNewResponse\XAccountConnectionChallenge;
 use XTwitterScraper\X\Accounts\AccountReauthParams;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
 use XTwitterScraper\X\Accounts\XAccountDetail;
@@ -40,7 +44,7 @@ final class AccountsRawService implements AccountsRawContract
      * }|AccountCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<mixed>
+     * @return BaseResponse<SanitizedXAccount|XAccountConnectionAttemptPending|XAccountConnectionChallenge,>
      *
      * @throws APIException
      */
@@ -59,7 +63,7 @@ final class AccountsRawService implements AccountsRawContract
             path: 'x/accounts',
             body: (object) $parsed,
             options: $options,
-            convert: 'mixed',
+            convert: AccountNewResponse::class,
         );
     }
 

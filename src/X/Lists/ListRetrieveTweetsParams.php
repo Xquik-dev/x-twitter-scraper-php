@@ -41,7 +41,7 @@ final class ListRetrieveTweetsParams implements BaseModel
     public ?bool $includeReplies;
 
     /**
-     * Maximum items requested from this page (1-100, default 20). The response can contain fewer items because the source returned fewer, filters removed items, or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is empty. The deprecated limit and count aliases remain accepted.
+     * Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
      */
     #[Optional]
     public ?int $pageSize;
@@ -109,7 +109,7 @@ final class ListRetrieveTweetsParams implements BaseModel
     }
 
     /**
-     * Maximum items requested from this page (1-100, default 20). The response can contain fewer items because the source returned fewer, filters removed items, or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is empty. The deprecated limit and count aliases remain accepted.
+     * Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
      */
     public function withPageSize(int $pageSize): self
     {

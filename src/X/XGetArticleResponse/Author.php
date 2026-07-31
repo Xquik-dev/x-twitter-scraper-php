@@ -16,7 +16,6 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   id: string,
  *   name: string,
  *   username: string,
- *   canDm?: bool|null,
  *   createdAt?: string|null,
  *   description?: string|null,
  *   favouritesCount?: int|null,
@@ -47,9 +46,6 @@ final class Author implements BaseModel
 
     #[Required]
     public string $username;
-
-    #[Optional]
-    public ?bool $canDm;
 
     #[Optional]
     public ?string $createdAt;
@@ -124,7 +120,6 @@ final class Author implements BaseModel
         string $id,
         string $name,
         string $username,
-        ?bool $canDm = null,
         ?string $createdAt = null,
         ?string $description = null,
         ?int $favouritesCount = null,
@@ -147,7 +142,6 @@ final class Author implements BaseModel
         $self['name'] = $name;
         $self['username'] = $username;
 
-        null !== $canDm && $self['canDm'] = $canDm;
         null !== $createdAt && $self['createdAt'] = $createdAt;
         null !== $description && $self['description'] = $description;
         null !== $favouritesCount && $self['favouritesCount'] = $favouritesCount;
@@ -187,14 +181,6 @@ final class Author implements BaseModel
     {
         $self = clone $this;
         $self['username'] = $username;
-
-        return $self;
-    }
-
-    public function withCanDm(bool $canDm): self
-    {
-        $self = clone $this;
-        $self['canDm'] = $canDm;
 
         return $self;
     }

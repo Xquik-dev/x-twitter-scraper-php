@@ -51,7 +51,7 @@ final class AccountsTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertIsNotResource($result);
+        $this->assertNotNull($result);
     }
 
     #[Test]
@@ -69,7 +69,7 @@ final class AccountsTest extends TestCase
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertIsNotResource($result);
+        $this->assertNotNull($result);
     }
 
     #[Test]

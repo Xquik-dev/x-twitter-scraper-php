@@ -8,44 +8,63 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\UserProfile\AffiliatesHighlightedLabel;
+use XTwitterScraper\UserProfile\HighlightsInfo;
+use XTwitterScraper\UserProfile\IdentityVerification;
 
 /**
  * Tweet author profile. The lookup route always includes follower count and verification state. Other profile fields appear when available.
+ *
+ * @phpstan-import-type AffiliatesHighlightedLabelShape from \XTwitterScraper\UserProfile\AffiliatesHighlightedLabel
+ * @phpstan-import-type HighlightsInfoShape from \XTwitterScraper\UserProfile\HighlightsInfo
+ * @phpstan-import-type IdentityVerificationShape from \XTwitterScraper\UserProfile\IdentityVerification
  *
  * @phpstan-type TweetAuthorShape = array{
  *   id: string,
  *   name: string,
  *   username: string,
+ *   affiliatesHighlightedLabel?: null|AffiliatesHighlightedLabel|AffiliatesHighlightedLabelShape,
  *   automatedBy?: string|null,
- *   canDm?: bool|null,
+ *   businessAccountAffiliatesCount?: int|null,
  *   communityRole?: string|null,
  *   coverPicture?: string|null,
  *   createdAt?: string|null,
+ *   creatorSubscriptionsCount?: int|null,
  *   description?: string|null,
  *   favouritesCount?: int|null,
  *   followers?: int|null,
  *   following?: int|null,
  *   hasCustomTimelines?: bool|null,
+ *   hasGraduatedAccess?: bool|null,
+ *   hasHiddenSubscriptionsOnProfile?: bool|null,
+ *   highlightsInfo?: null|HighlightsInfo|HighlightsInfoShape,
+ *   identityVerification?: null|IdentityVerification|IdentityVerificationShape,
  *   isAutomated?: bool|null,
  *   isBlueVerified?: bool|null,
+ *   isProfileTranslatable?: bool|null,
  *   isTranslator?: bool|null,
  *   isVerified?: bool|null,
  *   location?: string|null,
  *   mediaCount?: int|null,
+ *   parodyCommentaryFanLabel?: string|null,
  *   pinnedTweetIDs?: list<string>|null,
  *   possiblySensitive?: bool|null,
  *   profileBio?: array<string,mixed>|null,
  *   profileBannerURL?: string|null,
+ *   profileDescriptionLanguage?: string|null,
+ *   profileImageShape?: string|null,
+ *   profileInterstitialType?: string|null,
  *   profilePicture?: string|null,
+ *   profileSortEnabled?: bool|null,
+ *   profileTranslatorType?: string|null,
  *   protected?: bool|null,
  *   statusesCount?: int|null,
+ *   superFollowEligible?: bool|null,
  *   unavailable?: bool|null,
  *   unavailableReason?: string|null,
  *   url?: string|null,
  *   verified?: bool|null,
  *   verifiedType?: string|null,
- *   viewerFollowedBy?: bool|null,
- *   viewerFollowing?: bool|null,
  *   withheldInCountries?: list<string>|null,
  * }
  */
@@ -63,11 +82,17 @@ final class TweetAuthor implements BaseModel
     #[Required]
     public string $username;
 
+    /**
+     * Organization affiliation label shown on an X profile.
+     */
+    #[Optional]
+    public ?AffiliatesHighlightedLabel $affiliatesHighlightedLabel;
+
     #[Optional]
     public ?string $automatedBy;
 
     #[Optional]
-    public ?bool $canDm;
+    public ?int $businessAccountAffiliatesCount;
 
     /**
      * Community role when returned by community member reads.
@@ -80,6 +105,9 @@ final class TweetAuthor implements BaseModel
 
     #[Optional]
     public ?string $createdAt;
+
+    #[Optional]
+    public ?int $creatorSubscriptionsCount;
 
     #[Optional]
     public ?string $description;
@@ -97,6 +125,24 @@ final class TweetAuthor implements BaseModel
     public ?bool $hasCustomTimelines;
 
     #[Optional]
+    public ?bool $hasGraduatedAccess;
+
+    #[Optional]
+    public ?bool $hasHiddenSubscriptionsOnProfile;
+
+    /**
+     * Profile highlight availability and count metadata.
+     */
+    #[Optional]
+    public ?HighlightsInfo $highlightsInfo;
+
+    /**
+     * Identity verification metadata displayed by X.
+     */
+    #[Optional]
+    public ?IdentityVerification $identityVerification;
+
+    #[Optional]
     public ?bool $isAutomated;
 
     /**
@@ -104,6 +150,9 @@ final class TweetAuthor implements BaseModel
      */
     #[Optional]
     public ?bool $isBlueVerified;
+
+    #[Optional]
+    public ?bool $isProfileTranslatable;
 
     #[Optional]
     public ?bool $isTranslator;
@@ -119,6 +168,9 @@ final class TweetAuthor implements BaseModel
 
     #[Optional]
     public ?int $mediaCount;
+
+    #[Optional]
+    public ?string $parodyCommentaryFanLabel;
 
     /** @var list<string>|null $pinnedTweetIDs */
     #[Optional('pinnedTweetIds', list: 'string')]
@@ -142,7 +194,22 @@ final class TweetAuthor implements BaseModel
     public ?string $profileBannerURL;
 
     #[Optional]
+    public ?string $profileDescriptionLanguage;
+
+    #[Optional]
+    public ?string $profileImageShape;
+
+    #[Optional]
+    public ?string $profileInterstitialType;
+
+    #[Optional]
     public ?string $profilePicture;
+
+    #[Optional]
+    public ?bool $profileSortEnabled;
+
+    #[Optional]
+    public ?string $profileTranslatorType;
 
     /**
      * Whether the profile protects its posts.
@@ -152,6 +219,9 @@ final class TweetAuthor implements BaseModel
 
     #[Optional]
     public ?int $statusesCount;
+
+    #[Optional]
+    public ?bool $superFollowEligible;
 
     #[Optional]
     public ?bool $unavailable;
@@ -167,18 +237,6 @@ final class TweetAuthor implements BaseModel
 
     #[Optional]
     public ?string $verifiedType;
-
-    /**
-     * Whether this profile follows the authenticated viewer.
-     */
-    #[Optional]
-    public ?bool $viewerFollowedBy;
-
-    /**
-     * Whether the authenticated viewer follows this profile.
-     */
-    #[Optional]
-    public ?bool $viewerFollowing;
 
     /** @var list<string>|null $withheldInCountries */
     #[Optional(list: 'string')]
@@ -208,6 +266,9 @@ final class TweetAuthor implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param AffiliatesHighlightedLabel|AffiliatesHighlightedLabelShape|null $affiliatesHighlightedLabel
+     * @param HighlightsInfo|HighlightsInfoShape|null $highlightsInfo
+     * @param IdentityVerification|IdentityVerificationShape|null $identityVerification
      * @param list<string>|null $pinnedTweetIDs
      * @param array<string,mixed>|null $profileBio
      * @param list<string>|null $withheldInCountries
@@ -216,36 +277,48 @@ final class TweetAuthor implements BaseModel
         string $id,
         string $name,
         string $username,
+        AffiliatesHighlightedLabel|array|null $affiliatesHighlightedLabel = null,
         ?string $automatedBy = null,
-        ?bool $canDm = null,
+        ?int $businessAccountAffiliatesCount = null,
         ?string $communityRole = null,
         ?string $coverPicture = null,
         ?string $createdAt = null,
+        ?int $creatorSubscriptionsCount = null,
         ?string $description = null,
         ?int $favouritesCount = null,
         ?int $followers = null,
         ?int $following = null,
         ?bool $hasCustomTimelines = null,
+        ?bool $hasGraduatedAccess = null,
+        ?bool $hasHiddenSubscriptionsOnProfile = null,
+        HighlightsInfo|array|null $highlightsInfo = null,
+        IdentityVerification|array|null $identityVerification = null,
         ?bool $isAutomated = null,
         ?bool $isBlueVerified = null,
+        ?bool $isProfileTranslatable = null,
         ?bool $isTranslator = null,
         ?bool $isVerified = null,
         ?string $location = null,
         ?int $mediaCount = null,
+        ?string $parodyCommentaryFanLabel = null,
         ?array $pinnedTweetIDs = null,
         ?bool $possiblySensitive = null,
         ?array $profileBio = null,
         ?string $profileBannerURL = null,
+        ?string $profileDescriptionLanguage = null,
+        ?string $profileImageShape = null,
+        ?string $profileInterstitialType = null,
         ?string $profilePicture = null,
+        ?bool $profileSortEnabled = null,
+        ?string $profileTranslatorType = null,
         ?bool $protected = null,
         ?int $statusesCount = null,
+        ?bool $superFollowEligible = null,
         ?bool $unavailable = null,
         ?string $unavailableReason = null,
         ?string $url = null,
         ?bool $verified = null,
         ?string $verifiedType = null,
-        ?bool $viewerFollowedBy = null,
-        ?bool $viewerFollowing = null,
         ?array $withheldInCountries = null,
     ): self {
         $self = new self;
@@ -254,36 +327,48 @@ final class TweetAuthor implements BaseModel
         $self['name'] = $name;
         $self['username'] = $username;
 
+        null !== $affiliatesHighlightedLabel && $self['affiliatesHighlightedLabel'] = $affiliatesHighlightedLabel;
         null !== $automatedBy && $self['automatedBy'] = $automatedBy;
-        null !== $canDm && $self['canDm'] = $canDm;
+        null !== $businessAccountAffiliatesCount && $self['businessAccountAffiliatesCount'] = $businessAccountAffiliatesCount;
         null !== $communityRole && $self['communityRole'] = $communityRole;
         null !== $coverPicture && $self['coverPicture'] = $coverPicture;
         null !== $createdAt && $self['createdAt'] = $createdAt;
+        null !== $creatorSubscriptionsCount && $self['creatorSubscriptionsCount'] = $creatorSubscriptionsCount;
         null !== $description && $self['description'] = $description;
         null !== $favouritesCount && $self['favouritesCount'] = $favouritesCount;
         null !== $followers && $self['followers'] = $followers;
         null !== $following && $self['following'] = $following;
         null !== $hasCustomTimelines && $self['hasCustomTimelines'] = $hasCustomTimelines;
+        null !== $hasGraduatedAccess && $self['hasGraduatedAccess'] = $hasGraduatedAccess;
+        null !== $hasHiddenSubscriptionsOnProfile && $self['hasHiddenSubscriptionsOnProfile'] = $hasHiddenSubscriptionsOnProfile;
+        null !== $highlightsInfo && $self['highlightsInfo'] = $highlightsInfo;
+        null !== $identityVerification && $self['identityVerification'] = $identityVerification;
         null !== $isAutomated && $self['isAutomated'] = $isAutomated;
         null !== $isBlueVerified && $self['isBlueVerified'] = $isBlueVerified;
+        null !== $isProfileTranslatable && $self['isProfileTranslatable'] = $isProfileTranslatable;
         null !== $isTranslator && $self['isTranslator'] = $isTranslator;
         null !== $isVerified && $self['isVerified'] = $isVerified;
         null !== $location && $self['location'] = $location;
         null !== $mediaCount && $self['mediaCount'] = $mediaCount;
+        null !== $parodyCommentaryFanLabel && $self['parodyCommentaryFanLabel'] = $parodyCommentaryFanLabel;
         null !== $pinnedTweetIDs && $self['pinnedTweetIDs'] = $pinnedTweetIDs;
         null !== $possiblySensitive && $self['possiblySensitive'] = $possiblySensitive;
         null !== $profileBio && $self['profileBio'] = $profileBio;
         null !== $profileBannerURL && $self['profileBannerURL'] = $profileBannerURL;
+        null !== $profileDescriptionLanguage && $self['profileDescriptionLanguage'] = $profileDescriptionLanguage;
+        null !== $profileImageShape && $self['profileImageShape'] = $profileImageShape;
+        null !== $profileInterstitialType && $self['profileInterstitialType'] = $profileInterstitialType;
         null !== $profilePicture && $self['profilePicture'] = $profilePicture;
+        null !== $profileSortEnabled && $self['profileSortEnabled'] = $profileSortEnabled;
+        null !== $profileTranslatorType && $self['profileTranslatorType'] = $profileTranslatorType;
         null !== $protected && $self['protected'] = $protected;
         null !== $statusesCount && $self['statusesCount'] = $statusesCount;
+        null !== $superFollowEligible && $self['superFollowEligible'] = $superFollowEligible;
         null !== $unavailable && $self['unavailable'] = $unavailable;
         null !== $unavailableReason && $self['unavailableReason'] = $unavailableReason;
         null !== $url && $self['url'] = $url;
         null !== $verified && $self['verified'] = $verified;
         null !== $verifiedType && $self['verifiedType'] = $verifiedType;
-        null !== $viewerFollowedBy && $self['viewerFollowedBy'] = $viewerFollowedBy;
-        null !== $viewerFollowing && $self['viewerFollowing'] = $viewerFollowing;
         null !== $withheldInCountries && $self['withheldInCountries'] = $withheldInCountries;
 
         return $self;
@@ -313,6 +398,20 @@ final class TweetAuthor implements BaseModel
         return $self;
     }
 
+    /**
+     * Organization affiliation label shown on an X profile.
+     *
+     * @param AffiliatesHighlightedLabel|AffiliatesHighlightedLabelShape $affiliatesHighlightedLabel
+     */
+    public function withAffiliatesHighlightedLabel(
+        AffiliatesHighlightedLabel|array $affiliatesHighlightedLabel
+    ): self {
+        $self = clone $this;
+        $self['affiliatesHighlightedLabel'] = $affiliatesHighlightedLabel;
+
+        return $self;
+    }
+
     public function withAutomatedBy(string $automatedBy): self
     {
         $self = clone $this;
@@ -321,10 +420,11 @@ final class TweetAuthor implements BaseModel
         return $self;
     }
 
-    public function withCanDm(bool $canDm): self
-    {
+    public function withBusinessAccountAffiliatesCount(
+        int $businessAccountAffiliatesCount
+    ): self {
         $self = clone $this;
-        $self['canDm'] = $canDm;
+        $self['businessAccountAffiliatesCount'] = $businessAccountAffiliatesCount;
 
         return $self;
     }
@@ -352,6 +452,15 @@ final class TweetAuthor implements BaseModel
     {
         $self = clone $this;
         $self['createdAt'] = $createdAt;
+
+        return $self;
+    }
+
+    public function withCreatorSubscriptionsCount(
+        int $creatorSubscriptionsCount
+    ): self {
+        $self = clone $this;
+        $self['creatorSubscriptionsCount'] = $creatorSubscriptionsCount;
 
         return $self;
     }
@@ -396,6 +505,51 @@ final class TweetAuthor implements BaseModel
         return $self;
     }
 
+    public function withHasGraduatedAccess(bool $hasGraduatedAccess): self
+    {
+        $self = clone $this;
+        $self['hasGraduatedAccess'] = $hasGraduatedAccess;
+
+        return $self;
+    }
+
+    public function withHasHiddenSubscriptionsOnProfile(
+        bool $hasHiddenSubscriptionsOnProfile
+    ): self {
+        $self = clone $this;
+        $self['hasHiddenSubscriptionsOnProfile'] = $hasHiddenSubscriptionsOnProfile;
+
+        return $self;
+    }
+
+    /**
+     * Profile highlight availability and count metadata.
+     *
+     * @param HighlightsInfo|HighlightsInfoShape $highlightsInfo
+     */
+    public function withHighlightsInfo(
+        HighlightsInfo|array $highlightsInfo
+    ): self {
+        $self = clone $this;
+        $self['highlightsInfo'] = $highlightsInfo;
+
+        return $self;
+    }
+
+    /**
+     * Identity verification metadata displayed by X.
+     *
+     * @param IdentityVerification|IdentityVerificationShape $identityVerification
+     */
+    public function withIdentityVerification(
+        IdentityVerification|array $identityVerification
+    ): self {
+        $self = clone $this;
+        $self['identityVerification'] = $identityVerification;
+
+        return $self;
+    }
+
     public function withIsAutomated(bool $isAutomated): self
     {
         $self = clone $this;
@@ -411,6 +565,14 @@ final class TweetAuthor implements BaseModel
     {
         $self = clone $this;
         $self['isBlueVerified'] = $isBlueVerified;
+
+        return $self;
+    }
+
+    public function withIsProfileTranslatable(bool $isProfileTranslatable): self
+    {
+        $self = clone $this;
+        $self['isProfileTranslatable'] = $isProfileTranslatable;
 
         return $self;
     }
@@ -446,6 +608,15 @@ final class TweetAuthor implements BaseModel
     {
         $self = clone $this;
         $self['mediaCount'] = $mediaCount;
+
+        return $self;
+    }
+
+    public function withParodyCommentaryFanLabel(
+        string $parodyCommentaryFanLabel
+    ): self {
+        $self = clone $this;
+        $self['parodyCommentaryFanLabel'] = $parodyCommentaryFanLabel;
 
         return $self;
     }
@@ -493,10 +664,53 @@ final class TweetAuthor implements BaseModel
         return $self;
     }
 
+    public function withProfileDescriptionLanguage(
+        string $profileDescriptionLanguage
+    ): self {
+        $self = clone $this;
+        $self['profileDescriptionLanguage'] = $profileDescriptionLanguage;
+
+        return $self;
+    }
+
+    public function withProfileImageShape(string $profileImageShape): self
+    {
+        $self = clone $this;
+        $self['profileImageShape'] = $profileImageShape;
+
+        return $self;
+    }
+
+    public function withProfileInterstitialType(
+        string $profileInterstitialType
+    ): self {
+        $self = clone $this;
+        $self['profileInterstitialType'] = $profileInterstitialType;
+
+        return $self;
+    }
+
     public function withProfilePicture(string $profilePicture): self
     {
         $self = clone $this;
         $self['profilePicture'] = $profilePicture;
+
+        return $self;
+    }
+
+    public function withProfileSortEnabled(bool $profileSortEnabled): self
+    {
+        $self = clone $this;
+        $self['profileSortEnabled'] = $profileSortEnabled;
+
+        return $self;
+    }
+
+    public function withProfileTranslatorType(
+        string $profileTranslatorType
+    ): self {
+        $self = clone $this;
+        $self['profileTranslatorType'] = $profileTranslatorType;
 
         return $self;
     }
@@ -516,6 +730,14 @@ final class TweetAuthor implements BaseModel
     {
         $self = clone $this;
         $self['statusesCount'] = $statusesCount;
+
+        return $self;
+    }
+
+    public function withSuperFollowEligible(bool $superFollowEligible): self
+    {
+        $self = clone $this;
+        $self['superFollowEligible'] = $superFollowEligible;
 
         return $self;
     }
@@ -556,28 +778,6 @@ final class TweetAuthor implements BaseModel
     {
         $self = clone $this;
         $self['verifiedType'] = $verifiedType;
-
-        return $self;
-    }
-
-    /**
-     * Whether this profile follows the authenticated viewer.
-     */
-    public function withViewerFollowedBy(bool $viewerFollowedBy): self
-    {
-        $self = clone $this;
-        $self['viewerFollowedBy'] = $viewerFollowedBy;
-
-        return $self;
-    }
-
-    /**
-     * Whether the authenticated viewer follows this profile.
-     */
-    public function withViewerFollowing(bool $viewerFollowing): self
-    {
-        $self = clone $this;
-        $self['viewerFollowing'] = $viewerFollowing;
 
         return $self;
     }

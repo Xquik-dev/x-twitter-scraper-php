@@ -27,16 +27,21 @@ final class AccountConnectionAttemptGetResponse implements ConverterSource
 {
     use SdkUnion;
 
+    public static function discriminator(): string
+    {
+        return 'status';
+    }
+
     /**
      * @return list<string|Converter|ConverterSource>|array<string,string|Converter|ConverterSource>
      */
     public static function variants(): array
     {
         return [
-            XAccountConnectionAttemptPending::class,
-            XAccountConnectionAttemptSuccess::class,
-            XAccountConnectionAttemptFailed::class,
-            XAccountConnectionChallenge::class,
+            'pending' => XAccountConnectionAttemptPending::class,
+            'success' => XAccountConnectionAttemptSuccess::class,
+            'failed' => XAccountConnectionAttemptFailed::class,
+            'requires_email_code' => XAccountConnectionChallenge::class,
         ];
     }
 }

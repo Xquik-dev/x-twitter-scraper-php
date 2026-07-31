@@ -1,0 +1,153 @@
+<?php
+
+declare(strict_types=1);
+
+namespace XTwitterScraper\X\Accounts\AccountNewResponse;
+
+use XTwitterScraper\Core\Attributes\Required;
+use XTwitterScraper\Core\Concerns\SdkModel;
+use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\X\Accounts\AccountNewResponse\SanitizedXAccount\Health;
+
+/**
+ * Sanitized X account summary returned by connect and reauth.
+ *
+ * @phpstan-type SanitizedXAccountShape = array{
+ *   id: string,
+ *   createdAt: \DateTimeInterface,
+ *   health: Health|value-of<Health>,
+ *   status: 'active',
+ *   xUserID: string,
+ *   xUsername: string,
+ * }
+ */
+final class SanitizedXAccount implements BaseModel
+{
+    /** @use SdkModel<SanitizedXAccountShape> */
+    use SdkModel;
+
+    /** @var 'active' $status */
+    #[Required]
+    public string $status = 'active';
+
+    #[Required]
+    public string $id;
+
+    #[Required]
+    public \DateTimeInterface $createdAt;
+
+    /** @var value-of<Health> $health */
+    #[Required(enum: Health::class)]
+    public string $health;
+
+    #[Required('xUserId')]
+    public string $xUserID;
+
+    #[Required]
+    public string $xUsername;
+
+    /**
+     * `new SanitizedXAccount()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * SanitizedXAccount::with(
+     *   id: ..., createdAt: ..., health: ..., xUserID: ..., xUsername: ...
+     * )
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new SanitizedXAccount)
+     *   ->withID(...)
+     *   ->withCreatedAt(...)
+     *   ->withHealth(...)
+     *   ->withXUserID(...)
+     *   ->withXUsername(...)
+     * ```
+     */
+    public function __construct()
+    {
+        $this->initialize();
+    }
+
+    /**
+     * Construct an instance from the required parameters.
+     *
+     * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param Health|value-of<Health> $health
+     */
+    public static function with(
+        string $id,
+        \DateTimeInterface $createdAt,
+        Health|string $health,
+        string $xUserID,
+        string $xUsername,
+    ): self {
+        $self = new self;
+
+        $self['id'] = $id;
+        $self['createdAt'] = $createdAt;
+        $self['health'] = $health;
+        $self['xUserID'] = $xUserID;
+        $self['xUsername'] = $xUsername;
+
+        return $self;
+    }
+
+    public function withID(string $id): self
+    {
+        $self = clone $this;
+        $self['id'] = $id;
+
+        return $self;
+    }
+
+    public function withCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $self = clone $this;
+        $self['createdAt'] = $createdAt;
+
+        return $self;
+    }
+
+    /**
+     * @param Health|value-of<Health> $health
+     */
+    public function withHealth(Health|string $health): self
+    {
+        $self = clone $this;
+        $self['health'] = $health;
+
+        return $self;
+    }
+
+    /**
+     * @param 'active' $status
+     */
+    public function withStatus(string $status): self
+    {
+        $self = clone $this;
+        $self['status'] = $status;
+
+        return $self;
+    }
+
+    public function withXUserID(string $xUserID): self
+    {
+        $self = clone $this;
+        $self['xUserID'] = $xUserID;
+
+        return $self;
+    }
+
+    public function withXUsername(string $xUsername): self
+    {
+        $self = clone $this;
+        $self['xUsername'] = $xUsername;
+
+        return $self;
+    }
+}

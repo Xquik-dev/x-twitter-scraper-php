@@ -13,6 +13,8 @@ use XTwitterScraper\X\Tweets\TweetGetQuotesParams\MediaType;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Quotes;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Replies;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Retweets;
+use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Mode;
+use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
 use XTwitterScraper\X\Tweets\TweetGetResponse;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
 use XTwitterScraper\X\Tweets\TweetSearchParams\QueryType;
@@ -128,7 +130,7 @@ interface TweetsContract
      * @param int $minQuotes minimum quote count threshold
      * @param int $minReplies minimum replies threshold
      * @param int $minRetweets minimum retweets threshold
-     * @param int $pageSize Maximum items requested from this page (1-100, default 20). The response can contain fewer items because the source returned fewer, filters removed items, or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is empty. The deprecated limit and count aliases remain accepted.
+     * @param int $pageSize Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
      * @param Quotes|value-of<Quotes> $quotes quote mode
      * @param string $quotesOfTweetID only quotes of this tweet ID
      * @param Replies|value-of<Replies> $replies reply mode
@@ -194,13 +196,15 @@ interface TweetsContract
      * @param string $hashtags hashtags separated by spaces, commas, or lines
      * @param string $inReplyToTweetID only replies to this tweet ID
      * @param string $language Language code filter, e.g. en or tr.
+     * @param int $limit With mode=complete, maximum combined direct and nested reply rows (1-25000). Without complete mode, this is the deprecated pageSize alias and uses the normal 1-100 page range.
      * @param \XTwitterScraper\X\Tweets\TweetGetRepliesParams\MediaType|value-of<\XTwitterScraper\X\Tweets\TweetGetRepliesParams\MediaType> $mediaType filter by media type
      * @param string $mentioning filter tweets mentioning a username
      * @param int $minFaves minimum likes threshold
      * @param int $minQuotes minimum quote count threshold
      * @param int $minReplies minimum replies threshold
      * @param int $minRetweets minimum retweets threshold
-     * @param int $pageSize Maximum items requested from this page (1-100, default 20). The response can contain fewer items because the source returned fewer, filters removed items, or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is empty. The deprecated limit and count aliases remain accepted.
+     * @param Mode|value-of<Mode> $mode Set complete for maximum-coverage collection. Complete mode accepts only limit. Remove cursor, pageSize, count, time ranges, and tweet filters.
+     * @param int $pageSize Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
      * @param \XTwitterScraper\X\Tweets\TweetGetRepliesParams\Quotes|value-of<\XTwitterScraper\X\Tweets\TweetGetRepliesParams\Quotes> $quotes quote mode
      * @param string $quotesOfTweetID only quotes of this tweet ID
      * @param \XTwitterScraper\X\Tweets\TweetGetRepliesParams\Replies|value-of<\XTwitterScraper\X\Tweets\TweetGetRepliesParams\Replies> $replies reply mode
@@ -229,12 +233,14 @@ interface TweetsContract
         ?string $hashtags = null,
         ?string $inReplyToTweetID = null,
         ?string $language = null,
+        int $limit = 25000,
         \XTwitterScraper\X\Tweets\TweetGetRepliesParams\MediaType|string|null $mediaType = null,
         ?string $mentioning = null,
         ?int $minFaves = null,
         ?int $minQuotes = null,
         ?int $minReplies = null,
         ?int $minRetweets = null,
+        Mode|string|null $mode = null,
         int $pageSize = 20,
         \XTwitterScraper\X\Tweets\TweetGetRepliesParams\Quotes|string|null $quotes = null,
         ?string $quotesOfTweetID = null,
@@ -249,7 +255,7 @@ interface TweetsContract
         ?string $url = null,
         ?bool $verifiedOnly = null,
         RequestOptions|array|null $requestOptions = null,
-    ): PaginatedTweets;
+    ): TweetGetRepliesResponse;
 
     /**
      * @api
@@ -273,7 +279,7 @@ interface TweetsContract
      *
      * @param string $id Tweet ID to get thread context
      * @param string $cursor Pagination cursor for thread tweets
-     * @param int $pageSize Maximum items requested from this page (1-100, default 20). The response can contain fewer items because the source returned fewer, filters removed items, or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is empty. The deprecated limit and count aliases remain accepted.
+     * @param int $pageSize Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException

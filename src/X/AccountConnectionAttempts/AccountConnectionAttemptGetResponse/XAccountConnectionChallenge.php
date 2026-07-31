@@ -7,8 +7,6 @@ namespace XTwitterScraper\X\AccountConnectionAttempts\AccountConnectionAttemptGe
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\X\AccountConnectionAttempts\AccountConnectionAttemptGetResponse\XAccountConnectionChallenge\Object_;
-use XTwitterScraper\X\AccountConnectionAttempts\AccountConnectionAttemptGetResponse\XAccountConnectionChallenge\Status;
 
 /**
  * Resumable account connection challenge. Submit the email code to finish the same connection attempt.
@@ -17,8 +15,8 @@ use XTwitterScraper\X\AccountConnectionAttempts\AccountConnectionAttemptGetRespo
  *   id: string,
  *   expiresAt: \DateTimeInterface,
  *   message: string,
- *   object: Object_|value-of<Object_>,
- *   status: Status|value-of<Status>,
+ *   object: 'x_account_connection_challenge',
+ *   status: 'requires_email_code',
  *   username: string,
  * }
  */
@@ -26,6 +24,14 @@ final class XAccountConnectionChallenge implements BaseModel
 {
     /** @use SdkModel<XAccountConnectionChallengeShape> */
     use SdkModel;
+
+    /** @var 'x_account_connection_challenge' $object */
+    #[Required]
+    public string $object = 'x_account_connection_challenge';
+
+    /** @var 'requires_email_code' $status */
+    #[Required]
+    public string $status = 'requires_email_code';
 
     #[Required]
     public string $id;
@@ -36,14 +42,6 @@ final class XAccountConnectionChallenge implements BaseModel
     #[Required]
     public string $message;
 
-    /** @var value-of<Object_> $object */
-    #[Required(enum: Object_::class)]
-    public string $object;
-
-    /** @var value-of<Status> $status */
-    #[Required(enum: Status::class)]
-    public string $status;
-
     #[Required]
     public string $username;
 
@@ -53,7 +51,7 @@ final class XAccountConnectionChallenge implements BaseModel
      * To enforce required parameters use
      * ```
      * XAccountConnectionChallenge::with(
-     *   id: ..., expiresAt: ..., message: ..., object: ..., status: ..., username: ...
+     *   id: ..., expiresAt: ..., message: ..., username: ...
      * )
      * ```
      *
@@ -64,8 +62,6 @@ final class XAccountConnectionChallenge implements BaseModel
      *   ->withID(...)
      *   ->withExpiresAt(...)
      *   ->withMessage(...)
-     *   ->withObject(...)
-     *   ->withStatus(...)
      *   ->withUsername(...)
      * ```
      */
@@ -78,25 +74,18 @@ final class XAccountConnectionChallenge implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
-     *
-     * @param Object_|value-of<Object_> $object
-     * @param Status|value-of<Status> $status
      */
     public static function with(
         string $id,
         \DateTimeInterface $expiresAt,
         string $message,
-        Object_|string $object,
-        Status|string $status,
-        string $username,
+        string $username
     ): self {
         $self = new self;
 
         $self['id'] = $id;
         $self['expiresAt'] = $expiresAt;
         $self['message'] = $message;
-        $self['object'] = $object;
-        $self['status'] = $status;
         $self['username'] = $username;
 
         return $self;
@@ -127,9 +116,9 @@ final class XAccountConnectionChallenge implements BaseModel
     }
 
     /**
-     * @param Object_|value-of<Object_> $object
+     * @param 'x_account_connection_challenge' $object
      */
-    public function withObject(Object_|string $object): self
+    public function withObject(string $object): self
     {
         $self = clone $this;
         $self['object'] = $object;
@@ -138,9 +127,9 @@ final class XAccountConnectionChallenge implements BaseModel
     }
 
     /**
-     * @param Status|value-of<Status> $status
+     * @param 'requires_email_code' $status
      */
-    public function withStatus(Status|string $status): self
+    public function withStatus(string $status): self
     {
         $self = clone $this;
         $self['status'] = $status;
