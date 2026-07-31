@@ -16,6 +16,9 @@ use XTwitterScraper\ServiceContracts\X\AccountsContract;
 use XTwitterScraper\X\Accounts\AccountBulkRetryResponse;
 use XTwitterScraper\X\Accounts\AccountDeleteResponse;
 use XTwitterScraper\X\Accounts\AccountListResponse;
+use XTwitterScraper\X\Accounts\AccountNewResponse\SanitizedXAccount;
+use XTwitterScraper\X\Accounts\AccountNewResponse\XAccountConnectionAttemptPending;
+use XTwitterScraper\X\Accounts\AccountNewResponse\XAccountConnectionChallenge;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
 use XTwitterScraper\X\Accounts\XAccountDetail;
 
@@ -58,7 +61,7 @@ final class AccountsService implements AccountsContract
         string $totpSecret,
         string $username,
         RequestOptions|array|null $requestOptions = null,
-    ): mixed {
+    ): SanitizedXAccount|XAccountConnectionAttemptPending|XAccountConnectionChallenge {
         $params = Util::removeNulls(
             [
                 'email' => $email,
