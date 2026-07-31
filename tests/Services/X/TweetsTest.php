@@ -13,6 +13,7 @@ use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\X\Tweets\TweetDeleteResponse;
+use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
 use XTwitterScraper\X\Tweets\TweetGetResponse;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
 
@@ -143,7 +144,7 @@ final class TweetsTest extends TestCase
         $result = $this->client->x->tweets->getReplies('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(PaginatedTweets::class, $result);
+        $this->assertInstanceOf(TweetGetRepliesResponse::class, $result);
     }
 
     #[Test]

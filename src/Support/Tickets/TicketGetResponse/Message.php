@@ -8,19 +8,20 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Support\Tickets\TicketGetResponse;
 
-use XTwitterScraper\Core\Attributes\Optional;
+use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\Support\Tickets\TicketGetResponse\Message\Attachment;
+use XTwitterScraper\Support\Tickets\TicketGetResponse\Message\Sender;
 
 /**
  * @phpstan-import-type AttachmentShape from \XTwitterScraper\Support\Tickets\TicketGetResponse\Message\Attachment
  *
  * @phpstan-type MessageShape = array{
- *   attachments?: list<Attachment|AttachmentShape>|null,
- *   body?: string|null,
- *   createdAt?: \DateTimeInterface|null,
- *   sender?: string|null,
+ *   attachments: list<Attachment|AttachmentShape>,
+ *   body: string,
+ *   createdAt: \DateTimeInterface,
+ *   sender: Sender|value-of<Sender>,
  * }
  */
 final class Message implements BaseModel
@@ -28,19 +29,38 @@ final class Message implements BaseModel
     /** @use SdkModel<MessageShape> */
     use SdkModel;
 
-    /** @var list<Attachment>|null $attachments */
-    #[Optional(list: Attachment::class)]
-    public ?array $attachments;
+    /** @var list<Attachment> $attachments */
+    #[Required(list: Attachment::class)]
+    public array $attachments;
 
-    #[Optional]
-    public ?string $body;
+    #[Required]
+    public string $body;
 
-    #[Optional]
-    public ?\DateTimeInterface $createdAt;
+    #[Required]
+    public \DateTimeInterface $createdAt;
 
-    #[Optional]
-    public ?string $sender;
+    /** @var value-of<Sender> $sender */
+    #[Required(enum: Sender::class)]
+    public string $sender;
 
+    /**
+     * `new Message()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * Message::with(attachments: ..., body: ..., createdAt: ..., sender: ...)
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new Message)
+     *   ->withAttachments(...)
+     *   ->withBody(...)
+     *   ->withCreatedAt(...)
+     *   ->withSender(...)
+     * ```
+     */
     public function __construct()
     {
         $this->initialize();
@@ -51,20 +71,21 @@ final class Message implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param list<Attachment|AttachmentShape>|null $attachments
+     * @param list<Attachment|AttachmentShape> $attachments
+     * @param Sender|value-of<Sender> $sender
      */
     public static function with(
-        ?array $attachments = null,
-        ?string $body = null,
-        ?\DateTimeInterface $createdAt = null,
-        ?string $sender = null,
+        array $attachments,
+        string $body,
+        \DateTimeInterface $createdAt,
+        Sender|string $sender,
     ): self {
         $self = new self;
 
-        null !== $attachments && $self['attachments'] = $attachments;
-        null !== $body && $self['body'] = $body;
-        null !== $createdAt && $self['createdAt'] = $createdAt;
-        null !== $sender && $self['sender'] = $sender;
+        $self['attachments'] = $attachments;
+        $self['body'] = $body;
+        $self['createdAt'] = $createdAt;
+        $self['sender'] = $sender;
 
         return $self;
     }
@@ -96,7 +117,10 @@ final class Message implements BaseModel
         return $self;
     }
 
-    public function withSender(string $sender): self
+    /**
+     * @param Sender|value-of<Sender> $sender
+     */
+    public function withSender(Sender|string $sender): self
     {
         $self = clone $this;
         $self['sender'] = $sender;

@@ -199,7 +199,7 @@ final class CommunitiesService implements CommunitiesContract
      * @param string $communityID Numeric ID of the community whose posts to search
      * @param string $q Search query
      * @param string $cursor Pagination cursor for community search
-     * @param int $pageSize Maximum items requested from this page (1-100, default 20). The response can contain fewer items because the source returned fewer, filters removed items, or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is empty. The deprecated limit and count aliases remain accepted.
+     * @param int $pageSize Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
      * @param QueryType|value-of<QueryType> $queryType Sort order (Latest or Top)
      * @param RequestOpts|null $requestOptions
      *

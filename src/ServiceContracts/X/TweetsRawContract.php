@@ -19,6 +19,7 @@ use XTwitterScraper\X\Tweets\TweetDeleteResponse;
 use XTwitterScraper\X\Tweets\TweetGetFavoritersParams;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams;
+use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
 use XTwitterScraper\X\Tweets\TweetGetResponse;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersParams;
 use XTwitterScraper\X\Tweets\TweetGetThreadParams;
@@ -134,7 +135,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetGetRepliesParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<TweetGetRepliesResponse>
      *
      * @throws APIException
      */

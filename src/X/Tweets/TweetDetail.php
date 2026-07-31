@@ -15,13 +15,27 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\EmbeddedTweet;
 use XTwitterScraper\TweetMedia;
+use XTwitterScraper\X\Tweets\TweetDetail\Article;
+use XTwitterScraper\X\Tweets\TweetDetail\Card;
+use XTwitterScraper\X\Tweets\TweetDetail\CommunityNote;
+use XTwitterScraper\X\Tweets\TweetDetail\Edit;
+use XTwitterScraper\X\Tweets\TweetDetail\NoteTweet;
+use XTwitterScraper\X\Tweets\TweetDetail\Place;
+use XTwitterScraper\X\Tweets\TweetDetail\PreviousCounts;
 
 /**
  * Full tweet with text, engagement metrics, media, and metadata. A zero metric can mean X did not report the count.
  *
+ * @phpstan-import-type ArticleShape from \XTwitterScraper\X\Tweets\TweetDetail\Article
  * @phpstan-import-type TweetAuthorShape from \XTwitterScraper\X\Tweets\TweetAuthor
+ * @phpstan-import-type CardShape from \XTwitterScraper\X\Tweets\TweetDetail\Card
+ * @phpstan-import-type CommunityNoteShape from \XTwitterScraper\X\Tweets\TweetDetail\CommunityNote
  * @phpstan-import-type ContentDisclosureShape from \XTwitterScraper\ContentDisclosure
+ * @phpstan-import-type EditShape from \XTwitterScraper\X\Tweets\TweetDetail\Edit
  * @phpstan-import-type TweetMediaShape from \XTwitterScraper\TweetMedia
+ * @phpstan-import-type NoteTweetShape from \XTwitterScraper\X\Tweets\TweetDetail\NoteTweet
+ * @phpstan-import-type PlaceShape from \XTwitterScraper\X\Tweets\TweetDetail\Place
+ * @phpstan-import-type PreviousCountsShape from \XTwitterScraper\X\Tweets\TweetDetail\PreviousCounts
  * @phpstan-import-type EmbeddedTweetShape from \XTwitterScraper\EmbeddedTweet
  *
  * @phpstan-type TweetDetailShape = array{
@@ -33,11 +47,15 @@ use XTwitterScraper\TweetMedia;
  *   retweetCount: int,
  *   text: string,
  *   viewCount: int,
+ *   article?: null|Article|ArticleShape,
  *   author?: null|TweetAuthor|TweetAuthorShape,
+ *   card?: null|Card|CardShape,
+ *   communityNote?: null|CommunityNote|CommunityNoteShape,
  *   contentDisclosure?: null|ContentDisclosure|ContentDisclosureShape,
  *   conversationID?: string|null,
  *   createdAt?: string|null,
  *   displayTextRange?: list<int>|null,
+ *   edit?: null|Edit|EditShape,
  *   entities?: array<string,mixed>|null,
  *   inReplyToID?: string|null,
  *   inReplyToUserID?: string|null,
@@ -46,13 +64,19 @@ use XTwitterScraper\TweetMedia;
  *   isNoteTweet?: bool|null,
  *   isQuoteStatus?: bool|null,
  *   isReply?: bool|null,
+ *   isTranslatable?: bool|null,
  *   lang?: string|null,
  *   media?: list<TweetMedia|TweetMediaShape>|null,
+ *   noteTweet?: null|NoteTweet|NoteTweetShape,
+ *   place?: null|Place|PlaceShape,
+ *   possiblySensitive?: bool|null,
+ *   previousCounts?: null|PreviousCounts|PreviousCountsShape,
  *   quotedTweet?: null|EmbeddedTweet|EmbeddedTweetShape,
  *   retweetedTweet?: null|EmbeddedTweet|EmbeddedTweetShape,
  *   source?: string|null,
  *   type?: string|null,
  *   url?: string|null,
+ *   viewState?: string|null,
  * }
  */
 final class TweetDetail implements BaseModel
@@ -85,10 +109,28 @@ final class TweetDetail implements BaseModel
     public int $viewCount;
 
     /**
+     * Article metadata attached to a tweet.
+     */
+    #[Optional]
+    public ?Article $article;
+
+    /**
      * Tweet author profile. The lookup route always includes follower count and verification state. Other profile fields appear when available.
      */
     #[Optional]
     public ?TweetAuthor $author;
+
+    /**
+     * Public card metadata attached to a tweet.
+     */
+    #[Optional]
+    public ?Card $card;
+
+    /**
+     * Community Note presentation metadata returned by X.
+     */
+    #[Optional]
+    public ?CommunityNote $communityNote;
 
     /**
      * Content disclosure metadata shown by X when a tweet is labeled as paid partnership content or AI-generated media.
@@ -112,6 +154,12 @@ final class TweetDetail implements BaseModel
      */
     #[Optional(list: 'int')]
     public ?array $displayTextRange;
+
+    /**
+     * Edit history metadata returned by X.
+     */
+    #[Optional]
+    public ?Edit $edit;
 
     /**
      * Parsed entities from the tweet text (URLs, mentions, hashtags, media).
@@ -163,6 +211,9 @@ final class TweetDetail implements BaseModel
     #[Optional]
     public ?bool $isReply;
 
+    #[Optional]
+    public ?bool $isTranslatable;
+
     /**
      * Tweet language code.
      */
@@ -176,6 +227,27 @@ final class TweetDetail implements BaseModel
      */
     #[Optional(list: TweetMedia::class)]
     public ?array $media;
+
+    /**
+     * Complete Note Tweet content and rich-text metadata.
+     */
+    #[Optional]
+    public ?NoteTweet $noteTweet;
+
+    /**
+     * Public place metadata attached to a tweet.
+     */
+    #[Optional]
+    public ?Place $place;
+
+    #[Optional]
+    public ?bool $possiblySensitive;
+
+    /**
+     * Engagement counts retained from a prior tweet edit.
+     */
+    #[Optional]
+    public ?PreviousCounts $previousCounts;
 
     /**
      * Quoted or retweeted tweet context. Every object includes id, text, and engagement metrics. A zero metric can mean X did not report the count. Author, media, and conversation fields appear when available.
@@ -206,6 +278,9 @@ final class TweetDetail implements BaseModel
      */
     #[Optional]
     public ?string $url;
+
+    #[Optional]
+    public ?string $viewState;
 
     /**
      * `new TweetDetail()` is missing required properties by the API.
@@ -248,11 +323,18 @@ final class TweetDetail implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
+     * @param Article|ArticleShape|null $article
      * @param TweetAuthor|TweetAuthorShape|null $author
+     * @param Card|CardShape|null $card
+     * @param CommunityNote|CommunityNoteShape|null $communityNote
      * @param ContentDisclosure|ContentDisclosureShape|null $contentDisclosure
      * @param list<int>|null $displayTextRange
+     * @param Edit|EditShape|null $edit
      * @param array<string,mixed>|null $entities
      * @param list<TweetMedia|TweetMediaShape>|null $media
+     * @param NoteTweet|NoteTweetShape|null $noteTweet
+     * @param Place|PlaceShape|null $place
+     * @param PreviousCounts|PreviousCountsShape|null $previousCounts
      * @param EmbeddedTweet|EmbeddedTweetShape|null $quotedTweet
      * @param EmbeddedTweet|EmbeddedTweetShape|null $retweetedTweet
      */
@@ -265,11 +347,15 @@ final class TweetDetail implements BaseModel
         int $retweetCount,
         string $text,
         int $viewCount,
+        Article|array|null $article = null,
         TweetAuthor|array|null $author = null,
+        Card|array|null $card = null,
+        CommunityNote|array|null $communityNote = null,
         ContentDisclosure|array|null $contentDisclosure = null,
         ?string $conversationID = null,
         ?string $createdAt = null,
         ?array $displayTextRange = null,
+        Edit|array|null $edit = null,
         ?array $entities = null,
         ?string $inReplyToID = null,
         ?string $inReplyToUserID = null,
@@ -278,13 +364,19 @@ final class TweetDetail implements BaseModel
         ?bool $isNoteTweet = null,
         ?bool $isQuoteStatus = null,
         ?bool $isReply = null,
+        ?bool $isTranslatable = null,
         ?string $lang = null,
         ?array $media = null,
+        NoteTweet|array|null $noteTweet = null,
+        Place|array|null $place = null,
+        ?bool $possiblySensitive = null,
+        PreviousCounts|array|null $previousCounts = null,
         EmbeddedTweet|array|null $quotedTweet = null,
         EmbeddedTweet|array|null $retweetedTweet = null,
         ?string $source = null,
         ?string $type = null,
         ?string $url = null,
+        ?string $viewState = null,
     ): self {
         $self = new self;
 
@@ -297,11 +389,15 @@ final class TweetDetail implements BaseModel
         $self['text'] = $text;
         $self['viewCount'] = $viewCount;
 
+        null !== $article && $self['article'] = $article;
         null !== $author && $self['author'] = $author;
+        null !== $card && $self['card'] = $card;
+        null !== $communityNote && $self['communityNote'] = $communityNote;
         null !== $contentDisclosure && $self['contentDisclosure'] = $contentDisclosure;
         null !== $conversationID && $self['conversationID'] = $conversationID;
         null !== $createdAt && $self['createdAt'] = $createdAt;
         null !== $displayTextRange && $self['displayTextRange'] = $displayTextRange;
+        null !== $edit && $self['edit'] = $edit;
         null !== $entities && $self['entities'] = $entities;
         null !== $inReplyToID && $self['inReplyToID'] = $inReplyToID;
         null !== $inReplyToUserID && $self['inReplyToUserID'] = $inReplyToUserID;
@@ -310,13 +406,19 @@ final class TweetDetail implements BaseModel
         null !== $isNoteTweet && $self['isNoteTweet'] = $isNoteTweet;
         null !== $isQuoteStatus && $self['isQuoteStatus'] = $isQuoteStatus;
         null !== $isReply && $self['isReply'] = $isReply;
+        null !== $isTranslatable && $self['isTranslatable'] = $isTranslatable;
         null !== $lang && $self['lang'] = $lang;
         null !== $media && $self['media'] = $media;
+        null !== $noteTweet && $self['noteTweet'] = $noteTweet;
+        null !== $place && $self['place'] = $place;
+        null !== $possiblySensitive && $self['possiblySensitive'] = $possiblySensitive;
+        null !== $previousCounts && $self['previousCounts'] = $previousCounts;
         null !== $quotedTweet && $self['quotedTweet'] = $quotedTweet;
         null !== $retweetedTweet && $self['retweetedTweet'] = $retweetedTweet;
         null !== $source && $self['source'] = $source;
         null !== $type && $self['type'] = $type;
         null !== $url && $self['url'] = $url;
+        null !== $viewState && $self['viewState'] = $viewState;
 
         return $self;
     }
@@ -386,6 +488,19 @@ final class TweetDetail implements BaseModel
     }
 
     /**
+     * Article metadata attached to a tweet.
+     *
+     * @param Article|ArticleShape $article
+     */
+    public function withArticle(Article|array $article): self
+    {
+        $self = clone $this;
+        $self['article'] = $article;
+
+        return $self;
+    }
+
+    /**
      * Tweet author profile. The lookup route always includes follower count and verification state. Other profile fields appear when available.
      *
      * @param TweetAuthor|TweetAuthorShape $author
@@ -394,6 +509,32 @@ final class TweetDetail implements BaseModel
     {
         $self = clone $this;
         $self['author'] = $author;
+
+        return $self;
+    }
+
+    /**
+     * Public card metadata attached to a tweet.
+     *
+     * @param Card|CardShape $card
+     */
+    public function withCard(Card|array $card): self
+    {
+        $self = clone $this;
+        $self['card'] = $card;
+
+        return $self;
+    }
+
+    /**
+     * Community Note presentation metadata returned by X.
+     *
+     * @param CommunityNote|CommunityNoteShape $communityNote
+     */
+    public function withCommunityNote(CommunityNote|array $communityNote): self
+    {
+        $self = clone $this;
+        $self['communityNote'] = $communityNote;
 
         return $self;
     }
@@ -440,6 +581,19 @@ final class TweetDetail implements BaseModel
     {
         $self = clone $this;
         $self['displayTextRange'] = $displayTextRange;
+
+        return $self;
+    }
+
+    /**
+     * Edit history metadata returned by X.
+     *
+     * @param Edit|EditShape $edit
+     */
+    public function withEdit(Edit|array $edit): self
+    {
+        $self = clone $this;
+        $self['edit'] = $edit;
 
         return $self;
     }
@@ -534,6 +688,14 @@ final class TweetDetail implements BaseModel
         return $self;
     }
 
+    public function withIsTranslatable(bool $isTranslatable): self
+    {
+        $self = clone $this;
+        $self['isTranslatable'] = $isTranslatable;
+
+        return $self;
+    }
+
     /**
      * Tweet language code.
      */
@@ -554,6 +716,54 @@ final class TweetDetail implements BaseModel
     {
         $self = clone $this;
         $self['media'] = $media;
+
+        return $self;
+    }
+
+    /**
+     * Complete Note Tweet content and rich-text metadata.
+     *
+     * @param NoteTweet|NoteTweetShape $noteTweet
+     */
+    public function withNoteTweet(NoteTweet|array $noteTweet): self
+    {
+        $self = clone $this;
+        $self['noteTweet'] = $noteTweet;
+
+        return $self;
+    }
+
+    /**
+     * Public place metadata attached to a tweet.
+     *
+     * @param Place|PlaceShape $place
+     */
+    public function withPlace(Place|array $place): self
+    {
+        $self = clone $this;
+        $self['place'] = $place;
+
+        return $self;
+    }
+
+    public function withPossiblySensitive(bool $possiblySensitive): self
+    {
+        $self = clone $this;
+        $self['possiblySensitive'] = $possiblySensitive;
+
+        return $self;
+    }
+
+    /**
+     * Engagement counts retained from a prior tweet edit.
+     *
+     * @param PreviousCounts|PreviousCountsShape $previousCounts
+     */
+    public function withPreviousCounts(
+        PreviousCounts|array $previousCounts
+    ): self {
+        $self = clone $this;
+        $self['previousCounts'] = $previousCounts;
 
         return $self;
     }
@@ -614,6 +824,14 @@ final class TweetDetail implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    public function withViewState(string $viewState): self
+    {
+        $self = clone $this;
+        $self['viewState'] = $viewState;
 
         return $self;
     }

@@ -13,12 +13,13 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams\MediaType;
+use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Mode;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Quotes;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Replies;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Retweets;
 
 /**
- * Returns visible replies. For an unfiltered first page, Xquik compares a terminal page with the post's reported reply count. If the page is visibly incomplete, the endpoint returns 424 `replies_incomplete` instead of presenting partial coverage as complete. Use tweet search with a `conversation_id:{id}` query as the broader fallback.
+ * Returns direct replies. Complete mode merges available timeline views, supported rankings, every forward cursor module, labeled hidden-content branches, exact-parent time partitions scaled to the reported reply count, and search. It separates nested replies and returns 424 below 80% coverage.
  *
  * @see XTwitterScraper\Services\X\TweetsService::getReplies()
  *
@@ -33,12 +34,14 @@ use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Retweets;
  *   hashtags?: string|null,
  *   inReplyToTweetID?: string|null,
  *   language?: string|null,
+ *   limit?: int|null,
  *   mediaType?: null|MediaType|value-of<MediaType>,
  *   mentioning?: string|null,
  *   minFaves?: int|null,
  *   minQuotes?: int|null,
  *   minReplies?: int|null,
  *   minRetweets?: int|null,
+ *   mode?: null|Mode|value-of<Mode>,
  *   pageSize?: int|null,
  *   quotes?: null|Quotes|value-of<Quotes>,
  *   quotesOfTweetID?: string|null,
@@ -121,6 +124,12 @@ final class TweetGetRepliesParams implements BaseModel
     public ?string $language;
 
     /**
+     * With mode=complete, maximum combined direct and nested reply rows (1-25000). Without complete mode, this is the deprecated pageSize alias and uses the normal 1-100 page range.
+     */
+    #[Optional]
+    public ?int $limit;
+
+    /**
      * Filter by media type.
      *
      * @var value-of<MediaType>|null $mediaType
@@ -159,7 +168,15 @@ final class TweetGetRepliesParams implements BaseModel
     public ?int $minRetweets;
 
     /**
-     * Maximum items requested from this page (1-100, default 20). The response can contain fewer items because the source returned fewer, filters removed items, or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is empty. The deprecated limit and count aliases remain accepted.
+     * Set complete for maximum-coverage collection. Complete mode accepts only limit. Remove cursor, pageSize, count, time ranges, and tweet filters.
+     *
+     * @var value-of<Mode>|null $mode
+     */
+    #[Optional(enum: Mode::class)]
+    public ?string $mode;
+
+    /**
+     * Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
      */
     #[Optional]
     public ?int $pageSize;
@@ -253,6 +270,7 @@ final class TweetGetRepliesParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param MediaType|value-of<MediaType>|null $mediaType
+     * @param Mode|value-of<Mode>|null $mode
      * @param Quotes|value-of<Quotes>|null $quotes
      * @param Replies|value-of<Replies>|null $replies
      * @param Retweets|value-of<Retweets>|null $retweets
@@ -268,12 +286,14 @@ final class TweetGetRepliesParams implements BaseModel
         ?string $hashtags = null,
         ?string $inReplyToTweetID = null,
         ?string $language = null,
+        ?int $limit = null,
         MediaType|string|null $mediaType = null,
         ?string $mentioning = null,
         ?int $minFaves = null,
         ?int $minQuotes = null,
         ?int $minReplies = null,
         ?int $minRetweets = null,
+        Mode|string|null $mode = null,
         ?int $pageSize = null,
         Quotes|string|null $quotes = null,
         ?string $quotesOfTweetID = null,
@@ -300,12 +320,14 @@ final class TweetGetRepliesParams implements BaseModel
         null !== $hashtags && $self['hashtags'] = $hashtags;
         null !== $inReplyToTweetID && $self['inReplyToTweetID'] = $inReplyToTweetID;
         null !== $language && $self['language'] = $language;
+        null !== $limit && $self['limit'] = $limit;
         null !== $mediaType && $self['mediaType'] = $mediaType;
         null !== $mentioning && $self['mentioning'] = $mentioning;
         null !== $minFaves && $self['minFaves'] = $minFaves;
         null !== $minQuotes && $self['minQuotes'] = $minQuotes;
         null !== $minReplies && $self['minReplies'] = $minReplies;
         null !== $minRetweets && $self['minRetweets'] = $minRetweets;
+        null !== $mode && $self['mode'] = $mode;
         null !== $pageSize && $self['pageSize'] = $pageSize;
         null !== $quotes && $self['quotes'] = $quotes;
         null !== $quotesOfTweetID && $self['quotesOfTweetID'] = $quotesOfTweetID;
@@ -434,6 +456,17 @@ final class TweetGetRepliesParams implements BaseModel
     }
 
     /**
+     * With mode=complete, maximum combined direct and nested reply rows (1-25000). Without complete mode, this is the deprecated pageSize alias and uses the normal 1-100 page range.
+     */
+    public function withLimit(int $limit): self
+    {
+        $self = clone $this;
+        $self['limit'] = $limit;
+
+        return $self;
+    }
+
+    /**
      * Filter by media type.
      *
      * @param MediaType|value-of<MediaType> $mediaType
@@ -502,7 +535,20 @@ final class TweetGetRepliesParams implements BaseModel
     }
 
     /**
-     * Maximum items requested from this page (1-100, default 20). The response can contain fewer items because the source returned fewer, filters removed items, or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true, even when a page is empty. The deprecated limit and count aliases remain accepted.
+     * Set complete for maximum-coverage collection. Complete mode accepts only limit. Remove cursor, pageSize, count, time ranges, and tweet filters.
+     *
+     * @param Mode|value-of<Mode> $mode
+     */
+    public function withMode(Mode|string $mode): self
+    {
+        $self = clone $this;
+        $self['mode'] = $mode;
+
+        return $self;
+    }
+
+    /**
+     * Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
      */
     public function withPageSize(int $pageSize): self
     {
