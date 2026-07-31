@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.0 (2026-07-31)
+
+Full Changelog: [v0.9.0...v0.10.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.9.0...v0.10.0)
+
+### Features
+
+* **api:** add complete reply extraction, rich response contracts, and robust model serialization ([#25](https://github.com/Xquik-dev/x-twitter-scraper-php/pull/25)) ([1fb0b14](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/1fb0b14b5c9e7ee30cad40a0ef4b78cec0da6df9))
+
 ## 0.9.0 (2026-07-29)
 
 Full Changelog: [v0.8.0...v0.9.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.8.0...v0.9.0)
