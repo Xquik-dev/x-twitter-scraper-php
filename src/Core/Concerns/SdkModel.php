@@ -222,7 +222,7 @@ trait SdkModel
      *
      * @return array<string, mixed>
      */
-    public function jsonSerialize(): array
+    public function jsonSerialize(): array|\stdClass
     {
         // @phpstan-ignore-next-line argument.type
         return Conversion::dump(self::converter(), value: $this->__serialize());
