@@ -16,6 +16,9 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\Core\FileParam;
 use XTwitterScraper\RequestOptions;
+use XTwitterScraper\UserProfile\HighlightsInfo;
+use XTwitterScraper\X\Tweets\TweetGetRepliesResponse\Diagnostic\StrategiesAttempted;
+use XTwitterScraper\X\Tweets\TweetGetRepliesResponse\Diagnostic\StrategiesAttempted\StopReason;
 
 class Dog implements BaseModel
 {
@@ -206,6 +209,23 @@ class ModelTest extends TestCase
             '{"name":"Bob","age_years":12,"owner":null}',
             json_encode($model)
         );
+    }
+
+    #[Test]
+    public function testEmptyModelsAndBackedEnumInputsSerializeSafely(): void
+    {
+        $this->assertSame('{}', json_encode(new HighlightsInfo, JSON_THROW_ON_ERROR));
+
+        $strategy = StrategiesAttempted::with(
+            name: 'search',
+            newDirectReplies: 12,
+            newNestedReplies: 3,
+            pagesAttempted: 2,
+            stopReason: StopReason::EMPTY_PAGES,
+        );
+
+        $this->assertSame(StopReason::EMPTY_PAGES->value, $strategy->stopReason);
+        $this->assertSame(StopReason::EMPTY_PAGES->value, $strategy->toProperties()['stopReason']);
     }
 
     #[Test]

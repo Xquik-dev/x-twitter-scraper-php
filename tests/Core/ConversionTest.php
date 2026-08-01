@@ -269,6 +269,10 @@ final class ConversionTest extends TestCase
         $this->assertSame('first', $enum->coerce('first', $exact));
         $this->assertSame(1, $exact->yes);
 
+        $backed = new CoerceState;
+        $this->assertSame('first', $enum->coerce(ConversionKind::First, $backed));
+        $this->assertSame(1, $backed->yes);
+
         $compatible = new CoerceState;
         $this->assertSame('third', $enum->coerce('third', $compatible));
         $this->assertSame(1, $compatible->maybe);

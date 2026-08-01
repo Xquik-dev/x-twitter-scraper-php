@@ -20,7 +20,7 @@ use XTwitterScraper\X\AccountConnectionChallenges\AccountConnectionChallengeSubm
  *   id: string,
  *   createdAt: \DateTimeInterface,
  *   health: Health|value-of<Health>,
- *   status: string,
+ *   status: 'active',
  *   xUserID: string,
  *   xUsername: string,
  * }
@@ -29,6 +29,10 @@ final class AccountConnectionChallengeSubmitResponse implements BaseModel
 {
     /** @use SdkModel<AccountConnectionChallengeSubmitResponseShape> */
     use SdkModel;
+
+    /** @var 'active' $status */
+    #[Required]
+    public string $status = 'active';
 
     #[Required]
     public string $id;
@@ -39,9 +43,6 @@ final class AccountConnectionChallengeSubmitResponse implements BaseModel
     /** @var value-of<Health> $health */
     #[Required(enum: Health::class)]
     public string $health;
-
-    #[Required]
-    public string $status;
 
     #[Required('xUserId')]
     public string $xUserID;
@@ -55,12 +56,7 @@ final class AccountConnectionChallengeSubmitResponse implements BaseModel
      * To enforce required parameters use
      * ```
      * AccountConnectionChallengeSubmitResponse::with(
-     *   id: ...,
-     *   createdAt: ...,
-     *   health: ...,
-     *   status: ...,
-     *   xUserID: ...,
-     *   xUsername: ...,
+     *   id: ..., createdAt: ..., health: ..., xUserID: ..., xUsername: ...
      * )
      * ```
      *
@@ -71,7 +67,6 @@ final class AccountConnectionChallengeSubmitResponse implements BaseModel
      *   ->withID(...)
      *   ->withCreatedAt(...)
      *   ->withHealth(...)
-     *   ->withStatus(...)
      *   ->withXUserID(...)
      *   ->withXUsername(...)
      * ```
@@ -92,7 +87,6 @@ final class AccountConnectionChallengeSubmitResponse implements BaseModel
         string $id,
         \DateTimeInterface $createdAt,
         Health|string $health,
-        string $status,
         string $xUserID,
         string $xUsername,
     ): self {
@@ -101,7 +95,6 @@ final class AccountConnectionChallengeSubmitResponse implements BaseModel
         $self['id'] = $id;
         $self['createdAt'] = $createdAt;
         $self['health'] = $health;
-        $self['status'] = $status;
         $self['xUserID'] = $xUserID;
         $self['xUsername'] = $xUsername;
 
@@ -135,6 +128,9 @@ final class AccountConnectionChallengeSubmitResponse implements BaseModel
         return $self;
     }
 
+    /**
+     * @param 'active' $status
+     */
     public function withStatus(string $status): self
     {
         $self = clone $this;

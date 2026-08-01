@@ -8,18 +8,19 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Support\Tickets\TicketListResponse;
 
-use XTwitterScraper\Core\Attributes\Optional;
+use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Support\Tickets\TicketListResponse\Ticket\Status;
 
 /**
  * @phpstan-type TicketShape = array{
- *   createdAt?: \DateTimeInterface|null,
- *   messageCount?: int|null,
- *   publicID?: string|null,
- *   status?: string|null,
- *   subject?: string|null,
- *   updatedAt?: \DateTimeInterface|null,
+ *   createdAt: \DateTimeInterface,
+ *   messageCount: int,
+ *   publicID: string,
+ *   status: Status|value-of<Status>,
+ *   subject: string,
+ *   updatedAt: \DateTimeInterface,
  * }
  */
 final class Ticket implements BaseModel
@@ -27,24 +28,52 @@ final class Ticket implements BaseModel
     /** @use SdkModel<TicketShape> */
     use SdkModel;
 
-    #[Optional]
-    public ?\DateTimeInterface $createdAt;
+    #[Required]
+    public \DateTimeInterface $createdAt;
 
-    #[Optional]
-    public ?int $messageCount;
+    #[Required]
+    public int $messageCount;
 
-    #[Optional('publicId')]
-    public ?string $publicID;
+    #[Required('publicId')]
+    public string $publicID;
 
-    #[Optional]
-    public ?string $status;
+    /** @var value-of<Status> $status */
+    #[Required(enum: Status::class)]
+    public string $status;
 
-    #[Optional]
-    public ?string $subject;
+    #[Required]
+    public string $subject;
 
-    #[Optional]
-    public ?\DateTimeInterface $updatedAt;
+    #[Required]
+    public \DateTimeInterface $updatedAt;
 
+    /**
+     * `new Ticket()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * Ticket::with(
+     *   createdAt: ...,
+     *   messageCount: ...,
+     *   publicID: ...,
+     *   status: ...,
+     *   subject: ...,
+     *   updatedAt: ...,
+     * )
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new Ticket)
+     *   ->withCreatedAt(...)
+     *   ->withMessageCount(...)
+     *   ->withPublicID(...)
+     *   ->withStatus(...)
+     *   ->withSubject(...)
+     *   ->withUpdatedAt(...)
+     * ```
+     */
     public function __construct()
     {
         $this->initialize();
@@ -54,23 +83,25 @@ final class Ticket implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param Status|value-of<Status> $status
      */
     public static function with(
-        ?\DateTimeInterface $createdAt = null,
-        ?int $messageCount = null,
-        ?string $publicID = null,
-        ?string $status = null,
-        ?string $subject = null,
-        ?\DateTimeInterface $updatedAt = null,
+        \DateTimeInterface $createdAt,
+        int $messageCount,
+        string $publicID,
+        Status|string $status,
+        string $subject,
+        \DateTimeInterface $updatedAt,
     ): self {
         $self = new self;
 
-        null !== $createdAt && $self['createdAt'] = $createdAt;
-        null !== $messageCount && $self['messageCount'] = $messageCount;
-        null !== $publicID && $self['publicID'] = $publicID;
-        null !== $status && $self['status'] = $status;
-        null !== $subject && $self['subject'] = $subject;
-        null !== $updatedAt && $self['updatedAt'] = $updatedAt;
+        $self['createdAt'] = $createdAt;
+        $self['messageCount'] = $messageCount;
+        $self['publicID'] = $publicID;
+        $self['status'] = $status;
+        $self['subject'] = $subject;
+        $self['updatedAt'] = $updatedAt;
 
         return $self;
     }
@@ -99,7 +130,10 @@ final class Ticket implements BaseModel
         return $self;
     }
 
-    public function withStatus(string $status): self
+    /**
+     * @param Status|value-of<Status> $status
+     */
+    public function withStatus(Status|string $status): self
     {
         $self = clone $this;
         $self['status'] = $status;

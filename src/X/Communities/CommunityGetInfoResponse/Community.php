@@ -30,14 +30,12 @@ use XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\Rule;
  *   creator?: null|Creator|CreatorShape,
  *   description?: string|null,
  *   invitesPolicy?: string|null,
- *   isMember?: bool|null,
  *   isNsfw?: bool|null,
  *   joinPolicy?: string|null,
  *   memberCount?: int|null,
  *   moderatorCount?: int|null,
  *   name?: string|null,
  *   primaryTopic?: null|PrimaryTopic|PrimaryTopicShape,
- *   role?: string|null,
  *   rules?: list<Rule|RuleShape>|null,
  * }
  */
@@ -80,12 +78,6 @@ final class Community implements BaseModel
     public ?string $invitesPolicy;
 
     /**
-     * Whether the authenticated viewer is a member.
-     */
-    #[Optional('is_member')]
-    public ?bool $isMember;
-
-    /**
      * Whether the community is marked sensitive.
      */
     #[Optional('is_nsfw')]
@@ -120,12 +112,6 @@ final class Community implements BaseModel
      */
     #[Optional('primary_topic')]
     public ?PrimaryTopic $primaryTopic;
-
-    /**
-     * Authenticated viewer's community role.
-     */
-    #[Optional]
-    public ?string $role;
 
     /**
      * Community rules.
@@ -170,14 +156,12 @@ final class Community implements BaseModel
         Creator|array|null $creator = null,
         ?string $description = null,
         ?string $invitesPolicy = null,
-        ?bool $isMember = null,
         ?bool $isNsfw = null,
         ?string $joinPolicy = null,
         ?int $memberCount = null,
         ?int $moderatorCount = null,
         ?string $name = null,
         PrimaryTopic|array|null $primaryTopic = null,
-        ?string $role = null,
         ?array $rules = null,
     ): self {
         $self = new self;
@@ -189,14 +173,12 @@ final class Community implements BaseModel
         null !== $creator && $self['creator'] = $creator;
         null !== $description && $self['description'] = $description;
         null !== $invitesPolicy && $self['invitesPolicy'] = $invitesPolicy;
-        null !== $isMember && $self['isMember'] = $isMember;
         null !== $isNsfw && $self['isNsfw'] = $isNsfw;
         null !== $joinPolicy && $self['joinPolicy'] = $joinPolicy;
         null !== $memberCount && $self['memberCount'] = $memberCount;
         null !== $moderatorCount && $self['moderatorCount'] = $moderatorCount;
         null !== $name && $self['name'] = $name;
         null !== $primaryTopic && $self['primaryTopic'] = $primaryTopic;
-        null !== $role && $self['role'] = $role;
         null !== $rules && $self['rules'] = $rules;
 
         return $self;
@@ -269,17 +251,6 @@ final class Community implements BaseModel
     }
 
     /**
-     * Whether the authenticated viewer is a member.
-     */
-    public function withIsMember(bool $isMember): self
-    {
-        $self = clone $this;
-        $self['isMember'] = $isMember;
-
-        return $self;
-    }
-
-    /**
      * Whether the community is marked sensitive.
      */
     public function withIsNsfw(bool $isNsfw): self
@@ -343,17 +314,6 @@ final class Community implements BaseModel
     {
         $self = clone $this;
         $self['primaryTopic'] = $primaryTopic;
-
-        return $self;
-    }
-
-    /**
-     * Authenticated viewer's community role.
-     */
-    public function withRole(string $role): self
-    {
-        $self = clone $this;
-        $self['role'] = $role;
 
         return $self;
     }

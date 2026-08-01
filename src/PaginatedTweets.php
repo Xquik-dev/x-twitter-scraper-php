@@ -13,14 +13,10 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Paginated tweet results. The item count can be lower than pageSize when the source returns fewer tweets, filters remove tweets, or remaining credits cover fewer results. Follow next_cursor while has_next_page is true. An empty page can still have has_next_page true after filtering. Zero affordable results returns 402 insufficient_credits.
- *
- * @phpstan-import-type SearchTweetShape from \XTwitterScraper\SearchTweet
+ * Paginated tweets. Source visibility, filters, or remaining credits can reduce results. An empty filtered page can still have has_next_page true. Follow next_cursor while has_next_page is true. Zero affordable results returns 402 insufficient_credits.
  *
  * @phpstan-type PaginatedTweetsShape = array{
- *   hasNextPage: bool,
- *   nextCursor: string,
- *   tweets: list<SearchTweet|SearchTweetShape>,
+ *   hasNextPage: bool, nextCursor: string, tweets: list<mixed>
  * }
  */
 final class PaginatedTweets implements BaseModel
@@ -34,7 +30,7 @@ final class PaginatedTweets implements BaseModel
     #[Required('next_cursor')]
     public string $nextCursor;
 
-    /** @var list<SearchTweet> $tweets */
+    /** @var list<mixed> $tweets */
     #[Required(list: SearchTweet::class)]
     public array $tweets;
 
@@ -65,7 +61,7 @@ final class PaginatedTweets implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      *
-     * @param list<SearchTweet|SearchTweetShape> $tweets
+     * @param list<mixed> $tweets
      */
     public static function with(
         bool $hasNextPage,
@@ -98,7 +94,7 @@ final class PaginatedTweets implements BaseModel
     }
 
     /**
-     * @param list<SearchTweet|SearchTweetShape> $tweets
+     * @param list<mixed> $tweets
      */
     public function withTweets(array $tweets): self
     {
