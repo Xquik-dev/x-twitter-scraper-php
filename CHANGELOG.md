@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.2 (2026-08-11)
+
+Full Changelog: [v0.10.1...v0.10.2](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.10.1...v0.10.2)
+
+### Chores
+
+* **deps:** bump actions/attest from 4.2.1 to 4.2.2 ([#36](https://github.com/Xquik-dev/x-twitter-scraper-php/issues/36)) ([654cf3a](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/654cf3ab1f7e81153474c7ccfd0c71bfefae0058))
+
 ## 0.10.1 (2026-08-11)
 
 Full Changelog: [v0.10.0...v0.10.1](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.10.0...v0.10.1)
