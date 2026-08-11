@@ -40,7 +40,7 @@ final class GuestWalletsService implements GuestWalletsContract
     /**
      * @api
      *
-     * Create a one-use Stripe-hosted checkout after the user explicitly confirms a $10-$250 USD amount. This request creates no charge by itself. The user opens checkout_url on Stripe. This endpoint returns the paid-read API key without requiring an Xquik account, email, dashboard, or Xquik web page. An idempotent replay returns the same key.
+     * Create a one-use hosted checkout after the user confirms $10-$250 USD. The request creates no charge. It returns a paid-read API key without an Xquik account. Replays return the same key.
      *
      * @param int $amountMinor body param: USD cents accepted for this checkout
      * @param string $idempotencyKey Header param: Generate a cryptographically random UUID v4. Reuse it only to retry the same wallet and amount request. Initial wallet creation can recover the API key from this value, so store it as a secret and never log it.
@@ -72,7 +72,7 @@ final class GuestWalletsService implements GuestWalletsContract
     /**
      * @api
      *
-     * Poll after Stripe payment. Use usable to decide whether paid reads can run. An active wallet can remain usable while a top-up is pending. A new wallet becomes usable only after verified webhook fulfillment. Send the guest key as Authorization: Bearer.
+     * Poll after payment. Use usable to decide whether paid reads can run. An active wallet can remain usable while a top-up is pending. A new wallet becomes usable only after payment is verified. Send the guest key as Authorization: Bearer.
      *
      * @param RequestOpts|null $requestOptions
      *
@@ -90,7 +90,7 @@ final class GuestWalletsService implements GuestWalletsContract
     /**
      * @api
      *
-     * Create a one-use Stripe-hosted checkout for an existing paid-read guest key after the user explicitly confirms a $10-$250 USD amount. The key remains the same. This request creates no charge by itself and never redirects through an Xquik web page.
+     * Create a one-use hosted checkout after the user confirms a $10-$250 USD amount for an existing paid-read guest key. The key remains the same. This request creates no charge and never redirects through Xquik.
      *
      * @param int $amountMinor body param: USD cents accepted for this checkout
      * @param string $idempotencyKey Header param: Generate a cryptographically random UUID v4. Reuse it only to retry the same wallet and amount request. Initial wallet creation can recover the API key from this value, so store it as a secret and never log it.

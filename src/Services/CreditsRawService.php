@@ -123,7 +123,7 @@ final class CreditsRawService implements CreditsRawContract
     /**
      * @api
      *
-     * Create a Stripe Checkout session only after the user confirms. The request never completes payment or adds credits by itself.
+     * Create a hosted checkout only after the user confirms. The request never completes payment or adds credits.
      *
      * @param array{dollars: int, locale?: string}|CreditTopupBalanceParams $params
      * @param RequestOpts|null $requestOptions

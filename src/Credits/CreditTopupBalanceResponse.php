@@ -23,13 +23,13 @@ final class CreditTopupBalanceResponse implements BaseModel
     use SdkModel;
 
     /**
-     * Stable first-party Xquik redirect URL for the active Stripe Checkout session.
+     * Stable Xquik redirect URL for the active checkout.
      */
     #[Required('redirect_url')]
     public string $redirectURL;
 
     /**
-     * Same stable first-party Xquik redirect URL as redirect_url. The response never exposes a raw Stripe Checkout URL.
+     * Same stable Xquik redirect URL as redirect_url. The response never exposes the hosted checkout URL.
      */
     #[Required]
     public string $url;
@@ -69,7 +69,7 @@ final class CreditTopupBalanceResponse implements BaseModel
     }
 
     /**
-     * Stable first-party Xquik redirect URL for the active Stripe Checkout session.
+     * Stable Xquik redirect URL for the active checkout.
      */
     public function withRedirectURL(string $redirectURL): self
     {
@@ -80,7 +80,7 @@ final class CreditTopupBalanceResponse implements BaseModel
     }
 
     /**
-     * Same stable first-party Xquik redirect URL as redirect_url. The response never exposes a raw Stripe Checkout URL.
+     * Same stable Xquik redirect URL as redirect_url. The response never exposes the hosted checkout URL.
      */
     public function withURL(string $url): self
     {
