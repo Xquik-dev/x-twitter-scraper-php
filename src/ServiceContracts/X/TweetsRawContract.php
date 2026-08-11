@@ -26,6 +26,7 @@ use XTwitterScraper\X\Tweets\TweetGetThreadParams;
 use XTwitterScraper\X\Tweets\TweetListParams;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
 use XTwitterScraper\X\Tweets\TweetSearchParams;
+use XTwitterScraper\X\Tweets\TweetSearchResponse\TweetSearchCoverageResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -185,7 +186,7 @@ interface TweetsRawContract
      * @param array<string,mixed>|TweetSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<PaginatedTweets|TweetSearchCoverageResponse>
      *
      * @throws APIException
      */

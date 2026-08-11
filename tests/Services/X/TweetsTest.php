@@ -8,6 +8,7 @@ namespace Tests\Services\X;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
@@ -168,37 +169,60 @@ final class TweetsTest extends TestCase
     #[Test]
     public function testSearch(): void
     {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
         $result = $this->client->x->tweets->search(q: 'q');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(PaginatedTweets::class, $result);
+        $this->assertNotNull($result);
     }
 
     #[Test]
     public function testSearchWithOptionalParams(): void
     {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
         $result = $this->client->x->tweets->search(
             q: 'q',
             advancedQuery: 'advancedQuery',
             anyWords: 'anyWords',
+            blueVerifiedOnly: true,
             boundingBox: 'boundingBox',
+            cardName: 'cardName',
             cashtags: 'cashtags',
             conversationID: 'conversationId',
             cursor: 'cursor',
             exactPhrase: 'exactPhrase',
+            excludeSource: 'excludeSource',
             excludeWords: 'excludeWords',
             fromUser: 'fromUser',
+            geocode: 'geocode',
             hashtags: 'hashtags',
             inReplyToTweetID: 'inReplyToTweetId',
             language: 'language',
-            limit: 200,
+            limit: 1,
             listID: 'listId',
+            maxFaves: 0,
+            maxID: 'maxId',
+            maxQuotes: 0,
+            maxReplies: 0,
+            maxRetweets: 0,
             mediaType: 'images',
             mentioning: 'mentioning',
+            minBookmarks: 0,
             minFaves: 0,
             minQuotes: 0,
             minReplies: 0,
             minRetweets: 0,
+            minViews: 0,
+            mode: 'standard',
+            nativeRetweets: true,
+            near: 'near',
+            news: true,
             place: 'place',
             placeCountry: 'placeCountry',
             pointRadius: 'pointRadius',
@@ -208,16 +232,21 @@ final class TweetsTest extends TestCase
             replies: 'include',
             retweets: 'include',
             retweetsOfTweetID: 'retweetsOfTweetId',
+            safe: true,
             sinceDate: '2019-12-27',
+            sinceID: 'sinceId',
             sinceTime: 'sinceTime',
+            source: 'source',
             toUser: 'toUser',
             untilDate: '2019-12-27',
             untilTime: 'untilTime',
             url: 'url',
             verifiedOnly: true,
+            within: 'within',
+            withinTime: 'withinTime',
         );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(PaginatedTweets::class, $result);
+        $this->assertNotNull($result);
     }
 }

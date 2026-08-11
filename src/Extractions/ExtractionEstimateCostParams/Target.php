@@ -1,0 +1,35 @@
+<?php
+
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
+declare(strict_types=1);
+
+namespace XTwitterScraper\Extractions\ExtractionEstimateCostParams;
+
+use XTwitterScraper\Core\Concerns\SdkUnion;
+use XTwitterScraper\Core\Conversion\Contracts\Converter;
+use XTwitterScraper\Core\Conversion\Contracts\ConverterSource;
+use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Target\UnionMember1;
+
+/**
+ * One auto-routed target in a mixed Tweet collection.
+ *
+ * @phpstan-import-type UnionMember1Shape from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\Target\UnionMember1
+ *
+ * @phpstan-type TargetVariants = string|UnionMember1
+ * @phpstan-type TargetShape = TargetVariants|UnionMember1Shape
+ */
+final class Target implements ConverterSource
+{
+    use SdkUnion;
+
+    /**
+     * @return list<string|Converter|ConverterSource>|array<string,string|Converter|ConverterSource>
+     */
+    public static function variants(): array
+    {
+        return ['string', UnionMember1::class];
+    }
+}

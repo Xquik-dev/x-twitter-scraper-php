@@ -98,9 +98,9 @@ $client = new Client(
   apiKey: getenv('X_TWITTER_SCRAPER_API_KEY') ?: 'My API Key'
 );
 
-$paginatedTweets = $client->x->tweets->search(q: 'from:elonmusk', limit: 10);
+$response = $client->x->tweets->search(q: 'from:elonmusk', limit: 10);
 
-var_dump($paginatedTweets->hasNextPage);
+var_dump($response);
 ```
 
 ### Value Objects

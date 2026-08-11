@@ -64,7 +64,7 @@ final class DrawsService implements DrawsContract
      *
      * List draws
      *
-     * @param string $cursor Cursor for keyset pagination from prior response next_cursor
+     * @param string $cursor previous nextCursor
      * @param int $limit Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the returned count may be lower when remaining credits cannot cover the requested page. If zero paid results are affordable, the endpoint returns 402 insufficient_credits.
      * @param RequestOpts|null $requestOptions
      *
@@ -89,7 +89,7 @@ final class DrawsService implements DrawsContract
      * Export draw data
      *
      * @param string $id draw public ID returned by create and list draw responses
-     * @param Format|value-of<Format> $format Export output format
+     * @param Format|value-of<Format> $format Export output format. PDF entry exports include up to 10,000 rows. Other entry formats include up to 100,000 rows.
      * @param Type|value-of<Type> $type Export winners or all entries
      * @param RequestOpts|null $requestOptions
      *

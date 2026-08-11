@@ -64,6 +64,8 @@ enum LegacyErrorCode: string
 
     case MONITOR_ALREADY_EXISTS = 'monitor_already_exists';
 
+    case MONITOR_PROFILE_UNAVAILABLE = 'monitor_profile_unavailable';
+
     case NO_MEDIA = 'no_media';
 
     case NO_CREDITS = 'no_credits';
@@ -98,6 +100,10 @@ enum LegacyErrorCode: string
 
     case CONNECTION_CHALLENGE_INACTIVE = 'connection_challenge_inactive';
 
+    case COVERAGE_CURSOR_GONE = 'coverage_cursor_gone';
+
+    case COVERAGE_CURSOR_UNAVAILABLE = 'coverage_cursor_unavailable';
+
     case DRAFT_NOT_FOUND = 'draft_not_found';
 
     case FAVORITERS_UNAVAILABLE = 'favoriters_unavailable';
@@ -115,6 +121,8 @@ enum LegacyErrorCode: string
     case IDEMPOTENCY_KEY_CONFLICT = 'idempotency_key_conflict';
 
     case INVALID_COMMUNITY_ID = 'invalid_community_id';
+
+    case INVALID_COVERAGE_CURSOR = 'invalid_coverage_cursor';
 
     case INVALID_IDEMPOTENCY_KEY = 'invalid_idempotency_key';
 

@@ -34,7 +34,7 @@ final class ExtractionListParams implements BaseModel
     use SdkParams;
 
     /**
-     * Cursor for keyset pagination from prior response next_cursor.
+     * Previous nextCursor.
      */
     #[Optional]
     public ?string $cursor;
@@ -91,7 +91,7 @@ final class ExtractionListParams implements BaseModel
     }
 
     /**
-     * Cursor for keyset pagination from prior response next_cursor.
+     * Previous nextCursor.
      */
     public function withCursor(string $cursor): self
     {
