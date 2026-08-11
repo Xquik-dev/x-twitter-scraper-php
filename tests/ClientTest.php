@@ -11,6 +11,8 @@ use Http\Mock\Client;
 use PHPUnit\Framework\TestCase;
 use XTwitterScraper\Core\Util;
 
+use const XTwitterScraper\VERSION;
+
 /**
  * @internal
  */
@@ -43,5 +45,7 @@ class ClientTest extends TestCase
             $sent = $requested->getHeaderLine($header);
             $this->assertNotEmpty($sent);
         }
+
+        $this->assertSame(VERSION, $requested->getHeaderLine('X-Stainless-Package-Version'));
     }
 }
