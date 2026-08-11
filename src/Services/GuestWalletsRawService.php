@@ -36,7 +36,7 @@ final class GuestWalletsRawService implements GuestWalletsRawContract
     /**
      * @api
      *
-     * Create a one-use hosted checkout after the user confirms $10-$250 USD. The request creates no charge. It returns a paid-read API key without an Xquik account. Replays return the same key.
+     * Create a one-use hosted checkout after the user confirms $10-$250 USD. The request creates no charge. It returns a paid-read API key without an Xquik account. Idempotent replays return the same key.
      *
      * @param array{
      *   amountMinor: int, currency?: 'usd', idempotencyKey: string
