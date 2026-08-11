@@ -10,6 +10,8 @@ enum Source: string
 
     case FOLLOWING = 'following';
 
+    case COLLECTION = 'collection';
+
     case PAGINATION_CAP = 'paginationCap';
 
     case POSTS = 'posts';

@@ -35,7 +35,22 @@ final class ListsRawService implements ListsRawContract
      *
      * @param string $id List ID
      * @param array{
-     *   cursor?: string, pageSize?: int
+     *   bioContains?: string,
+     *   cursor?: string,
+     *   hasLocation?: bool,
+     *   hasWebsite?: bool,
+     *   locationContains?: string,
+     *   maxFollowers?: int,
+     *   maxFollowing?: int,
+     *   maxStatuses?: int,
+     *   minAccountAgeDays?: int,
+     *   minFollowers?: int,
+     *   minFollowing?: int,
+     *   minStatuses?: int,
+     *   pageSize?: int,
+     *   usernameContains?: string,
+     *   verifiedOnly?: bool,
+     *   verifiedType?: string,
      * }|ListRetrieveFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -69,7 +84,24 @@ final class ListsRawService implements ListsRawContract
      * List members of an X List
      *
      * @param string $id List ID for member lookup
-     * @param array{cursor?: string, pageSize?: int}|ListRetrieveMembersParams $params
+     * @param array{
+     *   bioContains?: string,
+     *   cursor?: string,
+     *   hasLocation?: bool,
+     *   hasWebsite?: bool,
+     *   locationContains?: string,
+     *   maxFollowers?: int,
+     *   maxFollowing?: int,
+     *   maxStatuses?: int,
+     *   minAccountAgeDays?: int,
+     *   minFollowers?: int,
+     *   minFollowing?: int,
+     *   minStatuses?: int,
+     *   pageSize?: int,
+     *   usernameContains?: string,
+     *   verifiedOnly?: bool,
+     *   verifiedType?: string,
+     * }|ListRetrieveMembersParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedUsers>

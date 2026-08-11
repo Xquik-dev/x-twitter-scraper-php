@@ -23,6 +23,8 @@ use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Replies;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Retweets;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Mode;
+use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Scope;
+use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Sort;
 use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
 use XTwitterScraper\X\Tweets\TweetGetResponse;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersParams;
@@ -31,6 +33,8 @@ use XTwitterScraper\X\Tweets\TweetListParams;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
 use XTwitterScraper\X\Tweets\TweetSearchParams;
 use XTwitterScraper\X\Tweets\TweetSearchParams\QueryType;
+use XTwitterScraper\X\Tweets\TweetSearchResponse;
+use XTwitterScraper\X\Tweets\TweetSearchResponse\TweetSearchCoverageResponse;
 
 /**
  * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
@@ -193,7 +197,24 @@ final class TweetsRawService implements TweetsRawContract
      * Returns liker profiles that X makes visible for the post. X can withhold liker identities even when the post reports likes. In that case this endpoint returns 424 `favoriters_unavailable` instead of a misleading empty success.
      *
      * @param string $id Tweet ID to get favoriters
-     * @param array{cursor?: string, pageSize?: int}|TweetGetFavoritersParams $params
+     * @param array{
+     *   bioContains?: string,
+     *   cursor?: string,
+     *   hasLocation?: bool,
+     *   hasWebsite?: bool,
+     *   locationContains?: string,
+     *   maxFollowers?: int,
+     *   maxFollowing?: int,
+     *   maxStatuses?: int,
+     *   minAccountAgeDays?: int,
+     *   minFollowers?: int,
+     *   minFollowing?: int,
+     *   minStatuses?: int,
+     *   pageSize?: int,
+     *   usernameContains?: string,
+     *   verifiedOnly?: bool,
+     *   verifiedType?: string,
+     * }|TweetGetFavoritersParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedUsers>
@@ -228,35 +249,54 @@ final class TweetsRawService implements TweetsRawContract
      * @param string $id Numeric tweet ID to get quotes, 15-20 digits
      * @param array{
      *   anyWords?: string,
+     *   blueVerifiedOnly?: bool,
+     *   cardName?: string,
      *   cashtags?: string,
      *   conversationID?: string,
      *   cursor?: string,
      *   exactPhrase?: string,
+     *   excludeSource?: string,
      *   excludeWords?: string,
      *   fromUser?: string,
+     *   geocode?: string,
      *   hashtags?: string,
      *   includeReplies?: bool,
      *   inReplyToTweetID?: string,
      *   language?: string,
+     *   maxFaves?: int,
+     *   maxID?: string,
+     *   maxQuotes?: int,
+     *   maxReplies?: int,
+     *   maxRetweets?: int,
      *   mediaType?: MediaType|value-of<MediaType>,
      *   mentioning?: string,
+     *   minBookmarks?: int,
      *   minFaves?: int,
      *   minQuotes?: int,
      *   minReplies?: int,
      *   minRetweets?: int,
+     *   minViews?: int,
+     *   nativeRetweets?: bool,
+     *   near?: string,
+     *   news?: bool,
      *   pageSize?: int,
      *   quotes?: Quotes|value-of<Quotes>,
      *   quotesOfTweetID?: string,
      *   replies?: Replies|value-of<Replies>,
      *   retweets?: Retweets|value-of<Retweets>,
      *   retweetsOfTweetID?: string,
+     *   safe?: bool,
      *   sinceDate?: string,
+     *   sinceID?: string,
      *   sinceTime?: string,
+     *   source?: string,
      *   toUser?: string,
      *   untilDate?: string,
      *   untilTime?: string,
      *   url?: string,
      *   verifiedOnly?: bool,
+     *   within?: string,
+     *   withinTime?: string,
      * }|TweetGetQuotesParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -283,8 +323,10 @@ final class TweetsRawService implements TweetsRawContract
                 [
                     'conversationID' => 'conversationId',
                     'inReplyToTweetID' => 'inReplyToTweetId',
+                    'maxID' => 'maxId',
                     'quotesOfTweetID' => 'quotesOfTweetId',
                     'retweetsOfTweetID' => 'retweetsOfTweetId',
+                    'sinceID' => 'sinceId',
                 ],
             ),
             options: $options,
@@ -295,41 +337,66 @@ final class TweetsRawService implements TweetsRawContract
     /**
      * @api
      *
-     * Returns direct replies. Complete mode merges available timeline views, supported rankings, every forward cursor module, labeled hidden-content branches, exact-parent time partitions scaled to the reported reply count, and search. It separates nested replies and returns 424 below 80% coverage.
+     * Returns direct replies. Omit mode for automatic maximum coverage with resumable pagination. Complete mode returns nested replies, diagnostics, and 424 when direct coverage stays below 80%.
      *
      * @param string $id Tweet ID to get replies
      * @param array{
      *   anyWords?: string,
+     *   blueVerifiedOnly?: bool,
+     *   cardName?: string,
      *   cashtags?: string,
      *   conversationID?: string,
      *   cursor?: string,
      *   exactPhrase?: string,
+     *   excludeOriginalAuthor?: bool,
+     *   excludeSource?: string,
      *   excludeWords?: string,
      *   fromUser?: string,
+     *   geocode?: string,
      *   hashtags?: string,
+     *   hasMediaOnly?: bool,
+     *   includeOriginalPost?: bool,
      *   inReplyToTweetID?: string,
      *   language?: string,
      *   limit?: int,
+     *   maxDepth?: int,
+     *   maxFaves?: int,
+     *   maxID?: string,
+     *   maxQuotes?: int,
+     *   maxReplies?: int,
+     *   maxRetweets?: int,
      *   mediaType?: TweetGetRepliesParams\MediaType|value-of<TweetGetRepliesParams\MediaType>,
      *   mentioning?: string,
+     *   minBookmarks?: int,
      *   minFaves?: int,
      *   minQuotes?: int,
      *   minReplies?: int,
      *   minRetweets?: int,
+     *   minViews?: int,
      *   mode?: Mode|value-of<Mode>,
+     *   nativeRetweets?: bool,
+     *   near?: string,
+     *   news?: bool,
      *   pageSize?: int,
      *   quotes?: TweetGetRepliesParams\Quotes|value-of<TweetGetRepliesParams\Quotes>,
      *   quotesOfTweetID?: string,
      *   replies?: TweetGetRepliesParams\Replies|value-of<TweetGetRepliesParams\Replies>,
      *   retweets?: TweetGetRepliesParams\Retweets|value-of<TweetGetRepliesParams\Retweets>,
      *   retweetsOfTweetID?: string,
+     *   safe?: bool,
+     *   scope?: Scope|value-of<Scope>,
      *   sinceDate?: string,
+     *   sinceID?: string,
      *   sinceTime?: string,
+     *   sort?: Sort|value-of<Sort>,
+     *   source?: string,
      *   toUser?: string,
      *   untilDate?: string,
      *   untilTime?: string,
      *   url?: string,
      *   verifiedOnly?: bool,
+     *   within?: string,
+     *   withinTime?: string,
      * }|TweetGetRepliesParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -356,8 +423,10 @@ final class TweetsRawService implements TweetsRawContract
                 [
                     'conversationID' => 'conversationId',
                     'inReplyToTweetID' => 'inReplyToTweetId',
+                    'maxID' => 'maxId',
                     'quotesOfTweetID' => 'quotesOfTweetId',
                     'retweetsOfTweetID' => 'retweetsOfTweetId',
+                    'sinceID' => 'sinceId',
                 ],
             ),
             options: $options,
@@ -371,7 +440,24 @@ final class TweetsRawService implements TweetsRawContract
      * List users who retweeted a tweet
      *
      * @param string $id Tweet ID to get retweeters
-     * @param array{cursor?: string, pageSize?: int}|TweetGetRetweetersParams $params
+     * @param array{
+     *   bioContains?: string,
+     *   cursor?: string,
+     *   hasLocation?: bool,
+     *   hasWebsite?: bool,
+     *   locationContains?: string,
+     *   maxFollowers?: int,
+     *   maxFollowing?: int,
+     *   maxStatuses?: int,
+     *   minAccountAgeDays?: int,
+     *   minFollowers?: int,
+     *   minFollowing?: int,
+     *   minStatuses?: int,
+     *   pageSize?: int,
+     *   usernameContains?: string,
+     *   verifiedOnly?: bool,
+     *   verifiedType?: string,
+     * }|TweetGetRetweetersParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedUsers>
@@ -434,30 +520,45 @@ final class TweetsRawService implements TweetsRawContract
     /**
      * @api
      *
-     * Search tweets by query, Tweet ID, X status URL, or account date window
+     * No-mode search maximizes coverage.
      *
      * @param array{
      *   q: string,
      *   advancedQuery?: string,
      *   anyWords?: string,
+     *   blueVerifiedOnly?: bool,
      *   boundingBox?: string,
+     *   cardName?: string,
      *   cashtags?: string,
      *   conversationID?: string,
      *   cursor?: string,
      *   exactPhrase?: string,
+     *   excludeSource?: string,
      *   excludeWords?: string,
      *   fromUser?: string,
+     *   geocode?: string,
      *   hashtags?: string,
      *   inReplyToTweetID?: string,
      *   language?: string,
      *   limit?: int,
      *   listID?: string,
+     *   maxFaves?: int,
+     *   maxID?: string,
+     *   maxQuotes?: int,
+     *   maxReplies?: int,
+     *   maxRetweets?: int,
      *   mediaType?: TweetSearchParams\MediaType|value-of<TweetSearchParams\MediaType>,
      *   mentioning?: string,
+     *   minBookmarks?: int,
      *   minFaves?: int,
      *   minQuotes?: int,
      *   minReplies?: int,
      *   minRetweets?: int,
+     *   minViews?: int,
+     *   mode?: TweetSearchParams\Mode|value-of<TweetSearchParams\Mode>,
+     *   nativeRetweets?: bool,
+     *   near?: string,
+     *   news?: bool,
      *   place?: string,
      *   placeCountry?: string,
      *   pointRadius?: string,
@@ -467,17 +568,22 @@ final class TweetsRawService implements TweetsRawContract
      *   replies?: TweetSearchParams\Replies|value-of<TweetSearchParams\Replies>,
      *   retweets?: TweetSearchParams\Retweets|value-of<TweetSearchParams\Retweets>,
      *   retweetsOfTweetID?: string,
+     *   safe?: bool,
      *   sinceDate?: string,
+     *   sinceID?: string,
      *   sinceTime?: string,
+     *   source?: string,
      *   toUser?: string,
      *   untilDate?: string,
      *   untilTime?: string,
      *   url?: string,
      *   verifiedOnly?: bool,
+     *   within?: string,
+     *   withinTime?: string,
      * }|TweetSearchParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedTweets>
+     * @return BaseResponse<PaginatedTweets|TweetSearchCoverageResponse>
      *
      * @throws APIException
      */
@@ -500,12 +606,14 @@ final class TweetsRawService implements TweetsRawContract
                     'conversationID' => 'conversationId',
                     'inReplyToTweetID' => 'inReplyToTweetId',
                     'listID' => 'listId',
+                    'maxID' => 'maxId',
                     'quotesOfTweetID' => 'quotesOfTweetId',
                     'retweetsOfTweetID' => 'retweetsOfTweetId',
+                    'sinceID' => 'sinceId',
                 ],
             ),
             options: $options,
-            convert: PaginatedTweets::class,
+            convert: TweetSearchResponse::class,
         );
     }
 }

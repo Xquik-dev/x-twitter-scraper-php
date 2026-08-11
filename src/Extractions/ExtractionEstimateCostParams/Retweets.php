@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace XTwitterScraper\Extractions\ExtractionEstimateCostParams;
 
 /**
- * Retweet mode used for estimation (tweet_search_extractor).
+ * Retweet mode (tweet_search_extractor).
  */
 enum Retweets: string
 {

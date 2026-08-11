@@ -58,10 +58,11 @@ final class EventsService implements EventsContract
      *
      * List events
      *
-     * @param string $cursor Cursor for keyset pagination from prior response next_cursor
+     * @param string $cursor previous nextCursor
      * @param EventType|value-of<EventType> $eventType Filter events by type
+     * @param string $keywordMonitorID keyword monitor ID
      * @param int $limit Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the returned count may be lower when remaining credits cannot cover the requested page. If zero paid results are affordable, the endpoint returns 402 insufficient_credits.
-     * @param string $monitorID Filter events by monitor ID
+     * @param string $monitorID account monitor ID
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -69,6 +70,7 @@ final class EventsService implements EventsContract
     public function list(
         ?string $cursor = null,
         EventType|string|null $eventType = null,
+        ?string $keywordMonitorID = null,
         int $limit = 50,
         ?string $monitorID = null,
         RequestOptions|array|null $requestOptions = null,
@@ -77,6 +79,7 @@ final class EventsService implements EventsContract
             [
                 'cursor' => $cursor,
                 'eventType' => $eventType,
+                'keywordMonitorID' => $keywordMonitorID,
                 'limit' => $limit,
                 'monitorID' => $monitorID,
             ],

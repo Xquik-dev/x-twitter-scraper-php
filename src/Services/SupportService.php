@@ -6,6 +6,7 @@ namespace XTwitterScraper\Services;
 
 use XTwitterScraper\Client;
 use XTwitterScraper\ServiceContracts\SupportContract;
+use XTwitterScraper\Services\Support\AttachmentsService;
 use XTwitterScraper\Services\Support\TicketsService;
 
 final class SupportService implements SupportContract
@@ -18,6 +19,11 @@ final class SupportService implements SupportContract
     /**
      * @api
      */
+    public AttachmentsService $attachments;
+
+    /**
+     * @api
+     */
     public TicketsService $tickets;
 
     /**
@@ -26,6 +32,7 @@ final class SupportService implements SupportContract
     public function __construct(private Client $client)
     {
         $this->raw = new SupportRawService($client);
+        $this->attachments = new AttachmentsService($client);
         $this->tickets = new TicketsService($client);
     }
 }

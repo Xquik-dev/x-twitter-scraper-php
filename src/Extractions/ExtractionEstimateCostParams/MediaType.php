@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace XTwitterScraper\Extractions\ExtractionEstimateCostParams;
 
 /**
- * Media type used for estimate filtering (tweet_search_extractor).
+ * Media type filter (tweet_search_extractor).
  */
 enum MediaType: string
 {

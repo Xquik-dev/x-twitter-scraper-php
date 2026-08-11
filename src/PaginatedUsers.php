@@ -9,7 +9,7 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Paginated user profiles. The item count can be lower than pageSize when the source returns fewer profiles or remaining credits cover fewer results. Follow next_cursor while has_next_page is true. A relationship can naturally contain fewer profiles than requested. Zero affordable results returns 402 insufficient_credits.
+ * Paginated user profiles. No-mode follower, following, and verified follower requests merge independent views automatically. Response fields, page size, aliases, filters, and per-returned-profile billing stay unchanged. Existing unprefixed cursors retain legacy behavior. Follow next_cursor while has_next_page is true.
  *
  * @phpstan-import-type UserProfileShape from \XTwitterScraper\UserProfile
  *

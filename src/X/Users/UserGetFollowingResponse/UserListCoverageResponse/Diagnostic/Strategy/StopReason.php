@@ -1,0 +1,22 @@
+<?php
+
+declare(strict_types=1);
+
+namespace XTwitterScraper\X\Users\UserGetFollowingResponse\UserListCoverageResponse\Diagnostic\Strategy;
+
+enum StopReason: string
+{
+    case CURSOR_FAILURE = 'cursor_failure';
+
+    case DEADLINE = 'deadline';
+
+    case EXHAUSTED = 'exhausted';
+
+    case FAILED = 'failed';
+
+    case PAGE_LIMIT = 'page_limit';
+
+    case RESULT_LIMIT = 'result_limit';
+
+    case STALLED = 'stalled';
+}

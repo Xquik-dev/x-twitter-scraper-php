@@ -10,13 +10,14 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\Tweets\TweetSearchParams\MediaType;
+use XTwitterScraper\X\Tweets\TweetSearchParams\Mode;
 use XTwitterScraper\X\Tweets\TweetSearchParams\QueryType;
 use XTwitterScraper\X\Tweets\TweetSearchParams\Quotes;
 use XTwitterScraper\X\Tweets\TweetSearchParams\Replies;
 use XTwitterScraper\X\Tweets\TweetSearchParams\Retweets;
 
 /**
- * Search tweets by query, Tweet ID, X status URL, or account date window.
+ * No-mode search maximizes coverage.
  *
  * @see XTwitterScraper\Services\X\TweetsService::search()
  *
@@ -24,24 +25,39 @@ use XTwitterScraper\X\Tweets\TweetSearchParams\Retweets;
  *   q: string,
  *   advancedQuery?: string|null,
  *   anyWords?: string|null,
+ *   blueVerifiedOnly?: bool|null,
  *   boundingBox?: string|null,
+ *   cardName?: string|null,
  *   cashtags?: string|null,
  *   conversationID?: string|null,
  *   cursor?: string|null,
  *   exactPhrase?: string|null,
+ *   excludeSource?: string|null,
  *   excludeWords?: string|null,
  *   fromUser?: string|null,
+ *   geocode?: string|null,
  *   hashtags?: string|null,
  *   inReplyToTweetID?: string|null,
  *   language?: string|null,
  *   limit?: int|null,
  *   listID?: string|null,
+ *   maxFaves?: int|null,
+ *   maxID?: string|null,
+ *   maxQuotes?: int|null,
+ *   maxReplies?: int|null,
+ *   maxRetweets?: int|null,
  *   mediaType?: null|MediaType|value-of<MediaType>,
  *   mentioning?: string|null,
+ *   minBookmarks?: int|null,
  *   minFaves?: int|null,
  *   minQuotes?: int|null,
  *   minReplies?: int|null,
  *   minRetweets?: int|null,
+ *   minViews?: int|null,
+ *   mode?: null|Mode|value-of<Mode>,
+ *   nativeRetweets?: bool|null,
+ *   near?: string|null,
+ *   news?: bool|null,
  *   place?: string|null,
  *   placeCountry?: string|null,
  *   pointRadius?: string|null,
@@ -51,13 +67,18 @@ use XTwitterScraper\X\Tweets\TweetSearchParams\Retweets;
  *   replies?: null|Replies|value-of<Replies>,
  *   retweets?: null|Retweets|value-of<Retweets>,
  *   retweetsOfTweetID?: string|null,
+ *   safe?: bool|null,
  *   sinceDate?: string|null,
+ *   sinceID?: string|null,
  *   sinceTime?: string|null,
+ *   source?: string|null,
  *   toUser?: string|null,
  *   untilDate?: string|null,
  *   untilTime?: string|null,
  *   url?: string|null,
  *   verifiedOnly?: bool|null,
+ *   within?: string|null,
+ *   withinTime?: string|null,
  * }
  */
 final class TweetSearchParams implements BaseModel
@@ -67,7 +88,7 @@ final class TweetSearchParams implements BaseModel
     use SdkParams;
 
     /**
-     * Search query (keywords,.
+     * Query, Tweet ID, or status URL. Valid inline bounds apply per page.
      */
     #[Required]
     public string $q;
@@ -85,10 +106,22 @@ final class TweetSearchParams implements BaseModel
     public ?string $anyWords;
 
     /**
+     * Only return tweets from Blue-verified authors.
+     */
+    #[Optional]
+    public ?bool $blueVerifiedOnly;
+
+    /**
      * Geo bounding box, e.g. -74.1 40.6 -73.9 40.8.
      */
     #[Optional]
     public ?string $boundingBox;
+
+    /**
+     * Match the Tweet card name.
+     */
+    #[Optional]
+    public ?string $cardName;
 
     /**
      * Cashtags separated by spaces, commas, or lines.
@@ -103,7 +136,7 @@ final class TweetSearchParams implements BaseModel
     public ?string $conversationID;
 
     /**
-     * Pagination cursor from previous response.
+     * Cursor from the previous response. Xquik cursors resume automatic coverage. Existing unprefixed cursors keep legacy standard behavior.
      */
     #[Optional]
     public ?string $cursor;
@@ -113,6 +146,12 @@ final class TweetSearchParams implements BaseModel
      */
     #[Optional]
     public ?string $exactPhrase;
+
+    /**
+     * Exclude a source application.
+     */
+    #[Optional]
+    public ?string $excludeSource;
 
     /**
      * Words or quoted phrases to exclude. Separate with spaces, commas, or lines.
@@ -125,6 +164,12 @@ final class TweetSearchParams implements BaseModel
      */
     #[Optional]
     public ?string $fromUser;
+
+    /**
+     * Match latitude, longitude, and radius.
+     */
+    #[Optional]
+    public ?string $geocode;
 
     /**
      * Hashtags separated by spaces, commas, or lines.
@@ -145,7 +190,7 @@ final class TweetSearchParams implements BaseModel
     public ?string $language;
 
     /**
-     * Max tweets to return (server paginates internally). Omit for single page (~20). This is an upper bound for paid authenticated calls: remaining credits can reduce the returned page size, and zero affordable results returns 402 insufficient_credits.
+     * Result upper bound. Omit it for the existing 20-row page size. Explicit coverage defaults to 2000 and allows 10000. For paid requests, remaining credits can reduce results. Zero affordable results returns 402.
      */
     #[Optional]
     public ?int $limit;
@@ -155,6 +200,36 @@ final class TweetSearchParams implements BaseModel
      */
     #[Optional]
     public ?string $listID;
+
+    /**
+     * Maximum likes threshold. maxLikes is also accepted.
+     */
+    #[Optional]
+    public ?int $maxFaves;
+
+    /**
+     * Return Tweets older than this Tweet ID.
+     */
+    #[Optional]
+    public ?string $maxID;
+
+    /**
+     * Maximum quotes threshold.
+     */
+    #[Optional]
+    public ?int $maxQuotes;
+
+    /**
+     * Maximum replies threshold.
+     */
+    #[Optional]
+    public ?int $maxReplies;
+
+    /**
+     * Maximum retweets threshold.
+     */
+    #[Optional]
+    public ?int $maxRetweets;
 
     /**
      * Filter by media type.
@@ -169,6 +244,12 @@ final class TweetSearchParams implements BaseModel
      */
     #[Optional]
     public ?string $mentioning;
+
+    /**
+     * Minimum bookmark count threshold.
+     */
+    #[Optional]
+    public ?int $minBookmarks;
 
     /**
      * Minimum likes threshold.
@@ -193,6 +274,38 @@ final class TweetSearchParams implements BaseModel
      */
     #[Optional]
     public ?int $minRetweets;
+
+    /**
+     * Minimum view count threshold.
+     */
+    #[Optional]
+    public ?int $minViews;
+
+    /**
+     * Omit mode for resumable maximum coverage. Standard keeps legacy pagination. Coverage returns diagnostics once and rejects cursors.
+     *
+     * @var value-of<Mode>|null $mode
+     */
+    #[Optional(enum: Mode::class)]
+    public ?string $mode;
+
+    /**
+     * Only return native reposts.
+     */
+    #[Optional]
+    public ?bool $nativeRetweets;
+
+    /**
+     * Match a place name.
+     */
+    #[Optional]
+    public ?string $near;
+
+    /**
+     * Only return news results.
+     */
+    #[Optional]
+    public ?bool $news;
 
     /**
      * Search within a place ID.
@@ -257,16 +370,34 @@ final class TweetSearchParams implements BaseModel
     public ?string $retweetsOfTweetID;
 
     /**
+     * Enable the safe-search filter.
+     */
+    #[Optional]
+    public ?bool $safe;
+
+    /**
      * Start date in YYYY-MM-DD format.
      */
     #[Optional]
     public ?string $sinceDate;
 
     /**
-     * ISO 8601 timestamp - only return tweets after this time.
+     * Return Tweets newer than this Tweet ID.
+     */
+    #[Optional]
+    public ?string $sinceID;
+
+    /**
+     * Inclusive ISO bound.
      */
     #[Optional]
     public ?string $sinceTime;
+
+    /**
+     * Match the source application.
+     */
+    #[Optional]
+    public ?string $source;
 
     /**
      * Filter replies sent to a username.
@@ -281,7 +412,7 @@ final class TweetSearchParams implements BaseModel
     public ?string $untilDate;
 
     /**
-     * ISO 8601 timestamp - only return tweets before this time.
+     * Exclusive ISO bound.
      */
     #[Optional]
     public ?string $untilTime;
@@ -297,6 +428,18 @@ final class TweetSearchParams implements BaseModel
      */
     #[Optional]
     public ?bool $verifiedOnly;
+
+    /**
+     * Set the radius for the near filter.
+     */
+    #[Optional]
+    public ?string $within;
+
+    /**
+     * Match Tweets inside a recent time window.
+     */
+    #[Optional]
+    public ?string $withinTime;
 
     /**
      * `new TweetSearchParams()` is missing required properties by the API.
@@ -323,6 +466,7 @@ final class TweetSearchParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param MediaType|value-of<MediaType>|null $mediaType
+     * @param Mode|value-of<Mode>|null $mode
      * @param QueryType|value-of<QueryType>|null $queryType
      * @param Quotes|value-of<Quotes>|null $quotes
      * @param Replies|value-of<Replies>|null $replies
@@ -332,24 +476,39 @@ final class TweetSearchParams implements BaseModel
         string $q,
         ?string $advancedQuery = null,
         ?string $anyWords = null,
+        ?bool $blueVerifiedOnly = null,
         ?string $boundingBox = null,
+        ?string $cardName = null,
         ?string $cashtags = null,
         ?string $conversationID = null,
         ?string $cursor = null,
         ?string $exactPhrase = null,
+        ?string $excludeSource = null,
         ?string $excludeWords = null,
         ?string $fromUser = null,
+        ?string $geocode = null,
         ?string $hashtags = null,
         ?string $inReplyToTweetID = null,
         ?string $language = null,
         ?int $limit = null,
         ?string $listID = null,
+        ?int $maxFaves = null,
+        ?string $maxID = null,
+        ?int $maxQuotes = null,
+        ?int $maxReplies = null,
+        ?int $maxRetweets = null,
         MediaType|string|null $mediaType = null,
         ?string $mentioning = null,
+        ?int $minBookmarks = null,
         ?int $minFaves = null,
         ?int $minQuotes = null,
         ?int $minReplies = null,
         ?int $minRetweets = null,
+        ?int $minViews = null,
+        Mode|string|null $mode = null,
+        ?bool $nativeRetweets = null,
+        ?string $near = null,
+        ?bool $news = null,
         ?string $place = null,
         ?string $placeCountry = null,
         ?string $pointRadius = null,
@@ -359,13 +518,18 @@ final class TweetSearchParams implements BaseModel
         Replies|string|null $replies = null,
         Retweets|string|null $retweets = null,
         ?string $retweetsOfTweetID = null,
+        ?bool $safe = null,
         ?string $sinceDate = null,
+        ?string $sinceID = null,
         ?string $sinceTime = null,
+        ?string $source = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         ?string $untilTime = null,
         ?string $url = null,
         ?bool $verifiedOnly = null,
+        ?string $within = null,
+        ?string $withinTime = null,
     ): self {
         $self = new self;
 
@@ -373,24 +537,39 @@ final class TweetSearchParams implements BaseModel
 
         null !== $advancedQuery && $self['advancedQuery'] = $advancedQuery;
         null !== $anyWords && $self['anyWords'] = $anyWords;
+        null !== $blueVerifiedOnly && $self['blueVerifiedOnly'] = $blueVerifiedOnly;
         null !== $boundingBox && $self['boundingBox'] = $boundingBox;
+        null !== $cardName && $self['cardName'] = $cardName;
         null !== $cashtags && $self['cashtags'] = $cashtags;
         null !== $conversationID && $self['conversationID'] = $conversationID;
         null !== $cursor && $self['cursor'] = $cursor;
         null !== $exactPhrase && $self['exactPhrase'] = $exactPhrase;
+        null !== $excludeSource && $self['excludeSource'] = $excludeSource;
         null !== $excludeWords && $self['excludeWords'] = $excludeWords;
         null !== $fromUser && $self['fromUser'] = $fromUser;
+        null !== $geocode && $self['geocode'] = $geocode;
         null !== $hashtags && $self['hashtags'] = $hashtags;
         null !== $inReplyToTweetID && $self['inReplyToTweetID'] = $inReplyToTweetID;
         null !== $language && $self['language'] = $language;
         null !== $limit && $self['limit'] = $limit;
         null !== $listID && $self['listID'] = $listID;
+        null !== $maxFaves && $self['maxFaves'] = $maxFaves;
+        null !== $maxID && $self['maxID'] = $maxID;
+        null !== $maxQuotes && $self['maxQuotes'] = $maxQuotes;
+        null !== $maxReplies && $self['maxReplies'] = $maxReplies;
+        null !== $maxRetweets && $self['maxRetweets'] = $maxRetweets;
         null !== $mediaType && $self['mediaType'] = $mediaType;
         null !== $mentioning && $self['mentioning'] = $mentioning;
+        null !== $minBookmarks && $self['minBookmarks'] = $minBookmarks;
         null !== $minFaves && $self['minFaves'] = $minFaves;
         null !== $minQuotes && $self['minQuotes'] = $minQuotes;
         null !== $minReplies && $self['minReplies'] = $minReplies;
         null !== $minRetweets && $self['minRetweets'] = $minRetweets;
+        null !== $minViews && $self['minViews'] = $minViews;
+        null !== $mode && $self['mode'] = $mode;
+        null !== $nativeRetweets && $self['nativeRetweets'] = $nativeRetweets;
+        null !== $near && $self['near'] = $near;
+        null !== $news && $self['news'] = $news;
         null !== $place && $self['place'] = $place;
         null !== $placeCountry && $self['placeCountry'] = $placeCountry;
         null !== $pointRadius && $self['pointRadius'] = $pointRadius;
@@ -400,19 +579,24 @@ final class TweetSearchParams implements BaseModel
         null !== $replies && $self['replies'] = $replies;
         null !== $retweets && $self['retweets'] = $retweets;
         null !== $retweetsOfTweetID && $self['retweetsOfTweetID'] = $retweetsOfTweetID;
+        null !== $safe && $self['safe'] = $safe;
         null !== $sinceDate && $self['sinceDate'] = $sinceDate;
+        null !== $sinceID && $self['sinceID'] = $sinceID;
         null !== $sinceTime && $self['sinceTime'] = $sinceTime;
+        null !== $source && $self['source'] = $source;
         null !== $toUser && $self['toUser'] = $toUser;
         null !== $untilDate && $self['untilDate'] = $untilDate;
         null !== $untilTime && $self['untilTime'] = $untilTime;
         null !== $url && $self['url'] = $url;
         null !== $verifiedOnly && $self['verifiedOnly'] = $verifiedOnly;
+        null !== $within && $self['within'] = $within;
+        null !== $withinTime && $self['withinTime'] = $withinTime;
 
         return $self;
     }
 
     /**
-     * Search query (keywords,.
+     * Query, Tweet ID, or status URL. Valid inline bounds apply per page.
      */
     public function withQ(string $q): self
     {
@@ -445,12 +629,34 @@ final class TweetSearchParams implements BaseModel
     }
 
     /**
+     * Only return tweets from Blue-verified authors.
+     */
+    public function withBlueVerifiedOnly(bool $blueVerifiedOnly): self
+    {
+        $self = clone $this;
+        $self['blueVerifiedOnly'] = $blueVerifiedOnly;
+
+        return $self;
+    }
+
+    /**
      * Geo bounding box, e.g. -74.1 40.6 -73.9 40.8.
      */
     public function withBoundingBox(string $boundingBox): self
     {
         $self = clone $this;
         $self['boundingBox'] = $boundingBox;
+
+        return $self;
+    }
+
+    /**
+     * Match the Tweet card name.
+     */
+    public function withCardName(string $cardName): self
+    {
+        $self = clone $this;
+        $self['cardName'] = $cardName;
 
         return $self;
     }
@@ -478,7 +684,7 @@ final class TweetSearchParams implements BaseModel
     }
 
     /**
-     * Pagination cursor from previous response.
+     * Cursor from the previous response. Xquik cursors resume automatic coverage. Existing unprefixed cursors keep legacy standard behavior.
      */
     public function withCursor(string $cursor): self
     {
@@ -495,6 +701,17 @@ final class TweetSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['exactPhrase'] = $exactPhrase;
+
+        return $self;
+    }
+
+    /**
+     * Exclude a source application.
+     */
+    public function withExcludeSource(string $excludeSource): self
+    {
+        $self = clone $this;
+        $self['excludeSource'] = $excludeSource;
 
         return $self;
     }
@@ -517,6 +734,17 @@ final class TweetSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['fromUser'] = $fromUser;
+
+        return $self;
+    }
+
+    /**
+     * Match latitude, longitude, and radius.
+     */
+    public function withGeocode(string $geocode): self
+    {
+        $self = clone $this;
+        $self['geocode'] = $geocode;
 
         return $self;
     }
@@ -555,7 +783,7 @@ final class TweetSearchParams implements BaseModel
     }
 
     /**
-     * Max tweets to return (server paginates internally). Omit for single page (~20). This is an upper bound for paid authenticated calls: remaining credits can reduce the returned page size, and zero affordable results returns 402 insufficient_credits.
+     * Result upper bound. Omit it for the existing 20-row page size. Explicit coverage defaults to 2000 and allows 10000. For paid requests, remaining credits can reduce results. Zero affordable results returns 402.
      */
     public function withLimit(int $limit): self
     {
@@ -572,6 +800,61 @@ final class TweetSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['listID'] = $listID;
+
+        return $self;
+    }
+
+    /**
+     * Maximum likes threshold. maxLikes is also accepted.
+     */
+    public function withMaxFaves(int $maxFaves): self
+    {
+        $self = clone $this;
+        $self['maxFaves'] = $maxFaves;
+
+        return $self;
+    }
+
+    /**
+     * Return Tweets older than this Tweet ID.
+     */
+    public function withMaxID(string $maxID): self
+    {
+        $self = clone $this;
+        $self['maxID'] = $maxID;
+
+        return $self;
+    }
+
+    /**
+     * Maximum quotes threshold.
+     */
+    public function withMaxQuotes(int $maxQuotes): self
+    {
+        $self = clone $this;
+        $self['maxQuotes'] = $maxQuotes;
+
+        return $self;
+    }
+
+    /**
+     * Maximum replies threshold.
+     */
+    public function withMaxReplies(int $maxReplies): self
+    {
+        $self = clone $this;
+        $self['maxReplies'] = $maxReplies;
+
+        return $self;
+    }
+
+    /**
+     * Maximum retweets threshold.
+     */
+    public function withMaxRetweets(int $maxRetweets): self
+    {
+        $self = clone $this;
+        $self['maxRetweets'] = $maxRetweets;
 
         return $self;
     }
@@ -596,6 +879,17 @@ final class TweetSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['mentioning'] = $mentioning;
+
+        return $self;
+    }
+
+    /**
+     * Minimum bookmark count threshold.
+     */
+    public function withMinBookmarks(int $minBookmarks): self
+    {
+        $self = clone $this;
+        $self['minBookmarks'] = $minBookmarks;
 
         return $self;
     }
@@ -640,6 +934,63 @@ final class TweetSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['minRetweets'] = $minRetweets;
+
+        return $self;
+    }
+
+    /**
+     * Minimum view count threshold.
+     */
+    public function withMinViews(int $minViews): self
+    {
+        $self = clone $this;
+        $self['minViews'] = $minViews;
+
+        return $self;
+    }
+
+    /**
+     * Omit mode for resumable maximum coverage. Standard keeps legacy pagination. Coverage returns diagnostics once and rejects cursors.
+     *
+     * @param Mode|value-of<Mode> $mode
+     */
+    public function withMode(Mode|string $mode): self
+    {
+        $self = clone $this;
+        $self['mode'] = $mode;
+
+        return $self;
+    }
+
+    /**
+     * Only return native reposts.
+     */
+    public function withNativeRetweets(bool $nativeRetweets): self
+    {
+        $self = clone $this;
+        $self['nativeRetweets'] = $nativeRetweets;
+
+        return $self;
+    }
+
+    /**
+     * Match a place name.
+     */
+    public function withNear(string $near): self
+    {
+        $self = clone $this;
+        $self['near'] = $near;
+
+        return $self;
+    }
+
+    /**
+     * Only return news results.
+     */
+    public function withNews(bool $news): self
+    {
+        $self = clone $this;
+        $self['news'] = $news;
 
         return $self;
     }
@@ -752,6 +1103,17 @@ final class TweetSearchParams implements BaseModel
     }
 
     /**
+     * Enable the safe-search filter.
+     */
+    public function withSafe(bool $safe): self
+    {
+        $self = clone $this;
+        $self['safe'] = $safe;
+
+        return $self;
+    }
+
+    /**
      * Start date in YYYY-MM-DD format.
      */
     public function withSinceDate(string $sinceDate): self
@@ -763,12 +1125,34 @@ final class TweetSearchParams implements BaseModel
     }
 
     /**
-     * ISO 8601 timestamp - only return tweets after this time.
+     * Return Tweets newer than this Tweet ID.
+     */
+    public function withSinceID(string $sinceID): self
+    {
+        $self = clone $this;
+        $self['sinceID'] = $sinceID;
+
+        return $self;
+    }
+
+    /**
+     * Inclusive ISO bound.
      */
     public function withSinceTime(string $sinceTime): self
     {
         $self = clone $this;
         $self['sinceTime'] = $sinceTime;
+
+        return $self;
+    }
+
+    /**
+     * Match the source application.
+     */
+    public function withSource(string $source): self
+    {
+        $self = clone $this;
+        $self['source'] = $source;
 
         return $self;
     }
@@ -796,7 +1180,7 @@ final class TweetSearchParams implements BaseModel
     }
 
     /**
-     * ISO 8601 timestamp - only return tweets before this time.
+     * Exclusive ISO bound.
      */
     public function withUntilTime(string $untilTime): self
     {
@@ -824,6 +1208,28 @@ final class TweetSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['verifiedOnly'] = $verifiedOnly;
+
+        return $self;
+    }
+
+    /**
+     * Set the radius for the near filter.
+     */
+    public function withWithin(string $within): self
+    {
+        $self = clone $this;
+        $self['within'] = $within;
+
+        return $self;
+    }
+
+    /**
+     * Match Tweets inside a recent time window.
+     */
+    public function withWithinTime(string $withinTime): self
+    {
+        $self = clone $this;
+        $self['withinTime'] = $withinTime;
 
         return $self;
     }

@@ -143,19 +143,66 @@ final class CommunitiesService implements CommunitiesContract
      * List members of a community
      *
      * @param string $id Community ID for member lookup
+     * @param string $bioContains match any comma-separated or line-separated bio term, ignoring case
      * @param string $cursor Pagination cursor
+     * @param bool $hasLocation only return profiles with a location
+     * @param bool $hasWebsite only return profiles with a website
+     * @param string $locationContains match a location substring, ignoring case
+     * @param int $maxFollowers Maximum follower count. Missing counts pass this maximum.
+     * @param int $maxFollowing maximum following count
+     * @param int $maxStatuses Maximum post count. maxPosts is also accepted.
+     * @param int $minAccountAgeDays minimum account age in whole days
+     * @param int $minFollowers Minimum follower count. Filtering happens before billing.
+     * @param int $minFollowing minimum following count
+     * @param int $minStatuses Minimum post count. minPosts is also accepted.
      * @param int $pageSize Items per page (20-200, default 20). This is an upper bound for paid authenticated calls: remaining credits can reduce the returned page size, and zero affordable results returns 402 insufficient_credits.
+     * @param string $usernameContains match a username substring, ignoring case
+     * @param bool $verifiedOnly only return verified profiles
+     * @param string $verifiedType match the verification type exactly, ignoring case
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function retrieveMembers(
         string $id,
+        ?string $bioContains = null,
         ?string $cursor = null,
+        ?bool $hasLocation = null,
+        ?bool $hasWebsite = null,
+        ?string $locationContains = null,
+        ?int $maxFollowers = null,
+        ?int $maxFollowing = null,
+        ?int $maxStatuses = null,
+        ?int $minAccountAgeDays = null,
+        ?int $minFollowers = null,
+        ?int $minFollowing = null,
+        ?int $minStatuses = null,
         int $pageSize = 20,
+        ?string $usernameContains = null,
+        ?bool $verifiedOnly = null,
+        ?string $verifiedType = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers {
-        $params = Util::removeNulls(['cursor' => $cursor, 'pageSize' => $pageSize]);
+        $params = Util::removeNulls(
+            [
+                'bioContains' => $bioContains,
+                'cursor' => $cursor,
+                'hasLocation' => $hasLocation,
+                'hasWebsite' => $hasWebsite,
+                'locationContains' => $locationContains,
+                'maxFollowers' => $maxFollowers,
+                'maxFollowing' => $maxFollowing,
+                'maxStatuses' => $maxStatuses,
+                'minAccountAgeDays' => $minAccountAgeDays,
+                'minFollowers' => $minFollowers,
+                'minFollowing' => $minFollowing,
+                'minStatuses' => $minStatuses,
+                'pageSize' => $pageSize,
+                'usernameContains' => $usernameContains,
+                'verifiedOnly' => $verifiedOnly,
+                'verifiedType' => $verifiedType,
+            ],
+        );
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieveMembers($id, params: $params, requestOptions: $requestOptions);
@@ -169,17 +216,63 @@ final class CommunitiesService implements CommunitiesContract
      * List moderators of a community
      *
      * @param string $id Community ID for moderator lookup
+     * @param string $bioContains match any comma-separated or line-separated bio term, ignoring case
      * @param string $cursor Pagination cursor for community moderators
+     * @param bool $hasLocation only return profiles with a location
+     * @param bool $hasWebsite only return profiles with a website
+     * @param string $locationContains match a location substring, ignoring case
+     * @param int $maxFollowers Maximum follower count. Missing counts pass this maximum.
+     * @param int $maxFollowing maximum following count
+     * @param int $maxStatuses Maximum post count. maxPosts is also accepted.
+     * @param int $minAccountAgeDays minimum account age in whole days
+     * @param int $minFollowers Minimum follower count. Filtering happens before billing.
+     * @param int $minFollowing minimum following count
+     * @param int $minStatuses Minimum post count. minPosts is also accepted.
+     * @param string $usernameContains match a username substring, ignoring case
+     * @param bool $verifiedOnly only return verified profiles
+     * @param string $verifiedType match the verification type exactly, ignoring case
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function retrieveModerators(
         string $id,
+        ?string $bioContains = null,
         ?string $cursor = null,
+        ?bool $hasLocation = null,
+        ?bool $hasWebsite = null,
+        ?string $locationContains = null,
+        ?int $maxFollowers = null,
+        ?int $maxFollowing = null,
+        ?int $maxStatuses = null,
+        ?int $minAccountAgeDays = null,
+        ?int $minFollowers = null,
+        ?int $minFollowing = null,
+        ?int $minStatuses = null,
+        ?string $usernameContains = null,
+        ?bool $verifiedOnly = null,
+        ?string $verifiedType = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers {
-        $params = Util::removeNulls(['cursor' => $cursor]);
+        $params = Util::removeNulls(
+            [
+                'bioContains' => $bioContains,
+                'cursor' => $cursor,
+                'hasLocation' => $hasLocation,
+                'hasWebsite' => $hasWebsite,
+                'locationContains' => $locationContains,
+                'maxFollowers' => $maxFollowers,
+                'maxFollowing' => $maxFollowing,
+                'maxStatuses' => $maxStatuses,
+                'minAccountAgeDays' => $minAccountAgeDays,
+                'minFollowers' => $minFollowers,
+                'minFollowing' => $minFollowing,
+                'minStatuses' => $minStatuses,
+                'usernameContains' => $usernameContains,
+                'verifiedOnly' => $verifiedOnly,
+                'verifiedType' => $verifiedType,
+            ],
+        );
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->retrieveModerators($id, params: $params, requestOptions: $requestOptions);

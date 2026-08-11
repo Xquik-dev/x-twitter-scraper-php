@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+
+namespace XTwitterScraper\Extractions\ExtractionRunParams;
+
+/**
+ * Keep target duplicates, first rows, or merged overlap.
+ */
+enum DedupeMode: string
+{
+    case NONE = 'none';
+
+    case FIRST = 'first';
+
+    case MERGE = 'merge';
+}

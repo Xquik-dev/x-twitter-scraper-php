@@ -10,7 +10,9 @@ use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\UserProfile;
 use XTwitterScraper\X\Users\UserGetBatchResponse;
+use XTwitterScraper\X\Users\UserGetFollowersResponse\UserListCoverageResponse;
 use XTwitterScraper\X\Users\UserRemoveFollowerResponse;
+use XTwitterScraper\X\Users\UserRetrieveFollowersParams\Mode;
 use XTwitterScraper\X\Users\UserRetrieveLikesParams\MediaType;
 use XTwitterScraper\X\Users\UserRetrieveLikesParams\Quotes;
 use XTwitterScraper\X\Users\UserRetrieveLikesParams\Replies;
@@ -69,9 +71,24 @@ interface UsersContract
      *
      * @param string $id target user ID or username for follower lookup
      * @param string $after Legacy cursor alias. Prefer cursor.
-     * @param string $cursor Pagination cursor for followers list
-     * @param int $limit Legacy integer page size alias for following lists. Prefer pageSize.
-     * @param int $pageSize Maximum user profiles requested from this page (20-200, default 200). The response can contain fewer profiles because the source returned fewer or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true. The deprecated limit and count aliases remain accepted.
+     * @param string $bioContains match any comma-separated or line-separated bio term, ignoring case
+     * @param string $cursor Cursor from the previous response. Xquik cursors resume automatic coverage. Existing unprefixed cursors keep legacy standard behavior.
+     * @param bool $hasLocation only return profiles with a location
+     * @param bool $hasWebsite only return profiles with a website
+     * @param int $limit Legacy page-size alias outside explicit coverage mode. Coverage accepts 1-10000. Prefer pageSize.
+     * @param string $locationContains match a location substring, ignoring case
+     * @param int $maxFollowers Maximum follower count. Missing counts pass this maximum.
+     * @param int $maxFollowing maximum following count
+     * @param int $maxStatuses Maximum post count. maxPosts is also accepted.
+     * @param int $minAccountAgeDays minimum account age in whole days
+     * @param int $minFollowers Minimum follower count. Filtering happens before billing.
+     * @param int $minFollowing minimum following count
+     * @param int $minStatuses Minimum post count. minPosts is also accepted.
+     * @param Mode|value-of<Mode> $mode Omit mode for resumable maximum coverage. Standard keeps legacy pagination. Coverage returns diagnostics once and rejects cursors.
+     * @param int $pageSize Maximum user profiles: automatic 300; standard 200. Sources return fewer profiles. Continue with has_next_page.
+     * @param string $usernameContains match a username substring, ignoring case
+     * @param bool $verifiedOnly only return verified profiles
+     * @param string $verifiedType match the verification type exactly, ignoring case
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -79,26 +96,69 @@ interface UsersContract
     public function retrieveFollowers(
         string $id,
         ?string $after = null,
+        ?string $bioContains = null,
         ?string $cursor = null,
+        ?bool $hasLocation = null,
+        ?bool $hasWebsite = null,
         ?int $limit = null,
+        ?string $locationContains = null,
+        ?int $maxFollowers = null,
+        ?int $maxFollowing = null,
+        ?int $maxStatuses = null,
+        ?int $minAccountAgeDays = null,
+        ?int $minFollowers = null,
+        ?int $minFollowing = null,
+        ?int $minStatuses = null,
+        Mode|string|null $mode = null,
         int $pageSize = 200,
+        ?string $usernameContains = null,
+        ?bool $verifiedOnly = null,
+        ?string $verifiedType = null,
         RequestOptions|array|null $requestOptions = null,
-    ): PaginatedUsers;
+    ): PaginatedUsers|UserListCoverageResponse;
 
     /**
      * @api
      *
      * @param string $id User ID for followers-you-know lookup
+     * @param string $bioContains match any comma-separated or line-separated bio term, ignoring case
      * @param string $cursor Pagination cursor for followers-you-know
-     * @param int $pageSize Maximum user profiles requested from this page (20-200, default 200). The response can contain fewer profiles because the source returned fewer or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true. The deprecated limit and count aliases remain accepted.
+     * @param bool $hasLocation only return profiles with a location
+     * @param bool $hasWebsite only return profiles with a website
+     * @param string $locationContains match a location substring, ignoring case
+     * @param int $maxFollowers Maximum follower count. Missing counts pass this maximum.
+     * @param int $maxFollowing maximum following count
+     * @param int $maxStatuses Maximum post count. maxPosts is also accepted.
+     * @param int $minAccountAgeDays minimum account age in whole days
+     * @param int $minFollowers Minimum follower count. Filtering happens before billing.
+     * @param int $minFollowing minimum following count
+     * @param int $minStatuses Minimum post count. minPosts is also accepted.
+     * @param int $pageSize Maximum user profiles requested from this page (20-200, default 200). Source, filters, or credits can return fewer profiles. Keep requesting next_cursor while has_next_page is true. Deprecated aliases remain accepted.
+     * @param string $usernameContains match a username substring, ignoring case
+     * @param bool $verifiedOnly only return verified profiles
+     * @param string $verifiedType match the verification type exactly, ignoring case
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function retrieveFollowersYouKnow(
         string $id,
+        ?string $bioContains = null,
         ?string $cursor = null,
+        ?bool $hasLocation = null,
+        ?bool $hasWebsite = null,
+        ?string $locationContains = null,
+        ?int $maxFollowers = null,
+        ?int $maxFollowing = null,
+        ?int $maxStatuses = null,
+        ?int $minAccountAgeDays = null,
+        ?int $minFollowers = null,
+        ?int $minFollowing = null,
+        ?int $minStatuses = null,
         int $pageSize = 200,
+        ?string $usernameContains = null,
+        ?bool $verifiedOnly = null,
+        ?string $verifiedType = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers;
 
@@ -107,9 +167,24 @@ interface UsersContract
      *
      * @param string $id User ID or username for following lookup
      * @param string $after Deprecated following cursor alias. Prefer cursor.
-     * @param string $cursor Pagination cursor for following list
-     * @param int $limit Legacy page size alias. Prefer pageSize.
-     * @param int $pageSize Maximum user profiles requested from this page (20-200, default 200). The response can contain fewer profiles because the source returned fewer or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true. The deprecated limit and count aliases remain accepted.
+     * @param string $bioContains match any comma-separated or line-separated bio term, ignoring case
+     * @param string $cursor Cursor from the previous response. Xquik cursors resume automatic coverage. Existing unprefixed cursors keep legacy standard behavior.
+     * @param bool $hasLocation only return profiles with a location
+     * @param bool $hasWebsite only return profiles with a website
+     * @param int $limit Legacy page-size alias outside explicit coverage mode. Coverage accepts 1-10000. Prefer pageSize.
+     * @param string $locationContains match a location substring, ignoring case
+     * @param int $maxFollowers Maximum follower count. Missing counts pass this maximum.
+     * @param int $maxFollowing maximum following count
+     * @param int $maxStatuses Maximum post count. maxPosts is also accepted.
+     * @param int $minAccountAgeDays minimum account age in whole days
+     * @param int $minFollowers Minimum follower count. Filtering happens before billing.
+     * @param int $minFollowing minimum following count
+     * @param int $minStatuses Minimum post count. minPosts is also accepted.
+     * @param \XTwitterScraper\X\Users\UserRetrieveFollowingParams\Mode|value-of<\XTwitterScraper\X\Users\UserRetrieveFollowingParams\Mode> $mode Omit mode for resumable maximum coverage. Standard keeps legacy pagination. Coverage returns diagnostics once and rejects cursors.
+     * @param int $pageSize Maximum user profiles: automatic 300; standard 200. Sources return fewer profiles. Continue with has_next_page.
+     * @param string $usernameContains match a username substring, ignoring case
+     * @param bool $verifiedOnly only return verified profiles
+     * @param string $verifiedType match the verification type exactly, ignoring case
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -117,43 +192,77 @@ interface UsersContract
     public function retrieveFollowing(
         string $id,
         ?string $after = null,
+        ?string $bioContains = null,
         ?string $cursor = null,
+        ?bool $hasLocation = null,
+        ?bool $hasWebsite = null,
         ?int $limit = null,
+        ?string $locationContains = null,
+        ?int $maxFollowers = null,
+        ?int $maxFollowing = null,
+        ?int $maxStatuses = null,
+        ?int $minAccountAgeDays = null,
+        ?int $minFollowers = null,
+        ?int $minFollowing = null,
+        ?int $minStatuses = null,
+        \XTwitterScraper\X\Users\UserRetrieveFollowingParams\Mode|string|null $mode = null,
         int $pageSize = 200,
+        ?string $usernameContains = null,
+        ?bool $verifiedOnly = null,
+        ?string $verifiedType = null,
         RequestOptions|array|null $requestOptions = null,
-    ): PaginatedUsers;
+    ): PaginatedUsers|\XTwitterScraper\X\Users\UserGetFollowingResponse\UserListCoverageResponse;
 
     /**
      * @api
      *
      * @param string $id User ID or username
      * @param string $anyWords Words or quoted phrases where any one can match. Separate with spaces, commas, or lines.
+     * @param bool $blueVerifiedOnly only return tweets from Blue-verified authors
+     * @param string $cardName match the Tweet card name
      * @param string $cashtags cashtags separated by spaces, commas, or lines
      * @param string $conversationID conversation ID filter
      * @param string $cursor Pagination cursor for liked tweets
      * @param string $exactPhrase exact phrase to match
+     * @param string $excludeSource exclude a source application
      * @param string $excludeWords Words or quoted phrases to exclude. Separate with spaces, commas, or lines.
      * @param string $fromUser filter by author username
+     * @param string $geocode match latitude, longitude, and radius
      * @param string $hashtags hashtags separated by spaces, commas, or lines
      * @param string $inReplyToTweetID only replies to this tweet ID
      * @param string $language Language code filter, e.g. en or tr.
+     * @param int $maxFaves Maximum likes threshold. maxLikes is also accepted.
+     * @param string $maxID return Tweets older than this Tweet ID
+     * @param int $maxQuotes maximum quotes threshold
+     * @param int $maxReplies maximum replies threshold
+     * @param int $maxRetweets maximum retweets threshold
      * @param MediaType|value-of<MediaType> $mediaType filter by media type
      * @param string $mentioning filter tweets mentioning a username
+     * @param int $minBookmarks minimum bookmark count threshold
      * @param int $minFaves minimum likes threshold
      * @param int $minQuotes minimum quote count threshold
      * @param int $minReplies minimum replies threshold
      * @param int $minRetweets minimum retweets threshold
+     * @param int $minViews minimum view count threshold
+     * @param bool $nativeRetweets only return native reposts
+     * @param string $near match a place name
+     * @param bool $news only return news results
      * @param int $pageSize Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
      * @param Quotes|value-of<Quotes> $quotes quote mode
      * @param string $quotesOfTweetID only quotes of this tweet ID
      * @param Replies|value-of<Replies> $replies reply mode
      * @param Retweets|value-of<Retweets> $retweets retweet mode
      * @param string $retweetsOfTweetID only retweets of this tweet ID
+     * @param bool $safe enable the safe-search filter
      * @param string $sinceDate start date in YYYY-MM-DD format
+     * @param string $sinceID return Tweets newer than this Tweet ID
+     * @param string $source match the source application
      * @param string $toUser filter replies sent to a username
      * @param string $untilDate end date in YYYY-MM-DD format
      * @param string $url URL substring or domain filter
      * @param bool $verifiedOnly only return tweets from verified authors
+     * @param string $within set the radius for the near filter
+     * @param string $withinTime match Tweets inside a recent time window
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -161,32 +270,51 @@ interface UsersContract
     public function retrieveLikes(
         string $id,
         ?string $anyWords = null,
+        ?bool $blueVerifiedOnly = null,
+        ?string $cardName = null,
         ?string $cashtags = null,
         ?string $conversationID = null,
         ?string $cursor = null,
         ?string $exactPhrase = null,
+        ?string $excludeSource = null,
         ?string $excludeWords = null,
         ?string $fromUser = null,
+        ?string $geocode = null,
         ?string $hashtags = null,
         ?string $inReplyToTweetID = null,
         ?string $language = null,
+        ?int $maxFaves = null,
+        ?string $maxID = null,
+        ?int $maxQuotes = null,
+        ?int $maxReplies = null,
+        ?int $maxRetweets = null,
         MediaType|string|null $mediaType = null,
         ?string $mentioning = null,
+        ?int $minBookmarks = null,
         ?int $minFaves = null,
         ?int $minQuotes = null,
         ?int $minReplies = null,
         ?int $minRetweets = null,
+        ?int $minViews = null,
+        ?bool $nativeRetweets = null,
+        ?string $near = null,
+        ?bool $news = null,
         int $pageSize = 20,
         Quotes|string|null $quotes = null,
         ?string $quotesOfTweetID = null,
         Replies|string|null $replies = null,
         Retweets|string|null $retweets = null,
         ?string $retweetsOfTweetID = null,
+        ?bool $safe = null,
         ?string $sinceDate = null,
+        ?string $sinceID = null,
+        ?string $source = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         ?string $url = null,
         ?bool $verifiedOnly = null,
+        ?string $within = null,
+        ?string $withinTime = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 
@@ -195,32 +323,51 @@ interface UsersContract
      *
      * @param string $id User ID or username for media lookup
      * @param string $anyWords Words or quoted phrases where any one can match. Separate with spaces, commas, or lines.
+     * @param bool $blueVerifiedOnly only return tweets from Blue-verified authors
+     * @param string $cardName match the Tweet card name
      * @param string $cashtags cashtags separated by spaces, commas, or lines
      * @param string $conversationID conversation ID filter
      * @param string $cursor Pagination cursor for media tweets
      * @param string $exactPhrase exact phrase to match
+     * @param string $excludeSource exclude a source application
      * @param string $excludeWords Words or quoted phrases to exclude. Separate with spaces, commas, or lines.
      * @param string $fromUser filter by author username
+     * @param string $geocode match latitude, longitude, and radius
      * @param string $hashtags hashtags separated by spaces, commas, or lines
      * @param string $inReplyToTweetID only replies to this tweet ID
      * @param string $language Language code filter, e.g. en or tr.
+     * @param int $maxFaves Maximum likes threshold. maxLikes is also accepted.
+     * @param string $maxID return Tweets older than this Tweet ID
+     * @param int $maxQuotes maximum quotes threshold
+     * @param int $maxReplies maximum replies threshold
+     * @param int $maxRetweets maximum retweets threshold
      * @param \XTwitterScraper\X\Users\UserRetrieveMediaParams\MediaType|value-of<\XTwitterScraper\X\Users\UserRetrieveMediaParams\MediaType> $mediaType filter by media type
      * @param string $mentioning filter tweets mentioning a username
+     * @param int $minBookmarks minimum bookmark count threshold
      * @param int $minFaves minimum likes threshold
      * @param int $minQuotes minimum quote count threshold
      * @param int $minReplies minimum replies threshold
      * @param int $minRetweets minimum retweets threshold
+     * @param int $minViews minimum view count threshold
+     * @param bool $nativeRetweets only return native reposts
+     * @param string $near match a place name
+     * @param bool $news only return news results
      * @param int $pageSize Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
      * @param \XTwitterScraper\X\Users\UserRetrieveMediaParams\Quotes|value-of<\XTwitterScraper\X\Users\UserRetrieveMediaParams\Quotes> $quotes quote mode
      * @param string $quotesOfTweetID only quotes of this tweet ID
      * @param \XTwitterScraper\X\Users\UserRetrieveMediaParams\Replies|value-of<\XTwitterScraper\X\Users\UserRetrieveMediaParams\Replies> $replies reply mode
      * @param \XTwitterScraper\X\Users\UserRetrieveMediaParams\Retweets|value-of<\XTwitterScraper\X\Users\UserRetrieveMediaParams\Retweets> $retweets retweet mode
      * @param string $retweetsOfTweetID only retweets of this tweet ID
+     * @param bool $safe enable the safe-search filter
      * @param string $sinceDate start date in YYYY-MM-DD format
+     * @param string $sinceID return Tweets newer than this Tweet ID
+     * @param string $source match the source application
      * @param string $toUser filter replies sent to a username
      * @param string $untilDate end date in YYYY-MM-DD format
      * @param string $url URL substring or domain filter
      * @param bool $verifiedOnly only return tweets from verified authors
+     * @param string $within set the radius for the near filter
+     * @param string $withinTime match Tweets inside a recent time window
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -228,32 +375,51 @@ interface UsersContract
     public function retrieveMedia(
         string $id,
         ?string $anyWords = null,
+        ?bool $blueVerifiedOnly = null,
+        ?string $cardName = null,
         ?string $cashtags = null,
         ?string $conversationID = null,
         ?string $cursor = null,
         ?string $exactPhrase = null,
+        ?string $excludeSource = null,
         ?string $excludeWords = null,
         ?string $fromUser = null,
+        ?string $geocode = null,
         ?string $hashtags = null,
         ?string $inReplyToTweetID = null,
         ?string $language = null,
+        ?int $maxFaves = null,
+        ?string $maxID = null,
+        ?int $maxQuotes = null,
+        ?int $maxReplies = null,
+        ?int $maxRetweets = null,
         \XTwitterScraper\X\Users\UserRetrieveMediaParams\MediaType|string|null $mediaType = null,
         ?string $mentioning = null,
+        ?int $minBookmarks = null,
         ?int $minFaves = null,
         ?int $minQuotes = null,
         ?int $minReplies = null,
         ?int $minRetweets = null,
+        ?int $minViews = null,
+        ?bool $nativeRetweets = null,
+        ?string $near = null,
+        ?bool $news = null,
         int $pageSize = 20,
         \XTwitterScraper\X\Users\UserRetrieveMediaParams\Quotes|string|null $quotes = null,
         ?string $quotesOfTweetID = null,
         \XTwitterScraper\X\Users\UserRetrieveMediaParams\Replies|string|null $replies = null,
         \XTwitterScraper\X\Users\UserRetrieveMediaParams\Retweets|string|null $retweets = null,
         ?string $retweetsOfTweetID = null,
+        ?bool $safe = null,
         ?string $sinceDate = null,
+        ?string $sinceID = null,
+        ?string $source = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         ?string $url = null,
         ?bool $verifiedOnly = null,
+        ?string $within = null,
+        ?string $withinTime = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 
@@ -262,34 +428,53 @@ interface UsersContract
      *
      * @param string $id User ID or username for mentions lookup
      * @param string $anyWords Words or quoted phrases where any one can match. Separate with spaces, commas, or lines.
+     * @param bool $blueVerifiedOnly only return tweets from Blue-verified authors
+     * @param string $cardName match the Tweet card name
      * @param string $cashtags cashtags separated by spaces, commas, or lines
      * @param string $conversationID conversation ID filter
      * @param string $cursor Pagination cursor for mentions
      * @param string $exactPhrase exact phrase to match
+     * @param string $excludeSource exclude a source application
      * @param string $excludeWords Words or quoted phrases to exclude. Separate with spaces, commas, or lines.
      * @param string $fromUser filter by author username
+     * @param string $geocode match latitude, longitude, and radius
      * @param string $hashtags hashtags separated by spaces, commas, or lines
      * @param string $inReplyToTweetID only replies to this tweet ID
      * @param string $language Language code filter, e.g. en or tr.
+     * @param int $maxFaves Maximum likes threshold. maxLikes is also accepted.
+     * @param string $maxID return Tweets older than this Tweet ID
+     * @param int $maxQuotes maximum quotes threshold
+     * @param int $maxReplies maximum replies threshold
+     * @param int $maxRetweets maximum retweets threshold
      * @param \XTwitterScraper\X\Users\UserRetrieveMentionsParams\MediaType|value-of<\XTwitterScraper\X\Users\UserRetrieveMentionsParams\MediaType> $mediaType filter by media type
      * @param string $mentioning filter tweets mentioning a username
+     * @param int $minBookmarks minimum bookmark count threshold
      * @param int $minFaves minimum likes threshold
      * @param int $minQuotes minimum quote count threshold
      * @param int $minReplies minimum replies threshold
      * @param int $minRetweets minimum retweets threshold
+     * @param int $minViews minimum view count threshold
+     * @param bool $nativeRetweets only return native reposts
+     * @param string $near match a place name
+     * @param bool $news only return news results
      * @param int $pageSize Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
      * @param \XTwitterScraper\X\Users\UserRetrieveMentionsParams\Quotes|value-of<\XTwitterScraper\X\Users\UserRetrieveMentionsParams\Quotes> $quotes quote mode
      * @param string $quotesOfTweetID only quotes of this tweet ID
      * @param \XTwitterScraper\X\Users\UserRetrieveMentionsParams\Replies|value-of<\XTwitterScraper\X\Users\UserRetrieveMentionsParams\Replies> $replies reply mode
      * @param \XTwitterScraper\X\Users\UserRetrieveMentionsParams\Retweets|value-of<\XTwitterScraper\X\Users\UserRetrieveMentionsParams\Retweets> $retweets retweet mode
      * @param string $retweetsOfTweetID only retweets of this tweet ID
+     * @param bool $safe enable the safe-search filter
      * @param string $sinceDate start date in YYYY-MM-DD format
+     * @param string $sinceID return Tweets newer than this Tweet ID
      * @param string $sinceTime Unix timestamp - return mentions after this time
+     * @param string $source match the source application
      * @param string $toUser filter replies sent to a username
      * @param string $untilDate end date in YYYY-MM-DD format
      * @param string $untilTime Unix timestamp - return mentions before this time
      * @param string $url URL substring or domain filter
      * @param bool $verifiedOnly only return tweets from verified authors
+     * @param string $within set the radius for the near filter
+     * @param string $withinTime match Tweets inside a recent time window
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -297,34 +482,53 @@ interface UsersContract
     public function retrieveMentions(
         string $id,
         ?string $anyWords = null,
+        ?bool $blueVerifiedOnly = null,
+        ?string $cardName = null,
         ?string $cashtags = null,
         ?string $conversationID = null,
         ?string $cursor = null,
         ?string $exactPhrase = null,
+        ?string $excludeSource = null,
         ?string $excludeWords = null,
         ?string $fromUser = null,
+        ?string $geocode = null,
         ?string $hashtags = null,
         ?string $inReplyToTweetID = null,
         ?string $language = null,
+        ?int $maxFaves = null,
+        ?string $maxID = null,
+        ?int $maxQuotes = null,
+        ?int $maxReplies = null,
+        ?int $maxRetweets = null,
         \XTwitterScraper\X\Users\UserRetrieveMentionsParams\MediaType|string|null $mediaType = null,
         ?string $mentioning = null,
+        ?int $minBookmarks = null,
         ?int $minFaves = null,
         ?int $minQuotes = null,
         ?int $minReplies = null,
         ?int $minRetweets = null,
+        ?int $minViews = null,
+        ?bool $nativeRetweets = null,
+        ?string $near = null,
+        ?bool $news = null,
         int $pageSize = 20,
         \XTwitterScraper\X\Users\UserRetrieveMentionsParams\Quotes|string|null $quotes = null,
         ?string $quotesOfTweetID = null,
         \XTwitterScraper\X\Users\UserRetrieveMentionsParams\Replies|string|null $replies = null,
         \XTwitterScraper\X\Users\UserRetrieveMentionsParams\Retweets|string|null $retweets = null,
         ?string $retweetsOfTweetID = null,
+        ?bool $safe = null,
         ?string $sinceDate = null,
+        ?string $sinceID = null,
         ?string $sinceTime = null,
+        ?string $source = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         ?string $untilTime = null,
         ?string $url = null,
         ?bool $verifiedOnly = null,
+        ?string $within = null,
+        ?string $withinTime = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 
@@ -333,33 +537,52 @@ interface UsersContract
      *
      * @param string $id target user ID or username for the replies timeline
      * @param string $anyWords Words or quoted phrases where any one can match. Separate with spaces, commas, or lines.
+     * @param bool $blueVerifiedOnly only return tweets from Blue-verified authors
+     * @param string $cardName match the Tweet card name
      * @param string $cashtags cashtags separated by spaces, commas, or lines
      * @param string $conversationID conversation ID filter
-     * @param string $cursor Pagination cursor for user replies
+     * @param string $cursor Cursor from the previous response. Xquik cursors resume automatic coverage. Existing unprefixed cursors keep legacy standard behavior.
      * @param string $exactPhrase exact phrase to match
+     * @param string $excludeSource exclude a source application
      * @param string $excludeWords Words or quoted phrases to exclude. Separate with spaces, commas, or lines.
      * @param string $fromUser filter by author username
+     * @param string $geocode match latitude, longitude, and radius
      * @param string $hashtags hashtags separated by spaces, commas, or lines
      * @param bool $includeParentTweet include each reply's parent tweet
      * @param string $inReplyToTweetID only replies to this tweet ID
      * @param string $language Language code filter, e.g. en or tr.
+     * @param int $maxFaves Maximum likes threshold. maxLikes is also accepted.
+     * @param string $maxID return Tweets older than this Tweet ID
+     * @param int $maxQuotes maximum quotes threshold
+     * @param int $maxReplies maximum replies threshold
+     * @param int $maxRetweets maximum retweets threshold
      * @param \XTwitterScraper\X\Users\UserRetrieveRepliesParams\MediaType|value-of<\XTwitterScraper\X\Users\UserRetrieveRepliesParams\MediaType> $mediaType filter by media type
      * @param string $mentioning filter tweets mentioning a username
+     * @param int $minBookmarks minimum bookmark count threshold
      * @param int $minFaves minimum likes threshold
      * @param int $minQuotes minimum quote count threshold
      * @param int $minReplies minimum replies threshold
      * @param int $minRetweets minimum retweets threshold
-     * @param int $pageSize Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
+     * @param int $minViews minimum view count threshold
+     * @param bool $nativeRetweets only return native reposts
+     * @param string $near match a place name
+     * @param bool $news only return news results
+     * @param int $pageSize Automatic pages accept 1-300 Tweets. Standard pages keep 1-100. Default 20. Continue while has_next_page is true. Deprecated aliases remain accepted.
      * @param \XTwitterScraper\X\Users\UserRetrieveRepliesParams\Quotes|value-of<\XTwitterScraper\X\Users\UserRetrieveRepliesParams\Quotes> $quotes quote mode
      * @param string $quotesOfTweetID only quotes of this tweet ID
      * @param \XTwitterScraper\X\Users\UserRetrieveRepliesParams\Replies|value-of<\XTwitterScraper\X\Users\UserRetrieveRepliesParams\Replies> $replies reply mode
      * @param \XTwitterScraper\X\Users\UserRetrieveRepliesParams\Retweets|value-of<\XTwitterScraper\X\Users\UserRetrieveRepliesParams\Retweets> $retweets retweet mode
      * @param string $retweetsOfTweetID only retweets of this tweet ID
+     * @param bool $safe enable the safe-search filter
      * @param string $sinceDate start date in YYYY-MM-DD format
+     * @param string $sinceID return Tweets newer than this Tweet ID
+     * @param string $source match the source application
      * @param string $toUser filter replies sent to a username
      * @param string $untilDate end date in YYYY-MM-DD format
      * @param string $url URL substring or domain filter
      * @param bool $verifiedOnly only return tweets from verified authors
+     * @param string $within set the radius for the near filter
+     * @param string $withinTime match Tweets inside a recent time window
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -367,33 +590,52 @@ interface UsersContract
     public function retrieveReplies(
         string $id,
         ?string $anyWords = null,
+        ?bool $blueVerifiedOnly = null,
+        ?string $cardName = null,
         ?string $cashtags = null,
         ?string $conversationID = null,
         ?string $cursor = null,
         ?string $exactPhrase = null,
+        ?string $excludeSource = null,
         ?string $excludeWords = null,
         ?string $fromUser = null,
+        ?string $geocode = null,
         ?string $hashtags = null,
         bool $includeParentTweet = false,
         ?string $inReplyToTweetID = null,
         ?string $language = null,
+        ?int $maxFaves = null,
+        ?string $maxID = null,
+        ?int $maxQuotes = null,
+        ?int $maxReplies = null,
+        ?int $maxRetweets = null,
         \XTwitterScraper\X\Users\UserRetrieveRepliesParams\MediaType|string|null $mediaType = null,
         ?string $mentioning = null,
+        ?int $minBookmarks = null,
         ?int $minFaves = null,
         ?int $minQuotes = null,
         ?int $minReplies = null,
         ?int $minRetweets = null,
+        ?int $minViews = null,
+        ?bool $nativeRetweets = null,
+        ?string $near = null,
+        ?bool $news = null,
         int $pageSize = 20,
         \XTwitterScraper\X\Users\UserRetrieveRepliesParams\Quotes|string|null $quotes = null,
         ?string $quotesOfTweetID = null,
         \XTwitterScraper\X\Users\UserRetrieveRepliesParams\Replies|string|null $replies = null,
         \XTwitterScraper\X\Users\UserRetrieveRepliesParams\Retweets|string|null $retweets = null,
         ?string $retweetsOfTweetID = null,
+        ?bool $safe = null,
         ?string $sinceDate = null,
+        ?string $sinceID = null,
+        ?string $source = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         ?string $url = null,
         ?bool $verifiedOnly = null,
+        ?string $within = null,
+        ?string $withinTime = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 
@@ -401,14 +643,42 @@ interface UsersContract
      * @api
      *
      * @param string $q User search query
+     * @param string $bioContains match any comma-separated or line-separated bio term, ignoring case
      * @param string $cursor Pagination cursor for user search
+     * @param bool $hasLocation only return profiles with a location
+     * @param bool $hasWebsite only return profiles with a website
+     * @param string $locationContains match a location substring, ignoring case
+     * @param int $maxFollowers Maximum follower count. Missing counts pass this maximum.
+     * @param int $maxFollowing maximum following count
+     * @param int $maxStatuses Maximum post count. maxPosts is also accepted.
+     * @param int $minAccountAgeDays minimum account age in whole days
+     * @param int $minFollowers Minimum follower count. Filtering happens before billing.
+     * @param int $minFollowing minimum following count
+     * @param int $minStatuses Minimum post count. minPosts is also accepted.
+     * @param string $usernameContains match a username substring, ignoring case
+     * @param bool $verifiedOnly only return verified profiles
+     * @param string $verifiedType match the verification type exactly, ignoring case
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function retrieveSearch(
         string $q,
+        ?string $bioContains = null,
         ?string $cursor = null,
+        ?bool $hasLocation = null,
+        ?bool $hasWebsite = null,
+        ?string $locationContains = null,
+        ?int $maxFollowers = null,
+        ?int $maxFollowing = null,
+        ?int $maxStatuses = null,
+        ?int $minAccountAgeDays = null,
+        ?int $minFollowers = null,
+        ?int $minFollowing = null,
+        ?int $minStatuses = null,
+        ?string $usernameContains = null,
+        ?bool $verifiedOnly = null,
+        ?string $verifiedType = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers;
 
@@ -417,34 +687,53 @@ interface UsersContract
      *
      * @param string $id X user ID or username
      * @param string $anyWords Words or quoted phrases where any one can match. Separate with spaces, commas, or lines.
+     * @param bool $blueVerifiedOnly only return tweets from Blue-verified authors
+     * @param string $cardName match the Tweet card name
      * @param string $cashtags cashtags separated by spaces, commas, or lines
      * @param string $conversationID conversation ID filter
-     * @param string $cursor Pagination cursor for user tweets
+     * @param string $cursor Cursor from the previous response. Xquik cursors resume automatic coverage. Existing unprefixed cursors keep legacy standard behavior.
      * @param string $exactPhrase exact phrase to match
+     * @param string $excludeSource exclude a source application
      * @param string $excludeWords Words or quoted phrases to exclude. Separate with spaces, commas, or lines.
      * @param string $fromUser filter by author username
+     * @param string $geocode match latitude, longitude, and radius
      * @param string $hashtags hashtags separated by spaces, commas, or lines
      * @param bool $includeParentTweet Include parent tweet for replies
      * @param bool $includeReplies Include reply tweets
      * @param string $inReplyToTweetID only replies to this tweet ID
      * @param string $language Language code filter, e.g. en or tr.
+     * @param int $maxFaves Maximum likes threshold. maxLikes is also accepted.
+     * @param string $maxID return Tweets older than this Tweet ID
+     * @param int $maxQuotes maximum quotes threshold
+     * @param int $maxReplies maximum replies threshold
+     * @param int $maxRetweets maximum retweets threshold
      * @param \XTwitterScraper\X\Users\UserRetrieveTweetsParams\MediaType|value-of<\XTwitterScraper\X\Users\UserRetrieveTweetsParams\MediaType> $mediaType filter by media type
      * @param string $mentioning filter tweets mentioning a username
+     * @param int $minBookmarks minimum bookmark count threshold
      * @param int $minFaves minimum likes threshold
      * @param int $minQuotes minimum quote count threshold
      * @param int $minReplies minimum replies threshold
      * @param int $minRetweets minimum retweets threshold
-     * @param int $pageSize Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
+     * @param int $minViews minimum view count threshold
+     * @param bool $nativeRetweets only return native reposts
+     * @param string $near match a place name
+     * @param bool $news only return news results
+     * @param int $pageSize Automatic pages accept 1-300 Tweets. Standard pages keep 1-100. Default 20. Continue while has_next_page is true. Deprecated aliases remain accepted.
      * @param \XTwitterScraper\X\Users\UserRetrieveTweetsParams\Quotes|value-of<\XTwitterScraper\X\Users\UserRetrieveTweetsParams\Quotes> $quotes quote mode
      * @param string $quotesOfTweetID only quotes of this tweet ID
      * @param \XTwitterScraper\X\Users\UserRetrieveTweetsParams\Replies|value-of<\XTwitterScraper\X\Users\UserRetrieveTweetsParams\Replies> $replies reply mode
      * @param \XTwitterScraper\X\Users\UserRetrieveTweetsParams\Retweets|value-of<\XTwitterScraper\X\Users\UserRetrieveTweetsParams\Retweets> $retweets retweet mode
      * @param string $retweetsOfTweetID only retweets of this tweet ID
+     * @param bool $safe enable the safe-search filter
      * @param string $sinceDate start date in YYYY-MM-DD format
+     * @param string $sinceID return Tweets newer than this Tweet ID
+     * @param string $source match the source application
      * @param string $toUser filter replies sent to a username
      * @param string $untilDate end date in YYYY-MM-DD format
      * @param string $url URL substring or domain filter
      * @param bool $verifiedOnly only return tweets from verified authors
+     * @param string $within set the radius for the near filter
+     * @param string $withinTime match Tweets inside a recent time window
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -452,34 +741,53 @@ interface UsersContract
     public function retrieveTweets(
         string $id,
         ?string $anyWords = null,
+        ?bool $blueVerifiedOnly = null,
+        ?string $cardName = null,
         ?string $cashtags = null,
         ?string $conversationID = null,
         ?string $cursor = null,
         ?string $exactPhrase = null,
+        ?string $excludeSource = null,
         ?string $excludeWords = null,
         ?string $fromUser = null,
+        ?string $geocode = null,
         ?string $hashtags = null,
         bool $includeParentTweet = false,
         bool $includeReplies = false,
         ?string $inReplyToTweetID = null,
         ?string $language = null,
+        ?int $maxFaves = null,
+        ?string $maxID = null,
+        ?int $maxQuotes = null,
+        ?int $maxReplies = null,
+        ?int $maxRetweets = null,
         \XTwitterScraper\X\Users\UserRetrieveTweetsParams\MediaType|string|null $mediaType = null,
         ?string $mentioning = null,
+        ?int $minBookmarks = null,
         ?int $minFaves = null,
         ?int $minQuotes = null,
         ?int $minReplies = null,
         ?int $minRetweets = null,
+        ?int $minViews = null,
+        ?bool $nativeRetweets = null,
+        ?string $near = null,
+        ?bool $news = null,
         int $pageSize = 20,
         \XTwitterScraper\X\Users\UserRetrieveTweetsParams\Quotes|string|null $quotes = null,
         ?string $quotesOfTweetID = null,
         \XTwitterScraper\X\Users\UserRetrieveTweetsParams\Replies|string|null $replies = null,
         \XTwitterScraper\X\Users\UserRetrieveTweetsParams\Retweets|string|null $retweets = null,
         ?string $retweetsOfTweetID = null,
+        ?bool $safe = null,
         ?string $sinceDate = null,
+        ?string $sinceID = null,
+        ?string $source = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         ?string $url = null,
         ?bool $verifiedOnly = null,
+        ?string $within = null,
+        ?string $withinTime = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 
@@ -487,16 +795,50 @@ interface UsersContract
      * @api
      *
      * @param string $id User ID or username for verified followers
-     * @param string $cursor Pagination cursor for verified followers
-     * @param int $pageSize Maximum user profiles requested from this page (20-200, default 200). The response can contain fewer profiles because the source returned fewer or remaining credits cover fewer results. Keep requesting next_cursor while has_next_page is true. The deprecated limit and count aliases remain accepted.
+     * @param string $after Legacy cursor alias. Prefer cursor.
+     * @param string $bioContains match any comma-separated or line-separated bio term, ignoring case
+     * @param string $cursor Cursor from the previous response. Xquik cursors resume automatic coverage. Existing unprefixed cursors keep legacy standard behavior.
+     * @param bool $hasLocation only return profiles with a location
+     * @param bool $hasWebsite only return profiles with a website
+     * @param int $limit Legacy page-size alias outside explicit coverage mode. Coverage accepts 1-10000. Prefer pageSize.
+     * @param string $locationContains match a location substring, ignoring case
+     * @param int $maxFollowers Maximum follower count. Missing counts pass this maximum.
+     * @param int $maxFollowing maximum following count
+     * @param int $maxStatuses Maximum post count. maxPosts is also accepted.
+     * @param int $minAccountAgeDays minimum account age in whole days
+     * @param int $minFollowers Minimum follower count. Filtering happens before billing.
+     * @param int $minFollowing minimum following count
+     * @param int $minStatuses Minimum post count. minPosts is also accepted.
+     * @param \XTwitterScraper\X\Users\UserRetrieveVerifiedFollowersParams\Mode|value-of<\XTwitterScraper\X\Users\UserRetrieveVerifiedFollowersParams\Mode> $mode Omit mode for resumable maximum coverage. Standard keeps legacy pagination. Coverage returns diagnostics once and rejects cursors.
+     * @param int $pageSize Maximum user profiles: automatic 300; standard 200. Sources return fewer profiles. Continue with has_next_page.
+     * @param string $usernameContains match a username substring, ignoring case
+     * @param bool $verifiedOnly only return verified profiles
+     * @param string $verifiedType match the verification type exactly, ignoring case
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function retrieveVerifiedFollowers(
         string $id,
+        ?string $after = null,
+        ?string $bioContains = null,
         ?string $cursor = null,
+        ?bool $hasLocation = null,
+        ?bool $hasWebsite = null,
+        ?int $limit = null,
+        ?string $locationContains = null,
+        ?int $maxFollowers = null,
+        ?int $maxFollowing = null,
+        ?int $maxStatuses = null,
+        ?int $minAccountAgeDays = null,
+        ?int $minFollowers = null,
+        ?int $minFollowing = null,
+        ?int $minStatuses = null,
+        \XTwitterScraper\X\Users\UserRetrieveVerifiedFollowersParams\Mode|string|null $mode = null,
         int $pageSize = 200,
+        ?string $usernameContains = null,
+        ?bool $verifiedOnly = null,
+        ?string $verifiedType = null,
         RequestOptions|array|null $requestOptions = null,
-    ): PaginatedUsers;
+    ): PaginatedUsers|\XTwitterScraper\X\Users\UserGetVerifiedFollowersResponse\UserListCoverageResponse;
 }

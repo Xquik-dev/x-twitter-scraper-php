@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace XTwitterScraper\Extractions\ExtractionEstimateCostParams;
 
 /**
- * Reply mode used for estimation (tweet_search_extractor).
+ * Reply mode (tweet_search_extractor).
  */
 enum Replies: string
 {

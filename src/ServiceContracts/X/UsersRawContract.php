@@ -11,6 +11,7 @@ use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\UserProfile;
 use XTwitterScraper\X\Users\UserGetBatchResponse;
+use XTwitterScraper\X\Users\UserGetFollowersResponse\UserListCoverageResponse;
 use XTwitterScraper\X\Users\UserRemoveFollowerParams;
 use XTwitterScraper\X\Users\UserRemoveFollowerResponse;
 use XTwitterScraper\X\Users\UserRetrieveBatchParams;
@@ -84,7 +85,7 @@ interface UsersRawContract
      * @param array<string,mixed>|UserRetrieveFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedUsers>
+     * @return BaseResponse<PaginatedUsers|UserListCoverageResponse>
      *
      * @throws APIException
      */
@@ -118,7 +119,7 @@ interface UsersRawContract
      * @param array<string,mixed>|UserRetrieveFollowingParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedUsers>
+     * @return BaseResponse<PaginatedUsers|\XTwitterScraper\X\Users\UserGetFollowingResponse\UserListCoverageResponse,>
      *
      * @throws APIException
      */
@@ -235,7 +236,7 @@ interface UsersRawContract
      * @param array<string,mixed>|UserRetrieveVerifiedFollowersParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<PaginatedUsers>
+     * @return BaseResponse<PaginatedUsers|\XTwitterScraper\X\Users\UserGetVerifiedFollowersResponse\UserListCoverageResponse,>
      *
      * @throws APIException
      */

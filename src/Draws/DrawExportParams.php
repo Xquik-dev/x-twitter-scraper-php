@@ -28,7 +28,7 @@ final class DrawExportParams implements BaseModel
     use SdkParams;
 
     /**
-     * Export output format.
+     * Export output format. PDF entry exports include up to 10,000 rows. Other entry formats include up to 100,000 rows.
      *
      * @var value-of<Format> $format
      */
@@ -84,7 +84,7 @@ final class DrawExportParams implements BaseModel
     }
 
     /**
-     * Export output format.
+     * Export output format. PDF entry exports include up to 10,000 rows. Other entry formats include up to 100,000 rows.
      *
      * @param Format|value-of<Format> $format
      */

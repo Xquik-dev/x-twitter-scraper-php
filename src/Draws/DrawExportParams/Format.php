@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace XTwitterScraper\Draws\DrawExportParams;
 
 /**
- * Export output format.
+ * Export output format. PDF entry exports include up to 10,000 rows. Other entry formats include up to 100,000 rows.
  */
 enum Format: string
 {
