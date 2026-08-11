@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.12.1 (2026-08-11)
+
+Full Changelog: [v0.12.0...v0.12.1](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.12.0...v0.12.1)
+
+### Features
+
+* **api:** api update ([e6d2f92](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/e6d2f92f6703f120cac667af58e245c569ef56d5))
+
 ## 0.12.0 (2026-08-11)
 
 Full Changelog: [v0.11.0...v0.12.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.11.0...v0.12.0)
