@@ -65,6 +65,7 @@ final class EventsRawService implements EventsRawContract
      * @param array{
      *   cursor?: string,
      *   eventType?: value-of<EventType>,
+     *   keywordMonitorID?: string,
      *   limit?: int,
      *   monitorID?: string,
      * }|EventListParams $params
@@ -87,7 +88,10 @@ final class EventsRawService implements EventsRawContract
         return $this->client->request(
             method: 'get',
             path: 'events',
-            query: Util::array_transform_keys($parsed, ['monitorID' => 'monitorId']),
+            query: Util::array_transform_keys(
+                $parsed,
+                ['keywordMonitorID' => 'keywordMonitorId', 'monitorID' => 'monitorId'],
+            ),
             options: $options,
             convert: EventListResponse::class,
         );

@@ -153,7 +153,22 @@ final class CommunitiesRawService implements CommunitiesRawContract
      *
      * @param string $id Community ID for member lookup
      * @param array{
-     *   cursor?: string, pageSize?: int
+     *   bioContains?: string,
+     *   cursor?: string,
+     *   hasLocation?: bool,
+     *   hasWebsite?: bool,
+     *   locationContains?: string,
+     *   maxFollowers?: int,
+     *   maxFollowing?: int,
+     *   maxStatuses?: int,
+     *   minAccountAgeDays?: int,
+     *   minFollowers?: int,
+     *   minFollowing?: int,
+     *   minStatuses?: int,
+     *   pageSize?: int,
+     *   usernameContains?: string,
+     *   verifiedOnly?: bool,
+     *   verifiedType?: string,
      * }|CommunityRetrieveMembersParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -187,7 +202,23 @@ final class CommunitiesRawService implements CommunitiesRawContract
      * List moderators of a community
      *
      * @param string $id Community ID for moderator lookup
-     * @param array{cursor?: string}|CommunityRetrieveModeratorsParams $params
+     * @param array{
+     *   bioContains?: string,
+     *   cursor?: string,
+     *   hasLocation?: bool,
+     *   hasWebsite?: bool,
+     *   locationContains?: string,
+     *   maxFollowers?: int,
+     *   maxFollowing?: int,
+     *   maxStatuses?: int,
+     *   minAccountAgeDays?: int,
+     *   minFollowers?: int,
+     *   minFollowing?: int,
+     *   minStatuses?: int,
+     *   usernameContains?: string,
+     *   verifiedOnly?: bool,
+     *   verifiedType?: string,
+     * }|CommunityRetrieveModeratorsParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedUsers>

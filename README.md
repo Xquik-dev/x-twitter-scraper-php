@@ -54,7 +54,7 @@ Install the package from Packagist with Composer:
 <!-- x-release-please-start-version -->
 
 ```sh
-composer require xquik/x-twitter-scraper:^0.10.2
+composer require xquik/x-twitter-scraper:^0.11.0
 ```
 
 <!-- x-release-please-end -->
@@ -98,9 +98,9 @@ $client = new Client(
   apiKey: getenv('X_TWITTER_SCRAPER_API_KEY') ?: 'My API Key'
 );
 
-$paginatedTweets = $client->x->tweets->search(q: 'from:elonmusk', limit: 10);
+$response = $client->x->tweets->search(q: 'from:elonmusk', limit: 10);
 
-var_dump($paginatedTweets->hasNextPage);
+var_dump($response);
 ```
 
 ### Value Objects

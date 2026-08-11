@@ -8,10 +8,12 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Monitors;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\EventType;
+use XTwitterScraper\Monitors\Monitor\PausedReason;
 
 /**
  * Account monitor that tracks activity for a given X user.
@@ -24,6 +26,8 @@ use XTwitterScraper\EventType;
  *   nextBillingAt: \DateTimeInterface,
  *   username: string,
  *   xUserID: string,
+ *   pausedAt?: \DateTimeInterface|null,
+ *   pausedReason?: null|PausedReason|value-of<PausedReason>,
  * }
  */
 final class Monitor implements BaseModel
@@ -59,6 +63,20 @@ final class Monitor implements BaseModel
 
     #[Required('xUserId')]
     public string $xUserID;
+
+    /**
+     * When Xquik automatically paused this monitor.
+     */
+    #[Optional]
+    public ?\DateTimeInterface $pausedAt;
+
+    /**
+     * Why Xquik automatically paused this monitor.
+     *
+     * @var value-of<PausedReason>|null $pausedReason
+     */
+    #[Optional(enum: PausedReason::class)]
+    public ?string $pausedReason;
 
     /**
      * `new Monitor()` is missing required properties by the API.
@@ -100,6 +118,7 @@ final class Monitor implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param list<EventType|value-of<EventType>> $eventTypes
+     * @param PausedReason|value-of<PausedReason>|null $pausedReason
      */
     public static function with(
         string $id,
@@ -109,6 +128,8 @@ final class Monitor implements BaseModel
         \DateTimeInterface $nextBillingAt,
         string $username,
         string $xUserID,
+        ?\DateTimeInterface $pausedAt = null,
+        PausedReason|string|null $pausedReason = null,
     ): self {
         $self = new self;
 
@@ -119,6 +140,9 @@ final class Monitor implements BaseModel
         $self['nextBillingAt'] = $nextBillingAt;
         $self['username'] = $username;
         $self['xUserID'] = $xUserID;
+
+        null !== $pausedAt && $self['pausedAt'] = $pausedAt;
+        null !== $pausedReason && $self['pausedReason'] = $pausedReason;
 
         return $self;
     }
@@ -183,6 +207,30 @@ final class Monitor implements BaseModel
     {
         $self = clone $this;
         $self['xUserID'] = $xUserID;
+
+        return $self;
+    }
+
+    /**
+     * When Xquik automatically paused this monitor.
+     */
+    public function withPausedAt(\DateTimeInterface $pausedAt): self
+    {
+        $self = clone $this;
+        $self['pausedAt'] = $pausedAt;
+
+        return $self;
+    }
+
+    /**
+     * Why Xquik automatically paused this monitor.
+     *
+     * @param PausedReason|value-of<PausedReason> $pausedReason
+     */
+    public function withPausedReason(PausedReason|string $pausedReason): self
+    {
+        $self = clone $this;
+        $self['pausedReason'] = $pausedReason;
 
         return $self;
     }

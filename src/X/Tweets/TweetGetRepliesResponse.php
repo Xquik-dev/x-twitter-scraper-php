@@ -12,7 +12,7 @@ use XTwitterScraper\SearchTweet;
 use XTwitterScraper\X\Tweets\TweetGetRepliesResponse\Diagnostic;
 
 /**
- * Reply rows. Complete mode also returns nested replies and coverage diagnostics. Keep nested replies separate from direct coverage.
+ * Direct reply rows. No-mode requests use resumable automatic coverage. Complete mode also returns nested replies and coverage diagnostics. Keep nested replies separate from direct coverage.
  *
  * @phpstan-import-type DiagnosticShape from \XTwitterScraper\X\Tweets\TweetGetRepliesResponse\Diagnostic
  *

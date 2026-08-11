@@ -29,7 +29,7 @@ final class DrawListParams implements BaseModel
     use SdkParams;
 
     /**
-     * Cursor for keyset pagination from prior response next_cursor.
+     * Previous nextCursor.
      */
     #[Optional]
     public ?string $cursor;
@@ -61,7 +61,7 @@ final class DrawListParams implements BaseModel
     }
 
     /**
-     * Cursor for keyset pagination from prior response next_cursor.
+     * Previous nextCursor.
      */
     public function withCursor(string $cursor): self
     {

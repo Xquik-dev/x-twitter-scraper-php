@@ -17,6 +17,7 @@
     <testsuite name="default">
       <directory suffix=".php">./tests</directory>
       <exclude>./tests/mock-api-router.php</exclude>
+      <exclude>./tests/UnsupportedMockTests.php</exclude>
       <exclude>./tests/Support</exclude>
     </testsuite>
   </testsuites>

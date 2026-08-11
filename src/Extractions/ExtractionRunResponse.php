@@ -8,14 +8,19 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Extractions;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
-use XTwitterScraper\Extractions\ExtractionRunResponse\ToolType;
 
 /**
  * @phpstan-type ExtractionRunResponseShape = array{
- *   id: string, status: 'running', toolType: ToolType|value-of<ToolType>
+ *   allowed: bool,
+ *   creditsAvailable: string,
+ *   creditsRequired: string,
+ *   estimatedResults: int,
+ *   source: string,
+ *   resolvedXUserID?: string|null,
  * }
  */
 final class ExtractionRunResponse implements BaseModel
@@ -23,33 +28,47 @@ final class ExtractionRunResponse implements BaseModel
     /** @use SdkModel<ExtractionRunResponseShape> */
     use SdkModel;
 
-    /** @var 'running' $status */
     #[Required]
-    public string $status = 'running';
+    public bool $allowed;
 
     #[Required]
-    public string $id;
+    public string $creditsAvailable;
 
-    /**
-     * Identifier for the extraction tool used to run a job.
-     *
-     * @var value-of<ToolType> $toolType
-     */
-    #[Required(enum: ToolType::class)]
-    public string $toolType;
+    #[Required]
+    public string $creditsRequired;
+
+    #[Required]
+    public int $estimatedResults;
+
+    #[Required]
+    public string $source;
+
+    #[Optional('resolvedXUserId')]
+    public ?string $resolvedXUserID;
 
     /**
      * `new ExtractionRunResponse()` is missing required properties by the API.
      *
      * To enforce required parameters use
      * ```
-     * ExtractionRunResponse::with(id: ..., toolType: ...)
+     * ExtractionRunResponse::with(
+     *   allowed: ...,
+     *   creditsAvailable: ...,
+     *   creditsRequired: ...,
+     *   estimatedResults: ...,
+     *   source: ...,
+     * )
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new ExtractionRunResponse)->withID(...)->withToolType(...)
+     * (new ExtractionRunResponse)
+     *   ->withAllowed(...)
+     *   ->withCreditsAvailable(...)
+     *   ->withCreditsRequired(...)
+     *   ->withEstimatedResults(...)
+     *   ->withSource(...)
      * ```
      */
     public function __construct()
@@ -61,47 +80,72 @@ final class ExtractionRunResponse implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
-     *
-     * @param ToolType|value-of<ToolType> $toolType
      */
-    public static function with(string $id, ToolType|string $toolType): self
-    {
+    public static function with(
+        bool $allowed,
+        string $creditsAvailable,
+        string $creditsRequired,
+        int $estimatedResults,
+        string $source,
+        ?string $resolvedXUserID = null,
+    ): self {
         $self = new self;
 
-        $self['id'] = $id;
-        $self['toolType'] = $toolType;
+        $self['allowed'] = $allowed;
+        $self['creditsAvailable'] = $creditsAvailable;
+        $self['creditsRequired'] = $creditsRequired;
+        $self['estimatedResults'] = $estimatedResults;
+        $self['source'] = $source;
+
+        null !== $resolvedXUserID && $self['resolvedXUserID'] = $resolvedXUserID;
 
         return $self;
     }
 
-    public function withID(string $id): self
+    public function withAllowed(bool $allowed): self
     {
         $self = clone $this;
-        $self['id'] = $id;
+        $self['allowed'] = $allowed;
 
         return $self;
     }
 
-    /**
-     * @param 'running' $status
-     */
-    public function withStatus(string $status): self
+    public function withCreditsAvailable(string $creditsAvailable): self
     {
         $self = clone $this;
-        $self['status'] = $status;
+        $self['creditsAvailable'] = $creditsAvailable;
 
         return $self;
     }
 
-    /**
-     * Identifier for the extraction tool used to run a job.
-     *
-     * @param ToolType|value-of<ToolType> $toolType
-     */
-    public function withToolType(ToolType|string $toolType): self
+    public function withCreditsRequired(string $creditsRequired): self
     {
         $self = clone $this;
-        $self['toolType'] = $toolType;
+        $self['creditsRequired'] = $creditsRequired;
+
+        return $self;
+    }
+
+    public function withEstimatedResults(int $estimatedResults): self
+    {
+        $self = clone $this;
+        $self['estimatedResults'] = $estimatedResults;
+
+        return $self;
+    }
+
+    public function withSource(string $source): self
+    {
+        $self = clone $this;
+        $self['source'] = $source;
+
+        return $self;
+    }
+
+    public function withResolvedXUserID(string $resolvedXUserID): self
+    {
+        $self = clone $this;
+        $self['resolvedXUserID'] = $resolvedXUserID;
 
         return $self;
     }

@@ -8,6 +8,7 @@ namespace Tests\Services\X;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
@@ -93,10 +94,14 @@ final class UsersTest extends TestCase
     #[Test]
     public function testRetrieveFollowers(): void
     {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
         $result = $this->client->x->users->retrieveFollowers('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(PaginatedUsers::class, $result);
+        $this->assertNotNull($result);
     }
 
     #[Test]
@@ -111,10 +116,14 @@ final class UsersTest extends TestCase
     #[Test]
     public function testRetrieveFollowing(): void
     {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
         $result = $this->client->x->users->retrieveFollowing('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(PaginatedUsers::class, $result);
+        $this->assertNotNull($result);
     }
 
     #[Test]
@@ -165,7 +174,24 @@ final class UsersTest extends TestCase
     #[Test]
     public function testRetrieveSearchWithOptionalParams(): void
     {
-        $result = $this->client->x->users->retrieveSearch(q: 'q', cursor: 'cursor');
+        $result = $this->client->x->users->retrieveSearch(
+            q: 'q',
+            bioContains: 'bioContains',
+            cursor: 'cursor',
+            hasLocation: true,
+            hasWebsite: true,
+            locationContains: 'locationContains',
+            maxFollowers: 0,
+            maxFollowing: 0,
+            maxStatuses: 0,
+            minAccountAgeDays: 0,
+            minFollowers: 0,
+            minFollowing: 0,
+            minStatuses: 0,
+            usernameContains: 'usernameContains',
+            verifiedOnly: true,
+            verifiedType: 'verifiedType',
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(PaginatedUsers::class, $result);
@@ -183,9 +209,13 @@ final class UsersTest extends TestCase
     #[Test]
     public function testRetrieveVerifiedFollowers(): void
     {
+        if (UnsupportedMockTests::$skip) {
+            $this->markTestSkipped('Mock server tests are disabled');
+        }
+
         $result = $this->client->x->users->retrieveVerifiedFollowers('id');
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
-        $this->assertInstanceOf(PaginatedUsers::class, $result);
+        $this->assertNotNull($result);
     }
 }
