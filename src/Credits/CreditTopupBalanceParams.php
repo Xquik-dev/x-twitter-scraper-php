@@ -11,7 +11,7 @@ use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * Create a Stripe Checkout session only after the user confirms. The request never completes payment or adds credits by itself.
+ * Create a hosted checkout only after the user confirms. The request never completes payment or adds credits.
  *
  * @see XTwitterScraper\Services\CreditsService::topupBalance()
  *

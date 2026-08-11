@@ -13,7 +13,7 @@ use XTwitterScraper\GuestWallets\GuestWalletTopupResponse\CredentialNotice;
 use XTwitterScraper\GuestWallets\GuestWalletTopupResponse\Status;
 
 /**
- * Pending Stripe checkout and guest wallet purchase details.
+ * Pending hosted checkout and guest wallet purchase details.
  *
  * @phpstan-import-type GuestWalletAmountShape from \XTwitterScraper\GuestWallets\GuestWalletAmount
  * @phpstan-import-type AuthorizationShape from \XTwitterScraper\GuestWallets\GuestWalletTopupResponse\Authorization
@@ -24,7 +24,7 @@ use XTwitterScraper\GuestWallets\GuestWalletTopupResponse\Status;
  *   checkoutURL: string,
  *   credits: string,
  *   expiresAt: \DateTimeInterface,
- *   instructions: 'Give checkout_url to the user. They must complete payment on Stripe. Never submit payment for them. After payment, poll status_url every poll_after_seconds until latest_purchase.status is no longer pending.',
+ *   instructions: string,
  *   pollAfterSeconds: 2,
  *   purchaseID: string,
  *   requiresUserInteraction: bool,
@@ -43,12 +43,6 @@ final class GuestWalletTopupResponse implements BaseModel
 
     #[Required('account_required')]
     public bool $accountRequired = false;
-
-    /**
-     * @var 'Give checkout_url to the user. They must complete payment on Stripe. Never submit payment for them. After payment, poll status_url every poll_after_seconds until latest_purchase.status is no longer pending.' $instructions
-     */
-    #[Required]
-    public string $instructions = 'Give checkout_url to the user. They must complete payment on Stripe. Never submit payment for them. After payment, poll status_url every poll_after_seconds until latest_purchase.status is no longer pending.';
 
     /**
      * Wait at least this long before polling status_url.
@@ -72,7 +66,7 @@ final class GuestWalletTopupResponse implements BaseModel
     public GuestWalletAmount $amount;
 
     /**
-     * Raw Stripe-hosted checkout URL for user interaction.
+     * Hosted checkout URL for user interaction.
      */
     #[Required('checkout_url')]
     public string $checkoutURL;
@@ -88,6 +82,12 @@ final class GuestWalletTopupResponse implements BaseModel
      */
     #[Required('expires_at')]
     public \DateTimeInterface $expiresAt;
+
+    /**
+     * Hosted checkout and status polling instructions.
+     */
+    #[Required]
+    public string $instructions;
 
     #[Required('purchase_id')]
     public string $purchaseID;
@@ -122,6 +122,7 @@ final class GuestWalletTopupResponse implements BaseModel
      *   checkoutURL: ...,
      *   credits: ...,
      *   expiresAt: ...,
+     *   instructions: ...,
      *   purchaseID: ...,
      *   status: ...,
      *   walletID: ...,
@@ -136,6 +137,7 @@ final class GuestWalletTopupResponse implements BaseModel
      *   ->withCheckoutURL(...)
      *   ->withCredits(...)
      *   ->withExpiresAt(...)
+     *   ->withInstructions(...)
      *   ->withPurchaseID(...)
      *   ->withStatus(...)
      *   ->withWalletID(...)
@@ -161,6 +163,7 @@ final class GuestWalletTopupResponse implements BaseModel
         string $checkoutURL,
         string $credits,
         \DateTimeInterface $expiresAt,
+        string $instructions,
         string $purchaseID,
         Status|string $status,
         string $walletID,
@@ -174,6 +177,7 @@ final class GuestWalletTopupResponse implements BaseModel
         $self['checkoutURL'] = $checkoutURL;
         $self['credits'] = $credits;
         $self['expiresAt'] = $expiresAt;
+        $self['instructions'] = $instructions;
         $self['purchaseID'] = $purchaseID;
         $self['status'] = $status;
         $self['walletID'] = $walletID;
@@ -207,7 +211,7 @@ final class GuestWalletTopupResponse implements BaseModel
     }
 
     /**
-     * Raw Stripe-hosted checkout URL for user interaction.
+     * Hosted checkout URL for user interaction.
      */
     public function withCheckoutURL(string $checkoutURL): self
     {
@@ -240,7 +244,7 @@ final class GuestWalletTopupResponse implements BaseModel
     }
 
     /**
-     * @param 'Give checkout_url to the user. They must complete payment on Stripe. Never submit payment for them. After payment, poll status_url every poll_after_seconds until latest_purchase.status is no longer pending.' $instructions
+     * Hosted checkout and status polling instructions.
      */
     public function withInstructions(string $instructions): self
     {
