@@ -40,7 +40,7 @@ final class GuestWalletsService implements GuestWalletsContract
     /**
      * @api
      *
-     * Create a one-use hosted checkout after the user confirms $10-$250 USD. The request creates no charge. It returns a paid-read API key without an Xquik account. Replays return the same key.
+     * Create a one-use hosted checkout after the user confirms $10-$250 USD. The request creates no charge. It returns a paid-read API key without an Xquik account. Idempotent replays return the same key.
      *
      * @param int $amountMinor body param: USD cents accepted for this checkout
      * @param string $idempotencyKey Header param: Generate a cryptographically random UUID v4. Reuse it only to retry the same wallet and amount request. Initial wallet creation can recover the API key from this value, so store it as a secret and never log it.
