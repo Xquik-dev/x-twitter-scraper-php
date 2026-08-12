@@ -490,7 +490,42 @@ final class TweetsRawService implements TweetsRawContract
      * Get full conversation thread for a tweet
      *
      * @param string $id Tweet ID to get thread context
-     * @param array{cursor?: string, pageSize?: int}|TweetGetThreadParams $params
+     * @param array{
+     *   anyWords?: string,
+     *   blueVerifiedOnly?: bool,
+     *   cashtags?: string,
+     *   conversationID?: string,
+     *   cursor?: string,
+     *   exactPhrase?: string,
+     *   excludeWords?: string,
+     *   fromUser?: string,
+     *   hashtags?: string,
+     *   inReplyToTweetID?: string,
+     *   language?: string,
+     *   maxFaves?: int,
+     *   maxQuotes?: int,
+     *   maxReplies?: int,
+     *   maxRetweets?: int,
+     *   mediaType?: TweetGetThreadParams\MediaType|value-of<TweetGetThreadParams\MediaType>,
+     *   mentioning?: string,
+     *   minBookmarks?: int,
+     *   minFaves?: int,
+     *   minQuotes?: int,
+     *   minReplies?: int,
+     *   minRetweets?: int,
+     *   minViews?: int,
+     *   pageSize?: int,
+     *   quotes?: TweetGetThreadParams\Quotes|value-of<TweetGetThreadParams\Quotes>,
+     *   quotesOfTweetID?: string,
+     *   replies?: TweetGetThreadParams\Replies|value-of<TweetGetThreadParams\Replies>,
+     *   retweets?: TweetGetThreadParams\Retweets|value-of<TweetGetThreadParams\Retweets>,
+     *   retweetsOfTweetID?: string,
+     *   sinceDate?: string,
+     *   toUser?: string,
+     *   untilDate?: string,
+     *   url?: string,
+     *   verifiedOnly?: bool,
+     * }|TweetGetThreadParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<PaginatedTweets>
@@ -511,7 +546,15 @@ final class TweetsRawService implements TweetsRawContract
         return $this->client->request(
             method: 'get',
             path: ['x/tweets/%1$s/thread', $id],
-            query: $parsed,
+            query: Util::array_transform_keys(
+                $parsed,
+                [
+                    'conversationID' => 'conversationId',
+                    'inReplyToTweetID' => 'inReplyToTweetId',
+                    'quotesOfTweetID' => 'quotesOfTweetId',
+                    'retweetsOfTweetID' => 'retweetsOfTweetId',
+                ],
+            ),
             options: $options,
             convert: PaginatedTweets::class,
         );
@@ -520,7 +563,7 @@ final class TweetsRawService implements TweetsRawContract
     /**
      * @api
      *
-     * No-mode search maximizes coverage.
+     * No-mode search maximizes coverage. New cursorless `Latest` sessions return rows newest-first across cursor pages. Existing cursors preserve their established ordering.
      *
      * @param array{
      *   q: string,

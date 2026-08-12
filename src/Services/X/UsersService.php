@@ -381,7 +381,7 @@ final class UsersService implements UsersContract
      * @param MediaType|value-of<MediaType> $mediaType filter by media type
      * @param string $mentioning filter tweets mentioning a username
      * @param int $minBookmarks minimum bookmark count threshold
-     * @param int $minFaves minimum likes threshold
+     * @param int $minFaves Minimum likes threshold. minLikes is also accepted.
      * @param int $minQuotes minimum quote count threshold
      * @param int $minReplies minimum replies threshold
      * @param int $minRetweets minimum retweets threshold
@@ -544,7 +544,7 @@ final class UsersService implements UsersContract
      * @param \XTwitterScraper\X\Users\UserRetrieveMediaParams\MediaType|value-of<\XTwitterScraper\X\Users\UserRetrieveMediaParams\MediaType> $mediaType filter by media type
      * @param string $mentioning filter tweets mentioning a username
      * @param int $minBookmarks minimum bookmark count threshold
-     * @param int $minFaves minimum likes threshold
+     * @param int $minFaves Minimum likes threshold. minLikes is also accepted.
      * @param int $minQuotes minimum quote count threshold
      * @param int $minReplies minimum replies threshold
      * @param int $minRetweets minimum retweets threshold
@@ -707,7 +707,7 @@ final class UsersService implements UsersContract
      * @param \XTwitterScraper\X\Users\UserRetrieveMentionsParams\MediaType|value-of<\XTwitterScraper\X\Users\UserRetrieveMentionsParams\MediaType> $mediaType filter by media type
      * @param string $mentioning filter tweets mentioning a username
      * @param int $minBookmarks minimum bookmark count threshold
-     * @param int $minFaves minimum likes threshold
+     * @param int $minFaves Minimum likes threshold. minLikes is also accepted.
      * @param int $minQuotes minimum quote count threshold
      * @param int $minReplies minimum replies threshold
      * @param int $minRetweets minimum retweets threshold
@@ -877,7 +877,7 @@ final class UsersService implements UsersContract
      * @param \XTwitterScraper\X\Users\UserRetrieveRepliesParams\MediaType|value-of<\XTwitterScraper\X\Users\UserRetrieveRepliesParams\MediaType> $mediaType filter by media type
      * @param string $mentioning filter tweets mentioning a username
      * @param int $minBookmarks minimum bookmark count threshold
-     * @param int $minFaves minimum likes threshold
+     * @param int $minFaves Minimum likes threshold. minLikes is also accepted.
      * @param int $minQuotes minimum quote count threshold
      * @param int $minReplies minimum replies threshold
      * @param int $minRetweets minimum retweets threshold
@@ -1115,7 +1115,7 @@ final class UsersService implements UsersContract
      * @param \XTwitterScraper\X\Users\UserRetrieveTweetsParams\MediaType|value-of<\XTwitterScraper\X\Users\UserRetrieveTweetsParams\MediaType> $mediaType filter by media type
      * @param string $mentioning filter tweets mentioning a username
      * @param int $minBookmarks minimum bookmark count threshold
-     * @param int $minFaves minimum likes threshold
+     * @param int $minFaves Minimum likes threshold. minLikes is also accepted.
      * @param int $minQuotes minimum quote count threshold
      * @param int $minReplies minimum replies threshold
      * @param int $minRetweets minimum retweets threshold

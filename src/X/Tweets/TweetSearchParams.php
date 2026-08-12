@@ -17,7 +17,7 @@ use XTwitterScraper\X\Tweets\TweetSearchParams\Replies;
 use XTwitterScraper\X\Tweets\TweetSearchParams\Retweets;
 
 /**
- * No-mode search maximizes coverage.
+ * No-mode search maximizes coverage. New cursorless `Latest` sessions return rows newest-first across cursor pages. Existing cursors preserve their established ordering.
  *
  * @see XTwitterScraper\Services\X\TweetsService::search()
  *
@@ -252,7 +252,7 @@ final class TweetSearchParams implements BaseModel
     public ?int $minBookmarks;
 
     /**
-     * Minimum likes threshold.
+     * Minimum likes threshold. minLikes is also accepted.
      */
     #[Optional]
     public ?int $minFaves;
@@ -895,7 +895,7 @@ final class TweetSearchParams implements BaseModel
     }
 
     /**
-     * Minimum likes threshold.
+     * Minimum likes threshold. minLikes is also accepted.
      */
     public function withMinFaves(int $minFaves): self
     {
