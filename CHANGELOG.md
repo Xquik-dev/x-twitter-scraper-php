@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.13.0 (2026-08-12)
+
+Full Changelog: [v0.12.1...v0.13.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.12.1...v0.13.0)
+
+### Features
+
+* **api:** sync public contracts ([1f653fb](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/1f653fbd86596412b1a884575bc5dec2c5a485bd))
+
 ## 0.12.1 (2026-08-11)
 
 Full Changelog: [v0.12.0...v0.12.1](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.12.0...v0.12.1)
