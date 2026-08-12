@@ -122,17 +122,27 @@ enum LegacyErrorCode: string
 
     case INVALID_COMMUNITY_ID = 'invalid_community_id';
 
+    case INVALID_COMPLETE_REPLIES_REQUEST = 'invalid_complete_replies_request';
+
     case INVALID_COVERAGE_CURSOR = 'invalid_coverage_cursor';
+
+    case INVALID_COVERAGE_REQUEST = 'invalid_coverage_request';
 
     case INVALID_IDEMPOTENCY_KEY = 'invalid_idempotency_key';
 
     case INVALID_LIST_ID = 'invalid_list_id';
 
+    case INVALID_OUTPUT_OPTIONS = 'invalid_output_options';
+
     case INVALID_PAYMENT_AMOUNT = 'invalid_payment_amount';
 
     case INVALID_RANGE = 'invalid_range';
 
+    case INVALID_REPLY_OPTIONS = 'invalid_reply_options';
+
     case LOGIN_RATE_LIMITED = 'login_rate_limited';
+
+    case LOGIN_SERVICE_UNAVAILABLE = 'login_service_unavailable';
 
     case MISSING_IDEMPOTENCY_KEY = 'missing_idempotency_key';
 
@@ -153,6 +163,8 @@ enum LegacyErrorCode: string
     case SUPPORT_REQUEST_RATE_LIMIT = 'support_request_rate_limit';
 
     case TOO_MANY_IDS = 'too_many_ids';
+
+    case TOO_MANY_TWEETS = 'too_many_tweets';
 
     case UNKNOWN_FIELD = 'unknown_field';
 

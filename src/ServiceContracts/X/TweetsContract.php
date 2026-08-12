@@ -171,7 +171,7 @@ interface TweetsContract
      * @param MediaType|value-of<MediaType> $mediaType filter by media type
      * @param string $mentioning filter tweets mentioning a username
      * @param int $minBookmarks minimum bookmark count threshold
-     * @param int $minFaves minimum likes threshold
+     * @param int $minFaves Minimum likes threshold. minLikes is also accepted.
      * @param int $minQuotes minimum quote count threshold
      * @param int $minReplies minimum replies threshold
      * @param int $minRetweets minimum retweets threshold
@@ -286,7 +286,7 @@ interface TweetsContract
      * @param \XTwitterScraper\X\Tweets\TweetGetRepliesParams\MediaType|value-of<\XTwitterScraper\X\Tweets\TweetGetRepliesParams\MediaType> $mediaType filter by media type
      * @param string $mentioning filter tweets mentioning a username
      * @param int $minBookmarks minimum bookmark count threshold
-     * @param int $minFaves minimum likes threshold
+     * @param int $minFaves Minimum likes threshold. minLikes is also accepted.
      * @param int $minQuotes minimum quote count threshold
      * @param int $minReplies minimum replies threshold
      * @param int $minRetweets minimum retweets threshold
@@ -429,16 +429,80 @@ interface TweetsContract
      * @api
      *
      * @param string $id Tweet ID to get thread context
+     * @param string $anyWords Words or quoted phrases where any one can match. Separate with spaces, commas, or lines.
+     * @param bool $blueVerifiedOnly only return tweets from Blue-verified authors
+     * @param string $cashtags cashtags separated by spaces, commas, or lines
+     * @param string $conversationID conversation ID filter
      * @param string $cursor Pagination cursor for thread tweets
+     * @param string $exactPhrase exact phrase to match
+     * @param string $excludeWords Words or quoted phrases to exclude. Separate with spaces, commas, or lines.
+     * @param string $fromUser filter by author username
+     * @param string $hashtags hashtags separated by spaces, commas, or lines
+     * @param string $inReplyToTweetID only replies to this tweet ID
+     * @param string $language Language code filter, e.g. en or tr.
+     * @param int $maxFaves Maximum likes threshold. maxLikes is also accepted.
+     * @param int $maxQuotes maximum quotes threshold
+     * @param int $maxReplies maximum replies threshold
+     * @param int $maxRetweets maximum retweets threshold
+     * @param \XTwitterScraper\X\Tweets\TweetGetThreadParams\MediaType|value-of<\XTwitterScraper\X\Tweets\TweetGetThreadParams\MediaType> $mediaType filter by media type
+     * @param string $mentioning filter tweets mentioning a username
+     * @param int $minBookmarks minimum bookmark count threshold
+     * @param int $minFaves Minimum likes threshold. minLikes is also accepted.
+     * @param int $minQuotes minimum quote count threshold
+     * @param int $minReplies minimum replies threshold
+     * @param int $minRetweets minimum retweets threshold
+     * @param int $minViews minimum view count threshold
      * @param int $pageSize Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
+     * @param \XTwitterScraper\X\Tweets\TweetGetThreadParams\Quotes|value-of<\XTwitterScraper\X\Tweets\TweetGetThreadParams\Quotes> $quotes quote mode
+     * @param string $quotesOfTweetID only quotes of this tweet ID
+     * @param \XTwitterScraper\X\Tweets\TweetGetThreadParams\Replies|value-of<\XTwitterScraper\X\Tweets\TweetGetThreadParams\Replies> $replies reply mode
+     * @param \XTwitterScraper\X\Tweets\TweetGetThreadParams\Retweets|value-of<\XTwitterScraper\X\Tweets\TweetGetThreadParams\Retweets> $retweets retweet mode
+     * @param string $retweetsOfTweetID only retweets of this tweet ID
+     * @param string $sinceDate start date in YYYY-MM-DD format
+     * @param string $toUser filter replies sent to a username
+     * @param string $untilDate end date in YYYY-MM-DD format
+     * @param string $url URL substring or domain filter
+     * @param bool $verifiedOnly only return tweets from verified authors
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function getThread(
         string $id,
+        ?string $anyWords = null,
+        ?bool $blueVerifiedOnly = null,
+        ?string $cashtags = null,
+        ?string $conversationID = null,
         ?string $cursor = null,
+        ?string $exactPhrase = null,
+        ?string $excludeWords = null,
+        ?string $fromUser = null,
+        ?string $hashtags = null,
+        ?string $inReplyToTweetID = null,
+        ?string $language = null,
+        ?int $maxFaves = null,
+        ?int $maxQuotes = null,
+        ?int $maxReplies = null,
+        ?int $maxRetweets = null,
+        \XTwitterScraper\X\Tweets\TweetGetThreadParams\MediaType|string|null $mediaType = null,
+        ?string $mentioning = null,
+        ?int $minBookmarks = null,
+        ?int $minFaves = null,
+        ?int $minQuotes = null,
+        ?int $minReplies = null,
+        ?int $minRetweets = null,
+        ?int $minViews = null,
         int $pageSize = 20,
+        \XTwitterScraper\X\Tweets\TweetGetThreadParams\Quotes|string|null $quotes = null,
+        ?string $quotesOfTweetID = null,
+        \XTwitterScraper\X\Tweets\TweetGetThreadParams\Replies|string|null $replies = null,
+        \XTwitterScraper\X\Tweets\TweetGetThreadParams\Retweets|string|null $retweets = null,
+        ?string $retweetsOfTweetID = null,
+        ?string $sinceDate = null,
+        ?string $toUser = null,
+        ?string $untilDate = null,
+        ?string $url = null,
+        ?bool $verifiedOnly = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 
@@ -472,7 +536,7 @@ interface TweetsContract
      * @param \XTwitterScraper\X\Tweets\TweetSearchParams\MediaType|value-of<\XTwitterScraper\X\Tweets\TweetSearchParams\MediaType> $mediaType filter by media type
      * @param string $mentioning filter tweets mentioning a username
      * @param int $minBookmarks minimum bookmark count threshold
-     * @param int $minFaves minimum likes threshold
+     * @param int $minFaves Minimum likes threshold. minLikes is also accepted.
      * @param int $minQuotes minimum quote count threshold
      * @param int $minReplies minimum replies threshold
      * @param int $minRetweets minimum retweets threshold
