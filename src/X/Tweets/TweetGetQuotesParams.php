@@ -221,7 +221,7 @@ final class TweetGetQuotesParams implements BaseModel
     public ?int $minBookmarks;
 
     /**
-     * Minimum likes threshold.
+     * Minimum likes threshold. minLikes is also accepted.
      */
     #[Optional]
     public ?int $minFaves;
@@ -759,7 +759,7 @@ final class TweetGetQuotesParams implements BaseModel
     }
 
     /**
-     * Minimum likes threshold.
+     * Minimum likes threshold. minLikes is also accepted.
      */
     public function withMinFaves(int $minFaves): self
     {
