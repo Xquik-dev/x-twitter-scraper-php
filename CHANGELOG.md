@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.13.1 (2026-08-14)
+
+Full Changelog: [v0.13.0...v0.13.1](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.13.0...v0.13.1)
+
+### Chores
+
+* **internal:** codegen related update ([1802480](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/1802480360dcb13e4ff753199d511a710b119821))
+
 ## 0.13.0 (2026-08-12)
 
 Full Changelog: [v0.12.1...v0.13.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.12.1...v0.13.0)
