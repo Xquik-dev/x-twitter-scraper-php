@@ -139,7 +139,7 @@ abstract class BaseClient
         $parsedPath = Util::parsePath($path);
 
         /** @var array<string,mixed> $mergedQuery */
-        $mergedQuery = [...$query, ...($options->extraQueryParams ?? [])];
+        $mergedQuery = array_merge_recursive($query, $options->extraQueryParams ?? []);
         $uri = Util::joinUri($this->baseUrl, path: $parsedPath, query: $mergedQuery)->__toString();
         $idempotencyHeaders = $this->idempotencyHeader && !array_key_exists($this->idempotencyHeader, array: $headers)
             ? [$this->idempotencyHeader => $this->generateIdempotencyKey()]

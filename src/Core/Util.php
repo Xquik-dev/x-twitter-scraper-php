@@ -279,7 +279,7 @@ final class Util
         parse_str($base->getQuery(), $q1);
         parse_str($parsed['query'] ?? '', $q2);
 
-        $mergedQuery = [...$q1, ...$q2, ...$query];
+        $mergedQuery = array_merge_recursive($q1, $q2, $query);
 
         /** @var array<string,mixed> */
         $normalizedQuery = self::mapRecursive(
