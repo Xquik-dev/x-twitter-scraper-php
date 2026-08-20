@@ -18,7 +18,7 @@ $input = stream_get_contents(STDIN);
 $report = json_decode($input, true, flags: JSON_THROW_ON_ERROR);
 $dependencies = $report['dependencies'] ?? null;
 if (!is_array($dependencies)) {
-    fwrite(STDERR, "Composer license output is invalid.\n");
+    fwrite(STDERR, "Composer license output is invalid. Rerun composer licenses.\n");
     exit(2);
 }
 
@@ -34,7 +34,7 @@ if ([] !== $rejected) {
     foreach ($rejected as $name => $license) {
         fwrite(STDERR, "{$name}: unapproved license {$license}\n");
     }
-    fwrite(STDERR, "A maintainer must review every new dependency license.\n");
+    fwrite(STDERR, "Dependency licenses need review. Approve or remove each listed dependency.\n");
     exit(1);
 }
 

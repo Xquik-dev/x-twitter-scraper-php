@@ -1,7 +1,5 @@
 # Contributing
 
-Thank you for improving the Xquik PHP SDK.
-
 Read [GOVERNANCE.md](GOVERNANCE.md) before proposing major changes.
 
 Follow the shared [Xquik contribution policy][contribution-policy].
@@ -10,7 +8,7 @@ Follow the shared [Xquik contribution policy][contribution-policy].
 
 Install PHP 8.3 or newer and Composer 2.10.2.
 
-Then install the locked development dependencies:
+Install the locked development dependencies:
 
 ```sh
 ./scripts/bootstrap

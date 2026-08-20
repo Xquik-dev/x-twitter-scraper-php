@@ -8,5 +8,5 @@ set -e
 
 cd -- "$(dirname -- "$0")/.."
 
-echo "==> Cleaning up..."
+echo "==> Removing generated files"
 exec -- rm -fr -- ./vendor/ ./.php-cs-fixer.cache

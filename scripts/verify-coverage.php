@@ -16,12 +16,12 @@ if (2 !== $argc) {
 
 $report = file_get_contents($argv[1]);
 if (false === $report) {
-    fwrite(STDERR, "Coverage report could not be read.\n");
+    fwrite(STDERR, "Could not read the coverage report. Check the file path.\n");
     exit(2);
 }
 
 if (!preg_match('/<coverage\b([^>]*)>/', $report, $coverageMatch)) {
-    fwrite(STDERR, "Coverage report omits the coverage summary.\n");
+    fwrite(STDERR, "Coverage report omits its summary. Regenerate coverage.\n");
     exit(2);
 }
 
@@ -41,7 +41,7 @@ $required = [
 ];
 foreach ($required as $name) {
     if (!array_key_exists($name, $attributes) || !is_numeric($attributes[$name])) {
-        fwrite(STDERR, "Coverage report omits {$name}.\n");
+        fwrite(STDERR, "Coverage report omits {$name}. Regenerate coverage.\n");
         exit(2);
     }
 }
@@ -66,11 +66,11 @@ echo "Branches: {$branchSummary}\n";
 
 $failed = false;
 if ($lineRate < MINIMUM_LINE_RATE) {
-    fwrite(STDERR, "Executable line coverage must remain at least 90%.\n");
+    fwrite(STDERR, "Executable line coverage is below 90%. Add tests.\n");
     $failed = true;
 }
 if ($branchRate < MINIMUM_BRANCH_RATE) {
-    fwrite(STDERR, "Branch coverage must remain at least 80%.\n");
+    fwrite(STDERR, "Branch coverage is below 80%. Add branch tests.\n");
     $failed = true;
 }
 

@@ -33,11 +33,11 @@ No OpenSSF-defined ineligibility applies.
 | CI | Pull requests and pushes run pinned, least-privilege workflows |
 | Two-factor authentication | The Xquik-dev organization requires 2FA |
 
-The current suite runs 240 tests with 681 assertions and no skips.
+The suite runs 247 tests with 689 assertions and 7 intentional skips.
 
-It covers 3,404 of 3,432 executable lines, or 99.18%.
+It covers 3,887 of 4,052 executable lines, or 95.93%.
 
-It covers 1,040 of 1,252 branches, or 83.07%.
+It covers 1,059 of 1,282 branches, or 82.61%.
 
 Dynamic coverage includes the client, runtime core, and service facades.
 
@@ -47,7 +47,7 @@ PHPStan checks every generated DTO at its strictest level.
 
 The loopback service suite also parses generated response models.
 
-REUSE validates license metadata for all 831 repository files.
+REUSE validates license metadata for all 962 repository files.
 
 ## Outstanding Silver Blocker
 
@@ -73,7 +73,7 @@ Do not claim Gold while any mandatory criterion remains unmet.
 | Independent review | History does not prove 50% qualifying review coverage | Require and record independent reviews |
 | Human security review | No completed review exists within 5 years | Commission and publish a scoped review |
 
-This remediation pull request needs a different human reviewer.
+Gold eligibility still requires review by a different human.
 
 ## Maintenance
 

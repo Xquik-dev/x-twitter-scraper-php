@@ -1,51 +1,41 @@
-# X (Twitter) Scraper PHP SDK: Tweet Search, Timelines, Followers & Posting
+# Xquik PHP SDK: Twitter Search, Followers & X Automation
 
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13737/badge)](https://www.bestpractices.dev/projects/13737)
 [![CI](https://github.com/Xquik-dev/x-twitter-scraper-php/actions/workflows/ci.yml/badge.svg)](https://github.com/Xquik-dev/x-twitter-scraper-php/actions/workflows/ci.yml)
 
-Use Xquik's typed Composer SDK as an X API alternative.
+Use the Xquik PHP SDK for Twitter search, timelines, profiles & followers.
 
-Search tweets, read timelines, export followers, and deliver webhooks.
+Manage media, webhooks & X automation with typed Composer methods.
 
-Confirmed methods also support posting and other account actions.
-
-## Is This A Twitter API Alternative?
-
-This package calls Xquik's documented REST API.
-
-It does not call or emulate the official X API.
-
-Use it for supported X data and automation workflows from PHP.
+It provides a Twitter API alternative through documented Xquik REST routes.
 
 ## Choose the PHP SDK
 
-Choose this client for Composer applications using typed value objects and retries.
-Reuse its client inside framework-based or standalone PHP services.
+Choose this client for typed value objects, retries & Composer applications.
+Use it in framework-based or standalone PHP services.
 Use REST when Composer installation is unavailable.
 
 ## Documentation
 
 Read the [PHP SDK guide](https://docs.xquik.com/sdks/php) or [API guide](https://docs.xquik.com/api-reference/overview).
 
-## Common X Data Tasks
+## Common Twitter & X Tasks
 
-Use the linked SDK guide for typed method names.
+Map each task to its REST route.
 
-| Customer Question | REST Route | Workflow Note |
+| Task | REST Route | Usage |
 | --- | --- | --- |
-| How do I search tweets? | `GET /x/tweets/search` | Use keyword or advanced operator queries. |
-| How do I extract a profile timeline? | `GET /x/users/{id}/tweets` | Paginate bounded X timeline results. |
-| How do I scrape X followers? | `GET /x/users/{id}/followers` | Use an extraction for complete datasets. |
-| How do I scrape X following accounts? | `GET /x/users/{id}/following` | Use an extraction for complete datasets. |
-| How do I read my home timeline? | `GET /x/timeline` | Approve this private read. |
-| How do I read lists or communities? | `/x/lists/*`, `/x/communities/*` | Use the typed nested services. |
-| How do I export large X datasets? | `POST /extractions` | Poll status, then download results. |
-| How do I monitor an account? | `POST /monitors` | Deliver events through HMAC webhooks. |
-| How do I post or reply? | `POST /x/tweets` | Confirm the account and payload. |
+| Search tweets without the X API | `GET /x/tweets/search` | Use keyword or advanced operator queries. |
+| Extract an X profile timeline | `GET /x/users/{id}/tweets` | Paginate bounded timeline results. |
+| Scrape Twitter followers | `GET /x/users/{id}/followers` | Use an extraction for complete datasets. |
+| Scrape X following accounts | `GET /x/users/{id}/following` | Use an extraction for complete datasets. |
+| Read a home timeline | `GET /x/timeline` | Approve this private read. |
+| Read lists or communities | `/x/lists/*`, `/x/communities/*` | Use the typed nested services. |
+| Export large X datasets | `POST /extractions` | Poll status, then download results. |
+| Monitor an account | `POST /monitors` | Deliver events through HMAC webhooks. |
+| Post or reply | `POST /x/tweets` | Confirm the account and payload. |
 
-The [API reference](https://docs.xquik.com/api-reference/overview) lists every route.
-
-The SDK exposes matching typed services and request models.
+The [API reference](https://docs.xquik.com/api-reference/overview) lists every route and contract.
 
 ## Installation
 
@@ -61,9 +51,7 @@ composer require xquik/x-twitter-scraper:^0.13.2
 
 ## Verify a Release
 
-Composer users install through Packagist.
-
-Verify Xquik's matching project archive before upgrading:
+Set `VERSION` to the release version. Then verify its project archive:
 
 ```sh
 release_tag=vVERSION
@@ -80,9 +68,7 @@ gh attestation verify "$archive" \
   --deny-self-hosted-runners
 ```
 
-Require the Xquik-dev repository and expected release workflow.
-
-GitHub verifies the archive digest, signer identity, and transparency proof.
+GitHub verifies the archive, repository, workflow, signer & transparency proof.
 
 ## Usage
 
@@ -225,7 +211,6 @@ PHP 8.1.0 or higher.
 ## Project Policies
 
 Read [Contributing](CONTRIBUTING.md), [Governance](GOVERNANCE.md), and [Security](SECURITY.md).
-
-See [OpenSSF evidence](OPENSSF.md) for verified controls and remaining blockers.
+See [OpenSSF evidence](OPENSSF.md) for verified controls and blockers.
 
 Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
