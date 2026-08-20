@@ -3,17 +3,13 @@
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13737/badge)](https://www.bestpractices.dev/projects/13737)
 [![CI](https://github.com/Xquik-dev/x-twitter-scraper-php/actions/workflows/ci.yml/badge.svg)](https://github.com/Xquik-dev/x-twitter-scraper-php/actions/workflows/ci.yml)
 
-Use the Xquik PHP SDK for Twitter search, timelines, profiles & followers.
+Search Twitter, read timelines, fetch profiles & export followers with Xquik.
+Use typed Composer methods for media, webhooks & X automation.
 
-Manage media, webhooks & X automation with typed Composer methods.
+## PHP or REST
 
-It provides a Twitter API alternative through documented Xquik REST routes.
-
-## Choose the PHP SDK
-
-Choose this client for typed value objects, retries & Composer applications.
-Use it in framework-based or standalone PHP services.
-Use REST when Composer installation is unavailable.
+Use this SDK for typed value objects, retries & Composer applications.
+Use the REST API when Composer is unavailable.
 
 ## Documentation
 
@@ -21,11 +17,9 @@ Read the [PHP SDK guide](https://docs.xquik.com/sdks/php) or [API guide](https:/
 
 ## Common Twitter & X Tasks
 
-Map each task to its REST route.
-
 | Task | REST Route | Usage |
 | --- | --- | --- |
-| Search tweets without the X API | `GET /x/tweets/search` | Use keyword or advanced operator queries. |
+| Run an advanced Twitter search | `GET /x/tweets/search` | Use keywords or supported operators. |
 | Extract an X profile timeline | `GET /x/users/{id}/tweets` | Paginate bounded timeline results. |
 | Scrape Twitter followers | `GET /x/users/{id}/followers` | Use an extraction for complete datasets. |
 | Scrape X following accounts | `GET /x/users/{id}/following` | Use an extraction for complete datasets. |
@@ -44,14 +38,14 @@ Install the package from Packagist with Composer:
 <!-- x-release-please-start-version -->
 
 ```sh
-composer require xquik/x-twitter-scraper:^0.13.2
+composer require xquik/x-twitter-scraper:^0.13.3
 ```
 
 <!-- x-release-please-end -->
 
 ## Verify a Release
 
-Set `VERSION` to the release version. Then verify its project archive:
+Replace `VERSION` with the release number. Then verify its project archive:
 
 ```sh
 release_tag=vVERSION
@@ -72,8 +66,7 @@ GitHub verifies the archive, repository, workflow, signer & transparency proof.
 
 ## Usage
 
-This library uses named parameters to specify optional arguments.
-Parameters with a default value must be set by name.
+Set optional arguments and parameters with defaults by name.
 
 ```php
 <?php
@@ -91,14 +84,12 @@ var_dump($response);
 
 ### Value Objects
 
-It is recommended to use the static `with` constructor `Dog::with(name: "Joey")`
-and named parameters to initialize value objects.
+Create value objects with `Dog::with(name: "Joey")` and named parameters.
+Builders also work: `(new Dog)->withName("Joey")`.
 
-However, builders are also provided `(new Dog)->withName("Joey")`.
+### Handling Errors
 
-### Handling errors
-
-When the library is unable to connect to the API, or if the API returns a non-success status code (i.e., 4xx or 5xx response), a subclass of `XTwitterScraper\Core\Exceptions\APIException` will be thrown:
+Connection failures and non-2xx responses throw an `APIException` subclass:
 
 ```php
 <?php
@@ -110,17 +101,17 @@ use XTwitterScraper\Core\Exceptions\APIStatusException;
 try {
   $account = $client->account->retrieve();
 } catch (APIConnectionException $e) {
-  echo "The server could not be reached", PHP_EOL;
+  echo "Could not reach the API. Check your connection.", PHP_EOL;
   var_dump($e->getPrevious());
 } catch (RateLimitException $e) {
-  echo "A 429 status code was received; we should back off a bit.", PHP_EOL;
+  echo "Rate limit reached. Retry later.", PHP_EOL;
 } catch (APIStatusException $e) {
-  echo "Another non-200-range status code was received", PHP_EOL;
+  echo "Request failed. Check the response details.", PHP_EOL;
   echo $e->getMessage();
 }
 ```
 
-Error codes are as follows:
+Error types by cause:
 
 | Cause            | Error Type                     |
 | ---------------- | ------------------------------ |
@@ -138,11 +129,9 @@ Error codes are as follows:
 
 ### Retries
 
-Certain errors will be automatically retried 2 times by default, with a short exponential backoff.
-
-Connection errors (for example, due to a network connectivity problem), 408 Request Timeout, 409 Conflict, 429 Rate Limit, >=500 Internal errors, and timeouts will all be retried by default.
-
-You can use the `maxRetries` option to configure or disable this:
+The client retries some failures twice with exponential backoff.
+Defaults include connection failures, timeouts, HTTP 408, 409, 429 & 5xx responses.
+Set `maxRetries` globally or per request:
 
 ```php
 <?php
@@ -156,15 +145,14 @@ $client = new Client(requestOptions: ['maxRetries' => 0]);
 $result = $client->account->retrieve(requestOptions: ['maxRetries' => 5]);
 ```
 
-## Advanced concepts
+## Advanced Concepts
 
-### Making custom or undocumented requests
+### Custom or Undocumented Requests
 
-#### Undocumented properties
+#### Undocumented Properties
 
-You can send undocumented parameters to any endpoint, and read undocumented response properties, like so:
-
-Note: the `extra*` parameters of the same name overrides the documented parameters.
+Send undocumented parameters and read undocumented response properties.
+An `extra*` value overrides its documented counterpart.
 
 ```php
 <?php
@@ -178,13 +166,13 @@ $account = $client->account->retrieve(
 );
 ```
 
-#### Undocumented request params
+#### Undocumented Request Parameters
 
-If you want to explicitly send an extra param, you can do so with the `extra_query`, `extra_body`, and `extra_headers` under the `request_options:` parameter when making a request, as seen in the examples above.
+Pass `extraQueryParams`, `extraBodyParams` & `extraHeaders` through `requestOptions`.
 
-#### Undocumented endpoints
+#### Undocumented Endpoints
 
-To make requests to undocumented endpoints while retaining the benefit of auth, retries, and so on, you can make requests using `client.request`, like so:
+Use `$client->request()` to keep authentication and retries on undocumented routes:
 
 ```php
 <?php
@@ -200,9 +188,9 @@ $response = $client->request(
 
 ## Versioning
 
-This package follows [SemVer](https://semver.org/spec/v2.0.0.html) conventions. As the library is in initial development and has a major version of `0`, APIs may change at any time.
-
-This package considers improvements to the (non-runtime) PHPDoc type definitions to be non-breaking changes.
+This package follows [SemVer](https://semver.org/spec/v2.0.0.html).
+Before version 1.0, APIs may change without a major release.
+PHPDoc-only type improvements are non-breaking changes.
 
 ## Requirements
 

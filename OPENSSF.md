@@ -8,11 +8,7 @@ Assessment date: 2026-07-23.
 
 ## Eligibility
 
-This public PHP SDK is active and released.
-
-It is eligible for the OpenSSF Best Practices badge.
-
-No OpenSSF-defined ineligibility applies.
+This active, public PHP SDK qualifies for the OpenSSF Best Practices badge.
 
 ## Verified Technical Controls
 
@@ -49,15 +45,11 @@ The loopback service suite also parses generated response models.
 
 REUSE validates license metadata for all 962 repository files.
 
-## Outstanding Silver Blocker
+## Verified Release Provenance
 
-The release workflow now creates SLSA provenance for exact Composer archives.
-
-It also attaches each archive and Sigstore bundle to GitHub Releases.
-
-Run one post-merge release and verify its public artifact.
-
-Keep `signed_releases` Unmet until that verification succeeds.
+Release v0.13.2 provides an attested Composer archive and Sigstore bundle.
+Its tag targets commit `66eb960e5324007f28792e5b4e5c99456005ece3`.
+GitHub verifies the archive against the release workflow and hosted-runner policy.
 
 ## Outstanding Gold Blockers
 
