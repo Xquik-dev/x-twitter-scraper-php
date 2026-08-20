@@ -19,27 +19,27 @@ cmp "$reproducibility_workspace/first.zip" "$reproducibility_workspace/second.zi
 archive_listing="$(unzip -Z1 "$reproducibility_workspace/first.zip")"
 for required_file in LICENSE composer.json src/Client.php; do
   if ! grep -Fxq "$required_file" <<<"$archive_listing"; then
-    echo "Source distribution omits $required_file." >&2
+    echo "Source distribution omits $required_file. Update Composer archive settings." >&2
     exit 1
   fi
 done
 
 for excluded_prefix in .github/ scripts/ tests/ vendor/; do
   if grep -Fq "$excluded_prefix" <<<"$archive_listing"; then
-    echo "Source distribution includes $excluded_prefix." >&2
+    echo "Source distribution includes $excluded_prefix. Update Composer archive exclusions." >&2
     exit 1
   fi
 done
 
 for excluded_entry in .env .git .php-cs-fixer.cache auth.json; do
   if grep -Fxq "$excluded_entry" <<<"$archive_listing"; then
-    echo "Source distribution includes $excluded_entry." >&2
+    echo "Source distribution includes $excluded_entry. Update Composer archive exclusions." >&2
     exit 1
   fi
 done
 
 if grep -Eq '^\.env\.' <<<"$archive_listing"; then
-  echo "Source distribution includes an environment file." >&2
+  echo "Source distribution includes an environment file. Update Composer archive exclusions." >&2
   exit 1
 fi
 

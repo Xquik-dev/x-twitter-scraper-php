@@ -16,7 +16,7 @@ fi
 
 test_api_port="${BASH_REMATCH[1]}"
 if ((test_api_port > 65535)); then
-  echo "TEST_API_BASE_URL uses an invalid port." >&2
+  echo "TEST_API_BASE_URL has an invalid port. Use a port from 1 to 65535." >&2
   exit 1
 fi
 
@@ -49,7 +49,7 @@ for _ in {1..50}; do
 done
 
 if [[ "$mock_ready" != true ]]; then
-  echo "Loopback mock API failed to start." >&2
+  echo "Loopback mock API failed. Review the server log." >&2
   cat "$mock_log" >&2
   exit 1
 fi

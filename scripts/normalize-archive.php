@@ -15,7 +15,7 @@ if (3 !== $argc) {
 
 $input = new ZipArchive;
 if (true !== $input->open($argv[1])) {
-    fwrite(STDERR, "Input archive could not be opened.\n");
+    fwrite(STDERR, "Could not open the input archive. Check its path and format.\n");
     exit(2);
 }
 
@@ -28,7 +28,7 @@ for ($index = 0; $index < $input->numFiles; ++$index) {
     $contents = $input->getFromIndex($index);
     if (false === $contents) {
         $input->close();
-        fwrite(STDERR, "Archive entry {$name} could not be read.\n");
+        fwrite(STDERR, "Could not read archive entry {$name}. Check the input archive.\n");
         exit(2);
     }
     $entries[$name] = $contents;
@@ -38,7 +38,7 @@ ksort($entries, SORT_STRING);
 
 $output = new ZipArchive;
 if (true !== $output->open($argv[2], ZipArchive::CREATE | ZipArchive::OVERWRITE)) {
-    fwrite(STDERR, "Output archive could not be created.\n");
+    fwrite(STDERR, "Could not create the output archive. Check its path.\n");
     exit(2);
 }
 
