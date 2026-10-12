@@ -1,7 +1,6 @@
 # Xquik PHP SDK: Twitter Search, Followers & X Automation
 
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13737/badge)](https://www.bestpractices.dev/projects/13737)
-[![CI](https://github.com/Xquik-dev/x-twitter-scraper-php/actions/workflows/ci.yml/badge.svg)](https://github.com/Xquik-dev/x-twitter-scraper-php/actions/workflows/ci.yml)
 
 Search Twitter, read timelines, fetch profiles & export followers with Xquik.
 Use typed Composer methods for media, webhooks & X automation.
@@ -45,24 +44,27 @@ composer require xquik/x-twitter-scraper:^0.13.3
 
 ## Verify a Release
 
-Replace `VERSION` with the release number. Then verify its project archive:
+Maintainers release from their own machine with `bin/release-local`.
+Each release attaches a reproducible Composer archive.
+Replace `VERSION` with the release number. Then rebuild the archive and compare:
 
 ```sh
 release_tag=vVERSION
 archive="x-twitter-scraper-php-$release_tag.zip"
 
+git clone --depth 1 --branch "$release_tag" \
+  https://github.com/Xquik-dev/x-twitter-scraper-php.git source
+
 gh release download "$release_tag" \
   --repo Xquik-dev/x-twitter-scraper-php \
   --pattern "$archive"
 
-gh attestation verify "$archive" \
-  --repo Xquik-dev/x-twitter-scraper-php \
-  --signer-workflow Xquik-dev/x-twitter-scraper-php/.github/workflows/release-provenance.yml \
-  --source-ref "refs/tags/$release_tag" \
-  --deny-self-hosted-runners
+TZ=UTC ./source/scripts/build-archive rebuilt.zip
+cmp "$archive" rebuilt.zip
 ```
 
-GitHub verifies the archive, repository, workflow, signer & transparency proof.
+`cmp` prints nothing when both archives have identical bytes.
+Releases up to v0.13.3 also carry GitHub build attestations.
 
 ## Usage
 

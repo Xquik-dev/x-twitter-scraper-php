@@ -24,7 +24,7 @@ for required_file in LICENSE composer.json src/Client.php; do
   fi
 done
 
-for excluded_prefix in .github/ scripts/ tests/ vendor/; do
+for excluded_prefix in .github/ bin/ scripts/ tests/ vendor/; do
   if grep -Fq "$excluded_prefix" <<<"$archive_listing"; then
     echo "Source distribution includes $excluded_prefix. Update Composer archive exclusions." >&2
     exit 1

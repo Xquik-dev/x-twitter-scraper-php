@@ -18,15 +18,15 @@ This active, public PHP SDK qualifies for the OpenSSF Best Practices badge.
 | Contribution process | DCO sign-off and independent review rules |
 | Governance | Public roles, decisions, releases, and continuity policy |
 | Security reporting | Private reporting, response targets, boundaries, and threat model |
-| Runtime compatibility | PHP 8.1 and 8.2 syntax and production dependency checks |
-| Functional tests | PHP 8.3, 8.4, and 8.5 |
+| Runtime compatibility | PHPStan targets PHP 8.1, and `bin/check-local` lints `src` with any installed PHP 8.1 or 8.2 |
+| Functional tests | `./scripts/test` on PHP 8.3 or newer |
 | Executable line coverage | `./scripts/coverage` enforces 90% |
 | Branch coverage | `./scripts/coverage` enforces 80% |
 | Static analysis | PHPStan level max and PHP CS Fixer |
-| Dependency review | Dependabot, Composer audit, and a license allowlist |
-| Licensing gate | Pinned REUSE action checks every repository file |
+| Dependency review | Composer audit, abandoned package checks, and a license allowlist |
+| Licensing gate | `reuse lint` checks every repository file |
 | Reproducibility | 2 normalized Composer archives must have identical bytes |
-| CI | Pull requests and pushes run pinned, least-privilege workflows |
+| Local gate | `bin/check-local` runs every check before review and release |
 | Two-factor authentication | The Xquik-dev organization requires 2FA |
 
 The suite runs 247 tests with 689 assertions and 7 intentional skips.
@@ -45,11 +45,14 @@ The loopback service suite also parses generated response models.
 
 REUSE validates license metadata for all 962 repository files.
 
-## Verified Release Provenance
+## Release Provenance
 
 Release v0.13.2 provides an attested Composer archive and Sigstore bundle.
 Its tag targets commit `66eb960e5324007f28792e5b4e5c99456005ece3`.
-GitHub verifies the archive against the release workflow and hosted-runner policy.
+GitHub verifies that archive against the former release workflow and hosted-runner policy.
+
+Later releases come from `bin/release-local` on a maintainer machine.
+Anyone can rebuild a release archive from its tag and compare the bytes.
 
 ## Outstanding Gold Blockers
 
@@ -69,18 +72,10 @@ Gold eligibility still requires review by a different human.
 
 ## Maintenance
 
-Run these evidence commands before releases:
+Run every evidence check before releases:
 
 ```sh
-./scripts/lint
-./scripts/test
-./scripts/coverage
-./scripts/audit
-reuse lint
-./scripts/check-reproducible
-gh attestation verify ARCHIVE \
-  --repo Xquik-dev/x-twitter-scraper-php \
-  --signer-workflow Xquik-dev/x-twitter-scraper-php/.github/workflows/release-provenance.yml
+./bin/check-local
 ```
 
 Reassess the register before every major release.

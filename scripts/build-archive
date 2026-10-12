@@ -24,4 +24,5 @@ composer archive \
   --file=source \
   --no-interaction
 
-php scripts/normalize-archive.php "$archive_workspace/source.zip" "$output_archive"
+# ZIP entries store local time, so pin the time zone for identical bytes on every machine.
+TZ=UTC php scripts/normalize-archive.php "$archive_workspace/source.zip" "$output_archive"

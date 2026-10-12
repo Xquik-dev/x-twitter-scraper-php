@@ -33,13 +33,16 @@ Run focused tests while editing.
 Run every gate before requesting review:
 
 ```sh
-./scripts/lint
-./scripts/test
-./scripts/coverage
-./scripts/audit
-reuse lint
-./scripts/check-reproducible
+./bin/check-local
 ```
+
+It installs locked dependencies, then runs PHP CS Fixer, PHPStan, ShellCheck, REUSE, and syntax checks.
+Then it runs tests, coverage, dependency audits, the reproducible archive check, and Semgrep.
+It stops at the first failure and says what to fix.
+It skips REUSE and Semgrep when they are missing, so install both before a release.
+
+For a clean tree whose commit is on GitHub, it posts the `xquik-local-checks` commit status.
+Pull requests need that status to merge. Pass `--no-status` to skip posting.
 
 Executable line coverage must remain at least 90%.
 
@@ -68,9 +71,18 @@ Follow [SECURITY.md](SECURITY.md) for private reporting.
 
 ## Releases
 
-Publish an immutable `v*` release after its commit reaches `main`.
+Maintainers release from their own machine, not from GitHub Actions.
 
-Verify the tag, changelog, audit, licensing, and reproducible archive.
+After the version and changelog update reaches `main`, run this from a clean `main`:
+
+```sh
+./bin/release-local
+```
+
+It refuses unless `main` matches `origin/main` and the `v*` tag is new.
+It runs `bin/check-local`, audits dependencies, and builds the Composer archive.
+Then it pushes the annotated tag, which Packagist reads from GitHub.
+Last, it publishes the GitHub release with notes from CHANGELOG.md.
 
 [contribution-policy]: https://github.com/Xquik-dev/.github/blob/main/CONTRIBUTING.md
 [review-policy]: https://github.com/Xquik-dev/.github/blob/main/REVIEWING.md

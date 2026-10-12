@@ -1,0 +1,263 @@
+#!/usr/bin/env bash
+
+# SPDX-FileCopyrightText: 2026 Xquik contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Runs every repository check on a maintainer machine and stops at the first failure.
+# It reports the result as the xquik-local-checks commit status on GitHub.
+# Pass --no-status to skip the commit status.
+
+set -euo pipefail
+
+cd -- "$(dirname -- "$0")/.."
+
+readonly repository="Xquik-dev/x-twitter-scraper-php"
+readonly status_context="xquik-local-checks"
+readonly semgrep_rules_repository="https://github.com/semgrep/semgrep-rules.git"
+readonly semgrep_rules_commit="311ca4e9ba59d700624539bf658e3d29b134ee77"
+
+post_statuses=true
+status_sha=""
+current_check="Starting"
+passed_checks=""
+skipped_checks=""
+semgrep_workspace=""
+
+for argument in "$@"; do
+  case "$argument" in
+    --no-status) post_statuses=false ;;
+    *)
+      echo "Usage: bin/check-local [--no-status]" >&2
+      exit 2
+      ;;
+  esac
+done
+
+post_status() {
+  local state="$1"
+  local description="$2"
+
+  if [[ -z "$status_sha" ]]; then
+    return 0
+  fi
+  if ! gh api --silent --method POST "repos/${repository}/statuses/${status_sha}" \
+    -f state="$state" \
+    -f context="$status_context" \
+    -f description="${description:0:139}" >/dev/null 2>&1; then
+    echo "check-local: Could not post the ${state} status. Run gh auth status, then try again." >&2
+  fi
+}
+
+finish() {
+  local exit_code=$?
+
+  if [[ -n "$semgrep_workspace" ]]; then
+    rm -rf -- "${semgrep_workspace:?}"
+  fi
+  if [[ "$exit_code" -eq 0 ]]; then
+    local summary="Passed: ${passed_checks}."
+    if [[ -n "$skipped_checks" ]]; then
+      summary="${summary} Skipped: ${skipped_checks}."
+    fi
+    post_status success "$summary"
+  else
+    post_status failure "${current_check} failed. Run bin/check-local to see why."
+  fi
+  exit "$exit_code"
+}
+trap finish EXIT
+
+fail() {
+  echo "check-local: $1" >&2
+  exit 1
+}
+
+append_label() {
+  if [[ -z "$1" ]]; then
+    echo "$2"
+  else
+    echo "$1, $2"
+  fi
+}
+
+run_check() {
+  local label="$1"
+  local name="$2"
+  local hint="$3"
+  shift 3
+
+  current_check="$name"
+  echo "==> ${name}"
+  if ! "$@"; then
+    fail "${name} failed. ${hint}"
+  fi
+  passed_checks="$(append_label "$passed_checks" "$label")"
+}
+
+skip_check() {
+  local label="$1"
+  local reason="$2"
+
+  echo "==> Skipping ${label}: ${reason}"
+  skipped_checks="$(append_label "$skipped_checks" "$label")"
+}
+
+# Posts the status only for a clean tree whose commit GitHub already has.
+choose_status_commit() {
+  local sha
+
+  if [[ "$post_statuses" != true ]]; then
+    echo "Not posting the ${status_context} status because --no-status is set."
+    return 0
+  fi
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "Not posting the ${status_context} status because gh is missing."
+    return 0
+  fi
+  if [[ -n "$(git status --porcelain)" ]]; then
+    echo "Not posting the ${status_context} status because the working tree has changes."
+    return 0
+  fi
+  sha="$(git rev-parse HEAD)"
+  if ! gh api --silent "repos/${repository}/commits/${sha}" >/dev/null 2>&1; then
+    echo "Not posting the ${status_context} status because GitHub does not have this commit yet."
+    return 0
+  fi
+  status_sha="$sha"
+  echo "Posting the ${status_context} status to commit ${sha:0:12}."
+}
+
+check_shell_scripts() {
+  shellcheck \
+    bin/check-local \
+    bin/release-local \
+    scripts/audit \
+    scripts/bootstrap \
+    scripts/build-archive \
+    scripts/check-reproducible \
+    scripts/clean \
+    scripts/coverage \
+    scripts/format \
+    scripts/lint \
+    scripts/test
+}
+
+# Prints installed PHP 8.1 and 8.2 binaries, the oldest versions composer.json supports.
+older_php_binaries() {
+  local version
+  local candidate
+
+  for version in 8.1 8.2; do
+    for candidate in \
+      "php${version}" \
+      "/opt/homebrew/opt/php@${version}/bin/php" \
+      "/usr/local/opt/php@${version}/bin/php"; do
+      if command -v "$candidate" >/dev/null 2>&1; then
+        command -v "$candidate"
+        break
+      fi
+    done
+  done
+}
+
+check_php_syntax() {
+  local php_binary
+
+  for php_binary in "$@"; do
+    echo "Checking src with PHP $("$php_binary" -r 'echo PHP_VERSION;')"
+    find src -name '*.php' -print0 |
+      xargs -0 -n 1 -P 4 "$php_binary" -d display_errors=stderr -l >/dev/null ||
+      return 1
+  done
+}
+
+run_semgrep() {
+  local rules="$semgrep_workspace/semgrep-rules"
+
+  git init --quiet "$rules" || return 1
+  git -C "$rules" fetch --quiet --depth 1 "$semgrep_rules_repository" "$semgrep_rules_commit" || return 1
+  git -C "$rules" checkout --quiet FETCH_HEAD || return 1
+  # This upstream rule flags every non-string assert. PHP 8.1+ does not
+  # evaluate assertion strings as code, and this SDK uses boolean invariants.
+  rm -- "$rules/php/lang/security/assert-use.yaml" || return 1
+
+  semgrep scan \
+    --config "$rules/php" \
+    --error \
+    --metrics=off \
+    --exclude vendor \
+    --exclude .phpunit.cache \
+    .
+}
+
+choose_status_commit
+post_status pending "Running lint, types, tests, coverage, audit & reproducible build."
+
+current_check="Checking required tools"
+echo "==> ${current_check}"
+for tool in cmp composer curl php shellcheck unzip; do
+  command -v "$tool" >/dev/null 2>&1 || fail "${tool} is missing. Install it, then run bin/check-local again."
+done
+
+run_check "dependencies" "Bootstrapping locked dependencies" \
+  "Fix composer.json or composer.lock, then run it again." \
+  ./scripts/bootstrap
+
+run_check "format & types" "Running PHP CS Fixer and PHPStan" \
+  "Run ./scripts/format, then fix the PHPStan errors above." \
+  ./scripts/lint
+
+run_check "ShellCheck" "Checking shell scripts" \
+  "Fix the ShellCheck findings above." \
+  check_shell_scripts
+
+if command -v reuse >/dev/null 2>&1; then
+  run_check "REUSE" "Checking repository licensing" \
+    "Add license metadata for the files reuse lists." \
+    reuse lint
+else
+  skip_check "REUSE" "reuse is missing. Install it with pipx install reuse."
+fi
+
+run_check "platform" "Checking production platform requirements" \
+  "Install the PHP extensions composer lists above." \
+  composer check-platform-reqs --no-dev --lock
+
+syntax_php_binaries=(php)
+while IFS= read -r php_binary; do
+  syntax_php_binaries+=("$php_binary")
+done < <(older_php_binaries)
+if [[ "${#syntax_php_binaries[@]}" -eq 1 ]]; then
+  echo "PHP 8.1 and 8.2 are missing, so only PHPStan checks their compatibility."
+fi
+run_check "syntax" "Checking PHP syntax" \
+  "Fix the syntax error above for that PHP version." \
+  check_php_syntax "${syntax_php_binaries[@]}"
+
+run_check "tests" "Running tests" \
+  "Fix the failing tests above." \
+  ./scripts/test
+
+run_check "coverage" "Enforcing coverage" \
+  "Install Xdebug if it is missing, or add tests until coverage meets the thresholds." \
+  ./scripts/coverage
+
+run_check "audit" "Auditing dependencies and licenses" \
+  "Update or replace the packages flagged above." \
+  ./scripts/audit
+
+run_check "reproducible build" "Verifying the reproducible distribution" \
+  "Fix the Composer archive settings named above." \
+  ./scripts/check-reproducible
+
+if command -v semgrep >/dev/null 2>&1; then
+  semgrep_workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-semgrep.XXXXXX")"
+  run_check "Semgrep" "Running Semgrep with pinned PHP rules" \
+    "Fix the Semgrep findings above." \
+    run_semgrep
+else
+  skip_check "Semgrep" "semgrep is missing. Install it with pipx install semgrep."
+fi
+
+echo "All local checks passed."

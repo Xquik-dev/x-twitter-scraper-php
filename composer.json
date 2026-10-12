@@ -16,6 +16,7 @@
       "/.release-please-manifest.json",
       "/.stats.yml",
       "/auth.json",
+      "/bin",
       "/docs",
       "/phpstan.dist.neon",
       "/phpunit.xml.dist",

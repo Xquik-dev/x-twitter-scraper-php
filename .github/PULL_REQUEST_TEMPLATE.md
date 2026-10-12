@@ -6,7 +6,7 @@ Describe the user-visible result.
 
 - [ ] I ran the relevant tests.
 - [ ] I added regression coverage for corrected defects.
-- [ ] I ran every required gate.
+- [ ] I ran `./bin/check-local`.
 - [ ] I preserved public API contracts.
 - [ ] I checked the diff for secrets and private implementation details.
 - [ ] I signed every commit with `git commit --signoff`.
