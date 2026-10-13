@@ -30,7 +30,9 @@ Document unresolved tradeoffs in the pull request.
 
 Every nontrivial change requires review before release.
 
-Maintainer-authored changes require another human reviewer.
+`bin/check-local` must pass on a pull request's exact head before it merges.
+
+1 maintainer reviews each change. No second human reviewer is required today.
 
 Security-sensitive changes require an explicit security review.
 
@@ -49,6 +51,8 @@ Protect local runtime fixes with focused regression tests.
 Release automation prepares version and changelog updates.
 
 Maintainers verify tests, security gates, and release metadata.
+
+Maintainers publish releases from their own machine with `bin/release-local`.
 
 Release tags must reference the reviewed default-branch commit.
 

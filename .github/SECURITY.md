@@ -40,17 +40,17 @@ This repository excludes private infrastructure and service implementation detai
 
 ## Threat Model
 
-Relevant threats include:
+These threats are in scope.
 
 - Credential leakage through logs, URLs, middleware, or debug output.
 - Redirects or custom base URLs sending credentials to untrusted hosts.
 - Malformed responses causing unsafe parsing or resource exhaustion.
 - Retrying consumed streams and producing incomplete uploads.
-- Dependency, generator, workflow, and release supply-chain compromise.
+- Dependency, generator, build, and release supply-chain compromise.
 
 Controls include loopback-only tests, strict parsing, static analysis, and Semgrep.
 
-CI also verifies dependencies, licenses, coverage, and reproducible archives.
+`bin/check-local` also verifies dependencies, licenses, coverage, and reproducible archives.
 
 ## Response Process
 

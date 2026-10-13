@@ -12,7 +12,10 @@ echo "==> Validating locked Composer metadata"
 composer validate --strict --no-check-publish
 
 echo "==> Auditing locked dependencies"
-composer audit --locked --abandoned=fail --format=plain
+# composer audit exits non-zero on any finding. verify-audit.php judges each
+# finding against audit-exceptions.json and rejects missing or broken output.
+audit_report="$(composer audit --locked --abandoned=report --format=json)" || true
+php scripts/verify-audit.php <<<"$audit_report"
 
 echo "==> Checking dependency license policy"
 composer licenses --format=json | php scripts/verify-licenses.php

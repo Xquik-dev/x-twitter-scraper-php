@@ -1,0 +1,230 @@
+#!/usr/bin/env bash
+
+# SPDX-FileCopyrightText: 2026 Xquik contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Runs every repository check in order and stops at the first failure.
+# Semgrep and REUSE are required. REUSE runs at a pinned version through uv.
+# Posts the xquik-local-checks commit status for a clean, pushed HEAD with the
+# gh login of whoever runs it. On the release machine, that is the owner's
+# login. The success text lists only the checks that ran and passed.
+# Pass --no-status to skip the status.
+
+set -euo pipefail
+
+cd -- "$(dirname -- "$0")/.."
+
+readonly repository="Xquik-dev/x-twitter-scraper-php"
+readonly status_context="xquik-local-checks"
+readonly status_limit=139
+readonly reuse_version="6.2.0"
+
+post_requested=true
+for argument in "$@"; do
+  case "$argument" in
+    --no-status) post_requested=false ;;
+    *)
+      echo "Unknown option $argument. Run bin/check-local or bin/check-local --no-status." >&2
+      exit 2
+      ;;
+  esac
+done
+
+check_name="Startup"
+check_label=""
+check_hint="Fix the error above, then rerun."
+passed_checks=()
+status_sha=""
+workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-check.XXXXXX")"
+
+post_status() {
+  if [[ -z "$status_sha" ]]; then
+    return 0
+  fi
+  local description="$2"
+  gh api --method POST "repos/$repository/statuses/$status_sha" \
+    -f state="$1" \
+    -f context="$status_context" \
+    -f description="${description:0:$status_limit}" >/dev/null ||
+    echo "Could not post the $1 commit status. Check gh auth status and push access." >&2
+}
+
+finish() {
+  local status=$?
+  rm -rf -- "${workspace:?}"
+  if [[ "$status" -ne 0 ]]; then
+    echo "Check failed at $check_name. $check_hint" >&2
+    post_status failure "Failed at $check_name."
+  fi
+}
+trap finish EXIT
+
+start_check() {
+  check_name="$1"
+  check_label="$2"
+  check_hint="$3"
+  echo "==> $check_name"
+}
+
+pass_check() {
+  passed_checks+=("$check_label")
+}
+
+# Prints the installed PHP 8.1 and 8.2 binaries, the oldest versions that
+# composer.json supports.
+older_php_binaries() {
+  local version candidate
+  for version in 8.1 8.2; do
+    for candidate in \
+      "php$version" \
+      "/opt/homebrew/opt/php@$version/bin/php" \
+      "/usr/local/opt/php@$version/bin/php"; do
+      if command -v "$candidate" >/dev/null 2>&1; then
+        command -v "$candidate"
+        break
+      fi
+    done
+  done
+}
+
+check_php_syntax() {
+  local php_binary
+  for php_binary in "$@"; do
+    echo "Checking src with PHP $("$php_binary" -r 'echo PHP_VERSION;')"
+    find src -name '*.php' -print0 |
+      xargs -0 -n 1 -P 4 "$php_binary" -d display_errors=stderr -l >/dev/null
+  done
+}
+
+# Prints how many tests ran and passed, from the PHPUnit summary in a log.
+passed_test_count() {
+  local escape summary tests skipped
+  escape="$(printf '\033')"
+  summary="$(sed "s/${escape}\[[0-9;]*m//g" "$1")"
+  tests="$(sed -n -e 's/^OK (\([0-9][0-9]*\) tests*, .*/\1/p' -e 's/^Tests: \([0-9][0-9]*\),.*/\1/p' <<<"$summary" | tail -n 1)"
+  skipped="$(sed -n 's/^Tests: .*Skipped: \([0-9][0-9]*\).*/\1/p' <<<"$summary" | tail -n 1)"
+  if [[ -n "$tests" ]]; then
+    echo $((tests - ${skipped:-0}))
+  fi
+}
+
+tree_state="$(git status --porcelain)"
+
+echo "==> Commit status"
+if [[ "$post_requested" == false ]]; then
+  echo "Commit status not posted because --no-status was passed."
+elif ! command -v gh >/dev/null 2>&1; then
+  echo "Commit status not posted because gh is not installed."
+elif [[ -n "$tree_state" ]]; then
+  echo "Commit status not posted because the working tree has changes."
+else
+  head_sha="$(git rev-parse HEAD)"
+  if gh api "repos/$repository/commits/$head_sha" >/dev/null 2>&1; then
+    status_sha="$head_sha"
+    post_status pending "Local checks are running."
+    echo "Posting $status_context for $head_sha."
+  else
+    echo "Commit status not posted because GitHub has no commit $head_sha. Push it, or run gh auth login."
+  fi
+fi
+
+start_check "Required tools" "" "Install the missing tool, then rerun."
+for tool in cmp composer curl git jq php semgrep shellcheck tar unzip uvx; do
+  if ! command -v "$tool" >/dev/null 2>&1; then
+    case "$tool" in
+      semgrep) check_hint="Install Semgrep with brew install semgrep, then rerun." ;;
+      uvx) check_hint="Install uv with brew install uv, then rerun." ;;
+      *) check_hint="Install $tool, then rerun." ;;
+    esac
+    exit 1
+  fi
+done
+
+start_check "Locked dependencies" "install" "Fix composer.json or composer.lock, then rerun."
+./scripts/bootstrap
+pass_check
+
+start_check "PHP formatting and types" "lint" "Run ./scripts/format, fix the PHPStan errors above, then rerun."
+./scripts/lint
+pass_check
+
+start_check "Shell scripts" "shellcheck" "Fix the shellcheck findings above, then rerun."
+shell_scripts=()
+for script in bin/* scripts/* scripts/tests/*; do
+  if [[ -f "$script" && "$(head -n 1 "$script")" == "#!/usr/bin/env bash" ]]; then
+    shell_scripts+=("$script")
+  fi
+done
+shellcheck --external-sources "${shell_scripts[@]}"
+pass_check
+
+start_check "Script tests" "script tests" "Fix the failing script tests above, then rerun."
+./scripts/test-scripts
+pass_check
+
+start_check "Repository licensing" "REUSE" "Add the missing license notice or REUSE.toml entry, then rerun."
+uvx --from "reuse==$reuse_version" reuse lint
+pass_check
+
+start_check "Production platform requirements" "platform" "Install the PHP extensions that Composer lists above, then rerun."
+composer check-platform-reqs --no-dev --lock
+pass_check
+
+start_check "PHP syntax" "syntax" "Fix the syntax error above for that PHP version, then rerun."
+syntax_php_binaries=(php)
+while IFS= read -r php_binary; do
+  syntax_php_binaries+=("$php_binary")
+done < <(older_php_binaries)
+if [[ "${#syntax_php_binaries[@]}" -eq 1 ]]; then
+  echo "PHP 8.1 and 8.2 are not installed, so only PHPStan checks those versions."
+fi
+check_php_syntax "${syntax_php_binaries[@]}"
+pass_check
+
+start_check "Tests" "tests" "Fix the failing tests above, then rerun."
+bash scripts/test | tee "$workspace/tests.log"
+tests_passed="$(passed_test_count "$workspace/tests.log")"
+check_label="${tests_passed:+$tests_passed }tests"
+pass_check
+
+start_check "Coverage" "coverage" "Install Xdebug if it is missing, or add tests until lines reach 90% and branches reach 80%, then rerun."
+./scripts/coverage
+pass_check
+
+start_check "Dependency audit" "audit" "Update the packages named above, or list an unfixable development-only finding in audit-exceptions.json."
+./scripts/audit
+pass_check
+
+start_check "Reproducible archive" "reproducible archive" "Fix the Composer archive setting named above, then rerun."
+./scripts/check-reproducible
+pass_check
+
+start_check "Semgrep PHP rules" "Semgrep" "Fix the Semgrep error or findings above, then rerun."
+./scripts/semgrep
+pass_check
+
+if [[ -z "$tree_state" ]]; then
+  start_check "Unchanged working tree" "" "A check changed or added the files above. Fix that check so it leaves the tree alone, then rerun."
+  tree_changes="$(git status --porcelain)"
+  if [[ -n "$tree_changes" ]]; then
+    echo "$tree_changes"
+    exit 1
+  fi
+fi
+
+check_name="Commit status"
+summary=""
+last_index=$((${#passed_checks[@]} - 1))
+for index in "${!passed_checks[@]}"; do
+  if [[ "$index" -eq 0 ]]; then
+    summary="${passed_checks[$index]}"
+  elif [[ "$index" -eq "$last_index" ]]; then
+    summary="$summary and ${passed_checks[$index]}"
+  else
+    summary="$summary, ${passed_checks[$index]}"
+  fi
+done
+summary="Passed $summary."
+post_status success "$summary"
+echo "$summary"
