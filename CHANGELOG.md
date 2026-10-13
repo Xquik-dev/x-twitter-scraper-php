@@ -112,7 +112,7 @@ Full Changelog: [v0.8.0...v0.9.0](https://github.com/Xquik-dev/x-twitter-scraper
 
 ### Documentation
 
-* add Contributor Covenant 2.1 Code of Conduct ([#2192](https://github.com/Xquik-dev/x-twitter-scraper-php/issues/2192)) ([9b5a580](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/9b5a580eb39c479709602e6be3dc9c83bdb57cef))
+* add Contributor Covenant 2.1 Code of Conduct ([9b5a580](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/9b5a580eb39c479709602e6be3dc9c83bdb57cef))
 * add DeepWiki badge ([05deaee](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/05deaee83f76ff3ae7f124ae1be90cbaa2d51240))
 * clarify repository discovery ([c533705](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/c5337050bca2786a7b1c1460950063832ffb93b2))
 * map common X data tasks ([#10](https://github.com/Xquik-dev/x-twitter-scraper-php/issues/10)) ([e89b0e7](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/e89b0e7c66f391bf1c1330f14bdf56b68a8d6316))
@@ -150,7 +150,7 @@ Full Changelog: [v0.7.0...v0.8.0](https://github.com/Xquik-dev/x-twitter-scraper
 
 ### Documentation
 
-* add Contributor Covenant 2.1 Code of Conduct ([#2192](https://github.com/Xquik-dev/x-twitter-scraper-php/issues/2192)) ([9b5a580](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/9b5a580eb39c479709602e6be3dc9c83bdb57cef))
+* add Contributor Covenant 2.1 Code of Conduct ([9b5a580](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/9b5a580eb39c479709602e6be3dc9c83bdb57cef))
 * add DeepWiki badge ([05deaee](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/05deaee83f76ff3ae7f124ae1be90cbaa2d51240))
 * clarify repository discovery ([c533705](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/c5337050bca2786a7b1c1460950063832ffb93b2))
 * map common X data tasks ([#10](https://github.com/Xquik-dev/x-twitter-scraper-php/issues/10)) ([e89b0e7](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/e89b0e7c66f391bf1c1330f14bdf56b68a8d6316))
@@ -186,7 +186,7 @@ Full Changelog: [v0.6.1...v0.7.0](https://github.com/Xquik-dev/x-twitter-scraper
 
 ### Documentation
 
-* add Contributor Covenant 2.1 Code of Conduct ([#2192](https://github.com/Xquik-dev/x-twitter-scraper-php/issues/2192)) ([9b5a580](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/9b5a580eb39c479709602e6be3dc9c83bdb57cef))
+* add Contributor Covenant 2.1 Code of Conduct ([9b5a580](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/9b5a580eb39c479709602e6be3dc9c83bdb57cef))
 * add DeepWiki badge ([05deaee](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/05deaee83f76ff3ae7f124ae1be90cbaa2d51240))
 * clarify repository discovery ([c533705](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/c5337050bca2786a7b1c1460950063832ffb93b2))
 * map common X data tasks ([#10](https://github.com/Xquik-dev/x-twitter-scraper-php/issues/10)) ([e89b0e7](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/e89b0e7c66f391bf1c1330f14bdf56b68a8d6316))
@@ -312,7 +312,7 @@ Full Changelog: [v0.4.0...v0.4.1](https://github.com/Xquik-dev/x-twitter-scraper
 
 ### Documentation
 
-* add Contributor Covenant 2.1 Code of Conduct ([#2192](https://github.com/Xquik-dev/x-twitter-scraper-php/issues/2192)) ([9b5a580](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/9b5a580eb39c479709602e6be3dc9c83bdb57cef))
+* add Contributor Covenant 2.1 Code of Conduct ([9b5a580](https://github.com/Xquik-dev/x-twitter-scraper-php/commit/9b5a580eb39c479709602e6be3dc9c83bdb57cef))
 
 ## 0.4.0 (2026-04-22)
 
