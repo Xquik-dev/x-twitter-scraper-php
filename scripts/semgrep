@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# SPDX-FileCopyrightText: 2026 Xquik contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Scans the repository with Semgrep and fails on any finding.
+# The rules are every PHP rule of the semgrep-rules repository at 1 pinned
+# commit of its release branch. This script removes no rule. Semgrep reads
+# the files that Git tracks and skips the paths on its default ignore list,
+# such as tests.
+
+set -euo pipefail
+
+cd -- "$(dirname -- "$0")/.."
+
+readonly rules_repository="https://github.com/semgrep/semgrep-rules.git"
+# The head of the release branch on 2026-10-13.
+readonly rules_commit="5a8a6beafb1a848591f44bdddcb51584474493c4"
+
+workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-semgrep.XXXXXX")"
+trap 'rm -rf -- "${workspace:?}"' EXIT
+readonly rules="$workspace/semgrep-rules"
+
+echo "==> Fetching the Semgrep rules at ${rules_commit:0:12}"
+git init --quiet "$rules"
+if ! git -C "$rules" fetch --quiet --depth 1 "$rules_repository" "$rules_commit"; then
+  echo "Could not fetch the Semgrep rules. Check your network, then rerun." >&2
+  exit 1
+fi
+git -C "$rules" checkout --quiet FETCH_HEAD
+if [[ "$(git -C "$rules" rev-parse HEAD)" != "$rules_commit" ]]; then
+  echo "The fetched Semgrep rules are not at the pinned commit. Rerun, and check the pin in scripts/semgrep if it happens again." >&2
+  exit 1
+fi
+
+echo "==> Scanning with the pinned PHP rules"
+semgrep scan \
+  --config "$rules/php" \
+  --error \
+  --metrics=off \
+  --disable-version-check \
+  --exclude vendor \
+  --exclude .phpunit.cache \
+  .

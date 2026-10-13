@@ -49,7 +49,7 @@ final class MonitorsService implements MonitorsContract
     /**
      * @api
      *
-     * Creates an account monitor. Monitors are unlimited. Active monitors check every 1 second and cost 21 credits per hour. Events and webhook deliveries are included. Creation requires available credits for the first hourly charge and username lookup.
+     * Creates an account monitor. Monitors are unlimited. Active monitors check every 1 second and cost 30 credits per hour. Events and webhook deliveries are included. Creation requires available credits for the first hourly charge and username lookup.
      *
      * @param list<EventType|value-of<EventType>> $eventTypes array of event types to subscribe to
      * @param string $username X username (without @)

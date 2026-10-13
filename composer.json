@@ -15,7 +15,9 @@
       "/.phpunit.cache",
       "/.release-please-manifest.json",
       "/.stats.yml",
+      "/audit-exceptions.json",
       "/auth.json",
+      "/bin",
       "/docs",
       "/phpstan.dist.neon",
       "/phpunit.xml.dist",
@@ -58,19 +60,18 @@
     "preferred-install": "dist",
     "sort-packages": true
   },
-  "description": "PHP SDK for Twitter search, followers, webhooks & X automation through Xquik. Not affiliated with X Corp.",
+  "description": "X API & Twitter API SDK for PHP. Scrape Twitter search, profiles & followers as a Twitter scraper & tweet scraper. Not affiliated with X Corp.",
   "homepage": "https://docs.xquik.com/sdks/php",
   "keywords": [
-    "api-client",
-    "automation",
-    "follower-export",
-    "media-download",
-    "profile-tweets",
-    "sdk",
-    "tweet-search",
+    "x-api",
     "twitter-api",
-    "webhooks",
-    "x-api"
+    "twitter-scraper",
+    "tweet-scraper",
+    "scrape-twitter",
+    "twitter-api-alternative",
+    "twitter-sdk",
+    "twitter-api-php",
+    "xquik"
   ],
   "name": "xquik/x-twitter-scraper",
   "support": {

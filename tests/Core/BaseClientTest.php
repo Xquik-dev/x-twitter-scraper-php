@@ -140,7 +140,7 @@ final class BaseClientTest extends TestCase
         $idempotencyKey = $request['headers']['Idempotency-Key'];
         $this->assertIsString($idempotencyKey);
         $this->assertMatchesRegularExpression(
-            '/^stainless-php-retry-[0-9a-f]{64}$/',
+            '/^xquik-php-retry-[0-9a-f]{64}$/',
             $idempotencyKey,
         );
         $this->assertSame(

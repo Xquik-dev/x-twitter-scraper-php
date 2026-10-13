@@ -10,7 +10,7 @@ const MINIMUM_LINE_RATE = 0.90;
 const MINIMUM_BRANCH_RATE = 0.80;
 
 if (2 !== $argc) {
-    fwrite(STDERR, "Usage: php scripts/verify-coverage.php <cobertura.xml>\n");
+    fwrite(STDERR, "Run php scripts/verify-coverage.php <cobertura.xml>.\n");
     exit(2);
 }
 
@@ -61,8 +61,8 @@ $branchSummary = sprintf(
     100 * $branchRate,
 );
 
-echo "Executable lines: {$lineSummary}\n";
-echo "Branches: {$branchSummary}\n";
+echo "Covered executable lines {$lineSummary}\n";
+echo "Covered branches {$branchSummary}\n";
 
 $failed = false;
 if ($lineRate < MINIMUM_LINE_RATE) {
