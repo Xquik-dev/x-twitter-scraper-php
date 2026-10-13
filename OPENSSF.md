@@ -24,7 +24,7 @@ This active, public PHP SDK qualifies for the OpenSSF Best Practices badge.
 | Branch coverage | `./scripts/coverage` enforces 80% |
 | Static analysis | PHPStan level max and PHP CS Fixer |
 | Dependency review | Composer audit at every severity with reviewed development-only exceptions, abandoned package checks, and a license allowlist |
-| Code scanning | Semgrep runs every PHP rule of a pinned semgrep-rules release commit and blocks on any finding |
+| Code scanning | Semgrep runs every PHP rule of a pinned semgrep-rules release commit and blocks on any finding or any file it cannot parse |
 | Licensing gate | REUSE 6.2.0 through `uvx` checks every repository file |
 | Reproducibility | 2 normalized Composer archives must have identical bytes |
 | Local gate | `bin/check-local` runs every check before review and release, and script tests cover it |

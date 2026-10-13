@@ -43,6 +43,8 @@ Last, it runs the dependency audit, the reproducible archive check and Semgrep.
 It stops at the first failure and says what to fix.
 Semgrep and uv are required, and no check is ever skipped.
 Semgrep uses every PHP rule of the semgrep-rules release branch at the commit that `scripts/semgrep` pins.
+Any Semgrep finding fails the run, and so does any file that Semgrep cannot parse.
+Semgrep 1.180 cannot parse a named argument called `list`, which PHP 8 allows. The run allows that 1 error only where the skipped text is exactly `list:`.
 `./scripts/test-scripts` runs the tests of `bin/` and `scripts/` with fake GitHub, Packagist and Composer commands.
 
 For a clean tree whose commit is on GitHub, it posts the `xquik-local-checks` commit status.

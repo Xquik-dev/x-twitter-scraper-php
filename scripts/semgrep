@@ -4,7 +4,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Scans the repository with Semgrep and fails on any finding.
+# Scans the repository with Semgrep and fails on any finding and on any file
+# that Semgrep could not parse.
 # The rules are every PHP rule of the semgrep-rules repository at 1 pinned
 # commit of its release branch. This script removes no rule. Semgrep reads
 # the files that Git tracks and skips the paths on its default ignore list,
@@ -21,6 +22,7 @@ readonly rules_commit="5a8a6beafb1a848591f44bdddcb51584474493c4"
 workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-semgrep.XXXXXX")"
 trap 'rm -rf -- "${workspace:?}"' EXIT
 readonly rules="$workspace/semgrep-rules"
+readonly report="$workspace/semgrep.json"
 
 echo "==> Fetching the Semgrep rules at ${rules_commit:0:12}"
 git init --quiet "$rules"
@@ -35,11 +37,88 @@ if [[ "$(git -C "$rules" rev-parse HEAD)" != "$rules_commit" ]]; then
 fi
 
 echo "==> Scanning with the pinned PHP rules"
+status=0
 semgrep scan \
   --config "$rules/php" \
   --error \
   --metrics=off \
   --disable-version-check \
+  --json-output="$report" \
   --exclude vendor \
   --exclude .phpunit.cache \
-  .
+  . || status=$?
+
+# Semgrep goes on after it fails to parse a file, scans only the code it could
+# parse and still exits with 0. Its JSON report lists each such file under
+# errors.
+if [[ ! -s "$report" ]]; then
+  ((status == 0)) || exit "$status"
+  echo "Semgrep wrote no report, so the scan cannot show that it read every file. Rerun, and update Semgrep if it happens again." >&2
+  exit 1
+fi
+php -- "$report" <<'PHP'
+<?php
+
+declare(strict_types=1);
+
+// Semgrep 1.180 cannot parse a named argument called list, which PHP 8 allows.
+// It skips the argument name and parses the rest of the file. Such an error
+// passes only while every span it reports holds exactly the text list: in the
+// file. The run fails when the exemption matches nothing, since Semgrep then
+// parses such an argument and the exemption must come out.
+function onlyListArgument(array $error): bool
+{
+    $type = $error['type'] ?? null;
+    if (($error['level'] ?? '') !== 'warn' || !is_array($type) || ($type[0] ?? '') !== 'PartialParsing') {
+        return false;
+    }
+    $message = explode("\n", (string) ($error['message'] ?? ''), 2);
+    $spans = $type[1] ?? [];
+    if (count($message) !== 2 || trim($message[1]) !== '`list:` was unexpected' || !is_array($spans) || $spans === []) {
+        return false;
+    }
+    foreach ($spans as $span) {
+        $path = (string) ($span['path'] ?? '');
+        $line = $span['start']['line'] ?? null;
+        $from = $span['start']['col'] ?? null;
+        $to = $span['end']['col'] ?? null;
+        if (!is_int($line) || !is_int($from) || !is_int($to) || $line !== ($span['end']['line'] ?? null) || !is_file($path)) {
+            return false;
+        }
+        $text = file($path, FILE_IGNORE_NEW_LINES)[$line - 1] ?? '';
+        if (substr($text, $from - 1, $to - $from) !== 'list:') {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+$report = json_decode((string) file_get_contents($argv[1]), true, 512, JSON_THROW_ON_ERROR);
+$allowed = 0;
+$unread = [];
+foreach ($report['errors'] ?? [] as $error) {
+    if (onlyListArgument($error)) {
+        ++$allowed;
+
+        continue;
+    }
+    $line = $error['spans'][0]['start']['line'] ?? null;
+    $unread[] = isset($error['path'])
+        ? $error['path'] . (is_int($line) ? " at line {$line}" : '')
+        : explode("\n", (string) ($error['message'] ?? 'an error without a message'))[0];
+}
+if ($unread !== []) {
+    $files = implode(' and ', array_unique($unread));
+    fwrite(STDERR, "Semgrep could not parse {$files}, so the scan is incomplete. Rewrite that code so Semgrep parses it, then rerun.\n");
+
+    exit(1);
+}
+if ($allowed === 0) {
+    fwrite(STDERR, "Semgrep now parses every named argument called list, so its exemption matched nothing. Remove the exemption from scripts/semgrep, then rerun.\n");
+
+    exit(1);
+}
+echo "Allowed {$allowed} Semgrep errors for a named argument called list, which Semgrep cannot parse yet.\n";
+PHP
+exit "$status"
