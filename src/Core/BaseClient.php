@@ -111,7 +111,7 @@ abstract class BaseClient
     {
         $hex = bin2hex(random_bytes(32));
 
-        return "stainless-php-retry-{$hex}";
+        return "xquik-php-retry-{$hex}";
     }
 
     /**

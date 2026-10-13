@@ -15,7 +15,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\EventType;
 
 /**
- * Creates a keyword monitor. Keyword monitors are unlimited. Active monitors check every 1 second and cost 21 credits per hour. Events and webhook deliveries are included. Creation requires available credits for the first hourly charge.
+ * Creates a keyword monitor. Keyword monitors are unlimited. Active monitors check every 1 second and cost 30 credits per hour. Events and webhook deliveries are included. Creation requires available credits for the first hourly charge.
  *
  * @see XTwitterScraper\Services\Monitors\KeywordsService::create()
  *
