@@ -1,22 +1,31 @@
-# Xquik PHP SDK: Twitter Search, Followers & X Automation
+# X API & Twitter API PHP SDK by Xquik
 
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13737/badge)](https://www.bestpractices.dev/projects/13737)
 
-Search Twitter, read timelines, fetch profiles & export followers with Xquik.
-Use typed Composer methods for media, webhooks & X automation.
+Use this X API & Twitter API SDK to work with X from PHP.
+It works as a Twitter scraper & tweet scraper for search, profiles & followers.
+Scrape Twitter timelines, lists, communities & trends into typed PHP value objects.
+Manage media, webhooks, monitors & X automation through typed Composer methods.
+It provides a Twitter API alternative through documented Xquik REST routes.
 
-## PHP or REST
+Xquik is the world's fastest and cheapest X Twitter scraper service with the most complete X data.
+Xquik charges only for delivered, unique, filter-matching results and never pads rows.
 
+> Xquik is an independent third-party service. Not affiliated with X Corp.
+> "Twitter" and "X" are trademarks of X Corp.
+
+## PHP client or REST
+
+The typed Composer package calls the documented Xquik REST API.
+It does not call or emulate the official X API.
 Use this SDK for typed value objects, retries & Composer applications.
-Use the REST API when Composer is unavailable.
-
-## Documentation
+Call REST directly when a Composer dependency does not fit.
 
 Read the [PHP SDK guide](https://docs.xquik.com/sdks/php) or [API guide](https://docs.xquik.com/api-reference/overview).
 
-## Common Twitter & X Tasks
+## Common Twitter & X tasks
 
-| Task | REST Route | Usage |
+| Task | REST route | Usage |
 | --- | --- | --- |
 | Run an advanced Twitter search | `GET /x/tweets/search` | Use keywords or supported operators. |
 | Extract an X profile timeline | `GET /x/users/{id}/tweets` | Paginate bounded timeline results. |
@@ -32,7 +41,7 @@ The [API reference](https://docs.xquik.com/api-reference/overview) lists every r
 
 ## Installation
 
-Install the package from Packagist with Composer:
+Install the [Packagist package `xquik/x-twitter-scraper`](https://packagist.org/packages/xquik/x-twitter-scraper) with Composer.
 
 <!-- x-release-please-start-version -->
 
@@ -42,11 +51,13 @@ composer require xquik/x-twitter-scraper:^0.13.3
 
 <!-- x-release-please-end -->
 
-## Verify a Release
+## Verify a release
 
 Maintainers release from their own machine with `bin/release-local`.
+The script runs every repository check before it pushes the tag.
+`bin/release-local --dry-run` runs the same checks and prints the listing without releasing.
 Each release attaches a reproducible Composer archive.
-Replace `VERSION` with the release number. Then rebuild the archive and compare:
+Replace `VERSION` with the release number, then rebuild the archive and compare.
 
 ```sh
 release_tag=vVERSION
@@ -84,14 +95,14 @@ $response = $client->x->tweets->search(q: 'from:elonmusk', limit: 10);
 var_dump($response);
 ```
 
-### Value Objects
+### Value objects
 
 Create value objects with `Dog::with(name: "Joey")` and named parameters.
-Builders also work: `(new Dog)->withName("Joey")`.
+Builders also work, as in `(new Dog)->withName("Joey")`.
 
-### Handling Errors
+### Handling errors
 
-Connection failures and non-2xx responses throw an `APIException` subclass:
+Connection failures and non-2xx responses throw an `APIException` subclass.
 
 ```php
 <?php
@@ -113,9 +124,9 @@ try {
 }
 ```
 
-Error types by cause:
+Each cause throws 1 error type.
 
-| Cause            | Error Type                     |
+| Cause            | Error type                     |
 | ---------------- | ------------------------------ |
 | HTTP 400         | `BadRequestException`          |
 | HTTP 401         | `AuthenticationException`      |
@@ -133,25 +144,25 @@ Error types by cause:
 
 The client retries some failures twice with exponential backoff.
 Defaults include connection failures, timeouts, HTTP 408, 409, 429 & 5xx responses.
-Set `maxRetries` globally or per request:
+Set `maxRetries` globally or per request.
 
 ```php
 <?php
 
 use XTwitterScraper\Client;
 
-// Configure the default for all requests:
+// Set the default for all requests.
 $client = new Client(requestOptions: ['maxRetries' => 0]);
 
-// Or, configure per-request:
+// Or set it for 1 request.
 $result = $client->account->retrieve(requestOptions: ['maxRetries' => 5]);
 ```
 
-## Advanced Concepts
+## Advanced concepts
 
-### Custom or Undocumented Requests
+### Custom or undocumented requests
 
-#### Undocumented Properties
+#### Undocumented properties
 
 Send undocumented parameters and read undocumented response properties.
 An `extra*` value overrides its documented counterpart.
@@ -168,13 +179,13 @@ $account = $client->account->retrieve(
 );
 ```
 
-#### Undocumented Request Parameters
+#### Undocumented request parameters
 
 Pass `extraQueryParams`, `extraBodyParams` & `extraHeaders` through `requestOptions`.
 
-#### Undocumented Endpoints
+#### Undocumented endpoints
 
-Use `$client->request()` to keep authentication and retries on undocumented routes:
+Use `$client->request()` to keep authentication and retries on undocumented routes.
 
 ```php
 <?php
@@ -198,7 +209,7 @@ PHPDoc-only type improvements are non-breaking changes.
 
 PHP 8.1.0 or higher.
 
-## Project Policies
+## Project policies
 
 Read [Contributing](CONTRIBUTING.md), [Governance](GOVERNANCE.md), and [Security](SECURITY.md).
 See [OpenSSF evidence](OPENSSF.md) for verified controls and blockers.
