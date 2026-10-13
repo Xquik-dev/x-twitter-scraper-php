@@ -4,8 +4,15 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Releases the Composer package from a maintainer machine.
-# Packagist reads the pushed tag from GitHub, so this script needs no registry credential.
+# Releases the version in .release-please-manifest.json. Run it from a clean
+# main that matches origin/main. It pushes the tag, publishes the GitHub
+# release with the reproducible Composer archive, and waits until Packagist
+# lists the version.
+# Pass --dry-run to run every check, build the archive and print the listing
+# and the files a release ships, without tagging or releasing.
+#
+# Packagist reads each pushed tag through its GitHub hook, so a release needs
+# no Packagist token and reads no Keychain item. gh uses its own login.
 
 set -euo pipefail
 
@@ -13,123 +20,195 @@ cd -- "$(dirname -- "$0")/.."
 
 readonly repository="Xquik-dev/x-twitter-scraper-php"
 readonly package="xquik/x-twitter-scraper"
+readonly packagist_metadata="https://repo.packagist.org/p2/$package.json"
+readonly packagist_page="https://packagist.org/packages/$package"
+readonly packagist_attempts=30
+readonly packagist_pause_seconds=10
+readonly version_pattern='^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z][0-9A-Za-z.-]*)?$'
+
+dry_run=false
+for argument in "$@"; do
+  case "$argument" in
+    --dry-run) dry_run=true ;;
+    *)
+      echo "Unknown option $argument. Run bin/release-local or bin/release-local --dry-run." >&2
+      exit 2
+      ;;
+  esac
+done
 
 step() {
   echo "==> $1"
 }
 
 refuse() {
-  echo "release-local: $1" >&2
+  echo "$1" >&2
   exit 1
 }
 
+workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-release.XXXXXX")"
+trap 'rm -rf -- "${workspace:?}"' EXIT
+
+# Succeeds when Packagist lists the version, and stops the run when Packagist
+# does not answer with metadata this script can read.
+packagist_lists_version() {
+  local metadata listed
+  metadata="$(
+    curl --fail --silent --show-error --location \
+      --proto '=https' --tlsv1.2 --max-time 30 \
+      "$packagist_metadata"
+  )" || refuse "Packagist did not answer. Check the network, then rerun."
+  listed="$(
+    jq -r --arg package "$package" --arg version "$version" \
+      '[.packages[$package][] | .version] | any(. == $version or . == "v" + $version)' <<<"$metadata"
+  )" || refuse "Packagist returned metadata that jq could not read. Retry later."
+  [[ "$listed" == true ]]
+}
+
 step "Checking required tools"
-for tool in composer curl gh git jq php; do
-  command -v "$tool" >/dev/null 2>&1 || refuse "${tool} is missing. Install it, then run bin/release-local again."
+required_tools=(composer curl git jq php tar unzip)
+if [[ "$dry_run" == false ]]; then
+  required_tools+=(gh)
+fi
+for tool in "${required_tools[@]}"; do
+  command -v "$tool" >/dev/null 2>&1 || refuse "$tool is not installed. Install it, then rerun."
 done
-gh auth status --hostname github.com >/dev/null 2>&1 || refuse "gh is signed out. Run gh auth login, then try again."
 
 step "Checking that the working tree is clean"
-[[ -z "$(git status --porcelain)" ]] || refuse "The working tree has changes. Commit or remove them first."
+tree_changes="$(git status --porcelain)"
+[[ -z "$tree_changes" ]] ||
+  refuse "The working tree has changes. Commit or remove them, then rerun."
 
 step "Checking that main is checked out"
-[[ "$(git symbolic-ref --quiet --short HEAD || true)" == "main" ]] || refuse "Release from main. Run git switch main first."
+[[ "$(git symbolic-ref --quiet --short HEAD || true)" == "main" ]] ||
+  refuse "The current branch is not main. Switch to main, then rerun."
 
 step "Checking that main matches origin/main"
-git fetch --quiet origin main || refuse "Could not fetch origin. Check your network and GitHub access."
+git fetch --quiet origin main ||
+  refuse "git could not fetch origin. Check the network, then rerun."
 [[ "$(git rev-parse HEAD)" == "$(git rev-parse refs/remotes/origin/main)" ]] ||
-  refuse "main differs from origin/main. Pull or push until they match."
+  refuse "main differs from origin/main. Pull or push main, then rerun."
 
 step "Reading the version from .release-please-manifest.json"
 version="$(jq -er '."." | strings' .release-please-manifest.json)" ||
-  refuse "Could not read the version from .release-please-manifest.json. Check its JSON."
-[[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z][0-9A-Za-z.-]*)?$ ]] ||
-  refuse "The manifest version '${version}' is invalid. Fix .release-please-manifest.json."
+  refuse ".release-please-manifest.json has no version. Fix it, then rerun."
+[[ "$version" =~ $version_pattern ]] ||
+  refuse ".release-please-manifest.json has no valid version. Fix it, then rerun."
 sdk_version="$(php -r 'require "src/Version.php"; echo \XTwitterScraper\VERSION;')" ||
-  refuse "Could not read src/Version.php. Check its syntax."
+  refuse "php could not read src/Version.php. Fix it, then rerun."
 [[ "$sdk_version" == "$version" ]] ||
-  refuse "src/Version.php says ${sdk_version} but the manifest says ${version}. Align them first."
-tag="v${version}"
+  refuse "The manifest says $version but src/Version.php says $sdk_version. Align them, then rerun."
+readonly version
+readonly tag="v$version"
 
-step "Checking that tag ${tag} is new"
-remote_tag="$(git ls-remote --tags origin "refs/tags/${tag}")" ||
-  refuse "Could not list tags on origin. Check your network and GitHub access."
-[[ -z "$remote_tag" ]] || refuse "Tag ${tag} already exists on origin. Bump the version first."
-if git rev-parse --quiet --verify "refs/tags/${tag}" >/dev/null; then
-  refuse "Tag ${tag} exists only locally. Delete it with git tag -d ${tag}, then try again."
+step "Checking that tag $tag does not exist yet"
+remote_tag="$(git ls-remote --tags origin "refs/tags/$tag")" ||
+  refuse "git could not read the tags of origin. Check the network, then rerun."
+[[ -z "$remote_tag" ]] || refuse "Tag $tag already exists on origin. Bump the version, then rerun."
+if git rev-parse --quiet --verify "refs/tags/$tag" >/dev/null; then
+  refuse "Tag $tag exists only in this clone. Delete it with git tag -d $tag, then rerun."
 fi
 
-step "Reading release notes for ${version} from CHANGELOG.md"
-notes="$(awk -v heading="## ${version}" '
-  $0 == heading || index($0, heading " ") == 1 { found = 1; next }
-  found && /^## / { exit }
-  found { print }
-' CHANGELOG.md | sed '/./,$!d')"
-[[ -n "${notes//[[:space:]]/}" ]] || refuse "CHANGELOG.md has no notes for ${version}. Add them first."
-
-step "Looking for a draft GitHub release for ${tag}"
-draft_ids="$(gh api --paginate "repos/${repository}/releases?per_page=100" \
-  --jq ".[] | select(.draft and .tag_name == \"${tag}\") | .id")" ||
-  refuse "Could not list GitHub releases. Run gh auth status, then try again."
-draft_count="$(grep -c . <<<"$draft_ids" || true)"
-[[ "$draft_count" -le 1 ]] || refuse "GitHub has ${draft_count} draft releases for ${tag}. Delete the extras first."
-
-workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-release.XXXXXX")"
-trap 'rm -rf -- "${workspace:?}"' EXIT
+step "Reading the release notes for $version from CHANGELOG.md"
 notes_file="$workspace/notes.md"
-printf '%s\n' "$notes" >"$notes_file"
-archive="$workspace/x-twitter-scraper-php-${tag}.zip"
+awk -v version="$version" '
+  /^## / {
+    if (found) exit
+    found = ($2 == version || index($2, "[" version "]") == 1)
+    next
+  }
+  found
+' CHANGELOG.md >"$notes_file"
+grep -q '[^[:space:]]' "$notes_file" ||
+  refuse "CHANGELOG.md has no section for $version. Add one, then rerun."
+
+draft_ids=""
+if [[ "$dry_run" == false ]]; then
+  step "Checking GitHub CLI access"
+  gh auth status --hostname github.com >/dev/null 2>&1 ||
+    refuse "The GitHub CLI is not signed in. Run gh auth login, then rerun."
+
+  step "Looking for a draft GitHub release for $tag"
+  draft_ids="$(
+    gh api --paginate "repos/$repository/releases?per_page=100" \
+      --jq ".[] | select(.draft and .tag_name == \"$tag\") | .id"
+  )" || refuse "GitHub did not list the releases. Check gh auth status, then rerun."
+  draft_count="$(grep -c . <<<"$draft_ids" || true)"
+  [[ "$draft_count" -le 1 ]] ||
+    refuse "GitHub has $draft_count draft releases for $tag. Delete the extra drafts, then rerun."
+fi
+
+step "Checking Packagist for $package $version"
+if packagist_lists_version; then
+  [[ "$dry_run" == true ]] ||
+    refuse "Packagist already lists $package $version. Bump the version, then rerun."
+  echo "Packagist already lists $package $version. A release stops here until the version is bumped."
+else
+  echo "Packagist does not list $package $version yet. A release pushes tag $tag, and Packagist reads it from GitHub."
+fi
 
 step "Running bin/check-local"
-./bin/check-local || refuse "bin/check-local failed. Fix the check it names, then try again."
+bin/check-local
 
-step "Auditing locked dependencies against audit-exceptions.json"
-./scripts/audit ||
-  refuse "The dependency audit failed. Update the flagged packages first."
+step "Auditing locked dependencies"
+./scripts/audit
 
-step "Building the Composer archive"
-./scripts/build-archive "$archive" || refuse "The Composer archive build failed. Fix the error above."
+step "Validating composer.json against the Packagist publish rules"
+composer validate --strict ||
+  refuse "composer.json fails the Packagist publish rules. Fix the errors above, then rerun."
 
-step "Checking whether Packagist already lists ${version}"
-packagist_metadata="$(curl --fail --silent --show-error --proto '=https' --tlsv1.2 --max-time 30 \
-  "https://repo.packagist.org/p2/${package}.json")" ||
-  refuse "Could not read Packagist metadata. Check your network, then try again."
-packagist_versions="$(jq -er '.packages[] | .[].version' <<<"$packagist_metadata")" ||
-  refuse "Packagist returned unreadable metadata. Try again later."
-if grep -Fxq -e "v${version}" -e "${version}" <<<"$packagist_versions"; then
-  echo "Packagist already lists ${version}. Skipping the upload, tag and GitHub release."
+step "Building the Composer archive for $package $version"
+archive="$workspace/x-twitter-scraper-php-$tag.zip"
+./scripts/build-archive "$archive"
+
+./scripts/package-listing "$archive" "$version"
+
+if [[ "$dry_run" == true ]]; then
+  echo "Dry run finished. Nothing was published, tagged or released."
   exit 0
 fi
 
-step "Creating annotated tag ${tag}"
-git tag --annotate "$tag" --message "Release ${tag}"
+step "Creating and pushing tag $tag"
+git tag --annotate "$tag" --message "$tag"
+git push --quiet origin "refs/tags/$tag"
 
-step "Pushing tag ${tag} so Packagist reads it from GitHub"
-git push origin "refs/tags/${tag}"
-
-release_flags=(--latest)
 if [[ "$version" == *-* ]]; then
   release_flags=(--prerelease --latest=false)
+else
+  release_flags=(--latest)
 fi
+readonly release_failed="Tag $tag is on origin, but the GitHub release failed. Fix the error above, then build the archive with ./scripts/build-archive and publish it with gh release create $tag --verify-tag."
 
 if [[ -n "$draft_ids" ]]; then
-  step "Publishing the draft GitHub release for ${tag}"
-  gh release upload "$tag" "$archive" --repo "$repository" --clobber
+  step "Publishing the draft GitHub release $tag"
+  gh release upload "$tag" "$archive" --repo "$repository" --clobber ||
+    refuse "$release_failed"
   gh release edit "$tag" \
     --repo "$repository" \
     --title "$tag" \
     --notes-file "$notes_file" \
     --draft=false \
     --verify-tag \
-    "${release_flags[@]}"
+    "${release_flags[@]}" ||
+    refuse "$release_failed"
 else
-  step "Creating GitHub release ${tag}"
+  step "Creating GitHub release $tag"
   gh release create "$tag" "$archive" \
     --repo "$repository" \
     --title "$tag" \
     --notes-file "$notes_file" \
     --verify-tag \
-    "${release_flags[@]}"
+    "${release_flags[@]}" ||
+    refuse "$release_failed"
 fi
 
-echo "Released ${tag}. Packagist picks up the new tag from GitHub."
+step "Waiting for Packagist to list $package $version"
+attempt=1
+until packagist_lists_version; do
+  [[ "$attempt" -lt "$packagist_attempts" ]] ||
+    refuse "Packagist does not list $package $version yet. Tag $tag and the GitHub release are published. Open $packagist_page, press Update, then check the Packagist hook in the GitHub repository settings."
+  attempt=$((attempt + 1))
+  sleep "$packagist_pause_seconds"
+done
+
+echo "Released $package $version. Packagist lists it, and GitHub release $tag holds the archive."

@@ -9,7 +9,7 @@ declare(strict_types=1);
 const REPRODUCIBLE_TIMESTAMP = 946684800;
 
 if (3 !== $argc) {
-    fwrite(STDERR, "Usage: php scripts/normalize-archive.php <input.zip> <output.zip>\n");
+    fwrite(STDERR, "Run php scripts/normalize-archive.php <input.zip> <output.zip>.\n");
     exit(2);
 }
 

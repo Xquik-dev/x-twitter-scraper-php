@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+# SPDX-FileCopyrightText: 2026 Xquik contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Prints what a release publishes. First the listing fields that Packagist
+# reads from composer.json, then every file in the Composer archive.
+# Packagist serves the GitHub export of the tag, so this script also fails
+# when that export and the archive hold different files.
+
+set -euo pipefail
+
+cd -- "$(dirname -- "$0")/.."
+
+if [[ "$#" -ne 2 ]]; then
+  echo "Run ./scripts/package-listing <archive.zip> <version>." >&2
+  exit 2
+fi
+
+readonly archive="$1"
+readonly version="$2"
+
+workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-listing.XXXXXX")"
+trap 'rm -rf -- "${workspace:?}"' EXIT
+
+stop() {
+  echo "$1" >&2
+  exit 1
+}
+
+unzip -p "$archive" composer.json >"$workspace/composer.json" ||
+  stop "The archive holds no composer.json. Check the Composer archive settings, then rerun."
+
+# Prints 1 listing field, or stops when composer.json leaves it empty.
+field() {
+  local label="$1" name="$2" filter="$3" value
+  value="$(jq -r "$filter // empty" "$workspace/composer.json")" ||
+    stop "jq could not read composer.json in the archive. Fix its JSON, then rerun."
+  [[ -n "$value" ]] ||
+    stop "composer.json has no $name. Packagist shows it on the package page. Add it, then rerun."
+  printf '%-15s %s\n' "$label" "$value"
+}
+
+name="$(jq -r '.name // empty' "$workspace/composer.json")" ||
+  stop "jq could not read composer.json in the archive. Fix its JSON, then rerun."
+[[ -n "$name" ]] || stop "composer.json has no name. Packagist requires it. Add it, then rerun."
+
+echo "==> Reading the Packagist listing of $name $version"
+field "Package" "name" '.name'
+printf '%-15s %s\n' "Version" "$version"
+field "Description" "description" '.description'
+field "Keywords" "keywords" '(.keywords // []) | join(", ")'
+field "Homepage" "homepage" '.homepage'
+field "License" "license" '.license | if type == "array" then join(" or ") else . end'
+field "Support docs" "support.docs link" '.support.docs'
+field "Support issues" "support.issues link" '.support.issues'
+field "Support source" "support.source link" '.support.source'
+field "Requires" "require list" '(.require // {}) | to_entries | map("\(.key) \(.value)") | join(", ")'
+
+echo "==> Listing the files that $name $version ships"
+unzip -Z1 "$archive" | grep -v '/$' | LC_ALL=C sort >"$workspace/archive-files"
+git archive --format=tar HEAD | tar -tf - | grep -v '/$' | LC_ALL=C sort >"$workspace/export-files"
+file_count="$(wc -l <"$workspace/archive-files" | tr -d '[:space:]')"
+cat "$workspace/archive-files"
+
+if ! cmp -s "$workspace/archive-files" "$workspace/export-files"; then
+  echo "Only one of the Composer archive and the GitHub export holds these files." >&2
+  comm -3 "$workspace/archive-files" "$workspace/export-files" | tr -d '\t' >&2
+  stop "The Composer archive and the GitHub export of the tag differ. Align archive.exclude in composer.json with export-ignore in .gitattributes, then rerun."
+fi
+
+echo "The Composer archive holds $file_count files. Packagist serves the same $file_count files from the tag."

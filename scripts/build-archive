@@ -9,7 +9,7 @@ set -euo pipefail
 cd -- "$(dirname -- "$0")/.."
 
 if [[ "$#" -ne 1 ]]; then
-  echo "Usage: ./scripts/build-archive <output.zip>" >&2
+  echo "Run ./scripts/build-archive <output.zip>." >&2
   exit 2
 fi
 

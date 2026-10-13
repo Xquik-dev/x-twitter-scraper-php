@@ -32,7 +32,7 @@ foreach ($dependencies as $name => $metadata) {
 
 if ([] !== $rejected) {
     foreach ($rejected as $name => $license) {
-        fwrite(STDERR, "{$name}: unapproved license {$license}\n");
+        fwrite(STDERR, "{$name} uses the unapproved license {$license}.\n");
     }
     fwrite(STDERR, "Dependency licenses need review. Approve or remove each listed dependency.\n");
     exit(1);

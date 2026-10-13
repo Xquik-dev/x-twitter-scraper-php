@@ -9,7 +9,9 @@ declare(strict_types=1);
 // Reads `composer audit --locked --format=json --abandoned=report` from STDIN.
 // Blocks every runtime finding, every abandoned package, and every development
 // finding unless audit-exceptions.json lists it, its recheck date is in the
-// future, and no fixed release exists on Packagist.
+// future, and no fixed release exists on Packagist. Severity never excuses a
+// finding. An advisory that the Composer config ignores, a package on a
+// Composer filter list and an unreachable repository block too.
 
 use Composer\Semver\Comparator;
 use Composer\Semver\Semver;
@@ -34,7 +36,7 @@ function read_json(string $contents, string $source, string $hint): array
 {
     try {
         $decoded = json_decode($contents, true, flags: JSON_THROW_ON_ERROR);
-    } catch (JsonException) {
+    } catch (JsonException $exception) {
         stop("{$source} is not valid JSON. {$hint}");
     }
     if (!is_array($decoded)) {
@@ -83,16 +85,17 @@ function advisory_ids(array $advisory): array
 
 function fixed_release(string $package, string $lockedVersion, string $affectedVersions): ?string
 {
-    $autoload = __DIR__.'/../vendor/autoload.php';
-    if (!is_file($autoload)) {
+    if (!is_file(__DIR__.'/../vendor/autoload.php')) {
         stop('Install dependencies with ./scripts/bootstrap, then run the audit again.');
     }
 
-    require_once $autoload;
+    require_once __DIR__.'/../vendor/autoload.php';
 
     $context = stream_context_create(['http' => ['timeout' => 30]]);
     // Report a failed download with 1 plain line instead of a PHP warning.
-    set_error_handler(static fn (): bool => true);
+    set_error_handler(static function (): bool {
+        return true;
+    });
     $metadata = file_get_contents("https://repo.packagist.org/p2/{$package}.json", false, $context);
     restore_error_handler();
     if (false === $metadata) {
@@ -139,8 +142,10 @@ foreach ($exceptions as $index => $exception) {
     $keys = is_array($exception) ? array_keys($exception) : [];
     sort($keys);
     if (!is_array($exception) || EXCEPTION_KEYS !== $keys
-        || [] !== array_filter($exception, static fn (mixed $value): bool => !is_string($value) || '' === $value)) {
-        $problems[] = "{$label} needs exactly these text fields: ".implode(', ', EXCEPTION_KEYS).'.';
+        || [] !== array_filter($exception, static function (mixed $value): bool {
+            return !is_string($value) || '' === $value;
+        })) {
+        $problems[] = "{$label} needs exactly the text fields ".implode(', ', EXCEPTION_KEYS).'.';
 
         continue;
     }
@@ -167,6 +172,26 @@ foreach ($exceptions as $index => $exception) {
 
 foreach (is_array($audit['abandoned']) ? $audit['abandoned'] : [] as $package => $replacement) {
     $problems[] = "{$package} is abandoned. Replace it".(is_string($replacement) ? " with {$replacement}" : '').'.';
+}
+
+// Composer moves an advisory here when its config ignores the advisory, the
+// package or the severity. No config may excuse a finding.
+foreach (is_array($audit['ignored-advisories'] ?? null) ? $audit['ignored-advisories'] : [] as $package => $advisories) {
+    foreach (is_array($advisories) ? $advisories : [] as $advisory) {
+        $name = is_array($advisory) ? (advisory_ids($advisory)[0] ?? 'an advisory') : 'an advisory';
+        $problems[] = "{$package} has {$name}, which the Composer config ignores. Remove that ignore rule, then update the package.";
+    }
+}
+
+foreach (is_array($audit['filter'] ?? null) ? $audit['filter'] : [] as $package => $entries) {
+    foreach (is_array($entries) ? $entries : [] as $entry) {
+        $list = is_array($entry) && is_string($entry['listName'] ?? null) ? $entry['listName'] : 'unnamed';
+        $problems[] = "{$package} is on the Composer {$list} filter list. Replace it.";
+    }
+}
+
+if ([] !== ($audit['unreachable-repositories'] ?? [])) {
+    $problems[] = 'Composer could not reach a package repository, so the audit is incomplete. Check your network, then run it again.';
 }
 
 $findings = 0;
