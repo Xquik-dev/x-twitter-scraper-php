@@ -39,10 +39,17 @@ Run every gate before requesting review:
 It installs locked dependencies, then runs PHP CS Fixer, PHPStan, ShellCheck, REUSE, and syntax checks.
 Then it runs tests, coverage, dependency audits, the reproducible archive check, and Semgrep.
 It stops at the first failure and says what to fix.
-It skips REUSE and Semgrep when they are missing, so install both before a release.
+Semgrep is required. Install it with `brew install semgrep`.
+It skips REUSE when reuse is missing and names it as skipped, so install reuse before a release.
 
 For a clean tree whose commit is on GitHub, it posts the `xquik-local-checks` commit status.
 Pull requests need that status to merge. Pass `--no-status` to skip posting.
+
+The dependency audit blocks every advisory in a package the SDK ships and every abandoned package.
+It also blocks development-only advisories unless `audit-exceptions.json` lists them.
+List one only when no fixed release exists, with `advisory`, `path`, `reason` and `recheck`.
+Use the reason `build-time only` or `peer dependency provided by the host`.
+Set `recheck` at most 30 days out. The entry blocks again on that date or once a fix ships.
 
 Executable line coverage must remain at least 90%.
 

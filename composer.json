@@ -15,6 +15,7 @@
       "/.phpunit.cache",
       "/.release-please-manifest.json",
       "/.stats.yml",
+      "/audit-exceptions.json",
       "/auth.json",
       "/bin",
       "/docs",

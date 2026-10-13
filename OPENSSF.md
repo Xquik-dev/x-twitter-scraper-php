@@ -23,7 +23,8 @@ This active, public PHP SDK qualifies for the OpenSSF Best Practices badge.
 | Executable line coverage | `./scripts/coverage` enforces 90% |
 | Branch coverage | `./scripts/coverage` enforces 80% |
 | Static analysis | PHPStan level max and PHP CS Fixer |
-| Dependency review | Composer audit, abandoned package checks, and a license allowlist |
+| Dependency review | Composer audit with reviewed development-only exceptions, abandoned package checks, and a license allowlist |
+| Code scanning | Semgrep with pinned PHP rules blocks on any finding |
 | Licensing gate | `reuse lint` checks every repository file |
 | Reproducibility | 2 normalized Composer archives must have identical bytes |
 | Local gate | `bin/check-local` runs every check before review and release |

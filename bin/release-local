@@ -83,9 +83,9 @@ archive="$workspace/x-twitter-scraper-php-${tag}.zip"
 step "Running bin/check-local"
 ./bin/check-local || refuse "bin/check-local failed. Fix the check it names, then try again."
 
-step "Auditing locked dependencies"
-composer audit --locked --abandoned=fail --format=plain ||
-  refuse "composer audit found a vulnerable or abandoned package. Update it first."
+step "Auditing locked dependencies against audit-exceptions.json"
+./scripts/audit ||
+  refuse "The dependency audit failed. Update the flagged packages first."
 
 step "Building the Composer archive"
 ./scripts/build-archive "$archive" || refuse "The Composer archive build failed. Fix the error above."

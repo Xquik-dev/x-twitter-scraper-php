@@ -31,7 +31,7 @@ for excluded_prefix in .github/ bin/ scripts/ tests/ vendor/; do
   fi
 done
 
-for excluded_entry in .env .git .php-cs-fixer.cache auth.json; do
+for excluded_entry in .env .git .php-cs-fixer.cache audit-exceptions.json auth.json; do
   if grep -Fxq "$excluded_entry" <<<"$archive_listing"; then
     echo "Source distribution includes $excluded_entry. Update Composer archive exclusions." >&2
     exit 1

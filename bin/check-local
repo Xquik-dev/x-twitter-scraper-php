@@ -6,7 +6,10 @@
 
 # Runs every repository check on a maintainer machine and stops at the first failure.
 # It reports the result as the xquik-local-checks commit status on GitHub.
-# Pass --no-status to skip the commit status.
+# The status uses the gh login of whoever runs this script, which is the
+# owner's login on the release machine. Pass --no-status to skip the status.
+# Semgrep is mandatory. REUSE runs when reuse is installed and is named as
+# skipped otherwise.
 
 set -euo pipefail
 
@@ -20,6 +23,7 @@ readonly semgrep_rules_commit="311ca4e9ba59d700624539bf658e3d29b134ee77"
 post_statuses=true
 status_sha=""
 current_check="Starting"
+all_checks_passed=false
 passed_checks=""
 skipped_checks=""
 semgrep_workspace=""
@@ -55,7 +59,7 @@ finish() {
   if [[ -n "$semgrep_workspace" ]]; then
     rm -rf -- "${semgrep_workspace:?}"
   fi
-  if [[ "$exit_code" -eq 0 ]]; then
+  if [[ "$exit_code" -eq 0 && "$all_checks_passed" == true ]]; then
     local summary="Passed: ${passed_checks}."
     if [[ -n "$skipped_checks" ]]; then
       summary="${summary} Skipped: ${skipped_checks}."
@@ -192,13 +196,15 @@ run_semgrep() {
 }
 
 choose_status_commit
-post_status pending "Running lint, types, tests, coverage, audit & reproducible build."
+post_status pending "Running bin/check-local."
 
 current_check="Checking required tools"
 echo "==> ${current_check}"
-for tool in cmp composer curl php shellcheck unzip; do
+for tool in cmp composer curl git php shellcheck unzip; do
   command -v "$tool" >/dev/null 2>&1 || fail "${tool} is missing. Install it, then run bin/check-local again."
 done
+command -v semgrep >/dev/null 2>&1 ||
+  fail "semgrep is missing. Install it with brew install semgrep, then run bin/check-local again."
 
 run_check "dependencies" "Bootstrapping locked dependencies" \
   "Fix composer.json or composer.lock, then run it again." \
@@ -217,7 +223,7 @@ if command -v reuse >/dev/null 2>&1; then
     "Add license metadata for the files reuse lists." \
     reuse lint
 else
-  skip_check "REUSE" "reuse is missing. Install it with pipx install reuse."
+  skip_check "REUSE" "reuse is missing. Install it with brew install reuse."
 fi
 
 run_check "platform" "Checking production platform requirements" \
@@ -244,20 +250,17 @@ run_check "coverage" "Enforcing coverage" \
   ./scripts/coverage
 
 run_check "audit" "Auditing dependencies and licenses" \
-  "Update or replace the packages flagged above." \
+  "Update the packages flagged above, or review an unfixable development-only finding in audit-exceptions.json." \
   ./scripts/audit
 
 run_check "reproducible build" "Verifying the reproducible distribution" \
   "Fix the Composer archive settings named above." \
   ./scripts/check-reproducible
 
-if command -v semgrep >/dev/null 2>&1; then
-  semgrep_workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-semgrep.XXXXXX")"
-  run_check "Semgrep" "Running Semgrep with pinned PHP rules" \
-    "Fix the Semgrep findings above." \
-    run_semgrep
-else
-  skip_check "Semgrep" "semgrep is missing. Install it with pipx install semgrep."
-fi
+semgrep_workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-semgrep.XXXXXX")"
+run_check "Semgrep" "Running Semgrep with pinned PHP rules" \
+  "Fix the Semgrep findings above." \
+  run_semgrep
 
+all_checks_passed=true
 echo "All local checks passed."
