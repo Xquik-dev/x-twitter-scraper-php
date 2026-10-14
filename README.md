@@ -21,7 +21,7 @@ It does not call or emulate the official X API.
 Use this SDK for typed value objects, retries & Composer applications.
 Call REST directly when a Composer dependency does not fit.
 
-Read the [PHP SDK guide](https://docs.xquik.com/sdks/php) or [API guide](https://docs.xquik.com/api-reference/overview).
+Read the [PHP SDK guide](https://docs.xquik.com/sdks/php) or the [API guide](https://docs.xquik.com/api-reference/overview).
 
 ## Common Twitter & X tasks
 
@@ -79,7 +79,7 @@ Releases up to v0.13.3 also carry GitHub build attestations.
 
 ## Usage
 
-Set optional arguments and parameters with defaults by name.
+Set optional arguments, and parameters that have defaults, by name.
 
 ```php
 <?php
@@ -124,7 +124,7 @@ try {
 }
 ```
 
-Each cause throws 1 error type.
+The SDK throws 1 error type for each cause.
 
 | Cause            | Error type                     |
 | ---------------- | ------------------------------ |
@@ -143,7 +143,7 @@ Each cause throws 1 error type.
 ### Retries
 
 The client retries some failures twice with exponential backoff.
-Defaults include connection failures, timeouts, HTTP 408, 409, 429 & 5xx responses.
+By default, it retries connection failures, timeouts, and HTTP 408, 409, 429 & 5xx responses.
 Set `maxRetries` globally or per request.
 
 ```php
@@ -207,7 +207,7 @@ PHPDoc-only type improvements are non-breaking changes.
 
 ## Requirements
 
-PHP 8.1.0 or higher.
+The SDK requires PHP 8.1.0 or later.
 
 ## Project policies
 
