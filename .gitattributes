@@ -15,4 +15,3 @@
 /audit-exceptions.json         export-ignore
 /phpstan.dist.neon             export-ignore
 /phpunit.xml.dist              export-ignore
-/release-please-config.json    export-ignore
