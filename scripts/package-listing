@@ -4,11 +4,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Prints what a release publishes. First the listing fields that Packagist
-# reads from composer.json, then every file in the Composer archive.
-# Packagist serves the GitHub export of the tag, so this script also fails
-# when that export and the archive hold different files.
-
 set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
@@ -32,7 +27,6 @@ stop() {
 unzip -p "$archive" composer.json >"$workspace/composer.json" ||
   stop "The archive holds no composer.json. Check the Composer archive settings, then rerun."
 
-# Prints 1 listing field, or stops when composer.json leaves it empty.
 field() {
   local label="$1" name="$2" filter="$3" value
   value="$(jq -r "$filter // empty" "$workspace/composer.json")" ||

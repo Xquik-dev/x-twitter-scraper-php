@@ -22,8 +22,7 @@ use XTwitterScraper\Radar\RadarItem\Metadata\SourceFormat;
  *   stickied? }. `score` is Reddit's public net score. Exact public
  *   upvote and downvote counts are not available. Estimated counts
  *   derive from the public score and upvote ratio, which Reddit may
- *   fuzz. Comment bodies are not included. Current items combine
- *   public listing discovery with server-rendered post data and use
+ *   fuzz. Comment bodies are not included. Current items use
  *   `sourceFormat: html`; `json` and `rss` remain for legacy rows.
  * - github: { starsToday: number }
  * - hacker_news: { points: number, numberComments: number }

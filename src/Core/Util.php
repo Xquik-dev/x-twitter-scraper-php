@@ -350,7 +350,6 @@ final class Util
         mixed $body
     ): RequestInterface {
         if ($body instanceof StreamInterface) {
-            // @var RequestInterface
             return $req->withBody($body);
         }
 
@@ -360,7 +359,6 @@ final class Util
                 $encoded = json_encode($body, flags: self::JSON_ENCODE_FLAGS);
                 $stream = $factory->createStream($encoded);
 
-                // @var RequestInterface
                 return $req->withBody($stream);
             }
         }
@@ -370,21 +368,18 @@ final class Util
             $encoded = implode('', iterator_to_array($gen, preserve_keys: false));
             $stream = $factory->createStream($encoded);
 
-            // @var RequestInterface
             return $req->withHeader('Content-Type', "{$contentType}; boundary={$boundary}")->withBody($stream);
         }
 
         if (is_resource($body)) {
             $stream = $factory->createStreamFromResource($body);
 
-            // @var RequestInterface
             return $req->withBody($stream);
         }
 
         if (is_string($body)) {
             $stream = $factory->createStream($body);
 
-            // @var RequestInterface
             return $req->withBody($stream);
         }
 
@@ -536,7 +531,7 @@ final class Util
             $data = $val->data;
             if (is_string($data)) {
                 yield $data;
-            } else { // resource
+            } else {
                 while (!feof($data)) {
                     if ($read = fread($data, length: self::BUF_SIZE)) {
                         yield $read;
@@ -577,9 +572,6 @@ final class Util
             yield "; name=\"{$name}\"";
         }
 
-        // File uploads require a filename in the Content-Disposition header,
-        // e.g. `Content-Disposition: form-data; name="file"; filename="data.csv"`
-        // Without this, many servers will reject the upload with a 400.
         if ($val instanceof FileParam) {
             $filename = str_replace(['"', "\r", "\n"], replace: '', subject: $val->filename);
 
@@ -593,8 +585,6 @@ final class Util
     }
 
     /**
-     * Expands list arrays into separate multipart parts, applying the configured array key format.
-     *
      * @param list<callable> $closing
      *
      * @return \Generator<string>

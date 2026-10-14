@@ -28,7 +28,6 @@ run_coverage_file() {
   coverage_index=$((coverage_index + 1))
   coverage_part="$coverage_workspace/coverage-${coverage_index}.cov"
   coverage_command=(./scripts/test --coverage-php="$coverage_part")
-  # Xdebug can crash while tracing generator paths in these focused tests.
   case "$test_file" in
     tests/Core/SdkPageTest.php | \
       tests/Core/UtilTest.php)
@@ -44,7 +43,6 @@ run_coverage_file() {
 }
 
 while IFS= read -r test_file; do
-  # Isolate Xdebug path data to prevent native crashes across test files.
   run_coverage_file "$test_file"
 done < <(find tests -type f -name '*Test.php' | LC_ALL=C sort)
 

@@ -4,27 +4,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Helpers for the tests that run this repository's scripts as a maintainer
-# would. Each test runs a script in a throwaway folder. Its PATH holds fake
-# commands in place of the tools that reach other systems, so no test can
-# reach Packagist, GitHub, the Semgrep rules or the Keychain.
-#
-# A test file sources this file, defines functions named test_*, and ends
-# with run_tests.
-
 tests_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)"
 readonly tests_root
 
-# Tools that only read and write local files. Each gets a wrapper in the
-# throwaway bin folder, wherever this machine installed it.
 readonly local_tools=(bash git jq)
 
-# Tools that reach other systems or do slow work. Each call fails unless the
-# test fakes it.
 readonly faked_tools=(composer curl gh php security semgrep shellcheck sleep uvx)
 
-# Builds the throwaway folder of 1 test. It holds an empty repository folder,
-# a bin folder for fake commands and a logs folder that the fakes write to.
 create_sandbox() {
   local tool tool_path
   sandbox="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-script-test.XXXXXX")"
@@ -57,14 +43,11 @@ remove_sandbox() {
   rm -rf -- "${sandbox:?}"
 }
 
-# Puts a fake command on PATH. Its source comes from standard input.
 fake() {
   cat >"$sandbox_bin/$1"
   chmod 755 "$sandbox_bin/$1"
 }
 
-# Puts the PHP of this machine on the throwaway PATH. The file that the first
-# argument names, if any, loads before each script that PHP runs.
 write_php_wrapper() {
   local php_path prepend=""
   php_path="$(command -v php)" || {
@@ -85,25 +68,21 @@ use_real_php() {
   write_php_wrapper ""
 }
 
-# Removes a command from the throwaway PATH.
 remove_tool() {
   rm -f -- "$sandbox_bin/$1"
 }
 
-# Writes an executable file into the throwaway repository from standard input.
 stub() {
   mkdir -p "$(dirname -- "$sandbox_repo/$1")"
   cat >"$sandbox_repo/$1"
   chmod 755 "$sandbox_repo/$1"
 }
 
-# Writes a plain file into the throwaway repository from standard input.
 write_file() {
   mkdir -p "$(dirname -- "$sandbox_repo/$1")"
   cat >"$sandbox_repo/$1"
 }
 
-# Copies a file of this repository into the throwaway repository.
 copy_file() {
   mkdir -p "$(dirname -- "$sandbox_repo/$1")"
   cp -p "$tests_root/$1" "$sandbox_repo/$1"
@@ -122,23 +101,18 @@ sandbox_git() {
     git -C "$sandbox_repo" "$@"
 }
 
-# Commits every file of the throwaway repository on main.
 commit_repo() {
   sandbox_git init --quiet --initial-branch=main
   sandbox_git add --all
   sandbox_git commit --quiet --message "Test commit"
 }
 
-# Gives the throwaway repository a local bare origin that holds main.
 add_origin() {
   sandbox_git init --quiet --bare "$sandbox/origin.git"
   sandbox_git remote add origin "$sandbox/origin.git"
   sandbox_git push --quiet origin main
 }
 
-# Runs a command in the throwaway repository with a clean environment. The
-# run_env array adds variables. The results land in run_status, run_stdout
-# and run_stderr.
 run_in_repo() {
   run_status=0
   (
@@ -161,16 +135,12 @@ run_in_repo() {
   run_stderr="$(cat "$sandbox/stderr")"
 }
 
-# Prints the lines a fake or a stub wrote to its log, or nothing when it
-# never ran.
 log_of() {
   if [[ -f "$sandbox_logs/$1" ]]; then
     cat "$sandbox_logs/$1"
   fi
 }
 
-# Ends the running test as failed, and shows what the last run printed. Each
-# test runs in its own subshell.
 fail_test() {
   echo "  $1" >&2
   if [[ -n "${run_status:-}" ]]; then
@@ -219,14 +189,13 @@ $1"
   fi
 }
 
-# Runs every test_* function of the calling file, each in its own throwaway
-# folder, and fails when any test fails.
 run_tests() {
   local name status failed=0 total=0
   while IFS= read -r name; do
     total=$((total + 1))
     # The subshell is a plain command. Inside a condition, bash would
     # ignore set -e and a failing step could not fail its test.
+    # https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
     set +e
     (
       set -euo pipefail

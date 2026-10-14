@@ -39,12 +39,6 @@ trait SdkPage
     }
 
     /**
-     * Get the next page of results.
-     * Before calling this method, you must check if there is a next page
-     * using {@link hasNextPage()}.
-     *
-     * @return static of static<Item>
-     *
      * @throws APIStatusException
      */
     public function getNextPage(): static
@@ -67,8 +61,6 @@ trait SdkPage
     }
 
     /**
-     * Iterator yielding each page (instance of static).
-     *
      * @return \Generator<static>
      */
     public function getIterator(): \Generator
@@ -84,8 +76,6 @@ trait SdkPage
     }
 
     /**
-     * Iterator yielding each item across all pages.
-     *
      * @return \Generator<Item>
      */
     public function pagingEachItem(): \Generator

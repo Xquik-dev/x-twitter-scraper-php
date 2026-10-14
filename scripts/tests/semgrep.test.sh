@@ -4,10 +4,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Runs scripts/semgrep in a throwaway repository. A fake git stands in for
-# the download of the Semgrep rules and a fake semgrep stands in for the
-# scanner, so no test reaches GitHub or scans real code.
-
 set -euo pipefail
 
 # shellcheck source=scripts/tests/support.sh
@@ -18,9 +14,6 @@ readonly fetched_rules="php/lang/security/assert-use.yaml
 php/lang/security/file-inclusion.yaml
 php/lang/security/tainted-exec.yaml"
 
-# A report with 1 PartialParsing error, as Semgrep 1.180 writes it. The
-# arguments are the text that the message calls unexpected and the span on
-# line 5 of src/Model.php, as start and end columns.
 partial_parsing_report() {
   local message="\`$1\` was unexpected"
   printf '{"results":[],"errors":[{"code":3,"level":"warn","type":["PartialParsing",[{"path":"src/Model.php","start":{"line":5,"col":%s,"offset":0},"end":{"line":5,"col":%s,"offset":5}}]],"message":"Syntax error at line src/Model.php:5:\\n %s","path":"src/Model.php","spans":[{"file":"src/Model.php","start":{"line":5,"col":%s,"offset":0},"end":{"line":5,"col":%s,"offset":5}}]}]}' \
@@ -39,14 +32,9 @@ final class Model
     public array $items;
 }
 EOF
-  # Semgrep cannot parse the list argument above, as on main today.
   run_env+=("FAKE_SEMGREP_REPORT=$(partial_parsing_report list: 16 21)")
   fake git <<'EOF'
 #!/bin/sh
-# Stands in for git. A fetch records the repository and the commit it is
-# asked for. A checkout writes 3 rule files, as the real rules repository
-# would. FAKE_FETCH_FAILS breaks the fetch and FAKE_RULES_HEAD names the
-# commit that the checkout lands on.
 case "$1" in
   init) mkdir -p "$3" ;;
   -C)
@@ -70,11 +58,6 @@ esac
 EOF
   fake semgrep <<'EOF'
 #!/bin/sh
-# Stands in for Semgrep. It records its arguments with the rules folder
-# replaced by RULES and the report path replaced by REPORT, and the rule
-# files that folder holds. It writes FAKE_SEMGREP_REPORT as the JSON report,
-# or a report without results and errors. It exits with FAKE_SEMGREP_EXIT,
-# as Semgrep exits with 1 on a finding.
 rules="$3"
 report='{"results":[],"errors":[]}'
 [ -z "${FAKE_SEMGREP_REPORT+set}" ] || report="$FAKE_SEMGREP_REPORT"
@@ -121,7 +104,6 @@ test_a_finding_fails_the_scan() {
 
 test_a_file_that_semgrep_could_not_parse_fails_the_scan_and_is_named() {
   prepare_scan
-  # The errors that Semgrep 1.180 reports for 2 files it could read only in part.
   run_env+=('FAKE_SEMGREP_REPORT={"results":[],"errors":[{"code":3,"level":"warn","type":["PartialParsing",[{"path":"src/Client.php","start":{"line":4,"col":5,"offset":0},"end":{"line":4,"col":17,"offset":12}}]],"message":"Syntax error at line src/Client.php:4","path":"src/Client.php","spans":[{"file":"src/Client.php","start":{"line":4,"col":5,"offset":0},"end":{"line":4,"col":17,"offset":12}}]},{"code":3,"level":"warn","type":"Syntax error","message":"Syntax error at line src/Core/Util.php:9","path":"src/Core/Util.php","spans":[{"file":"src/Core/Util.php","start":{"line":9,"col":1,"offset":0},"end":{"line":9,"col":6,"offset":5}}]}]}')
 
   run_in_repo scripts/semgrep

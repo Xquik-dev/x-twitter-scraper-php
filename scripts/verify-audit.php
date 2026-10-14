@@ -6,13 +6,6 @@
 
 declare(strict_types=1);
 
-// Reads `composer audit --locked --format=json --abandoned=report` from STDIN.
-// Blocks every runtime finding, every abandoned package, and every development
-// finding unless audit-exceptions.json lists it, its recheck date is in the
-// future, and no fixed release exists on Packagist. Severity never excuses a
-// finding. An advisory that the Composer config ignores, a package on a
-// Composer filter list and an unreachable repository block too.
-
 use Composer\Semver\Comparator;
 use Composer\Semver\Semver;
 use Composer\Semver\VersionParser;
@@ -47,7 +40,7 @@ function read_json(string $contents, string $source, string $hint): array
 }
 
 /**
- * @return array<string, string> package name to locked version
+ * @return array<string, string>
  */
 function locked_packages(mixed $packages): array
 {
@@ -92,7 +85,6 @@ function fixed_release(string $package, string $lockedVersion, string $affectedV
     require_once __DIR__.'/../vendor/autoload.php';
 
     $context = stream_context_create(['http' => ['timeout' => 30]]);
-    // Report a failed download with 1 plain line instead of a PHP warning.
     set_error_handler(static function (): bool {
         return true;
     });
@@ -174,8 +166,6 @@ foreach (is_array($audit['abandoned']) ? $audit['abandoned'] : [] as $package =>
     $problems[] = "{$package} is abandoned. Replace it".(is_string($replacement) ? " with {$replacement}" : '').'.';
 }
 
-// Composer moves an advisory here when its config ignores the advisory, the
-// package or the severity. No config may excuse a finding.
 foreach (is_array($audit['ignored-advisories'] ?? null) ? $audit['ignored-advisories'] : [] as $package => $advisories) {
     foreach (is_array($advisories) ? $advisories : [] as $advisory) {
         $name = is_array($advisory) ? (advisory_ids($advisory)[0] ?? 'an advisory') : 'an advisory';

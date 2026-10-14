@@ -14,9 +14,6 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * @internal
- *
- * Wraps a PSR-18 client and produces a response with a non-buffered body when
- * the underlying client requires an opt-in for streaming
  */
 final class StreamingHttpClient implements ClientInterface
 {

@@ -4,10 +4,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Runs bin/check-local in a throwaway repository. Stubs stand in for the
-# check scripts. Fake commands stand in for the GitHub CLI, uv, Composer,
-# PHP, Semgrep and shellcheck, so no test reaches GitHub or runs a real check.
-
 set -euo pipefail
 
 # shellcheck source=scripts/tests/support.sh
@@ -28,22 +24,18 @@ semgrep"
 readonly passed_line="Passed install, lint, shellcheck, script tests, REUSE, platform, syntax, 12 tests, coverage, audit, reproducible archive and Semgrep."
 readonly statuses="repos/Xquik-dev/x-twitter-scraper-php/statuses"
 
-# Builds a repository whose checks all pass, on a machine with every tool.
 prepare_checks() {
   local name
   copy_file bin/check-local
   for name in bootstrap lint test-scripts coverage audit check-reproducible semgrep; do
     stub "scripts/$name" <<EOF
 #!/usr/bin/env bash
-# Stands in for scripts/$name. It fails when FAKE_FAILING_CHECK names it.
 echo "$name" >>"\$FAKE_LOGS/order"
 [[ "\${FAKE_FAILING_CHECK:-}" != "$name" ]]
 EOF
   done
   stub scripts/test <<'EOF'
 #!/usr/bin/env bash
-# Stands in for scripts/test. It prints the PHPUnit summary that
-# FAKE_TEST_SUMMARY holds and fails when FAKE_FAILING_CHECK names it.
 echo "test" >>"$FAKE_LOGS/order"
 printf '%b\n' "${FAKE_TEST_SUMMARY:-OK (12 tests, 30 assertions)}"
 [[ "${FAKE_FAILING_CHECK:-}" != "test" ]]
@@ -53,25 +45,21 @@ EOF
 EOF
   fake shellcheck <<'EOF'
 #!/bin/sh
-# Stands in for shellcheck. It records the scripts it is asked to check.
 echo "shellcheck" >>"$FAKE_LOGS/order"
 echo "$*" >>"$FAKE_LOGS/shellcheck"
 EOF
   fake uvx <<'EOF'
 #!/bin/sh
-# Stands in for uvx. It records its arguments.
 echo "uvx" >>"$FAKE_LOGS/order"
 echo "$*" >>"$FAKE_LOGS/uvx"
 EOF
   fake composer <<'EOF'
 #!/bin/sh
-# Stands in for Composer. It records its arguments.
 echo "composer" >>"$FAKE_LOGS/order"
 echo "$*" >>"$FAKE_LOGS/composer"
 EOF
   fake php <<'EOF'
 #!/bin/sh
-# Stands in for PHP. It prints a version for -r and records each syntax check.
 case "$*" in
   "-r "*) printf '8.5.0' ;;
   *" -l "*)
@@ -82,13 +70,10 @@ esac
 EOF
   fake semgrep <<'EOF'
 #!/bin/sh
-# Stands in for Semgrep. bin/check-local only checks that it exists.
 exit 0
 EOF
   fake gh <<'EOF'
 #!/bin/sh
-# Stands in for the GitHub CLI. It knows every commit unless
-# FAKE_GH_UNKNOWN_COMMIT is set, and records each status it is asked to post.
 case "$*" in
   "api repos/Xquik-dev/x-twitter-scraper-php/commits/"*)
     [ -z "${FAKE_GH_UNKNOWN_COMMIT:-}" ]
@@ -216,7 +201,6 @@ test_a_run_without_uv_stops_even_when_another_reuse_is_installed() {
   remove_tool uvx
   fake reuse <<'EOF'
 #!/bin/sh
-# Stands in for a reuse that is not the pinned one.
 echo "reuse" >>"$FAKE_LOGS/order"
 EOF
 
@@ -300,7 +284,6 @@ test_a_check_that_changes_the_tree_fails_the_run() {
   prepare_checks
   stub scripts/coverage <<'EOF'
 #!/usr/bin/env bash
-# Stands in for a check that leaves a file behind.
 echo "coverage" >>"$FAKE_LOGS/order"
 echo "left behind" >leftover.txt
 EOF

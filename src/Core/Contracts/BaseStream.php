@@ -29,9 +29,5 @@ interface BaseStream extends \IteratorAggregate
         mixed $parsedBody,
     );
 
-    /**
-     * Manually force the stream to close early.
-     * Iterating through will automatically close as well.
-     */
     public function close(): void;
 }

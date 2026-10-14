@@ -4,13 +4,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Runs bin/release-local in a throwaway repository whose origin is a local
-# bare repository. Stubs stand in for the checks and the archive build. Fake
-# commands stand in for Composer, curl, the GitHub CLI, sleep and the macOS
-# Keychain, so no test can reach Packagist, GitHub or a real secret.
-# The fake Packagist lists a version once its tag is on the origin, as the
-# real one does through its GitHub hook.
-
 set -euo pipefail
 
 # shellcheck source=scripts/tests/support.sh
@@ -41,8 +34,6 @@ readonly release_tags="refs/tags/v9.9.9
 refs/tags/v9.9.9^{}"
 readonly release_failed_line="Tag v9.9.9 is on origin, but the GitHub release failed. Fix the error above, then build the archive with ./scripts/build-archive and publish it with gh release create v9.9.9 --verify-tag."
 
-# Builds a repository on main that matches its origin, with stand-ins for
-# every step that would leave the machine.
 prepare_release() {
   local description_line='"description": "Search & export <tweets>.",'
   if [[ -n "${FIXTURE_NO_DESCRIPTION:-}" ]]; then
@@ -52,18 +43,14 @@ prepare_release() {
   copy_file scripts/package-listing
   stub bin/check-local <<'EOF'
 #!/bin/sh
-# Stands in for bin/check-local.
 echo "ran" >>"$FAKE_LOGS/check-local"
 EOF
   stub scripts/audit <<'EOF'
 #!/bin/sh
-# Stands in for scripts/audit.
 echo "ran" >>"$FAKE_LOGS/audit"
 EOF
   stub scripts/build-archive <<'EOF'
 #!/bin/sh
-# Stands in for the archive build. It packs the files that Git exports, and
-# adds 1 more file when FAKE_ARCHIVE_EXTRA is set.
 echo "ran" >>"$FAKE_LOGS/build-archive"
 git archive --format=zip --output "$1" HEAD
 if [ -n "${FAKE_ARCHIVE_EXTRA:-}" ]; then
@@ -120,18 +107,11 @@ EOF
 EOF
   fake composer <<'EOF'
 #!/bin/sh
-# Stands in for Composer. It records its arguments and rejects composer.json
-# when FAKE_COMPOSER_INVALID is set.
 echo "$*" >>"$FAKE_LOGS/composer"
 [ -z "${FAKE_COMPOSER_INVALID:-}" ]
 EOF
   fake curl <<'EOF'
 #!/bin/sh
-# Stands in for Packagist. It lists the version of FAKE_TAG, which is v9.9.9
-# unless a test sets it, once that tag is on the origin, after
-# FAKE_PACKAGIST_SLOW_CALLS more requests. FAKE_PACKAGIST_LISTS makes it list
-# the version from the start, FAKE_PACKAGIST_HOOK_BROKEN never, and
-# FAKE_PACKAGIST_DOWN fails every request.
 for argument in "$@"; do url="$argument"; done
 echo "$url" >>"$FAKE_LOGS/curl"
 if [ -n "${FAKE_PACKAGIST_DOWN:-}" ]; then
@@ -154,10 +134,6 @@ echo "{\"packages\":{\"xquik/x-twitter-scraper\":[$versions]}}"
 EOF
   fake gh <<'EOF'
 #!/bin/sh
-# Stands in for the GitHub CLI. It is signed in unless FAKE_GH_SIGNED_OUT is
-# set. The release list holds the draft IDs in FAKE_DRAFT_IDS. Each release
-# call is recorded with the files of the archive it uploads and whether the
-# tag was on the origin by then. FAKE_GH_RELEASE_FAILS breaks those calls.
 case "$1" in
   auth)
     [ -z "${FAKE_GH_SIGNED_OUT:-}" ]
@@ -197,7 +173,6 @@ fi
 EOF
   fake sleep <<'EOF'
 #!/bin/sh
-# Stands in for sleep. It records the pause and returns at once.
 echo "$*" >>"$FAKE_LOGS/sleep"
 EOF
   use_real_php

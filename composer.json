@@ -22,7 +22,6 @@
       "/phpstan.dist.neon",
       "/phpunit.xml.dist",
       "/playground",
-      "/release-please-config.json",
       "/scripts",
       "/tests",
       "/vendor"

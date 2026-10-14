@@ -6,11 +6,6 @@
 
 declare(strict_types=1);
 
-// Stands in for Packagist in the audit tests. scripts/tests/audit.test.sh
-// loads this file before scripts/verify-audit.php. It answers every HTTPS
-// read from a file under FAKE_PACKAGIST_DIR and records the URL, so no test
-// reaches the network. A package without a file acts like a failed download.
-
 final class FakePackagist
 {
     /** @var resource|null */
