@@ -22,7 +22,7 @@ final class NoCodeCommentsRule implements Rule
 {
     private const PROOF = '~https://|SPDX-|REUSE-Ignore~';
     private const DIRECTIVE = '~@phpstan-|@psalm-|phpcs:|@codeCoverageIgnore|@noinspection~';
-    private const TYPE_TAG = '~@(?:param|return|var|property(?:-read|-write)?|method|template(?:-covariant|-contravariant)?|extends|implements|use|mixin|throws|phpstan-|psalm-)\b~';
+    private const TYPE_TAG = '~@(?:param|return|var|property(?:-read|-write)?|method|template(?:-covariant|-contravariant)?|extends|implements|use|mixin|throws|internal|phpstan-|psalm-)\b~';
     private const DECLARATION_TOKENS = [
         T_ABSTRACT, T_CASE, T_CLASS, T_CONST, T_ENUM, T_FINAL, T_FUNCTION,
         T_INTERFACE, T_PROTECTED, T_PUBLIC, T_READONLY, T_STATIC, T_TRAIT,

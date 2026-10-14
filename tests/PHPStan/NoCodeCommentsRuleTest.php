@@ -54,6 +54,11 @@ final class NoCodeCommentsRuleTest extends RuleTestCase
 
             namespace Fixture;
 
+            /**
+             * @internal
+             */
+            final class Internal {}
+
             // cURL keeps the connection open.
             // https://www.php.net/manual/en/function.curl-setopt.php
             /**
