@@ -43,13 +43,9 @@ The [API reference](https://docs.xquik.com/api-reference/overview) lists every r
 
 Install the [Packagist package `xquik/x-twitter-scraper`](https://packagist.org/packages/xquik/x-twitter-scraper) with Composer.
 
-<!-- x-release-please-start-version -->
-
 ```sh
-composer require xquik/x-twitter-scraper:^0.13.3
+composer require xquik/x-twitter-scraper:^0.13.4
 ```
-
-<!-- x-release-please-end -->
 
 ## Verify a release
 

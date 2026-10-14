@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.13.4 (2026-10-14)
+
+[Full changelog from v0.13.3 to v0.13.4](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.13.3...v0.13.4)
+
+### Documentation
+
+* The README title is now "X API & Twitter API PHP SDK by Xquik".
+* The README says near the top what Xquik is, how it bills and that it is not affiliated with X Corp.
+* The README uses sentence case headings, active voice and whole sentences.
+* The Packagist description leads with "X API & Twitter API", and the package has 9 new keywords.
+* Doc comments use the current price. An active monitor costs 30 credits per hour.
+
+### Chores
+
+* A generated retry idempotency key starts with `xquik-php-retry-`. The client sends no such key by default.
+* Releases run from a maintainer's machine. Each release still attaches a reproducible Composer archive, but releases after 0.13.3 carry no GitHub build attestation.
+* The Packagist package no longer ships `.gitleaks.toml`.
+
 ## 0.13.3 (2026-08-21)
 
 Full Changelog: [v0.13.2...v0.13.3](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.13.2...v0.13.3)
