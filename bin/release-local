@@ -4,16 +4,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Releases the version in .release-please-manifest.json. Run it from a clean
-# main that matches origin/main. It pushes the tag, publishes the GitHub
-# release with the reproducible Composer archive, and waits until Packagist
-# lists the version.
-# Pass --dry-run to run every check, build the archive and print the listing
-# and the files a release ships, without tagging or releasing.
-#
-# Packagist reads each pushed tag through its GitHub hook, so a release needs
-# no Packagist token and reads no Keychain item. gh uses its own login.
-
 set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
@@ -49,8 +39,6 @@ refuse() {
 workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-release.XXXXXX")"
 trap 'rm -rf -- "${workspace:?}"' EXIT
 
-# Succeeds when Packagist lists the version, and stops the run when Packagist
-# does not answer with metadata this script can read.
 packagist_lists_version() {
   local metadata listed
   metadata="$(

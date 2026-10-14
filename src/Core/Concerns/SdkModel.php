@@ -25,7 +25,7 @@ trait SdkModel
     private static ModelOf $converter;
 
     /**
-     * @var array<string, mixed> keeps track of undocumented data
+     * @var array<string, mixed>
      */
     private array $_data = [];
 
@@ -75,10 +75,6 @@ trait SdkModel
     /**
      * @internal
      *
-     * Magic get is intended to occur when we have manually unset
-     * a native class property, indicating an omitted value,
-     * or a property overridden with an incongruent type
-     *
      * @throws \Exception
      */
     public function __get(string $key): mixed
@@ -87,25 +83,18 @@ trait SdkModel
             throw new \RuntimeException("Property '{$key}' does not exist in {$this}::class");
         }
 
-        // The unset property was overridden by a value with an incongruent type.
-        // It's forbidden for an optional value to be `null` in the payload.
         if (array_key_exists($key, array: $this->_data)) {
             throw new \Exception(
                 "The {$key} property is overridden, use the array access ['{$key}'] syntax to the raw payload property.",
             );
         }
 
-        // An optional property which was unset to be omitted from serialized is being accessed.
-        // Return null to match user's expectations.
         // @phpstan-ignore-next-line return.type
         return null;
     }
 
     /**
      * @internal
-     *
-     * Like {@link __unserialize()}, but for raw API payloads, whose keys are
-     * API property names rather than PHP property names
      *
      * @param array<string, mixed> $data
      */

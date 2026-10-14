@@ -4,19 +4,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Scans the repository with Semgrep and fails on any finding and on any file
-# that Semgrep could not parse.
-# The rules are every PHP rule of the semgrep-rules repository at 1 pinned
-# commit of its release branch. This script removes no rule. Semgrep reads
-# the files that Git tracks and skips the paths on its default ignore list,
-# such as tests.
-
 set -euo pipefail
 
 cd -- "$(dirname -- "$0")/.."
 
 readonly rules_repository="https://github.com/semgrep/semgrep-rules.git"
-# The head of the release branch on 2026-10-13.
 readonly rules_commit="5a8a6beafb1a848591f44bdddcb51584474493c4"
 
 workspace="$(mktemp -d "${TMPDIR:-/tmp}/xquik-php-semgrep.XXXXXX")"
@@ -48,9 +40,6 @@ semgrep scan \
   --exclude .phpunit.cache \
   . || status=$?
 
-# Semgrep goes on after it fails to parse a file, scans only the code it could
-# parse and still exits with 0. Its JSON report lists each such file under
-# errors.
 if [[ ! -s "$report" ]]; then
   ((status == 0)) || exit "$status"
   echo "Semgrep wrote no report, so the scan cannot show that it read every file. Rerun, and update Semgrep if it happens again." >&2
@@ -61,11 +50,6 @@ php -- "$report" <<'PHP'
 
 declare(strict_types=1);
 
-// Semgrep 1.180 cannot parse a named argument called list, which PHP 8 allows.
-// It skips the argument name and parses the rest of the file. Such an error
-// passes only while every span it reports holds exactly the text list: in the
-// file. The run fails when the exemption matches nothing, since Semgrep then
-// parses such an argument and the exemption must come out.
 function onlyListArgument(array $error): bool
 {
     $type = $error['type'] ?? null;

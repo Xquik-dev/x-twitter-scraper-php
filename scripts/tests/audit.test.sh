@@ -4,11 +4,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Runs scripts/audit in a throwaway repository. A fake Composer prints an
-# audit report in the shape that Composer 2.10 writes, and
-# scripts/tests/fake-packagist.php stands in for Packagist. No test reaches
-# the network.
-
 set -euo pipefail
 
 # shellcheck source=scripts/tests/support.sh
@@ -21,13 +16,10 @@ readonly advisory_name="PKSA-abcd-1234-efgh"
 readonly audit_start="==> Validating locked Composer metadata
 ==> Auditing locked dependencies"
 
-# Prints the date that lies this many days after today.
 day_from_today() {
   jq -nr --argjson days "$1" 'now + $days * 86400 | strftime("%Y-%m-%d")'
 }
 
-# Builds a repository that ships 1 package at runtime and uses 1 package only
-# for development. The audit report starts without findings.
 prepare_audit() {
   copy_file scripts/audit
   copy_file scripts/verify-audit.php
@@ -48,9 +40,6 @@ EOF
 EOF
   fake composer <<'EOF'
 #!/bin/sh
-# Stands in for Composer. It records its arguments. The audit prints the
-# report in FAKE_AUDIT_REPORT and exits with 1 when the report has a finding,
-# as Composer does.
 echo "$*" >>"$FAKE_LOGS/composer"
 case "$1" in
   audit)
@@ -68,8 +57,6 @@ EOF
   run_env=("FAKE_AUDIT_REPORT=$sandbox/audit-report.json" "FAKE_PACKAGIST_DIR=$sandbox/packagist")
 }
 
-# Makes the fake Composer report 1 advisory. Pass the package, the severity
-# and the report key, which is advisories unless Composer ignored the finding.
 report_advisory() {
   jq -n \
     --arg package "$1" \
@@ -90,8 +77,6 @@ report_advisory() {
     }]}}' >"$sandbox/audit-report.json"
 }
 
-# Lists the advisory in audit-exceptions.json for this package, with this
-# recheck date and this reason.
 list_exception() {
   write_file audit-exceptions.json <<EOF
 {
@@ -107,7 +92,6 @@ list_exception() {
 EOF
 }
 
-# Makes the fake Packagist list these versions of the development package.
 packagist_lists() {
   local version entries=""
   for version in "$@"; do
