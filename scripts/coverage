@@ -20,32 +20,20 @@ fi
 echo "==> Measuring runtime core and service coverage"
 coverage_index=0
 
-run_coverage_file() {
-  local test_file="$1"
-  local coverage_part
-  local -a coverage_command
-
+while IFS= read -r test_file; do
   coverage_index=$((coverage_index + 1))
-  coverage_part="$coverage_workspace/coverage-${coverage_index}.cov"
-  coverage_command=(./scripts/test --coverage-php="$coverage_part")
+  coverage_options=(--path-coverage)
   # Xdebug can crash while tracing generator paths in these focused tests.
   case "$test_file" in
     tests/Core/SdkPageTest.php | \
       tests/Core/UtilTest.php)
-      ;;
-    *)
-      coverage_command+=(--path-coverage)
+      coverage_options=()
       ;;
   esac
-  coverage_command+=("$test_file")
-
   echo "==> Collecting coverage file ${coverage_index}"
-  XDEBUG_MODE=coverage PHPUNIT_MEMORY_LIMIT=1G "${coverage_command[@]}"
-}
-
-while IFS= read -r test_file; do
-  # Isolate Xdebug path data to prevent native crashes across test files.
-  run_coverage_file "$test_file"
+  XDEBUG_MODE=coverage PHPUNIT_MEMORY_LIMIT=1G ./scripts/test \
+    --coverage-php="$coverage_workspace/coverage-${coverage_index}.cov" \
+    "${coverage_options[@]}" "$test_file"
 done < <(find tests -type f -name '*Test.php' | LC_ALL=C sort)
 
 php -d memory_limit=1G vendor/bin/phpcov merge \
