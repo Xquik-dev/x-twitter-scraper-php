@@ -12,3 +12,13 @@ parameters:
         - identifier: property.onlyWritten
 
     reportUnmatchedIgnoredErrors: false
+
+services:
+    -
+        class: Tests\Support\NoCodeCommentsRule
+        arguments:
+            root: %currentWorkingDirectory%
+            publicApiFolders: [src/]
+            privateApiFolders: [src/Core/]
+        tags:
+            - phpstan.rules.rule
