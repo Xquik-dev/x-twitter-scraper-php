@@ -8,4 +8,4 @@ declare(strict_types=1);
 
 namespace XTwitterScraper;
 
-const VERSION = '0.13.4';
+const VERSION = '0.13.5';
