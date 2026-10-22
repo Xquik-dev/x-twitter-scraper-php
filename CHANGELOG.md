@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.13.5 (2026-10-22)
+
+[Full changelog from v0.13.4 to v0.13.5](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.13.4...v0.13.5)
+
+The API and its behavior are the same as in 0.13.4.
+
+### Documentation
+
+* The README shows live trust and usage numbers and links the other Xquik repositories by name.
+
+### Chores
+
+* The source carries no code comments, and PHPStan fails on new ones.
+* The Composer archive leaves out local maintainer files.
+
 ## 0.13.4 (2026-10-14)
 
 [Full changelog from v0.13.3 to v0.13.4](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.13.3...v0.13.4)
