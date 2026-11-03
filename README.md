@@ -1,6 +1,7 @@
 # X API & Twitter API PHP SDK by Xquik
 
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13737/badge)](https://www.bestpractices.dev/projects/13737)
+[![Convex Component](https://www.convex.dev/components/badge/convex-xquik)](https://www.convex.dev/components/convex-xquik)
 
 Use this X API & Twitter API SDK to work with X from PHP.
 It works as a Twitter scraper & tweet scraper for search, profiles & followers.
