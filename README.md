@@ -1,21 +1,21 @@
 # X API & Twitter API PHP SDK by Xquik
 
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13737/badge)](https://www.bestpractices.dev/projects/13737)
-[![Convex Component](https://www.convex.dev/components/badge/convex-xquik)](https://www.convex.dev/components/convex-xquik)
-
-Use the Xquik X API & Twitter API SDK to work with X from PHP.
-It works as a Twitter scraper & tweet scraper for search, profiles & followers.
-Scrape Twitter timelines, lists, communities & trends into typed PHP value objects.
-Manage media, webhooks, monitors & X automation through typed Composer methods.
-It provides a Twitter API alternative through documented Xquik REST routes.
+Add the Twitter API PHP SDK by Xquik to search tweets from Composer apps.
+Calls take named arguments and return typed value objects.
+Public reads need no X developer account.
 
 Xquik is the world's fastest and cheapest X Twitter scraper service with the most complete X data.
+Most other Apify Actors charge before filtering or deduplication.
 Xquik charges only for delivered, unique, filter-matching results and never pads rows.
+Xquik is independent and not affiliated with X Corp.
 
-> Xquik is an independent third-party service. Not affiliated with X Corp.
-> "Twitter" and "X" are trademarks of X Corp.
+<!-- trust:win:start -->
+The Xquik REST API read 45 tweets per second at $0.15 per 1,000 on 2026-10-15. The fastest of 4 rival Actors read 12.5 per second. The cheapest cost $0.173 per 1,000. [Compare each run](https://xquik.com/benchmarks#benchmark-x-tweet-scraper).
+<!-- trust:win:end -->
 
 ## Install the Twitter API PHP SDK
+
+The SDK requires PHP 8.1.0 or later.
 
 Install the [Packagist package `xquik/x-twitter-scraper`](https://packagist.org/packages/xquik/x-twitter-scraper) with Composer.
 
@@ -25,62 +25,45 @@ composer require xquik/x-twitter-scraper:^0.13.5
 
 ## Scrape tweets with the Twitter PHP client
 
-Set optional arguments, and parameters that have defaults, by name.
+Create an API key in the [Xquik dashboard](https://dashboard.xquik.com) and export it.
+
+```sh
+export X_TWITTER_SCRAPER_API_KEY="your-api-key"
+```
+
+This script prints 10 recent posts from 1 account.
 
 ```php
 <?php
 
+require __DIR__ . '/vendor/autoload.php';
+
 use XTwitterScraper\Client;
 
-$client = new Client(
-  apiKey: getenv('X_TWITTER_SCRAPER_API_KEY') ?: 'My API Key'
-);
+$client = new Client();
 
 $response = $client->x->tweets->search(q: 'from:elonmusk', limit: 10);
 
 var_dump($response);
 ```
 
+Next, read the [PHP SDK guide](https://docs.xquik.com/sdks/php) or the [REST API reference](https://docs.xquik.com/api-reference/overview).
+
 <!-- trust:start -->
 
-## Trust & usage
+## Benchmarks & usage
 
-[![Twitter API package downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Fdownloads.json)](https://xquik.com/trust#downloads)
-[![Twitter scraper users on Apify](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Fapify-users.json)](https://apify.com/xquik)
-[![Twitter scraper runs on Apify](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Fapify-runs.json)](https://apify.com/xquik)
-[![Tweet scraper rating on Apify](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Fapify-rating.json)](https://apify.com/xquik/x-tweet-scraper/reviews)
-[![Xquik Twitter API accounts](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Faccounts.json)](https://xquik.com/trust#accounts)
-[![Twitter Skill installs](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Fskill-installs.json)](https://xquik.com/trust#skill-installs)
-[![Xquik verified revenue on TrustMRR](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Frevenue.json)](https://trustmrr.com/startup/xquik)
-[![Twitter API p99 server read time](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Frest-p99.json)](https://xquik.com/trust#speed)
-[![Xquik GitHub stars](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Fgithub-stars.json)](https://github.com/Xquik-dev)
-[![xquik/x-twitter-scraper downloads on Packagist](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Fpackagist-xquik-x-twitter-scraper.json)](https://packagist.org/packages/xquik/x-twitter-scraper/stats)
+[![Twitter API package downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Fdownloads.json)](https://xquik.com/benchmarks#downloads)
+[![Twitter API p99 server read time](https://img.shields.io/endpoint?url=https%3A%2F%2Fxquik.com%2Fbadges%2Frest-p99.json)](https://xquik.com/benchmarks#speed)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13737/badge)](https://www.bestpractices.dev/projects/13737)
 
-- 53,000+ downloads of Xquik's Twitter API packages on npm, PyPI, RubyGems, NuGet, Packagist & Terraform ([source](https://xquik.com/trust#downloads)) <!-- trust:downloads 53547 -->
-- 9,500+ users of Xquik's Twitter scraper Actors on Apify ([source](https://apify.com/xquik)) <!-- trust:apify-users 9595 -->
-- 6,700,000+ runs of Xquik's Twitter scraper Actors on Apify ([source](https://apify.com/xquik)) <!-- trust:apify-runs 6765249 -->
-- 4.66 of 5 for the X Tweet Scraper from 16 Apify reviews ([source](https://apify.com/xquik/x-tweet-scraper/reviews)) <!-- trust:apify-rating 4.66 16 -->
-- 4,000+ accounts on xquik.com ([source](https://xquik.com/trust#accounts)) <!-- trust:accounts 4073 -->
-- 1,600+ installs of Xquik's Twitter Skills on skills.sh ([source](https://xquik.com/trust#skill-installs)) <!-- trust:skill-installs 1617 -->
-- $39,000+ in revenue verified by TrustMRR ([source](https://trustmrr.com/startup/xquik)) <!-- trust:revenue 39784 -->
-- 13.2 s p99 REST API server read time over 7 days, failed reads included ([source](https://xquik.com/trust#speed)) <!-- trust:rest-p99 13194 -->
-- 380+ GitHub stars across Xquik's repos ([source](https://github.com/Xquik-dev)) <!-- trust:github-stars 383 -->
-- 40 downloads of xquik/x-twitter-scraper on Packagist ([source](https://packagist.org/packages/xquik/x-twitter-scraper/stats)) <!-- trust:packagist-xquik-x-twitter-scraper 40 -->
+- 63,000+ downloads of Xquik's Twitter API packages on npm, PyPI, RubyGems, NuGet, Packagist & Terraform ([source](https://xquik.com/benchmarks#downloads)) <!-- trust:downloads 63178 -->
+- 6.4 s p99 REST API server read time over 7 days, failed reads included ([source](https://xquik.com/benchmarks#speed)) <!-- trust:rest-p99 6317 -->
 - This repo meets the OpenSSF Best Practices passing criteria ([source](https://www.bestpractices.dev/projects/13737)) <!-- trust:openssf-x-twitter-scraper-php 1 -->
 
-Checked on 2026-10-25. See each number with its date & source on [xquik.com/trust](https://xquik.com/trust) or as [JSON](https://xquik.com/trust.json).
+Checked on 2026-11-06. See each number with its date & source on [xquik.com/benchmarks](https://xquik.com/benchmarks) or as [JSON](https://xquik.com/trust.json).
 
 <!-- trust:end -->
-
-## PHP client or REST
-
-The typed Composer package calls the documented Xquik REST API.
-It does not call or emulate the official X API.
-Use this SDK for typed value objects, retries & Composer applications.
-Call REST directly when a Composer dependency does not fit.
-
-Read the [PHP SDK guide](https://docs.xquik.com/sdks/php) or the [API guide](https://docs.xquik.com/api-reference/overview).
 
 ## Common Twitter & X tasks
 
@@ -96,13 +79,8 @@ Read the [PHP SDK guide](https://docs.xquik.com/sdks/php) or the [API guide](htt
 | Monitor an account | `POST /monitors` | Deliver events through HMAC webhooks. |
 | Post or reply | `POST /x/tweets` | Confirm the account and payload. |
 
-The [API reference](https://docs.xquik.com/api-reference/overview) lists every route and contract.
-
 ## Verify a release
 
-Maintainers release from their own machine with `bin/release-local`.
-The script runs every repository check before it pushes the tag.
-`bin/release-local --dry-run` runs the same checks and prints the listing without releasing.
 Each release attaches a reproducible Composer archive.
 Replace `VERSION` with the release number, then rebuild the archive and compare.
 
@@ -122,14 +100,13 @@ cmp "$archive" rebuilt.zip
 ```
 
 `cmp` prints nothing when both archives have identical bytes.
-Releases up to v0.13.3 also carry GitHub build attestations.
 
 ## Usage
 
 ### Value objects
 
-Create value objects with `Dog::with(name: "Joey")` and named parameters.
-Builders also work, as in `(new Dog)->withName("Joey")`.
+Create value objects with named parameters, as in `TweetMedia::with(mediaURL: $preview, type: 'photo', url: $url)`.
+Builders also work, as in `(new TweetMedia)->withURL($url)`.
 
 ### Handling errors
 
@@ -174,7 +151,7 @@ The SDK throws 1 error type for each cause.
 ### Retries
 
 The client retries some failures twice with exponential backoff.
-By default, it retries connection failures, timeouts, and HTTP 408, 409, 429 & 5xx responses.
+It retries connection failures, timeouts and HTTP 408, 409, 429 & 5xx responses.
 Set `maxRetries` globally or per request.
 
 ```php
@@ -189,13 +166,9 @@ $client = new Client(requestOptions: ['maxRetries' => 0]);
 $result = $client->account->retrieve(requestOptions: ['maxRetries' => 5]);
 ```
 
-## Advanced concepts
+## Custom requests
 
-### Custom or undocumented requests
-
-#### Undocumented properties
-
-Send undocumented parameters and read undocumented response properties.
+Pass `extraQueryParams`, `extraBodyParams` & `extraHeaders` through `requestOptions`.
 An `extra*` value overrides its documented counterpart.
 
 ```php
@@ -210,23 +183,17 @@ $account = $client->account->retrieve(
 );
 ```
 
-#### Undocumented request parameters
-
-Pass `extraQueryParams`, `extraBodyParams` & `extraHeaders` through `requestOptions`.
-
-#### Undocumented endpoints
-
 Use `$client->request()` to keep authentication and retries on undocumented routes.
 
 ```php
 <?php
 
 $response = $client->request(
-  method: "post",
+  method: 'post',
   path: '/undocumented/endpoint',
-  query: ['dog' => 'woof'],
-  headers: ['useful-header' => 'interesting-value'],
-  body: ['hello' => 'world']
+  query: ['my_query_parameter' => 'value'],
+  headers: ['my-header' => 'value'],
+  body: ['my_body_parameter' => 'value'],
 );
 ```
 
@@ -235,10 +202,6 @@ $response = $client->request(
 This package follows [SemVer](https://semver.org/spec/v2.0.0.html).
 Before version 1.0, APIs may change without a major release.
 PHPDoc-only type improvements are non-breaking changes.
-
-## Requirements
-
-The SDK requires PHP 8.1.0 or later.
 
 ## Questions
 
@@ -249,19 +212,21 @@ need a connected X account.
 
 ### Is this the official X API?
 
-No. Xquik is an independent third-party service with its own REST API. This SDK
-calls that API, not the official X API.
+No. Xquik runs its own REST API. This SDK calls that API, not the official X API.
 
 ## More Xquik tools
 
 - [X (Twitter) scraper API & Twitter MCP server](https://github.com/Xquik-dev/x-twitter-scraper) with REST, MCP & Skill setup.
-- Twitter API SDKs for [TypeScript](https://github.com/Xquik-dev/x-twitter-scraper-typescript), [Python](https://github.com/Xquik-dev/x-twitter-scraper-python), [Go](https://github.com/Xquik-dev/x-twitter-scraper-go), [Ruby](https://github.com/Xquik-dev/x-twitter-scraper-ruby), [Java](https://github.com/Xquik-dev/x-twitter-scraper-java), [Kotlin](https://github.com/Xquik-dev/x-twitter-scraper-kotlin) & [C#](https://github.com/Xquik-dev/x-twitter-scraper-csharp).
+- Twitter API SDKs for [TypeScript](https://github.com/Xquik-dev/x-twitter-scraper-typescript), [Python](https://github.com/Xquik-dev/x-twitter-scraper-python), [Go](https://github.com/Xquik-dev/x-twitter-scraper-go) & [Java](https://github.com/Xquik-dev/x-twitter-scraper-java).
+- Twitter API SDKs for [Ruby](https://github.com/Xquik-dev/x-twitter-scraper-ruby), [Kotlin](https://github.com/Xquik-dev/x-twitter-scraper-kotlin) & [C#](https://github.com/Xquik-dev/x-twitter-scraper-csharp).
 - [Twitter CLI & X CLI](https://github.com/Xquik-dev/x-twitter-scraper-cli) for terminal workflows.
 - [Twitter advanced search operators](https://github.com/Xquik-dev/x-twitter-advanced-search) with tested examples.
-- Twitter agent plugins for [OpenClaw](https://github.com/Xquik-dev/tweetclaw) & [Hermes Agent](https://github.com/Xquik-dev/hermes-tweet), and the [Twitter API documentation source](https://github.com/Xquik-dev/xquik-docs).
-- Twitter integrations for [n8n](https://github.com/Xquik-dev/n8n-nodes-xquik), [Prefect](https://github.com/Xquik-dev/prefect-xquik), [Haystack](https://github.com/Xquik-dev/xquik-haystack), [Paperclip](https://github.com/Xquik-dev/paperclip-plugin-xquik), [Terraform](https://github.com/Xquik-dev/terraform-provider-x-twitter-scraper), [Convex](https://github.com/Xquik-dev/xquik-convex), [Supabase](https://github.com/Xquik-dev/xquik-supabase) & [Strapi](https://github.com/Xquik-dev/strapi-plugin-xquik).
+- Twitter agent plugins for [OpenClaw](https://github.com/Xquik-dev/tweetclaw) & [Hermes Agent](https://github.com/Xquik-dev/hermes-tweet).
+- Twitter integrations for [n8n](https://github.com/Xquik-dev/n8n-nodes-xquik), [Prefect](https://github.com/Xquik-dev/prefect-xquik), [Haystack](https://github.com/Xquik-dev/xquik-haystack) & [Paperclip](https://github.com/Xquik-dev/paperclip-plugin-xquik).
+- Twitter integrations for [Terraform](https://github.com/Xquik-dev/terraform-provider-x-twitter-scraper), [Convex](https://github.com/Xquik-dev/xquik-convex), [Supabase](https://github.com/Xquik-dev/xquik-supabase) & [Strapi](https://github.com/Xquik-dev/strapi-plugin-xquik).
 - Twitter MCP for [AI agents](https://github.com/Xquik-dev/xquik-mcp), [VS Code](https://github.com/Xquik-dev/xquik-vscode) & [Raycast](https://github.com/Xquik-dev/xquik-raycast).
-- [Xquik X API & Twitter scraper](https://xquik.com) and the [Twitter API documentation](https://docs.xquik.com/api-reference/overview).
+- [Xquik X API & Twitter scraper](https://xquik.com).
+- [Twitter API documentation](https://docs.xquik.com/api-reference/overview) and its [source](https://github.com/Xquik-dev/xquik-docs).
 
 ## Project policies
 
