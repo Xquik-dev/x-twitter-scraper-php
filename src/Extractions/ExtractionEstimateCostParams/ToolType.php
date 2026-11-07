@@ -53,6 +53,8 @@ enum ToolType: string
 
     case TWEET_SEARCH_EXTRACTOR = 'tweet_search_extractor';
 
+    case USER_AFFILIATES = 'user_affiliates';
+
     case USER_LIKES = 'user_likes';
 
     case USER_MEDIA = 'user_media';

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Features
+
+* Extraction tool types gain `USER_AFFILIATES`.
+
 ## 0.13.5 (2026-10-22)
 
 [Full changelog from v0.13.4 to v0.13.5](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.13.4...v0.13.5)
