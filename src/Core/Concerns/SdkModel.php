@@ -48,6 +48,8 @@ trait SdkModel
      */
     public function __unserialize(array $data): void
     {
+        $this->initialize();
+
         foreach ($data as $key => $value) {
             // @phpstan-ignore-next-line argument.type
             $this->offsetSet($key, value: $value);
