@@ -6,6 +6,7 @@
 
 namespace Tests\Extractions;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\ToolType as EstimateToolType;
@@ -18,12 +19,21 @@ use XTwitterScraper\Extractions\ExtractionRunParams\ToolType as RunToolType;
  */
 final class ToolTypeTest extends TestCase
 {
-    #[Test]
-    public function testEveryToolTypeTakesUserAffiliates(): void
+    /**
+     * @return list<array{string}>
+     */
+    public static function affiliates(): array
     {
-        $this->assertSame(EstimateToolType::USER_AFFILIATES, EstimateToolType::from('user_affiliates'));
-        $this->assertSame(JobToolType::USER_AFFILIATES, JobToolType::from('user_affiliates'));
-        $this->assertSame(ListToolType::USER_AFFILIATES, ListToolType::from('user_affiliates'));
-        $this->assertSame(RunToolType::USER_AFFILIATES, RunToolType::from('user_affiliates'));
+        return [['user_affiliates']];
+    }
+
+    #[Test]
+    #[DataProvider('affiliates')]
+    public function testEveryToolTypeTakesUserAffiliates(string $value): void
+    {
+        $this->assertSame(EstimateToolType::USER_AFFILIATES, EstimateToolType::from($value));
+        $this->assertSame(JobToolType::USER_AFFILIATES, JobToolType::from($value));
+        $this->assertSame(ListToolType::USER_AFFILIATES, ListToolType::from($value));
+        $this->assertSame(RunToolType::USER_AFFILIATES, RunToolType::from($value));
     }
 }
