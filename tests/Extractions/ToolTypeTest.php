@@ -19,14 +19,6 @@ use XTwitterScraper\Extractions\ExtractionRunParams\ToolType as RunToolType;
  */
 final class ToolTypeTest extends TestCase
 {
-    /**
-     * @return list<array{string}>
-     */
-    public static function affiliates(): array
-    {
-        return [['user_affiliates']];
-    }
-
     #[Test]
     #[DataProvider('affiliates')]
     public function testEveryToolTypeTakesUserAffiliates(string $value): void
@@ -35,5 +27,13 @@ final class ToolTypeTest extends TestCase
         $this->assertSame(JobToolType::USER_AFFILIATES, JobToolType::from($value));
         $this->assertSame(ListToolType::USER_AFFILIATES, ListToolType::from($value));
         $this->assertSame(RunToolType::USER_AFFILIATES, RunToolType::from($value));
+    }
+
+    /**
+     * @return list<array{string}>
+     */
+    public static function affiliates(): array
+    {
+        return [['user_affiliates']];
     }
 }
