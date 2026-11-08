@@ -16,6 +16,9 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   coverMediaURL?: string|null,
  *   previewText?: string|null,
  *   title?: string|null,
+ *   coverMedia?: array<string,mixed>|null,
+ *   lifecycleState?: array<string,mixed>|null,
+ *   metadata?: array<string,mixed>|null,
  * }
  */
 final class Article implements BaseModel
@@ -35,6 +38,30 @@ final class Article implements BaseModel
     #[Optional]
     public ?string $title;
 
+    /**
+     * Public metadata whose fields X defines.
+     *
+     * @var array<string,mixed>|null $coverMedia
+     */
+    #[Optional(map: 'mixed')]
+    public ?array $coverMedia;
+
+    /**
+     * Public metadata whose fields X defines.
+     *
+     * @var array<string,mixed>|null $lifecycleState
+     */
+    #[Optional(map: 'mixed')]
+    public ?array $lifecycleState;
+
+    /**
+     * Public metadata whose fields X defines.
+     *
+     * @var array<string,mixed>|null $metadata
+     */
+    #[Optional(map: 'mixed')]
+    public ?array $metadata;
+
     public function __construct()
     {
         $this->initialize();
@@ -44,12 +71,19 @@ final class Article implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param array<string,mixed>|null $coverMedia
+     * @param array<string,mixed>|null $lifecycleState
+     * @param array<string,mixed>|null $metadata
      */
     public static function with(
         ?string $id = null,
         ?string $coverMediaURL = null,
         ?string $previewText = null,
         ?string $title = null,
+        ?array $coverMedia = null,
+        ?array $lifecycleState = null,
+        ?array $metadata = null
     ): self {
         $self = new self;
 
@@ -57,6 +91,12 @@ final class Article implements BaseModel
         null !== $coverMediaURL && $self['coverMediaURL'] = $coverMediaURL;
         null !== $previewText && $self['previewText'] = $previewText;
         null !== $title && $self['title'] = $title;
+
+        null !== $coverMedia && $self['coverMedia'] = $coverMedia;
+
+        null !== $lifecycleState && $self['lifecycleState'] = $lifecycleState;
+
+        null !== $metadata && $self['metadata'] = $metadata;
 
         return $self;
     }
@@ -89,6 +129,45 @@ final class Article implements BaseModel
     {
         $self = clone $this;
         $self['title'] = $title;
+
+        return $self;
+    }
+
+    /**
+     * Public metadata whose fields X defines.
+     *
+     * @param array<string,mixed>|null $coverMedia
+     */
+    public function withCoverMedia(?array $coverMedia): self
+    {
+        $self = clone $this;
+        $self['coverMedia'] = $coverMedia;
+
+        return $self;
+    }
+
+    /**
+     * Public metadata whose fields X defines.
+     *
+     * @param array<string,mixed>|null $lifecycleState
+     */
+    public function withLifecycleState(?array $lifecycleState): self
+    {
+        $self = clone $this;
+        $self['lifecycleState'] = $lifecycleState;
+
+        return $self;
+    }
+
+    /**
+     * Public metadata whose fields X defines.
+     *
+     * @param array<string,mixed>|null $metadata
+     */
+    public function withMetadata(?array $metadata): self
+    {
+        $self = clone $this;
+        $self['metadata'] = $metadata;
 
         return $self;
     }

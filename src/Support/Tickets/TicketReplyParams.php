@@ -20,7 +20,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\Support\TicketsService::reply()
  *
  * @phpstan-type TicketReplyParamsShape = array{
- *   body: string, idempotencyKey?: string|null
+ *   body: string, idempotencyKey?: string|null,
+ *   attachments?: list<string>|null,
  * }
  */
 final class TicketReplyParams implements BaseModel
@@ -34,6 +35,14 @@ final class TicketReplyParams implements BaseModel
 
     #[Optional]
     public ?string $idempotencyKey;
+
+    /**
+     * 1 to 4 support image or video uploads.
+     *
+     * @var list<string>|null $attachments
+     */
+    #[Optional(list: 'string')]
+    public ?array $attachments;
 
     /**
      * `new TicketReplyParams()` is missing required properties by the API.
@@ -58,16 +67,21 @@ final class TicketReplyParams implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param list<string>|null $attachments
      */
     public static function with(
         string $body,
-        ?string $idempotencyKey = null
+        ?string $idempotencyKey = null,
+        ?array $attachments = null
     ): self {
         $self = new self;
 
         $self['body'] = $body;
 
         null !== $idempotencyKey && $self['idempotencyKey'] = $idempotencyKey;
+
+        null !== $attachments && $self['attachments'] = $attachments;
 
         return $self;
     }
@@ -84,6 +98,19 @@ final class TicketReplyParams implements BaseModel
     {
         $self = clone $this;
         $self['idempotencyKey'] = $idempotencyKey;
+
+        return $self;
+    }
+
+    /**
+     * 1 to 4 support image or video uploads.
+     *
+     * @param list<string>|null $attachments
+     */
+    public function withAttachments(?array $attachments): self
+    {
+        $self = clone $this;
+        $self['attachments'] = $attachments;
 
         return $self;
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\Tweets\TweetGetRepliesResponse\Diagnostic;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
@@ -16,6 +17,7 @@ use XTwitterScraper\X\Tweets\TweetGetRepliesResponse\Diagnostic\StrategiesAttemp
  *   newNestedReplies: int,
  *   pagesAttempted: int,
  *   stopReason: StopReason|value-of<StopReason>,
+ *   newDirectReplyPages?: list<int>|null,
  * }
  */
 final class StrategiesAttempted implements BaseModel
@@ -38,6 +40,14 @@ final class StrategiesAttempted implements BaseModel
     /** @var value-of<StopReason> $stopReason */
     #[Required(enum: StopReason::class)]
     public string $stopReason;
+
+    /**
+     * The page, from 1, where each new direct reply appeared.
+     *
+     * @var list<int>|null $newDirectReplyPages
+     */
+    #[Optional(list: 'int')]
+    public ?array $newDirectReplyPages;
 
     /**
      * `new StrategiesAttempted()` is missing required properties by the API.
@@ -75,6 +85,7 @@ final class StrategiesAttempted implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param StopReason|value-of<StopReason> $stopReason
+     * @param list<int>|null $newDirectReplyPages
      */
     public static function with(
         string $name,
@@ -82,6 +93,7 @@ final class StrategiesAttempted implements BaseModel
         int $newNestedReplies,
         int $pagesAttempted,
         StopReason|string $stopReason,
+        ?array $newDirectReplyPages = null
     ): self {
         $self = new self;
 
@@ -90,6 +102,8 @@ final class StrategiesAttempted implements BaseModel
         $self['newNestedReplies'] = $newNestedReplies;
         $self['pagesAttempted'] = $pagesAttempted;
         $self['stopReason'] = $stopReason;
+
+        null !== $newDirectReplyPages && $self['newDirectReplyPages'] = $newDirectReplyPages;
 
         return $self;
     }
@@ -133,6 +147,19 @@ final class StrategiesAttempted implements BaseModel
     {
         $self = clone $this;
         $self['stopReason'] = $stopReason;
+
+        return $self;
+    }
+
+    /**
+     * The page, from 1, where each new direct reply appeared.
+     *
+     * @param list<int>|null $newDirectReplyPages
+     */
+    public function withNewDirectReplyPages(?array $newDirectReplyPages): self
+    {
+        $self = clone $this;
+        $self['newDirectReplyPages'] = $newDirectReplyPages;
 
         return $self;
     }

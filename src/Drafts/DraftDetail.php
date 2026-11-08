@@ -23,6 +23,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   updatedAt: \DateTimeInterface,
  *   goal?: string|null,
  *   topic?: string|null,
+ *   ignoredFields?: list<string>|null,
  * }
  */
 final class DraftDetail implements BaseModel
@@ -47,6 +48,14 @@ final class DraftDetail implements BaseModel
 
     #[Optional]
     public ?string $topic;
+
+    /**
+     * Fields the request sent that this route does not read, in the order sent. They changed nothing. The answer leaves this out when the route read every field.
+     *
+     * @var list<string>|null $ignoredFields
+     */
+    #[Optional(list: 'string')]
+    public ?array $ignoredFields;
 
     /**
      * `new DraftDetail()` is missing required properties by the API.
@@ -75,6 +84,8 @@ final class DraftDetail implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param list<string>|null $ignoredFields
      */
     public static function with(
         string $id,
@@ -83,6 +94,7 @@ final class DraftDetail implements BaseModel
         \DateTimeInterface $updatedAt,
         ?string $goal = null,
         ?string $topic = null,
+        ?array $ignoredFields = null
     ): self {
         $self = new self;
 
@@ -93,6 +105,8 @@ final class DraftDetail implements BaseModel
 
         null !== $goal && $self['goal'] = $goal;
         null !== $topic && $self['topic'] = $topic;
+
+        null !== $ignoredFields && $self['ignoredFields'] = $ignoredFields;
 
         return $self;
     }
@@ -141,6 +155,19 @@ final class DraftDetail implements BaseModel
     {
         $self = clone $this;
         $self['topic'] = $topic;
+
+        return $self;
+    }
+
+    /**
+     * Fields the request sent that this route does not read, in the order sent. They changed nothing. The answer leaves this out when the route read every field.
+     *
+     * @param list<string>|null $ignoredFields
+     */
+    public function withIgnoredFields(?array $ignoredFields): self
+    {
+        $self = clone $this;
+        $self['ignoredFields'] = $ignoredFields;
 
         return $self;
     }

@@ -9,6 +9,7 @@ namespace Tests\Services;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use XTwitterScraper\Client;
+use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Events\EventDetail;
 use XTwitterScraper\Events\EventListResponse;
@@ -50,5 +51,14 @@ final class EventsTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(EventListResponse::class, $result);
+    }
+
+    #[Test]
+    public function testStream(): void
+    {
+        $result = $this->client->events->stream();
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(BaseResponse::class, $result);
     }
 }

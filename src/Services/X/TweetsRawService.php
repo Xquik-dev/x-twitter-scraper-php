@@ -13,13 +13,23 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedTweets2;
+use XTwitterScraper\PaginatedUserIDs;
 use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\TweetsRawContract;
+use XTwitterScraper\X\Tweets\TweetBookmarkParams;
+use XTwitterScraper\X\Tweets\TweetCheckRepostParams;
+use XTwitterScraper\X\Tweets\TweetCheckRepostResponse;
 use XTwitterScraper\X\Tweets\TweetCreateParams;
 use XTwitterScraper\X\Tweets\TweetDeleteParams;
 use XTwitterScraper\X\Tweets\TweetDeleteResponse;
+use XTwitterScraper\X\Tweets\TweetEmbedParams;
+use XTwitterScraper\X\Tweets\TweetEmbedResponse;
 use XTwitterScraper\X\Tweets\TweetGetFavoritersParams;
+use XTwitterScraper\X\Tweets\TweetGetHiddenRepliesParams;
+use XTwitterScraper\X\Tweets\TweetGetInsightsParams;
+use XTwitterScraper\X\Tweets\TweetGetInsightsResponse;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams\MediaType;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Quotes;
@@ -31,17 +41,28 @@ use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Scope;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Sort;
 use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
 use XTwitterScraper\X\Tweets\TweetGetResponse;
+use XTwitterScraper\X\Tweets\TweetGetRetweeterIdsParams;
 use XTwitterScraper\X\Tweets\TweetGetRetweetersParams;
+use XTwitterScraper\X\Tweets\TweetGetSubtitlesParams;
+use XTwitterScraper\X\Tweets\TweetGetSubtitlesResponse;
 use XTwitterScraper\X\Tweets\TweetGetThreadParams;
 use XTwitterScraper\X\Tweets\TweetListParams;
+use XTwitterScraper\X\Tweets\TweetListTopParams;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
+use XTwitterScraper\X\Tweets\TweetResolveLinksParams;
+use XTwitterScraper\X\Tweets\TweetResolveLinksResponse;
+use XTwitterScraper\X\Tweets\TweetRetrieveParams;
 use XTwitterScraper\X\Tweets\TweetSearchParams;
 use XTwitterScraper\X\Tweets\TweetSearchParams\QueryType;
 use XTwitterScraper\X\Tweets\TweetSearchResponse;
 use XTwitterScraper\X\Tweets\TweetSearchResponse\TweetSearchCoverageResponse;
+use XTwitterScraper\X\Tweets\TweetTranslateParams;
+use XTwitterScraper\X\Tweets\TweetTranslateResponse;
+use XTwitterScraper\X\Tweets\TweetUnbookmarkParams;
+use XTwitterScraper\XWriteAction;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class TweetsRawService implements TweetsRawContract
 {
@@ -104,6 +125,7 @@ final class TweetsRawService implements TweetsRawContract
      * Get tweet with full text, author, metrics and media
      *
      * @param string $id Numeric tweet ID, 15-20 digits
+     * @param array<string,mixed>|TweetRetrieveParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<TweetGetResponse>
@@ -112,13 +134,20 @@ final class TweetsRawService implements TweetsRawContract
      */
     public function retrieve(
         string $id,
+        array|TweetRetrieveParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse {
+        [$parsed, $options] = TweetRetrieveParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'get',
             path: ['x/tweets/%1$s', $id],
-            options: $requestOptions,
+            query: $parsed,
+            options: $options,
             convert: TweetGetResponse::class,
         );
     }
@@ -663,6 +692,362 @@ final class TweetsRawService implements TweetsRawContract
             ),
             options: $options,
             convert: TweetSearchResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns the tweets X ranks highest by 1 metric over the last day, week or month. Covers all of X unless you pick a country or a language. Pages hold up to 20 tweets, and the list ends at 100. Each tweet costs 1 credit.
+     *
+     * Top tweet lists come back reliably.
+     *
+     * @param array<string,mixed>|TweetListTopParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<PaginatedTweets2>
+     *
+     * @throws APIException
+     */
+    public function listTop(
+        array|TweetListTopParams $params = [],
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = TweetListTopParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: 'x/tweets/top',
+            query: $parsed,
+            options: $options,
+            convert: PaginatedTweets2::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Bookmarks a post through a connected X account. Only that account sees its bookmarks, and GET /x/bookmarks lists them.
+     *
+     * @param array<string,mixed>|TweetBookmarkParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<XWriteAction>
+     *
+     * @throws APIException
+     */
+    public function bookmark(
+        string $id,
+        array|TweetBookmarkParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = TweetBookmarkParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'post',
+            path: ['x/tweets/%1$s/bookmark', $id],
+            body: (object) $parsed,
+            options: $options,
+            convert: XWriteAction::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Removes a bookmark through a connected X account.
+     *
+     * @param array<string,mixed>|TweetUnbookmarkParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<XWriteAction>
+     *
+     * @throws APIException
+     */
+    public function unbookmark(
+        string $id,
+        array|TweetUnbookmarkParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = TweetUnbookmarkParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'delete',
+            path: ['x/tweets/%1$s/bookmark', $id],
+            body: (object) $parsed,
+            options: $options,
+            convert: XWriteAction::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns whether 1 account reposted the post. It finds recent reposts. An older repost can return false, with complete false. Each check costs 1 credit.
+     *
+     * @param array<string,mixed>|TweetCheckRepostParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<TweetCheckRepostResponse>
+     *
+     * @throws APIException
+     */
+    public function checkRepost(
+        string $id,
+        array|TweetCheckRepostParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = TweetCheckRepostParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: ['x/tweets/%1$s/retweeters/check', $id],
+            query: $parsed,
+            options: $options,
+            convert: TweetCheckRepostResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns the user IDs of a post's reposters, in the order & pages of /x/tweets/{id}/retweeters. Use it when you need IDs only. Each ID costs 1 credit. A post nobody reposted returns an empty list for free.
+     *
+     * @param array<string,mixed>|TweetGetRetweeterIdsParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<PaginatedUserIDs>
+     *
+     * @throws APIException
+     */
+    public function getRetweeterIds(
+        string $id,
+        array|TweetGetRetweeterIdsParams $params = [],
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = TweetGetRetweeterIdsParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: ['x/tweets/%1$s/retweeter-ids', $id],
+            query: $parsed,
+            options: $options,
+            convert: PaginatedUserIDs::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns the replies the post's author hid, oldest first, with the replies to them. A post without hidden replies returns an empty list.
+     *
+     * @param array<string,mixed>|TweetGetHiddenRepliesParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<PaginatedTweets2>
+     *
+     * @throws APIException
+     */
+    public function getHiddenReplies(
+        string $id,
+        array|TweetGetHiddenRepliesParams $params = [],
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = TweetGetHiddenRepliesParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: ['x/tweets/%1$s/hidden-replies', $id],
+            query: $parsed,
+            options: $options,
+            convert: PaginatedTweets2::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns X's own translation of 1 public tweet into the language you pick, with the links, mentions, and tags X places in the translated text.
+     *
+     * Posts & bios can be translated into your language.
+     *
+     * @param array<string,mixed>|TweetTranslateParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<TweetTranslateResponse>
+     *
+     * @throws APIException
+     */
+    public function translate(
+        string $id,
+        array|TweetTranslateParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = TweetTranslateParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: ['x/tweets/%1$s/translation', $id],
+            query: $parsed,
+            options: $options,
+            convert: TweetTranslateResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns engagement insights for 1 tweet. They are engagements per hour since it went up, per view and per follower of its author, and how far it spread. Each report costs 1 credit, whatever it reads.
+     *
+     * @param array<string,mixed>|TweetGetInsightsParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<TweetGetInsightsResponse>
+     *
+     * @throws APIException
+     */
+    public function getInsights(
+        string $id,
+        array|TweetGetInsightsParams $params = [],
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = TweetGetInsightsParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: ['x/tweets/%1$s/insights', $id],
+            query: $parsed,
+            options: $options,
+            convert: TweetGetInsightsResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns the HTML that X gives websites to embed 1 public tweet, with the tweet's link and author.
+     *
+     * @param array<string,mixed>|TweetEmbedParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<TweetEmbedResponse>
+     *
+     * @throws APIException
+     */
+    public function embed(
+        string $id,
+        array|TweetEmbedParams $params = [],
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = TweetEmbedParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: ['x/tweets/%1$s/embed', $id],
+            query: $parsed,
+            options: $options,
+            convert: TweetEmbedResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns the caption tracks of 1 public tweet's videos. Each track has its language, name, timed cues, and full text. A tweet without video, or a video without captions, returns no track and costs nothing.
+     *
+     * Video subtitles come with timed cues.
+     *
+     * @param array<string,mixed>|TweetGetSubtitlesParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<TweetGetSubtitlesResponse>
+     *
+     * @throws APIException
+     */
+    public function getSubtitles(
+        string $id,
+        array|TweetGetSubtitlesParams $params = [],
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = TweetGetSubtitlesParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: ['x/tweets/%1$s/subtitles', $id],
+            query: $parsed,
+            options: $options,
+            convert: TweetGetSubtitlesResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns where each t.co link leads, as X's own redirect says. Xquik reads the redirect and never visits the target site. A link t.co does not have comes back without `resolvedUrl` and costs nothing. A link X does not answer for in time comes back in `unprocessedUrls`, free. Each resolved link costs 1 credit.
+     *
+     * @param array<string,mixed>|TweetResolveLinksParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<TweetResolveLinksResponse>
+     *
+     * @throws APIException
+     */
+    public function resolveLinks(
+        array|TweetResolveLinksParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = TweetResolveLinksParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: 'x/links/resolve',
+            query: $parsed,
+            options: $options,
+            convert: TweetResolveLinksResponse::class,
         );
     }
 }

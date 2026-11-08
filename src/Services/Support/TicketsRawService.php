@@ -16,6 +16,7 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\Support\TicketsRawContract;
 use XTwitterScraper\Support\Tickets\TicketCreateParams;
 use XTwitterScraper\Support\Tickets\TicketGetResponse;
+use XTwitterScraper\Support\Tickets\TicketListParams;
 use XTwitterScraper\Support\Tickets\TicketListResponse;
 use XTwitterScraper\Support\Tickets\TicketNewResponse;
 use XTwitterScraper\Support\Tickets\TicketReplyParams;
@@ -27,7 +28,7 @@ use XTwitterScraper\Support\Tickets\TicketUpdateResponse;
 /**
  * Support ticket management.
  *
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class TicketsRawService implements TicketsRawContract
 {
@@ -141,6 +142,7 @@ final class TicketsRawService implements TicketsRawContract
      *
      * List user's support tickets
      *
+     * @param array<string,mixed>|TicketListParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<TicketListResponse>
@@ -148,13 +150,20 @@ final class TicketsRawService implements TicketsRawContract
      * @throws APIException
      */
     public function list(
+        array|TicketListParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse {
+        [$parsed, $options] = TicketListParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'get',
             path: 'support/tickets',
-            options: $requestOptions,
+            query: $parsed,
+            options: $options,
             convert: TicketListResponse::class,
         );
     }

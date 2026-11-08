@@ -14,6 +14,7 @@ use XTwitterScraper\Core\BaseClient;
 use XTwitterScraper\Core\Implementation\StreamingHttpClient;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\Services\AccountService;
+use XTwitterScraper\Services\ActivityService;
 use XTwitterScraper\Services\ComposeService;
 use XTwitterScraper\Services\CreditsService;
 use XTwitterScraper\Services\DraftsService;
@@ -31,8 +32,8 @@ use XTwitterScraper\Services\WebhooksService;
 use XTwitterScraper\Services\XService;
 
 /**
- * @phpstan-import-type NormalizedRequest from \XTwitterScraper\Core\BaseClient
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type NormalizedRequest from BaseClient
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 class Client extends BaseClient
 {
@@ -74,6 +75,11 @@ class Client extends BaseClient
      * @api
      */
     public MonitorsService $monitors;
+
+    /**
+     * @api
+     */
+    public ActivityService $activity;
 
     /**
      * @api
@@ -191,6 +197,7 @@ class Client extends BaseClient
         $this->styles = new StylesService($this);
         $this->radar = new RadarService($this);
         $this->monitors = new MonitorsService($this);
+        $this->activity = new ActivityService($this);
         $this->events = new EventsService($this);
         $this->extractions = new ExtractionsService($this);
         $this->draws = new DrawsService($this);

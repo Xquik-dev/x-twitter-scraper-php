@@ -12,6 +12,7 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\EventType;
 use XTwitterScraper\Webhooks\Webhook;
+use XTwitterScraper\Webhooks\WebhookCreateTelegramLinkResponse;
 use XTwitterScraper\Webhooks\WebhookDeactivateResponse;
 use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse;
 use XTwitterScraper\Webhooks\WebhookListResponse;
@@ -116,5 +117,14 @@ final class WebhooksTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(WebhookTestResponse::class, $result);
+    }
+
+    #[Test]
+    public function testCreateTelegramLink(): void
+    {
+        $result = $this->client->webhooks->createTelegramLink();
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(WebhookCreateTelegramLinkResponse::class, $result);
     }
 }

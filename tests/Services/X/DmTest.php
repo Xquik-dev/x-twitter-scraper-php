@@ -12,6 +12,7 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\X\Dm\DmGetHistoryResponse;
 use XTwitterScraper\X\Dm\DmSendResponse;
+use XTwitterScraper\XWriteAction;
 
 /**
  * @internal
@@ -87,5 +88,14 @@ final class DmTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(DmSendResponse::class, $result);
+    }
+
+    #[Test]
+    public function testDeleteMessage(): void
+    {
+        $result = $this->client->x->dm->deleteMessage('userID', 'messageID', account: 'account');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(XWriteAction::class, $result);
     }
 }

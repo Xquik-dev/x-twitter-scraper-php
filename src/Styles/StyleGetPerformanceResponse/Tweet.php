@@ -22,6 +22,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   replyCount?: int|null,
  *   retweetCount?: int|null,
  *   viewCount?: int|null,
+ *   quoteCount?: int|null,
+ *   bookmarkCount?: int|null,
  * }
  */
 final class Tweet implements BaseModel
@@ -49,6 +51,12 @@ final class Tweet implements BaseModel
 
     #[Optional]
     public ?int $viewCount;
+
+    #[Optional]
+    public ?int $quoteCount;
+
+    #[Optional]
+    public ?int $bookmarkCount;
 
     /**
      * `new Tweet()` is missing required properties by the API.
@@ -82,6 +90,8 @@ final class Tweet implements BaseModel
         ?int $replyCount = null,
         ?int $retweetCount = null,
         ?int $viewCount = null,
+        ?int $quoteCount = null,
+        ?int $bookmarkCount = null
     ): self {
         $self = new self;
 
@@ -93,6 +103,10 @@ final class Tweet implements BaseModel
         null !== $replyCount && $self['replyCount'] = $replyCount;
         null !== $retweetCount && $self['retweetCount'] = $retweetCount;
         null !== $viewCount && $self['viewCount'] = $viewCount;
+
+        null !== $quoteCount && $self['quoteCount'] = $quoteCount;
+
+        null !== $bookmarkCount && $self['bookmarkCount'] = $bookmarkCount;
 
         return $self;
     }
@@ -149,6 +163,22 @@ final class Tweet implements BaseModel
     {
         $self = clone $this;
         $self['viewCount'] = $viewCount;
+
+        return $self;
+    }
+
+    public function withQuoteCount(?int $quoteCount): self
+    {
+        $self = clone $this;
+        $self['quoteCount'] = $quoteCount;
+
+        return $self;
+    }
+
+    public function withBookmarkCount(?int $bookmarkCount): self
+    {
+        $self = clone $this;
+        $self['bookmarkCount'] = $bookmarkCount;
 
         return $self;
     }

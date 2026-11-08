@@ -8,15 +8,18 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Styles;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-import-type StyleProfileSummaryShape from \XTwitterScraper\Styles\StyleProfileSummary
+ * @phpstan-import-type StyleProfileSummaryShape from StyleProfileSummary
  *
  * @phpstan-type StyleListResponseShape = array{
- *   styles: list<StyleProfileSummary|StyleProfileSummaryShape>
+ *   styles: list<StyleProfileSummary|StyleProfileSummaryShape>,
+ *   hasMore?: bool|null,
+ *   nextCursor?: string|null,
  * }
  */
 final class StyleListResponse implements BaseModel
@@ -27,6 +30,12 @@ final class StyleListResponse implements BaseModel
     /** @var list<StyleProfileSummary> $styles */
     #[Required(list: StyleProfileSummary::class)]
     public array $styles;
+
+    #[Optional]
+    public ?bool $hasMore;
+
+    #[Optional]
+    public ?string $nextCursor;
 
     /**
      * `new StyleListResponse()` is missing required properties by the API.
@@ -54,11 +63,15 @@ final class StyleListResponse implements BaseModel
      *
      * @param list<StyleProfileSummary|StyleProfileSummaryShape> $styles
      */
-    public static function with(array $styles): self
+    public static function with(array $styles, ?bool $hasMore = null, ?string $nextCursor = null): self
     {
         $self = new self;
 
         $self['styles'] = $styles;
+
+        null !== $hasMore && $self['hasMore'] = $hasMore;
+
+        null !== $nextCursor && $self['nextCursor'] = $nextCursor;
 
         return $self;
     }
@@ -70,6 +83,22 @@ final class StyleListResponse implements BaseModel
     {
         $self = clone $this;
         $self['styles'] = $styles;
+
+        return $self;
+    }
+
+    public function withHasMore(?bool $hasMore): self
+    {
+        $self = clone $this;
+        $self['hasMore'] = $hasMore;
+
+        return $self;
+    }
+
+    public function withNextCursor(?string $nextCursor): self
+    {
+        $self = clone $this;
+        $self['nextCursor'] = $nextCursor;
 
         return $self;
     }

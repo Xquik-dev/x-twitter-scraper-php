@@ -8,15 +8,18 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Webhooks;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-import-type WebhookShape from \XTwitterScraper\Webhooks\Webhook
+ * @phpstan-import-type WebhookShape from Webhook
  *
  * @phpstan-type WebhookListResponseShape = array{
- *   webhooks: list<Webhook|WebhookShape>
+ *   webhooks: list<Webhook|WebhookShape>,
+ *   hasMore?: bool|null,
+ *   nextCursor?: string|null,
  * }
  */
 final class WebhookListResponse implements BaseModel
@@ -27,6 +30,12 @@ final class WebhookListResponse implements BaseModel
     /** @var list<Webhook> $webhooks */
     #[Required(list: Webhook::class)]
     public array $webhooks;
+
+    #[Optional]
+    public ?bool $hasMore;
+
+    #[Optional]
+    public ?string $nextCursor;
 
     /**
      * `new WebhookListResponse()` is missing required properties by the API.
@@ -54,11 +63,15 @@ final class WebhookListResponse implements BaseModel
      *
      * @param list<Webhook|WebhookShape> $webhooks
      */
-    public static function with(array $webhooks): self
+    public static function with(array $webhooks, ?bool $hasMore = null, ?string $nextCursor = null): self
     {
         $self = new self;
 
         $self['webhooks'] = $webhooks;
+
+        null !== $hasMore && $self['hasMore'] = $hasMore;
+
+        null !== $nextCursor && $self['nextCursor'] = $nextCursor;
 
         return $self;
     }
@@ -70,6 +83,22 @@ final class WebhookListResponse implements BaseModel
     {
         $self = clone $this;
         $self['webhooks'] = $webhooks;
+
+        return $self;
+    }
+
+    public function withHasMore(?bool $hasMore): self
+    {
+        $self = clone $this;
+        $self['hasMore'] = $hasMore;
+
+        return $self;
+    }
+
+    public function withNextCursor(?string $nextCursor): self
+    {
+        $self = clone $this;
+        $self['nextCursor'] = $nextCursor;
 
         return $self;
     }

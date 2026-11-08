@@ -25,7 +25,7 @@ use XTwitterScraper\X\Accounts\XAccountDetail;
 /**
  * Connected X account management.
  *
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class AccountsService implements AccountsContract
 {
@@ -102,15 +102,26 @@ final class AccountsService implements AccountsContract
      *
      * List connected X accounts
      *
+     * @param int|null $limit Maximum items per page, from 1 to 10,000. Default 50. A low credit balance can return fewer paid results. When it covers none, the answer is 402 insufficient_credits.
+     * @param string|null $cursor Previous nextCursor. The after alias also works. Offset pagination is not supported.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function list(
+        ?int $limit = null,
+        ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null
     ): AccountListResponse {
+        $params = Util::removeNulls(
+            [
+                'limit' => $limit,
+                'cursor' => $cursor,
+            ],
+        );
+
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->list(requestOptions: $requestOptions);
+        $response = $this->raw->list(params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }
@@ -140,15 +151,23 @@ final class AccountsService implements AccountsContract
      *
      * Clears loginFailedAt and loginFailureReason for all accounts with transient or automated failure reasons, making them eligible for retry on next use.
      *
+     * @param list<mixed>|null $accountIDs IDs of the X accounts to retry. Accounts that failed for another reason, or belong to someone else, stay as they are.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function bulkRetry(
+        ?array $accountIDs = null,
         RequestOptions|array|null $requestOptions = null
     ): AccountBulkRetryResponse {
+        $params = Util::removeNulls(
+            [
+                'accountIDs' => $accountIDs,
+            ],
+        );
+
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->bulkRetry(requestOptions: $requestOptions);
+        $response = $this->raw->bulkRetry(params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

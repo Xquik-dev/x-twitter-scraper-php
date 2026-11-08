@@ -18,7 +18,10 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *
  * @see XTwitterScraper\Services\TrendsService::list()
  *
- * @phpstan-type TrendListParamsShape = array{count?: int|null, woeid?: int|null}
+ * @phpstan-type TrendListParamsShape = array{count?: int|null, woeid?: int|null,
+ *   fields?: string|null,
+ *   omit?: string|null,
+ * }
  */
 final class TrendListParams implements BaseModel
 {
@@ -38,6 +41,18 @@ final class TrendListParams implements BaseModel
     #[Optional]
     public ?int $woeid;
 
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     */
+    #[Optional]
+    public ?string $fields;
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     */
+    #[Optional]
+    public ?string $omit;
+
     public function __construct()
     {
         $this->initialize();
@@ -48,12 +63,16 @@ final class TrendListParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(?int $count = null, ?int $woeid = null): self
+    public static function with(?int $count = null, ?int $woeid = null, ?string $fields = null, ?string $omit = null): self
     {
         $self = new self;
 
         null !== $count && $self['count'] = $count;
         null !== $woeid && $self['woeid'] = $woeid;
+
+        null !== $fields && $self['fields'] = $fields;
+
+        null !== $omit && $self['omit'] = $omit;
 
         return $self;
     }
@@ -76,6 +95,28 @@ final class TrendListParams implements BaseModel
     {
         $self = clone $this;
         $self['woeid'] = $woeid;
+
+        return $self;
+    }
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     */
+    public function withFields(?string $fields): self
+    {
+        $self = clone $this;
+        $self['fields'] = $fields;
+
+        return $self;
+    }
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     */
+    public function withOmit(?string $omit): self
+    {
+        $self = clone $this;
+        $self['omit'] = $omit;
 
         return $self;
     }

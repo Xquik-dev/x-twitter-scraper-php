@@ -8,10 +8,12 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Monitors\Keywords;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\EventType;
+use XTwitterScraper\Monitors\Keywords\KeywordGetResponse\PausedReason;
 
 /**
  * Keyword monitor that tracks matching public X activity.
@@ -23,6 +25,9 @@ use XTwitterScraper\EventType;
  *   isActive: bool,
  *   nextBillingAt: \DateTimeInterface,
  *   query: string,
+ *   name?: string|null,
+ *   pausedReason?: PausedReason|value-of<PausedReason>|null,
+ *   pausedAt?: \DateTimeInterface|null,
  * }
  */
 final class KeywordGetResponse implements BaseModel
@@ -55,6 +60,26 @@ final class KeywordGetResponse implements BaseModel
 
     #[Required]
     public string $query;
+
+    /**
+     * Customer-set label of the keyword monitor, when set.
+     */
+    #[Optional]
+    public ?string $name;
+
+    /**
+     * Why Xquik paused this keyword monitor. The balance could not pay an hour, so add credits & resume. Absent when the monitor is active or you paused it yourself.
+     *
+     * @var value-of<PausedReason>|null $pausedReason
+     */
+    #[Optional(enum: PausedReason::class)]
+    public ?string $pausedReason;
+
+    /**
+     * When Xquik paused this keyword monitor.
+     */
+    #[Optional]
+    public ?\DateTimeInterface $pausedAt;
 
     /**
      * `new KeywordGetResponse()` is missing required properties by the API.
@@ -94,6 +119,7 @@ final class KeywordGetResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param list<EventType|value-of<EventType>> $eventTypes
+     * @param PausedReason|value-of<PausedReason>|null $pausedReason
      */
     public static function with(
         string $id,
@@ -102,6 +128,9 @@ final class KeywordGetResponse implements BaseModel
         bool $isActive,
         \DateTimeInterface $nextBillingAt,
         string $query,
+        ?string $name = null,
+        PausedReason|string|null $pausedReason = null,
+        ?\DateTimeInterface $pausedAt = null
     ): self {
         $self = new self;
 
@@ -111,6 +140,12 @@ final class KeywordGetResponse implements BaseModel
         $self['isActive'] = $isActive;
         $self['nextBillingAt'] = $nextBillingAt;
         $self['query'] = $query;
+
+        null !== $name && $self['name'] = $name;
+
+        null !== $pausedReason && $self['pausedReason'] = $pausedReason;
+
+        null !== $pausedAt && $self['pausedAt'] = $pausedAt;
 
         return $self;
     }
@@ -167,6 +202,41 @@ final class KeywordGetResponse implements BaseModel
     {
         $self = clone $this;
         $self['query'] = $query;
+
+        return $self;
+    }
+
+    /**
+     * Customer-set label of the keyword monitor, when set.
+     */
+    public function withName(?string $name): self
+    {
+        $self = clone $this;
+        $self['name'] = $name;
+
+        return $self;
+    }
+
+    /**
+     * Why Xquik paused this keyword monitor. The balance could not pay an hour, so add credits & resume. Absent when the monitor is active or you paused it yourself.
+     *
+     * @param PausedReason|value-of<PausedReason>|null $pausedReason
+     */
+    public function withPausedReason(PausedReason|string|null $pausedReason): self
+    {
+        $self = clone $this;
+        $self['pausedReason'] = $pausedReason;
+
+        return $self;
+    }
+
+    /**
+     * When Xquik paused this keyword monitor.
+     */
+    public function withPausedAt(?\DateTimeInterface $pausedAt): self
+    {
+        $self = clone $this;
+        $self['pausedAt'] = $pausedAt;
 
         return $self;
     }

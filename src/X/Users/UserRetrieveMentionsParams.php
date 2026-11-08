@@ -71,6 +71,9 @@ use XTwitterScraper\X\Users\UserRetrieveMentionsParams\Retweets;
  *   verifiedOnly?: bool|null,
  *   within?: string|null,
  *   withinTime?: string|null,
+ *   minLikes?: int|null,
+ *   fields?: string|null,
+ *   omit?: string|null,
  * }
  */
 final class UserRetrieveMentionsParams implements BaseModel
@@ -375,6 +378,24 @@ final class UserRetrieveMentionsParams implements BaseModel
     #[Optional]
     public ?string $withinTime;
 
+    /**
+     * Minimum likes. Its aliases are minFaves, min_likes & min_faves.
+     */
+    #[Optional]
+    public ?int $minLikes;
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     */
+    #[Optional]
+    public ?string $fields;
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     */
+    #[Optional]
+    public ?string $omit;
+
     public function __construct()
     {
         $this->initialize();
@@ -439,6 +460,9 @@ final class UserRetrieveMentionsParams implements BaseModel
         ?bool $verifiedOnly = null,
         ?string $within = null,
         ?string $withinTime = null,
+        ?int $minLikes = null,
+        ?string $fields = null,
+        ?string $omit = null
     ): self {
         $self = new self;
 
@@ -490,6 +514,12 @@ final class UserRetrieveMentionsParams implements BaseModel
         null !== $verifiedOnly && $self['verifiedOnly'] = $verifiedOnly;
         null !== $within && $self['within'] = $within;
         null !== $withinTime && $self['withinTime'] = $withinTime;
+
+        null !== $minLikes && $self['minLikes'] = $minLikes;
+
+        null !== $fields && $self['fields'] = $fields;
+
+        null !== $omit && $self['omit'] = $omit;
 
         return $self;
     }
@@ -1026,6 +1056,39 @@ final class UserRetrieveMentionsParams implements BaseModel
     {
         $self = clone $this;
         $self['withinTime'] = $withinTime;
+
+        return $self;
+    }
+
+    /**
+     * Minimum likes. Its aliases are minFaves, min_likes & min_faves.
+     */
+    public function withMinLikes(?int $minLikes): self
+    {
+        $self = clone $this;
+        $self['minLikes'] = $minLikes;
+
+        return $self;
+    }
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     */
+    public function withFields(?string $fields): self
+    {
+        $self = clone $this;
+        $self['fields'] = $fields;
+
+        return $self;
+    }
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     */
+    public function withOmit(?string $omit): self
+    {
+        $self = clone $this;
+        $self['omit'] = $omit;
 
         return $self;
     }

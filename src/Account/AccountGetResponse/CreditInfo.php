@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Account\AccountGetResponse;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
@@ -20,6 +21,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   balance: string,
  *   lifetimePurchased: string,
  *   lifetimeUsed: string,
+ *   autoTopupStopped?: bool|null,
  * }
  */
 final class CreditInfo implements BaseModel
@@ -59,6 +61,12 @@ final class CreditInfo implements BaseModel
      */
     #[Required]
     public string $lifetimeUsed;
+
+    /**
+     * True when 3 declined charges in a row on 1 card stopped automatic top-up. The setting stays enabled. A paid top-up, a paid plan renewal, or the next automatic top-up on a new card clears it.
+     */
+    #[Optional]
+    public ?bool $autoTopupStopped;
 
     /**
      * `new CreditInfo()` is missing required properties by the API.
@@ -104,6 +112,7 @@ final class CreditInfo implements BaseModel
         string $balance,
         string $lifetimePurchased,
         string $lifetimeUsed,
+        ?bool $autoTopupStopped = null
     ): self {
         $self = new self;
 
@@ -113,6 +122,8 @@ final class CreditInfo implements BaseModel
         $self['balance'] = $balance;
         $self['lifetimePurchased'] = $lifetimePurchased;
         $self['lifetimeUsed'] = $lifetimeUsed;
+
+        null !== $autoTopupStopped && $self['autoTopupStopped'] = $autoTopupStopped;
 
         return $self;
     }
@@ -177,6 +188,17 @@ final class CreditInfo implements BaseModel
     {
         $self = clone $this;
         $self['lifetimeUsed'] = $lifetimeUsed;
+
+        return $self;
+    }
+
+    /**
+     * True when 3 declined charges in a row on 1 card stopped automatic top-up. The setting stays enabled. A paid top-up, a paid plan renewal, or the next automatic top-up on a new card clears it.
+     */
+    public function withAutoTopupStopped(?bool $autoTopupStopped): self
+    {
+        $self = clone $this;
+        $self['autoTopupStopped'] = $autoTopupStopped;
 
         return $self;
     }

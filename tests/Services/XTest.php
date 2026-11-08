@@ -11,9 +11,15 @@ use PHPUnit\Framework\TestCase;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\SearchSuggestions;
 use XTwitterScraper\X\XGetArticleResponse;
+use XTwitterScraper\X\XGetHashflagsResponse;
+use XTwitterScraper\X\XGetNewsStoryVersionsResponse;
 use XTwitterScraper\X\XGetNotificationsResponse;
+use XTwitterScraper\X\XGetTrendLocationsResponse;
+use XTwitterScraper\X\XGetTrendsHistoryResponse;
 use XTwitterScraper\X\XGetTrendsResponse;
+use XTwitterScraper\X\XSearchPlacesResponse;
 
 /**
  * @internal
@@ -70,5 +76,59 @@ final class XTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(XGetTrendsResponse::class, $result);
+    }
+
+    #[Test]
+    public function testGetTrendsHistory(): void
+    {
+        $result = $this->client->x->getTrendsHistory();
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(XGetTrendsHistoryResponse::class, $result);
+    }
+
+    #[Test]
+    public function testGetTrendLocations(): void
+    {
+        $result = $this->client->x->getTrendLocations();
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(XGetTrendLocationsResponse::class, $result);
+    }
+
+    #[Test]
+    public function testGetNewsStoryVersions(): void
+    {
+        $result = $this->client->x->getNewsStoryVersions('id');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(XGetNewsStoryVersionsResponse::class, $result);
+    }
+
+    #[Test]
+    public function testGetHashflags(): void
+    {
+        $result = $this->client->x->getHashflags();
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(XGetHashflagsResponse::class, $result);
+    }
+
+    #[Test]
+    public function testSearchPlaces(): void
+    {
+        $result = $this->client->x->searchPlaces(q: 'q');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(XSearchPlacesResponse::class, $result);
+    }
+
+    #[Test]
+    public function testAutocompleteSearch(): void
+    {
+        $result = $this->client->x->autocompleteSearch(q: 'q');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(SearchSuggestions::class, $result);
     }
 }

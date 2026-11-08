@@ -35,6 +35,14 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   usernameContains?: string|null,
  *   verifiedOnly?: bool|null,
  *   verifiedType?: string|null,
+ *   includeRetweetTimestamp?: bool|null,
+ *   blueVerifiedOnly?: bool|null,
+ *   hasEmail?: bool|null,
+ *   businessEmailOnly?: bool|null,
+ *   emailDomains?: string|null,
+ *   enrichProfiles?: bool|null,
+ *   fields?: string|null,
+ *   omit?: string|null,
  * }
  */
 final class TweetGetRetweetersParams implements BaseModel
@@ -139,6 +147,54 @@ final class TweetGetRetweetersParams implements BaseModel
     #[Optional]
     public ?string $verifiedType;
 
+    /**
+     * Look up repost event times.
+     */
+    #[Optional]
+    public ?bool $includeRetweetTimestamp;
+
+    /**
+     * Only return profiles X marks as blue verified. X marks many business & government accounts blue too. Use verifiedType for 1 badge type.
+     */
+    #[Optional]
+    public ?bool $blueVerifiedOnly;
+
+    /**
+     * Only return profiles that publish an email.
+     */
+    #[Optional]
+    public ?bool $hasEmail;
+
+    /**
+     * Only return profiles that publish an email outside free webmail, such as Gmail.
+     */
+    #[Optional]
+    public ?bool $businessEmailOnly;
+
+    /**
+     * Only return profiles with an email at one of these domains. Separate domains with commas. Subdomains match.
+     */
+    #[Optional]
+    public ?string $emailDomains;
+
+    /**
+     * Add each row's full profile, as GET /x/users/{id} returns it. Pages take several seconds longer.
+     */
+    #[Optional]
+    public ?bool $enrichProfiles;
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     */
+    #[Optional]
+    public ?string $fields;
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     */
+    #[Optional]
+    public ?string $omit;
+
     public function __construct()
     {
         $this->initialize();
@@ -166,6 +222,14 @@ final class TweetGetRetweetersParams implements BaseModel
         ?string $usernameContains = null,
         ?bool $verifiedOnly = null,
         ?string $verifiedType = null,
+        ?bool $includeRetweetTimestamp = null,
+        ?bool $blueVerifiedOnly = null,
+        ?bool $hasEmail = null,
+        ?bool $businessEmailOnly = null,
+        ?string $emailDomains = null,
+        ?bool $enrichProfiles = null,
+        ?string $fields = null,
+        ?string $omit = null
     ): self {
         $self = new self;
 
@@ -185,6 +249,22 @@ final class TweetGetRetweetersParams implements BaseModel
         null !== $usernameContains && $self['usernameContains'] = $usernameContains;
         null !== $verifiedOnly && $self['verifiedOnly'] = $verifiedOnly;
         null !== $verifiedType && $self['verifiedType'] = $verifiedType;
+
+        null !== $includeRetweetTimestamp && $self['includeRetweetTimestamp'] = $includeRetweetTimestamp;
+
+        null !== $blueVerifiedOnly && $self['blueVerifiedOnly'] = $blueVerifiedOnly;
+
+        null !== $hasEmail && $self['hasEmail'] = $hasEmail;
+
+        null !== $businessEmailOnly && $self['businessEmailOnly'] = $businessEmailOnly;
+
+        null !== $emailDomains && $self['emailDomains'] = $emailDomains;
+
+        null !== $enrichProfiles && $self['enrichProfiles'] = $enrichProfiles;
+
+        null !== $fields && $self['fields'] = $fields;
+
+        null !== $omit && $self['omit'] = $omit;
 
         return $self;
     }
@@ -361,6 +441,94 @@ final class TweetGetRetweetersParams implements BaseModel
     {
         $self = clone $this;
         $self['verifiedType'] = $verifiedType;
+
+        return $self;
+    }
+
+    /**
+     * Look up repost event times.
+     */
+    public function withIncludeRetweetTimestamp(?bool $includeRetweetTimestamp): self
+    {
+        $self = clone $this;
+        $self['includeRetweetTimestamp'] = $includeRetweetTimestamp;
+
+        return $self;
+    }
+
+    /**
+     * Only return profiles X marks as blue verified. X marks many business & government accounts blue too. Use verifiedType for 1 badge type.
+     */
+    public function withBlueVerifiedOnly(?bool $blueVerifiedOnly): self
+    {
+        $self = clone $this;
+        $self['blueVerifiedOnly'] = $blueVerifiedOnly;
+
+        return $self;
+    }
+
+    /**
+     * Only return profiles that publish an email.
+     */
+    public function withHasEmail(?bool $hasEmail): self
+    {
+        $self = clone $this;
+        $self['hasEmail'] = $hasEmail;
+
+        return $self;
+    }
+
+    /**
+     * Only return profiles that publish an email outside free webmail, such as Gmail.
+     */
+    public function withBusinessEmailOnly(?bool $businessEmailOnly): self
+    {
+        $self = clone $this;
+        $self['businessEmailOnly'] = $businessEmailOnly;
+
+        return $self;
+    }
+
+    /**
+     * Only return profiles with an email at one of these domains. Separate domains with commas. Subdomains match.
+     */
+    public function withEmailDomains(?string $emailDomains): self
+    {
+        $self = clone $this;
+        $self['emailDomains'] = $emailDomains;
+
+        return $self;
+    }
+
+    /**
+     * Add each row's full profile, as GET /x/users/{id} returns it. Pages take several seconds longer.
+     */
+    public function withEnrichProfiles(?bool $enrichProfiles): self
+    {
+        $self = clone $this;
+        $self['enrichProfiles'] = $enrichProfiles;
+
+        return $self;
+    }
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     */
+    public function withFields(?string $fields): self
+    {
+        $self = clone $this;
+        $self['fields'] = $fields;
+
+        return $self;
+    }
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     */
+    public function withOmit(?string $omit): self
+    {
+        $self = clone $this;
+        $self['omit'] = $omit;
 
         return $self;
     }

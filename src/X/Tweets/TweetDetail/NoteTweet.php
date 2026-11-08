@@ -8,12 +8,13 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\X\Tweets\TweetDetail\NoteTweet\InlineMedia;
 use XTwitterScraper\X\Tweets\TweetDetail\NoteTweet\RichtextTag;
 
 /**
  * Complete Note Tweet content and rich-text metadata.
  *
- * @phpstan-import-type RichtextTagShape from \XTwitterScraper\X\Tweets\TweetDetail\NoteTweet\RichtextTag
+ * @phpstan-import-type RichtextTagShape from RichtextTag
  *
  * @phpstan-type NoteTweetShape = array{
  *   text: string,
@@ -21,6 +22,8 @@ use XTwitterScraper\X\Tweets\TweetDetail\NoteTweet\RichtextTag;
  *   entities?: array<string,mixed>|null,
  *   isExpandable?: bool|null,
  *   richtextTags?: list<RichtextTag|RichtextTagShape>|null,
+ *   noteID?: string|null,
+ *   inlineMedia?: list<InlineMedia|array<string,mixed>>|null,
  * }
  */
 final class NoteTweet implements BaseModel
@@ -44,6 +47,20 @@ final class NoteTweet implements BaseModel
     /** @var list<RichtextTag>|null $richtextTags */
     #[Optional(list: RichtextTag::class)]
     public ?array $richtextTags;
+
+    /**
+     * The Note's own ID, apart from the post's.
+     */
+    #[Optional('noteId')]
+    public ?string $noteID;
+
+    /**
+     * Inline media positions in the Note Tweet text.
+     *
+     * @var list<InlineMedia>|null $inlineMedia
+     */
+    #[Optional(list: InlineMedia::class)]
+    public ?array $inlineMedia;
 
     /**
      * `new NoteTweet()` is missing required properties by the API.
@@ -71,6 +88,7 @@ final class NoteTweet implements BaseModel
      *
      * @param array<string,mixed>|null $entities
      * @param list<RichtextTag|RichtextTagShape>|null $richtextTags
+     * @param list<InlineMedia|array<string,mixed>>|null $inlineMedia
      */
     public static function with(
         string $text,
@@ -78,6 +96,8 @@ final class NoteTweet implements BaseModel
         ?array $entities = null,
         ?bool $isExpandable = null,
         ?array $richtextTags = null,
+        ?string $noteID = null,
+        ?array $inlineMedia = null
     ): self {
         $self = new self;
 
@@ -87,6 +107,10 @@ final class NoteTweet implements BaseModel
         null !== $entities && $self['entities'] = $entities;
         null !== $isExpandable && $self['isExpandable'] = $isExpandable;
         null !== $richtextTags && $self['richtextTags'] = $richtextTags;
+
+        null !== $noteID && $self['noteID'] = $noteID;
+
+        null !== $inlineMedia && $self['inlineMedia'] = $inlineMedia;
 
         return $self;
     }
@@ -133,6 +157,30 @@ final class NoteTweet implements BaseModel
     {
         $self = clone $this;
         $self['richtextTags'] = $richtextTags;
+
+        return $self;
+    }
+
+    /**
+     * The Note's own ID, apart from the post's.
+     */
+    public function withNoteID(?string $noteID): self
+    {
+        $self = clone $this;
+        $self['noteID'] = $noteID;
+
+        return $self;
+    }
+
+    /**
+     * Inline media positions in the Note Tweet text.
+     *
+     * @param list<InlineMedia|array<string,mixed>>|null $inlineMedia
+     */
+    public function withInlineMedia(?array $inlineMedia): self
+    {
+        $self = clone $this;
+        $self['inlineMedia'] = $inlineMedia;
 
         return $self;
     }

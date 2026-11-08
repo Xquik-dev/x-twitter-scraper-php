@@ -20,7 +20,7 @@ use XTwitterScraper\X\Accounts\AccountReauthResponse;
 use XTwitterScraper\X\Accounts\XAccountDetail;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface AccountsContract
 {
@@ -59,11 +59,15 @@ interface AccountsContract
     /**
      * @api
      *
+     * @param int|null $limit Maximum items per page, from 1 to 10,000. Default 50. A low credit balance can return fewer paid results. When it covers none, the answer is 402 insufficient_credits.
+     * @param string|null $cursor Previous nextCursor. The after alias also works. Offset pagination is not supported.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function list(
+        ?int $limit = null,
+        ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null
     ): AccountListResponse;
 
@@ -83,11 +87,13 @@ interface AccountsContract
     /**
      * @api
      *
+     * @param list<mixed>|null $accountIDs IDs of the X accounts to retry. Accounts that failed for another reason, or belong to someone else, stay as they are.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function bulkRetry(
+        ?array $accountIDs = null,
         RequestOptions|array|null $requestOptions = null
     ): AccountBulkRetryResponse;
 

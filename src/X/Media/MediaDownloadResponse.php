@@ -12,9 +12,10 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\ImageFilterSummary;
+use XTwitterScraper\X\Media\MediaDownloadResponse\Items;
 
 /**
- * @phpstan-import-type ImageFilterSummaryShape from \XTwitterScraper\ImageFilterSummary
+ * @phpstan-import-type ImageFilterSummaryShape from ImageFilterSummary
  *
  * @phpstan-type MediaDownloadResponseShape = array{
  *   cacheHit?: bool|null,
@@ -23,6 +24,8 @@ use XTwitterScraper\ImageFilterSummary;
  *   totalMedia?: int|null,
  *   totalTweets?: int|null,
  *   tweetID?: string|null,
+ *   items?: list<Items|array<string,mixed>>|null,
+ *   unprocessedTweetIDs?: list<string>|null,
  * }
  */
 final class MediaDownloadResponse implements BaseModel
@@ -51,6 +54,22 @@ final class MediaDownloadResponse implements BaseModel
     #[Optional('tweetId')]
     public ?string $tweetID;
 
+    /**
+     * The post's files saved to your gallery. Single downloads only. Empty when imageShows kept no photo.
+     *
+     * @var list<Items>|null $items
+     */
+    #[Optional(list: Items::class)]
+    public ?array $items;
+
+    /**
+     * Posts Xquik had no time to read, at no charge. Send them again.
+     *
+     * @var list<string>|null $unprocessedTweetIDs
+     */
+    #[Optional('unprocessedTweetIds', list: 'string')]
+    public ?array $unprocessedTweetIDs;
+
     public function __construct()
     {
         $this->initialize();
@@ -62,6 +81,8 @@ final class MediaDownloadResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param ImageFilterSummary|ImageFilterSummaryShape|null $imageFilter
+     * @param list<Items|array<string,mixed>>|null $items
+     * @param list<string>|null $unprocessedTweetIDs
      */
     public static function with(
         ?bool $cacheHit = null,
@@ -70,6 +91,8 @@ final class MediaDownloadResponse implements BaseModel
         ?int $totalMedia = null,
         ?int $totalTweets = null,
         ?string $tweetID = null,
+        ?array $items = null,
+        ?array $unprocessedTweetIDs = null
     ): self {
         $self = new self;
 
@@ -79,6 +102,10 @@ final class MediaDownloadResponse implements BaseModel
         null !== $totalMedia && $self['totalMedia'] = $totalMedia;
         null !== $totalTweets && $self['totalTweets'] = $totalTweets;
         null !== $tweetID && $self['tweetID'] = $tweetID;
+
+        null !== $items && $self['items'] = $items;
+
+        null !== $unprocessedTweetIDs && $self['unprocessedTweetIDs'] = $unprocessedTweetIDs;
 
         return $self;
     }
@@ -132,6 +159,32 @@ final class MediaDownloadResponse implements BaseModel
     {
         $self = clone $this;
         $self['tweetID'] = $tweetID;
+
+        return $self;
+    }
+
+    /**
+     * The post's files saved to your gallery. Single downloads only. Empty when imageShows kept no photo.
+     *
+     * @param list<Items|array<string,mixed>>|null $items
+     */
+    public function withItems(?array $items): self
+    {
+        $self = clone $this;
+        $self['items'] = $items;
+
+        return $self;
+    }
+
+    /**
+     * Posts Xquik had no time to read, at no charge. Send them again.
+     *
+     * @param list<string>|null $unprocessedTweetIDs
+     */
+    public function withUnprocessedTweetIDs(?array $unprocessedTweetIDs): self
+    {
+        $self = clone $this;
+        $self['unprocessedTweetIDs'] = $unprocessedTweetIDs;
 
         return $self;
     }

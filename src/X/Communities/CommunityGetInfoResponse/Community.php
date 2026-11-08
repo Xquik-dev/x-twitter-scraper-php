@@ -8,20 +8,23 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\Communities\CommunityGetInfoResponse;
 
+use XTwitterScraper\CommunityBanner;
 use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\UserProfile;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\Creator;
+use XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\MembersFacepile;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\PrimaryTopic;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\Rule;
 
 /**
  * Community info object.
  *
- * @phpstan-import-type CreatorShape from \XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\Creator
- * @phpstan-import-type PrimaryTopicShape from \XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\PrimaryTopic
- * @phpstan-import-type RuleShape from \XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\Rule
+ * @phpstan-import-type CreatorShape from Creator
+ * @phpstan-import-type PrimaryTopicShape from PrimaryTopic
+ * @phpstan-import-type RuleShape from Rule
  *
  * @phpstan-type CommunityShape = array{
  *   id: string,
@@ -37,6 +40,11 @@ use XTwitterScraper\X\Communities\CommunityGetInfoResponse\Community\Rule;
  *   name?: string|null,
  *   primaryTopic?: null|PrimaryTopic|PrimaryTopicShape,
  *   rules?: list<Rule|RuleShape>|null,
+ *   question?: string|null,
+ *   searchTags?: list<string>|null,
+ *   admin?: UserProfile|array<string,mixed>|null,
+ *   membersFacepile?: list<MembersFacepile|array<string,mixed>>|null,
+ *   banner?: CommunityBanner|array<string,mixed>|null,
  * }
  */
 final class Community implements BaseModel
@@ -122,6 +130,40 @@ final class Community implements BaseModel
     public ?array $rules;
 
     /**
+     * What the community asks a user who joins.
+     */
+    #[Optional]
+    public ?string $question;
+
+    /**
+     * Tags X finds the community by.
+     *
+     * @var list<string>|null $searchTags
+     */
+    #[Optional(list: 'string')]
+    public ?array $searchTags;
+
+    /**
+     * Public X profile.
+     */
+    #[Optional]
+    public ?UserProfile $admin;
+
+    /**
+     * The members X previews beside the member count. A keyword or topic result gives each member's ID & picture only.
+     *
+     * @var list<MembersFacepile>|null $membersFacepile
+     */
+    #[Optional(list: MembersFacepile::class)]
+    public ?array $membersFacepile;
+
+    /**
+     * The banner X shows for a community, with its size & colors.
+     */
+    #[Optional]
+    public ?CommunityBanner $banner;
+
+    /**
      * `new Community()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -148,6 +190,10 @@ final class Community implements BaseModel
      * @param Creator|CreatorShape|null $creator
      * @param PrimaryTopic|PrimaryTopicShape|null $primaryTopic
      * @param list<Rule|RuleShape>|null $rules
+     * @param list<string>|null $searchTags
+     * @param UserProfile|array<string,mixed>|null $admin
+     * @param list<MembersFacepile|array<string,mixed>>|null $membersFacepile
+     * @param CommunityBanner|array<string,mixed>|null $banner
      */
     public static function with(
         string $id,
@@ -163,6 +209,11 @@ final class Community implements BaseModel
         ?string $name = null,
         PrimaryTopic|array|null $primaryTopic = null,
         ?array $rules = null,
+        ?string $question = null,
+        ?array $searchTags = null,
+        UserProfile|array|null $admin = null,
+        ?array $membersFacepile = null,
+        CommunityBanner|array|null $banner = null
     ): self {
         $self = new self;
 
@@ -180,6 +231,16 @@ final class Community implements BaseModel
         null !== $name && $self['name'] = $name;
         null !== $primaryTopic && $self['primaryTopic'] = $primaryTopic;
         null !== $rules && $self['rules'] = $rules;
+
+        null !== $question && $self['question'] = $question;
+
+        null !== $searchTags && $self['searchTags'] = $searchTags;
+
+        null !== $admin && $self['admin'] = $admin;
+
+        null !== $membersFacepile && $self['membersFacepile'] = $membersFacepile;
+
+        null !== $banner && $self['banner'] = $banner;
 
         return $self;
     }
@@ -327,6 +388,69 @@ final class Community implements BaseModel
     {
         $self = clone $this;
         $self['rules'] = $rules;
+
+        return $self;
+    }
+
+    /**
+     * What the community asks a user who joins.
+     */
+    public function withQuestion(?string $question): self
+    {
+        $self = clone $this;
+        $self['question'] = $question;
+
+        return $self;
+    }
+
+    /**
+     * Tags X finds the community by.
+     *
+     * @param list<string>|null $searchTags
+     */
+    public function withSearchTags(?array $searchTags): self
+    {
+        $self = clone $this;
+        $self['searchTags'] = $searchTags;
+
+        return $self;
+    }
+
+    /**
+     * Public X profile.
+     *
+     * @param UserProfile|array<string,mixed>|null $admin
+     */
+    public function withAdmin(UserProfile|array|null $admin): self
+    {
+        $self = clone $this;
+        $self['admin'] = $admin;
+
+        return $self;
+    }
+
+    /**
+     * The members X previews beside the member count. A keyword or topic result gives each member's ID & picture only.
+     *
+     * @param list<MembersFacepile|array<string,mixed>>|null $membersFacepile
+     */
+    public function withMembersFacepile(?array $membersFacepile): self
+    {
+        $self = clone $this;
+        $self['membersFacepile'] = $membersFacepile;
+
+        return $self;
+    }
+
+    /**
+     * The banner X shows for a community, with its size & colors.
+     *
+     * @param CommunityBanner|array<string,mixed>|null $banner
+     */
+    public function withBanner(CommunityBanner|array|null $banner): self
+    {
+        $self = clone $this;
+        $self['banner'] = $banner;
 
         return $self;
     }

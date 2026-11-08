@@ -10,8 +10,10 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\PaginatedLists;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\PaginatedUsers;
+use XTwitterScraper\X\Lists\ListRetrieveResponse;
 
 /**
  * @internal
@@ -59,5 +61,23 @@ final class ListsTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(PaginatedTweets::class, $result);
+    }
+
+    #[Test]
+    public function testRetrieveSearch(): void
+    {
+        $result = $this->client->x->lists->retrieveSearch(q: 'q');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(PaginatedLists::class, $result);
+    }
+
+    #[Test]
+    public function testRetrieve(): void
+    {
+        $result = $this->client->x->lists->retrieve('id');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(ListRetrieveResponse::class, $result);
     }
 }

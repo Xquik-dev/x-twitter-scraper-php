@@ -26,6 +26,7 @@ use XTwitterScraper\X\Accounts\XAccountDetail\Health;
  *   xUsername: string,
  *   cookiesObtainedAt?: \DateTimeInterface|null,
  *   updatedAt?: \DateTimeInterface|null,
+ *   connectedAt?: \DateTimeInterface|null,
  * }
  */
 final class XAccountDetail implements BaseModel
@@ -52,11 +53,20 @@ final class XAccountDetail implements BaseModel
     #[Required]
     public string $xUsername;
 
+    /**
+     * @deprecated use connectedAt
+     */
     #[Optional]
     public ?\DateTimeInterface $cookiesObtainedAt;
 
     #[Optional]
     public ?\DateTimeInterface $updatedAt;
+
+    /**
+     * Last connection or reconnection time of this account. Omitted before its first login.
+     */
+    #[Optional]
+    public ?\DateTimeInterface $connectedAt;
 
     /**
      * `new XAccountDetail()` is missing required properties by the API.
@@ -106,6 +116,7 @@ final class XAccountDetail implements BaseModel
         string $xUsername,
         ?\DateTimeInterface $cookiesObtainedAt = null,
         ?\DateTimeInterface $updatedAt = null,
+        ?\DateTimeInterface $connectedAt = null
     ): self {
         $self = new self;
 
@@ -118,6 +129,8 @@ final class XAccountDetail implements BaseModel
 
         null !== $cookiesObtainedAt && $self['cookiesObtainedAt'] = $cookiesObtainedAt;
         null !== $updatedAt && $self['updatedAt'] = $updatedAt;
+
+        null !== $connectedAt && $self['connectedAt'] = $connectedAt;
 
         return $self;
     }
@@ -186,6 +199,17 @@ final class XAccountDetail implements BaseModel
     {
         $self = clone $this;
         $self['updatedAt'] = $updatedAt;
+
+        return $self;
+    }
+
+    /**
+     * Last connection or reconnection time of this account. Omitted before its first login.
+     */
+    public function withConnectedAt(?\DateTimeInterface $connectedAt): self
+    {
+        $self = clone $this;
+        $self['connectedAt'] = $connectedAt;
 
         return $self;
     }

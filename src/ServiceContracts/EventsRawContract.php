@@ -13,10 +13,11 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Events\EventDetail;
 use XTwitterScraper\Events\EventListParams;
 use XTwitterScraper\Events\EventListResponse;
+use XTwitterScraper\Events\EventStreamParams;
 use XTwitterScraper\RequestOptions;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface EventsRawContract
 {
@@ -47,6 +48,21 @@ interface EventsRawContract
      */
     public function list(
         array|EventListParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|EventStreamParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<string>
+     *
+     * @throws APIException
+     */
+    public function stream(
+        array|EventStreamParams $params = [],
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 }

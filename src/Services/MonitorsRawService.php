@@ -15,16 +15,19 @@ use XTwitterScraper\EventType;
 use XTwitterScraper\Monitors\Monitor;
 use XTwitterScraper\Monitors\MonitorCreateParams;
 use XTwitterScraper\Monitors\MonitorDeactivateResponse;
+use XTwitterScraper\Monitors\MonitorListParams;
 use XTwitterScraper\Monitors\MonitorListResponse;
 use XTwitterScraper\Monitors\MonitorNewResponse;
 use XTwitterScraper\Monitors\MonitorUpdateParams;
+use XTwitterScraper\Monitors\MonitorUpsertByUsernameParams;
+use XTwitterScraper\Monitors\MonitorUpsertByUsernameResponse;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\MonitorsRawContract;
 
 /**
  * X account monitoring with 1-second checks.
  *
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class MonitorsRawService implements MonitorsRawContract
 {
@@ -132,6 +135,7 @@ final class MonitorsRawService implements MonitorsRawContract
      *
      * List monitors
      *
+     * @param array<string,mixed>|MonitorListParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MonitorListResponse>
@@ -139,13 +143,20 @@ final class MonitorsRawService implements MonitorsRawContract
      * @throws APIException
      */
     public function list(
+        array|MonitorListParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse {
+        [$parsed, $options] = MonitorListParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'get',
             path: 'monitors',
-            options: $requestOptions,
+            query: $parsed,
+            options: $options,
             convert: MonitorListResponse::class,
         );
     }
@@ -172,6 +183,38 @@ final class MonitorsRawService implements MonitorsRawContract
             path: ['monitors/%1$s', $id],
             options: $requestOptions,
             convert: MonitorDeactivateResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Creates the monitor if it does not exist, or updates it if it does. Send the same call twice & you still have 1 monitor. A new monitor answers 201 & an update answers 200. Both carry `created`, so you know which one ran. Creating needs the credits of the first hour, then costs 30 credits an hour. A stopped monitor turns back on & counts as created. Updating is free & replaces the event types. It changes the name only when you send one.
+     *
+     * @param array<string,mixed>|MonitorUpsertByUsernameParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<MonitorUpsertByUsernameResponse>
+     *
+     * @throws APIException
+     */
+    public function upsertByUsername(
+        string $username,
+        array|MonitorUpsertByUsernameParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = MonitorUpsertByUsernameParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'put',
+            path: ['monitors/username/%1$s', $username],
+            body: (object) $parsed,
+            options: $options,
+            convert: MonitorUpsertByUsernameResponse::class,
         );
     }
 }

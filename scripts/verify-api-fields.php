@@ -46,9 +46,9 @@ function objectNode(array $props = [], bool $open = false): array
     return ['kind' => 'object', 'props' => $props, 'open' => $open];
 }
 
-function prop(array $node, bool $required, ?bool $nullable): array
+function prop(array $node, bool $required, ?bool $nullable, bool $obsolete = false): array
 {
-    return ['node' => $node, 'required' => $required, 'nullable' => $nullable];
+    return ['node' => $node, 'required' => $required, 'nullable' => $nullable, 'obsolete' => $obsolete];
 }
 
 function ofKind(array $nodes, string $kind): array
@@ -77,6 +77,7 @@ function mergeObjects(array $objects): array
             merge(array_column($have, 'node')),
             count($have) === count($objects) && [] === array_filter($have, static fn (array $item): bool => !$item['required']),
             $hasUnknown ? null : in_array(true, $nullables, true),
+            [] === array_filter($have, static fn (array $item): bool => !$item['obsolete']),
         );
     }
     $open = [] !== array_filter($objects, static fn (array $node): bool => $node['open']);
@@ -138,6 +139,7 @@ function intersect(array $nodes): array
                 intersect([$earlier['node'], $item['node']]),
                 $earlier['required'] || $item['required'],
                 (bool) $earlier['nullable'] && (bool) $item['nullable'],
+                $earlier['obsolete'] && $item['obsolete'],
             );
         }
     }
@@ -173,8 +175,8 @@ function compareNodes(array $spec, array $sdk, string $path, array &$found): voi
             compareNodes($wanted['node'], $got['node'], $here, $found);
         }
         if (!$spec['open']) {
-            foreach (array_keys($sdk['props']) as $name) {
-                if (!array_key_exists($name, $spec['props'])) {
+            foreach ($sdk['props'] as $name => $item) {
+                if (!array_key_exists($name, $spec['props']) && !$item['obsolete']) {
                     $found[] = ['extra', joined($path, (string) $name)];
                 }
             }
@@ -207,8 +209,10 @@ function differences(array $spec, array $sdk): array
             $request[] = ['missing', (string) $name];
         }
     } elseif ('object' === ($sdk['body']['kind'] ?? null)) {
-        foreach (array_keys($sdk['body']['props']) as $name) {
-            $request[] = ['extra', (string) $name];
+        foreach ($sdk['body']['props'] as $name => $item) {
+            if (!$item['obsolete']) {
+                $request[] = ['extra', (string) $name];
+            }
         }
     }
     $response = [];
@@ -569,7 +573,12 @@ final class SdkReader
             $nullable = $required ? (bool) $property->getType()?->allowsNull() : (($arguments['nullable'] ?? false) ? true : null);
             $fields[$property->getName()] = [
                 'name' => $arguments[0] ?? $arguments['apiName'] ?? $property->getName(),
-                'prop' => prop($this->propertyNode($property, $arguments, $stack), $required, $nullable),
+                'prop' => prop(
+                    $this->propertyNode($property, $arguments, $stack),
+                    $required,
+                    $nullable,
+                    str_contains((string) $property->getDocComment(), '@deprecated'),
+                ),
             ];
         }
 

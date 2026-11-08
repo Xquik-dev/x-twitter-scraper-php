@@ -7,6 +7,16 @@
 * Extraction tool types gain `USER_AFFILIATES`.
 * `x->tweets->search`, `x->users->retrieveTweets`, `retrieveReplies` and `retrieveMedia` take `topic` and `imageShows`. `extractions->run` and `estimateCost` take both, and `x->media->download` takes `imageShows`.
 * A filtered page carries `topicFilter` or `imageFilter`, and each kept post carries `topicScore` or `imageScore`. Extraction jobs carry both summaries, and a media download carries `imageFilter`.
+* The SDK gains the 82 operations it lacked, including `activity`, `monitors->posts`, `x->analysis`, `x->broadcasts`, `x->communityNotes`, `x->jobs`, `x->spaces` and `x->sports`, plus the fields the API added on existing operations.
+* `monitors->list`, `webhooks->list`, `styles->list` and other methods that took no arguments take the parameters the API reads. Each one keeps `requestOptions` last, so pass it by name.
+
+### Bug Fixes
+
+* Reading an optional response field the API left out returns null instead of throwing an `Error`.
+
+### Chores
+
+* `bin/check-local` compares every operation's fields with the live API spec.
 
 ## 0.13.5 (2026-10-22)
 

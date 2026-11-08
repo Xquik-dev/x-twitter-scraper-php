@@ -13,8 +13,12 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\Webhooks\Webhook;
 use XTwitterScraper\Webhooks\WebhookCreateParams;
+use XTwitterScraper\Webhooks\WebhookCreateTelegramLinkParams;
+use XTwitterScraper\Webhooks\WebhookCreateTelegramLinkResponse;
 use XTwitterScraper\Webhooks\WebhookDeactivateResponse;
+use XTwitterScraper\Webhooks\WebhookListDeliveriesParams;
 use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse;
+use XTwitterScraper\Webhooks\WebhookListParams;
 use XTwitterScraper\Webhooks\WebhookListResponse;
 use XTwitterScraper\Webhooks\WebhookNewResponse;
 use XTwitterScraper\Webhooks\WebhookResumeResponse;
@@ -22,7 +26,7 @@ use XTwitterScraper\Webhooks\WebhookTestResponse;
 use XTwitterScraper\Webhooks\WebhookUpdateParams;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface WebhooksRawContract
 {
@@ -61,6 +65,7 @@ interface WebhooksRawContract
     /**
      * @api
      *
+     * @param array<string,mixed>|WebhookListParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<WebhookListResponse>
@@ -68,6 +73,7 @@ interface WebhooksRawContract
      * @throws APIException
      */
     public function list(
+        array|WebhookListParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 
@@ -90,6 +96,7 @@ interface WebhooksRawContract
      * @api
      *
      * @param string $id resource ID returned by the matching create or list endpoint
+     * @param array<string,mixed>|WebhookListDeliveriesParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<WebhookListDeliveriesResponse>
@@ -98,6 +105,7 @@ interface WebhooksRawContract
      */
     public function listDeliveries(
         string $id,
+        array|WebhookListDeliveriesParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 
@@ -129,5 +137,20 @@ interface WebhooksRawContract
     public function test(
         string $id,
         RequestOptions|array|null $requestOptions = null
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|WebhookCreateTelegramLinkParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<WebhookCreateTelegramLinkResponse>
+     *
+     * @throws APIException
+     */
+    public function createTelegramLink(
+        array|WebhookCreateTelegramLinkParams $params = [],
+        RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 }

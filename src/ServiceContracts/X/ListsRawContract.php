@@ -10,15 +10,19 @@ namespace XTwitterScraper\ServiceContracts\X;
 
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedLists;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Lists\ListRetrieveFollowersParams;
 use XTwitterScraper\X\Lists\ListRetrieveMembersParams;
+use XTwitterScraper\X\Lists\ListRetrieveParams;
+use XTwitterScraper\X\Lists\ListRetrieveResponse;
+use XTwitterScraper\X\Lists\ListRetrieveSearchParams;
 use XTwitterScraper\X\Lists\ListRetrieveTweetsParams;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface ListsRawContract
 {
@@ -70,6 +74,37 @@ interface ListsRawContract
     public function retrieveTweets(
         string $id,
         array|ListRetrieveTweetsParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|ListRetrieveSearchParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<PaginatedLists>
+     *
+     * @throws APIException
+     */
+    public function retrieveSearch(
+        array|ListRetrieveSearchParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|ListRetrieveParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<ListRetrieveResponse>
+     *
+     * @throws APIException
+     */
+    public function retrieve(
+        string $id,
+        array|ListRetrieveParams $params = [],
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 }

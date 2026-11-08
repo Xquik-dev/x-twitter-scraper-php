@@ -20,7 +20,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\Support\TicketsService::create()
  *
  * @phpstan-type TicketCreateParamsShape = array{
- *   body: string, subject: string, idempotencyKey?: string|null
+ *   body: string, subject: string, idempotencyKey?: string|null,
+ *   attachments?: list<string>|null,
  * }
  */
 final class TicketCreateParams implements BaseModel
@@ -37,6 +38,14 @@ final class TicketCreateParams implements BaseModel
 
     #[Optional]
     public ?string $idempotencyKey;
+
+    /**
+     * 1 to 4 support image or video uploads.
+     *
+     * @var list<string>|null $attachments
+     */
+    #[Optional(list: 'string')]
+    public ?array $attachments;
 
     /**
      * `new TicketCreateParams()` is missing required properties by the API.
@@ -61,11 +70,14 @@ final class TicketCreateParams implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param list<string>|null $attachments
      */
     public static function with(
         string $body,
         string $subject,
-        ?string $idempotencyKey = null
+        ?string $idempotencyKey = null,
+        ?array $attachments = null
     ): self {
         $self = new self;
 
@@ -73,6 +85,8 @@ final class TicketCreateParams implements BaseModel
         $self['subject'] = $subject;
 
         null !== $idempotencyKey && $self['idempotencyKey'] = $idempotencyKey;
+
+        null !== $attachments && $self['attachments'] = $attachments;
 
         return $self;
     }
@@ -97,6 +111,19 @@ final class TicketCreateParams implements BaseModel
     {
         $self = clone $this;
         $self['idempotencyKey'] = $idempotencyKey;
+
+        return $self;
+    }
+
+    /**
+     * 1 to 4 support image or video uploads.
+     *
+     * @param list<string>|null $attachments
+     */
+    public function withAttachments(?array $attachments): self
+    {
+        $self = clone $this;
+        $self['attachments'] = $attachments;
 
         return $self;
     }

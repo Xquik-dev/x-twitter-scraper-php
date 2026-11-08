@@ -8,16 +8,19 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Monitors\Keywords;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\Monitors\Keywords\KeywordListResponse\Monitor;
 
 /**
- * @phpstan-import-type MonitorShape from \XTwitterScraper\Monitors\Keywords\KeywordListResponse\Monitor
+ * @phpstan-import-type MonitorShape from Monitor
  *
  * @phpstan-type KeywordListResponseShape = array{
- *   monitors: list<Monitor|MonitorShape>, total: int
+ *   monitors: list<Monitor|MonitorShape>, total: int,
+ *   hasMore?: bool|null,
+ *   nextCursor?: string|null,
  * }
  */
 final class KeywordListResponse implements BaseModel
@@ -31,6 +34,12 @@ final class KeywordListResponse implements BaseModel
 
     #[Required]
     public int $total;
+
+    #[Optional]
+    public ?bool $hasMore;
+
+    #[Optional]
+    public ?string $nextCursor;
 
     /**
      * `new KeywordListResponse()` is missing required properties by the API.
@@ -58,12 +67,16 @@ final class KeywordListResponse implements BaseModel
      *
      * @param list<Monitor|MonitorShape> $monitors
      */
-    public static function with(array $monitors, int $total): self
+    public static function with(array $monitors, int $total, ?bool $hasMore = null, ?string $nextCursor = null): self
     {
         $self = new self;
 
         $self['monitors'] = $monitors;
         $self['total'] = $total;
+
+        null !== $hasMore && $self['hasMore'] = $hasMore;
+
+        null !== $nextCursor && $self['nextCursor'] = $nextCursor;
 
         return $self;
     }
@@ -83,6 +96,22 @@ final class KeywordListResponse implements BaseModel
     {
         $self = clone $this;
         $self['total'] = $total;
+
+        return $self;
+    }
+
+    public function withHasMore(?bool $hasMore): self
+    {
+        $self = clone $this;
+        $self['hasMore'] = $hasMore;
+
+        return $self;
+    }
+
+    public function withNextCursor(?string $nextCursor): self
+    {
+        $self = clone $this;
+        $self['nextCursor'] = $nextCursor;
 
         return $self;
     }

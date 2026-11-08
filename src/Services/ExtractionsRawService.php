@@ -12,6 +12,7 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\Extractions\ExtractionCancelResponse;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\CollectionStrategy;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\DedupeMode;
@@ -22,7 +23,10 @@ use XTwitterScraper\Extractions\ExtractionEstimateCostParams\RelationTarget;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Replies;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Retweets;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Scope;
+use XTwitterScraper\Extractions\ExtractionEstimateCostParams\SinceTime;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Sort;
+use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Target;
+use XTwitterScraper\Extractions\ExtractionEstimateCostParams\UntilTime;
 use XTwitterScraper\Extractions\ExtractionEstimateCostResponse;
 use XTwitterScraper\Extractions\ExtractionExportResultsParams;
 use XTwitterScraper\Extractions\ExtractionExportResultsParams\Format;
@@ -43,15 +47,15 @@ use XTwitterScraper\ServiceContracts\ExtractionsRawContract;
 /**
  * Bulk data extraction (23 tool types).
  *
- * @phpstan-import-type RelationTargetShape from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\RelationTarget
- * @phpstan-import-type SinceTimeShape from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\SinceTime
- * @phpstan-import-type TargetShape from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\Target
- * @phpstan-import-type UntilTimeShape from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\UntilTime
+ * @phpstan-import-type RelationTargetShape from RelationTarget
+ * @phpstan-import-type SinceTimeShape from SinceTime
+ * @phpstan-import-type TargetShape from Target
+ * @phpstan-import-type UntilTimeShape from UntilTime
  * @phpstan-import-type RelationTargetShape from \XTwitterScraper\Extractions\ExtractionRunParams\RelationTarget as RelationTargetShape1
  * @phpstan-import-type SinceTimeShape from \XTwitterScraper\Extractions\ExtractionRunParams\SinceTime as SinceTimeShape1
  * @phpstan-import-type TargetShape from \XTwitterScraper\Extractions\ExtractionRunParams\Target as TargetShape1
  * @phpstan-import-type UntilTimeShape from \XTwitterScraper\Extractions\ExtractionRunParams\UntilTime as UntilTimeShape1
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class ExtractionsRawService implements ExtractionsRawContract
 {
@@ -454,6 +458,30 @@ final class ExtractionsRawService implements ExtractionsRawContract
             body: (object) array_diff_key($parsed, $query_params),
             options: $options,
             convert: ExtractionRunResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Cancels an active extraction without charging or saving rows.
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<ExtractionCancelResponse>
+     *
+     * @throws APIException
+     */
+    public function cancel(
+        string $id,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'delete',
+            path: ['extractions/%1$s', $id],
+            options: $requestOptions,
+            convert: ExtractionCancelResponse::class,
         );
     }
 }

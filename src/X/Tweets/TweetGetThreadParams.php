@@ -57,6 +57,13 @@ use XTwitterScraper\X\Tweets\TweetGetThreadParams\Retweets;
  *   untilDate?: string|null,
  *   url?: string|null,
  *   verifiedOnly?: bool|null,
+ *   minLikes?: int|null,
+ *   sinceID?: string|null,
+ *   maxID?: string|null,
+ *   withinTime?: string|null,
+ *   nativeRetweets?: bool|null,
+ *   fields?: string|null,
+ *   omit?: string|null,
  * }
  */
 final class TweetGetThreadParams implements BaseModel
@@ -277,6 +284,48 @@ final class TweetGetThreadParams implements BaseModel
     #[Optional]
     public ?bool $verifiedOnly;
 
+    /**
+     * Minimum likes. Its aliases are minFaves, min_likes & min_faves.
+     */
+    #[Optional]
+    public ?int $minLikes;
+
+    /**
+     * Return Tweets whose IDs exceed this ID. Searches accept `since_id` & `max_id` bounds.
+     */
+    #[Optional('sinceId')]
+    public ?string $sinceID;
+
+    /**
+     * Return Tweets at or below this ID.
+     */
+    #[Optional('maxId')]
+    public ?string $maxID;
+
+    /**
+     * Keeps Tweets from a recent window, such as 90m or 7d. Use a whole number & s, m, h or d.
+     */
+    #[Optional]
+    public ?string $withinTime;
+
+    /**
+     * Only return native reposts.
+     */
+    #[Optional]
+    public ?bool $nativeRetweets;
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     */
+    #[Optional]
+    public ?string $fields;
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     */
+    #[Optional]
+    public ?string $omit;
+
     public function __construct()
     {
         $this->initialize();
@@ -327,6 +376,13 @@ final class TweetGetThreadParams implements BaseModel
         ?string $untilDate = null,
         ?string $url = null,
         ?bool $verifiedOnly = null,
+        ?int $minLikes = null,
+        ?string $sinceID = null,
+        ?string $maxID = null,
+        ?string $withinTime = null,
+        ?bool $nativeRetweets = null,
+        ?string $fields = null,
+        ?string $omit = null
     ): self {
         $self = new self;
 
@@ -364,6 +420,20 @@ final class TweetGetThreadParams implements BaseModel
         null !== $untilDate && $self['untilDate'] = $untilDate;
         null !== $url && $self['url'] = $url;
         null !== $verifiedOnly && $self['verifiedOnly'] = $verifiedOnly;
+
+        null !== $minLikes && $self['minLikes'] = $minLikes;
+
+        null !== $sinceID && $self['sinceID'] = $sinceID;
+
+        null !== $maxID && $self['maxID'] = $maxID;
+
+        null !== $withinTime && $self['withinTime'] = $withinTime;
+
+        null !== $nativeRetweets && $self['nativeRetweets'] = $nativeRetweets;
+
+        null !== $fields && $self['fields'] = $fields;
+
+        null !== $omit && $self['omit'] = $omit;
 
         return $self;
     }
@@ -746,6 +816,83 @@ final class TweetGetThreadParams implements BaseModel
     {
         $self = clone $this;
         $self['verifiedOnly'] = $verifiedOnly;
+
+        return $self;
+    }
+
+    /**
+     * Minimum likes. Its aliases are minFaves, min_likes & min_faves.
+     */
+    public function withMinLikes(?int $minLikes): self
+    {
+        $self = clone $this;
+        $self['minLikes'] = $minLikes;
+
+        return $self;
+    }
+
+    /**
+     * Return Tweets whose IDs exceed this ID. Searches accept `since_id` & `max_id` bounds.
+     */
+    public function withSinceID(?string $sinceID): self
+    {
+        $self = clone $this;
+        $self['sinceID'] = $sinceID;
+
+        return $self;
+    }
+
+    /**
+     * Return Tweets at or below this ID.
+     */
+    public function withMaxID(?string $maxID): self
+    {
+        $self = clone $this;
+        $self['maxID'] = $maxID;
+
+        return $self;
+    }
+
+    /**
+     * Keeps Tweets from a recent window, such as 90m or 7d. Use a whole number & s, m, h or d.
+     */
+    public function withWithinTime(?string $withinTime): self
+    {
+        $self = clone $this;
+        $self['withinTime'] = $withinTime;
+
+        return $self;
+    }
+
+    /**
+     * Only return native reposts.
+     */
+    public function withNativeRetweets(?bool $nativeRetweets): self
+    {
+        $self = clone $this;
+        $self['nativeRetweets'] = $nativeRetweets;
+
+        return $self;
+    }
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     */
+    public function withFields(?string $fields): self
+    {
+        $self = clone $this;
+        $self['fields'] = $fields;
+
+        return $self;
+    }
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     */
+    public function withOmit(?string $omit): self
+    {
+        $self = clone $this;
+        $self['omit'] = $omit;
 
         return $self;
     }

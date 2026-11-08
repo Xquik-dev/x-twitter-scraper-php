@@ -14,7 +14,7 @@ use XTwitterScraper\X\Media\MediaDownloadResponse;
 use XTwitterScraper\X\Media\MediaUploadResponse;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface MediaContract
 {
@@ -45,6 +45,8 @@ interface MediaContract
      * @param string $account Body param: X account (@username or ID) uploading media from URL
      * @param string $url Body param: HTTPS URL to download and upload as media
      * @param string $idempotencyKey Header param: Generate one unique value for each intended write. Reuse it only when retrying the exact same account, action, target, and payload. A reused key returns the original action. Reusing it with different input returns 409. Replay protection remains active for at least 90 days.
+     * @param string|null $file Media file to upload, up to 95 MB. A larger file gets 413 `media_too_large` before any account lookup.
+     * @param bool|null $isLongVideo set true only for video/mp4 multipart uploads longer than 140 seconds
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -53,6 +55,8 @@ interface MediaContract
         string $account,
         string $url,
         string $idempotencyKey,
+        ?string $file = null,
+        ?bool $isLongVideo = null,
         RequestOptions|array|null $requestOptions = null,
     ): MediaUploadResponse;
 }

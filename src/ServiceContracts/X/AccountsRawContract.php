@@ -11,9 +11,11 @@ namespace XTwitterScraper\ServiceContracts\X;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
+use XTwitterScraper\X\Accounts\AccountBulkRetryParams;
 use XTwitterScraper\X\Accounts\AccountBulkRetryResponse;
 use XTwitterScraper\X\Accounts\AccountCreateParams;
 use XTwitterScraper\X\Accounts\AccountDeleteResponse;
+use XTwitterScraper\X\Accounts\AccountListParams;
 use XTwitterScraper\X\Accounts\AccountListResponse;
 use XTwitterScraper\X\Accounts\AccountNewResponse\SanitizedXAccount;
 use XTwitterScraper\X\Accounts\AccountNewResponse\XAccountConnectionAttemptPending;
@@ -23,7 +25,7 @@ use XTwitterScraper\X\Accounts\AccountReauthResponse;
 use XTwitterScraper\X\Accounts\XAccountDetail;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface AccountsRawContract
 {
@@ -60,6 +62,7 @@ interface AccountsRawContract
     /**
      * @api
      *
+     * @param array<string,mixed>|AccountListParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<AccountListResponse>
@@ -67,6 +70,7 @@ interface AccountsRawContract
      * @throws APIException
      */
     public function list(
+        array|AccountListParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 
@@ -88,6 +92,7 @@ interface AccountsRawContract
     /**
      * @api
      *
+     * @param array<string,mixed>|AccountBulkRetryParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<AccountBulkRetryResponse>
@@ -95,6 +100,7 @@ interface AccountsRawContract
      * @throws APIException
      */
     public function bulkRetry(
+        array|AccountBulkRetryParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 

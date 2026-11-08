@@ -14,13 +14,15 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\DmRawContract;
+use XTwitterScraper\X\Dm\DmDeleteMessageParams;
 use XTwitterScraper\X\Dm\DmGetHistoryResponse;
 use XTwitterScraper\X\Dm\DmRetrieveHistoryParams;
 use XTwitterScraper\X\Dm\DmSendParams;
 use XTwitterScraper\X\Dm\DmSendResponse;
+use XTwitterScraper\XWriteAction;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class DmRawService implements DmRawContract
 {
@@ -105,6 +107,39 @@ final class DmRawService implements DmRawContract
             ),
             options: $options,
             convert: DmSendResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Deletes 1 DM from the account's side. The other person keeps it. Success means the DM is gone from the account's conversation. A DM that stays gets 422 `x_dm_not_deleted`, and Xquik charges nothing.
+     *
+     * @param array<string,mixed>|DmDeleteMessageParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<XWriteAction>
+     *
+     * @throws APIException
+     */
+    public function deleteMessage(
+        string $userID,
+        string $messageID,
+        array|DmDeleteMessageParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = DmDeleteMessageParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'delete',
+            path: ['x/dm/%1$s/messages/%2$s', $userID, $messageID],
+            query: $parsed,
+            options: $options,
+            convert: XWriteAction::class,
         );
     }
 }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Credits;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
@@ -20,6 +21,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   balance: string,
  *   lifetimePurchased: string,
  *   lifetimeUsed: string,
+ *   autoTopupStopped?: bool|null,
  * }
  */
 final class CreditGetBalanceResponse implements BaseModel
@@ -59,6 +61,12 @@ final class CreditGetBalanceResponse implements BaseModel
      */
     #[Required('lifetime_used')]
     public string $lifetimeUsed;
+
+    /**
+     * Whether declined charges stopped automatic top-up while it is enabled. It stops after 3 declines in a row on 1 card. A paid top-up, a paid plan renewal, or the next automatic top-up on a new card clears it.
+     */
+    #[Optional('auto_topup_stopped')]
+    public ?bool $autoTopupStopped;
 
     /**
      * `new CreditGetBalanceResponse()` is missing required properties by the API.
@@ -104,6 +112,7 @@ final class CreditGetBalanceResponse implements BaseModel
         string $balance,
         string $lifetimePurchased,
         string $lifetimeUsed,
+        ?bool $autoTopupStopped = null
     ): self {
         $self = new self;
 
@@ -113,6 +122,8 @@ final class CreditGetBalanceResponse implements BaseModel
         $self['balance'] = $balance;
         $self['lifetimePurchased'] = $lifetimePurchased;
         $self['lifetimeUsed'] = $lifetimeUsed;
+
+        null !== $autoTopupStopped && $self['autoTopupStopped'] = $autoTopupStopped;
 
         return $self;
     }
@@ -177,6 +188,17 @@ final class CreditGetBalanceResponse implements BaseModel
     {
         $self = clone $this;
         $self['lifetimeUsed'] = $lifetimeUsed;
+
+        return $self;
+    }
+
+    /**
+     * Whether declined charges stopped automatic top-up while it is enabled. It stops after 3 declines in a row on 1 card. A paid top-up, a paid plan renewal, or the next automatic top-up on a new card clears it.
+     */
+    public function withAutoTopupStopped(?bool $autoTopupStopped): self
+    {
+        $self = clone $this;
+        $self['autoTopupStopped'] = $autoTopupStopped;
 
         return $self;
     }

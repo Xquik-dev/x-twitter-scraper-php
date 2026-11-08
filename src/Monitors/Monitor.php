@@ -28,6 +28,7 @@ use XTwitterScraper\Monitors\Monitor\PausedReason;
  *   xUserID: string,
  *   pausedAt?: \DateTimeInterface|null,
  *   pausedReason?: null|PausedReason|value-of<PausedReason>,
+ *   name?: string|null,
  * }
  */
 final class Monitor implements BaseModel
@@ -77,6 +78,12 @@ final class Monitor implements BaseModel
      */
     #[Optional(enum: PausedReason::class)]
     public ?string $pausedReason;
+
+    /**
+     * Customer-set label of the account monitor, when set.
+     */
+    #[Optional]
+    public ?string $name;
 
     /**
      * `new Monitor()` is missing required properties by the API.
@@ -130,6 +137,7 @@ final class Monitor implements BaseModel
         string $xUserID,
         ?\DateTimeInterface $pausedAt = null,
         PausedReason|string|null $pausedReason = null,
+        ?string $name = null
     ): self {
         $self = new self;
 
@@ -143,6 +151,8 @@ final class Monitor implements BaseModel
 
         null !== $pausedAt && $self['pausedAt'] = $pausedAt;
         null !== $pausedReason && $self['pausedReason'] = $pausedReason;
+
+        null !== $name && $self['name'] = $name;
 
         return $self;
     }
@@ -231,6 +241,17 @@ final class Monitor implements BaseModel
     {
         $self = clone $this;
         $self['pausedReason'] = $pausedReason;
+
+        return $self;
+    }
+
+    /**
+     * Customer-set label of the account monitor, when set.
+     */
+    public function withName(?string $name): self
+    {
+        $self = clone $this;
+        $self['name'] = $name;
 
         return $self;
     }

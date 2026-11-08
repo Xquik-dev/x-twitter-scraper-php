@@ -20,6 +20,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   name?: string|null,
  *   placeType?: string|null,
  *   url?: string|null,
+ *   centroid?: list<float>|null,
+ *   attributes?: array<string,mixed>|null,
  * }
  */
 final class Place implements BaseModel
@@ -52,6 +54,22 @@ final class Place implements BaseModel
     #[Optional]
     public ?string $url;
 
+    /**
+     * Center of the place. Longitude, then latitude.
+     *
+     * @var list<float>|null $centroid
+     */
+    #[Optional(list: 'float', nullable: true)]
+    public ?array $centroid;
+
+    /**
+     * Extra details X attaches to some places. Often empty.
+     *
+     * @var array<string,mixed>|null $attributes
+     */
+    #[Optional(map: 'mixed')]
+    public ?array $attributes;
+
     public function __construct()
     {
         $this->initialize();
@@ -63,6 +81,8 @@ final class Place implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param array<string,mixed>|null $boundingBox
+     * @param list<float>|null $centroid
+     * @param array<string,mixed>|null $attributes
      */
     public static function with(
         ?string $id = null,
@@ -73,6 +93,8 @@ final class Place implements BaseModel
         ?string $name = null,
         ?string $placeType = null,
         ?string $url = null,
+        ?array $centroid = null,
+        ?array $attributes = null
     ): self {
         $self = new self;
 
@@ -84,6 +106,10 @@ final class Place implements BaseModel
         null !== $name && $self['name'] = $name;
         null !== $placeType && $self['placeType'] = $placeType;
         null !== $url && $self['url'] = $url;
+
+        null !== $centroid && $self['centroid'] = $centroid;
+
+        null !== $attributes && $self['attributes'] = $attributes;
 
         return $self;
     }
@@ -151,6 +177,32 @@ final class Place implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Center of the place. Longitude, then latitude.
+     *
+     * @param list<float>|null $centroid
+     */
+    public function withCentroid(?array $centroid): self
+    {
+        $self = clone $this;
+        $self['centroid'] = $centroid;
+
+        return $self;
+    }
+
+    /**
+     * Extra details X attaches to some places. Often empty.
+     *
+     * @param array<string,mixed>|null $attributes
+     */
+    public function withAttributes(?array $attributes): self
+    {
+        $self = clone $this;
+        $self['attributes'] = $attributes;
 
         return $self;
     }

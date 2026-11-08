@@ -8,15 +8,19 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Support\Tickets;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\Support\Tickets\TicketListResponse\Ticket;
 
 /**
- * @phpstan-import-type TicketShape from \XTwitterScraper\Support\Tickets\TicketListResponse\Ticket
+ * @phpstan-import-type TicketShape from Ticket
  *
- * @phpstan-type TicketListResponseShape = array{tickets: list<Ticket|TicketShape>}
+ * @phpstan-type TicketListResponseShape = array{tickets: list<Ticket|TicketShape>,
+ *   hasMore?: bool|null,
+ *   nextCursor?: string|null,
+ * }
  */
 final class TicketListResponse implements BaseModel
 {
@@ -26,6 +30,12 @@ final class TicketListResponse implements BaseModel
     /** @var list<Ticket> $tickets */
     #[Required(list: Ticket::class)]
     public array $tickets;
+
+    #[Optional]
+    public ?bool $hasMore;
+
+    #[Optional]
+    public ?string $nextCursor;
 
     /**
      * `new TicketListResponse()` is missing required properties by the API.
@@ -53,11 +63,15 @@ final class TicketListResponse implements BaseModel
      *
      * @param list<Ticket|TicketShape> $tickets
      */
-    public static function with(array $tickets): self
+    public static function with(array $tickets, ?bool $hasMore = null, ?string $nextCursor = null): self
     {
         $self = new self;
 
         $self['tickets'] = $tickets;
+
+        null !== $hasMore && $self['hasMore'] = $hasMore;
+
+        null !== $nextCursor && $self['nextCursor'] = $nextCursor;
 
         return $self;
     }
@@ -69,6 +83,22 @@ final class TicketListResponse implements BaseModel
     {
         $self = clone $this;
         $self['tickets'] = $tickets;
+
+        return $self;
+    }
+
+    public function withHasMore(?bool $hasMore): self
+    {
+        $self = clone $this;
+        $self['hasMore'] = $hasMore;
+
+        return $self;
+    }
+
+    public function withNextCursor(?string $nextCursor): self
+    {
+        $self = clone $this;
+        $self['nextCursor'] = $nextCursor;
 
         return $self;
     }

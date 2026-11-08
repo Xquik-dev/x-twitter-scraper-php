@@ -12,6 +12,7 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Extractions\ExtractionJob\CompletionReason;
 use XTwitterScraper\Extractions\ExtractionJob\Status;
 use XTwitterScraper\Extractions\ExtractionJob\ToolType;
 use XTwitterScraper\ImageFilterSummary;
@@ -20,8 +21,8 @@ use XTwitterScraper\TopicFilterSummary;
 /**
  * Extraction job tracking status, tool type, and result count.
  *
- * @phpstan-import-type ImageFilterSummaryShape from \XTwitterScraper\ImageFilterSummary
- * @phpstan-import-type TopicFilterSummaryShape from \XTwitterScraper\TopicFilterSummary
+ * @phpstan-import-type ImageFilterSummaryShape from ImageFilterSummary
+ * @phpstan-import-type TopicFilterSummaryShape from TopicFilterSummary
  *
  * @phpstan-type ExtractionJobShape = array{
  *   id: string,
@@ -32,6 +33,11 @@ use XTwitterScraper\TopicFilterSummary;
  *   completedAt?: \DateTimeInterface|null,
  *   imageFilter?: null|ImageFilterSummary|ImageFilterSummaryShape,
  *   topicFilter?: null|TopicFilterSummary|TopicFilterSummaryShape,
+ *   url?: string|null,
+ *   resultsLimit?: int|null,
+ *   effectiveResultsLimit?: int|null,
+ *   completionReason?: CompletionReason|value-of<CompletionReason>|null,
+ *   errorMessage?: string|null,
  * }
  */
 final class ExtractionJob implements BaseModel
@@ -76,6 +82,38 @@ final class ExtractionJob implements BaseModel
     public ?TopicFilterSummary $topicFilter;
 
     /**
+     * Dashboard page where a signed-in user follows this job & downloads its rows as CSV, XLSX, JSON, Markdown, PDF or text.
+     */
+    #[Optional]
+    public ?string $url;
+
+    /**
+     * Requested result limit.
+     */
+    #[Optional]
+    public ?int $resultsLimit;
+
+    /**
+     * Result limit after affordability checks.
+     */
+    #[Optional]
+    public ?int $effectiveResultsLimit;
+
+    /**
+     * Why a terminal job stopped. `requested_limit_reached` means the job returned the number of results you asked for. `source_exhausted` means the read reached its end before your limit. A search can reach its end with only part of its matches. Wide date windows return fewer posts than narrow ones over the same dates. For a fuller collection, run the same search in shorter windows. `pagination_safety_limit` means a paging safety rule ended the read early. The job keeps every result it found. `deadline_reached` means the job ran out of time. `partial_failure` means some reads failed, and the job keeps the results from the rest. `budget_limited` means your credits covered fewer results than the job found. `canceled` and `failed` match the job status.
+     *
+     * @var value-of<CompletionReason>|null $completionReason
+     */
+    #[Optional(enum: CompletionReason::class)]
+    public ?string $completionReason;
+
+    /**
+     * Safe error code for a failed job.
+     */
+    #[Optional]
+    public ?string $errorMessage;
+
+    /**
      * `new ExtractionJob()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -110,6 +148,7 @@ final class ExtractionJob implements BaseModel
      * @param ToolType|value-of<ToolType> $toolType
      * @param ImageFilterSummary|ImageFilterSummaryShape|null $imageFilter
      * @param TopicFilterSummary|TopicFilterSummaryShape|null $topicFilter
+     * @param CompletionReason|value-of<CompletionReason>|null $completionReason
      */
     public static function with(
         string $id,
@@ -120,6 +159,11 @@ final class ExtractionJob implements BaseModel
         ?\DateTimeInterface $completedAt = null,
         ImageFilterSummary|array|null $imageFilter = null,
         TopicFilterSummary|array|null $topicFilter = null,
+        ?string $url = null,
+        ?int $resultsLimit = null,
+        ?int $effectiveResultsLimit = null,
+        CompletionReason|string|null $completionReason = null,
+        ?string $errorMessage = null
     ): self {
         $self = new self;
 
@@ -132,6 +176,16 @@ final class ExtractionJob implements BaseModel
         null !== $completedAt && $self['completedAt'] = $completedAt;
         null !== $imageFilter && $self['imageFilter'] = $imageFilter;
         null !== $topicFilter && $self['topicFilter'] = $topicFilter;
+
+        null !== $url && $self['url'] = $url;
+
+        null !== $resultsLimit && $self['resultsLimit'] = $resultsLimit;
+
+        null !== $effectiveResultsLimit && $self['effectiveResultsLimit'] = $effectiveResultsLimit;
+
+        null !== $completionReason && $self['completionReason'] = $completionReason;
+
+        null !== $errorMessage && $self['errorMessage'] = $errorMessage;
 
         return $self;
     }
@@ -214,6 +268,63 @@ final class ExtractionJob implements BaseModel
     {
         $self = clone $this;
         $self['topicFilter'] = $topicFilter;
+
+        return $self;
+    }
+
+    /**
+     * Dashboard page where a signed-in user follows this job & downloads its rows as CSV, XLSX, JSON, Markdown, PDF or text.
+     */
+    public function withUrl(?string $url): self
+    {
+        $self = clone $this;
+        $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Requested result limit.
+     */
+    public function withResultsLimit(?int $resultsLimit): self
+    {
+        $self = clone $this;
+        $self['resultsLimit'] = $resultsLimit;
+
+        return $self;
+    }
+
+    /**
+     * Result limit after affordability checks.
+     */
+    public function withEffectiveResultsLimit(?int $effectiveResultsLimit): self
+    {
+        $self = clone $this;
+        $self['effectiveResultsLimit'] = $effectiveResultsLimit;
+
+        return $self;
+    }
+
+    /**
+     * Why a terminal job stopped. `requested_limit_reached` means the job returned the number of results you asked for. `source_exhausted` means the read reached its end before your limit. A search can reach its end with only part of its matches. Wide date windows return fewer posts than narrow ones over the same dates. For a fuller collection, run the same search in shorter windows. `pagination_safety_limit` means a paging safety rule ended the read early. The job keeps every result it found. `deadline_reached` means the job ran out of time. `partial_failure` means some reads failed, and the job keeps the results from the rest. `budget_limited` means your credits covered fewer results than the job found. `canceled` and `failed` match the job status.
+     *
+     * @param CompletionReason|value-of<CompletionReason>|null $completionReason
+     */
+    public function withCompletionReason(CompletionReason|string|null $completionReason): self
+    {
+        $self = clone $this;
+        $self['completionReason'] = $completionReason;
+
+        return $self;
+    }
+
+    /**
+     * Safe error code for a failed job.
+     */
+    public function withErrorMessage(?string $errorMessage): self
+    {
+        $self = clone $this;
+        $self['errorMessage'] = $errorMessage;
 
         return $self;
     }

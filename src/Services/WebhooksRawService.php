@@ -16,8 +16,12 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\WebhooksRawContract;
 use XTwitterScraper\Webhooks\Webhook;
 use XTwitterScraper\Webhooks\WebhookCreateParams;
+use XTwitterScraper\Webhooks\WebhookCreateTelegramLinkParams;
+use XTwitterScraper\Webhooks\WebhookCreateTelegramLinkResponse;
 use XTwitterScraper\Webhooks\WebhookDeactivateResponse;
+use XTwitterScraper\Webhooks\WebhookListDeliveriesParams;
 use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse;
+use XTwitterScraper\Webhooks\WebhookListParams;
 use XTwitterScraper\Webhooks\WebhookListResponse;
 use XTwitterScraper\Webhooks\WebhookNewResponse;
 use XTwitterScraper\Webhooks\WebhookResumeResponse;
@@ -27,7 +31,7 @@ use XTwitterScraper\Webhooks\WebhookUpdateParams;
 /**
  * Webhook endpoint management and delivery.
  *
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class WebhooksRawService implements WebhooksRawContract
 {
@@ -112,6 +116,7 @@ final class WebhooksRawService implements WebhooksRawContract
      *
      * List webhooks
      *
+     * @param array<string,mixed>|WebhookListParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<WebhookListResponse>
@@ -119,13 +124,20 @@ final class WebhooksRawService implements WebhooksRawContract
      * @throws APIException
      */
     public function list(
+        array|WebhookListParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse {
+        [$parsed, $options] = WebhookListParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'get',
             path: 'webhooks',
-            options: $requestOptions,
+            query: $parsed,
+            options: $options,
             convert: WebhookListResponse::class,
         );
     }
@@ -161,6 +173,7 @@ final class WebhooksRawService implements WebhooksRawContract
      * List webhook deliveries
      *
      * @param string $id resource ID returned by the matching create or list endpoint
+     * @param array<string,mixed>|WebhookListDeliveriesParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<WebhookListDeliveriesResponse>
@@ -169,13 +182,20 @@ final class WebhooksRawService implements WebhooksRawContract
      */
     public function listDeliveries(
         string $id,
+        array|WebhookListDeliveriesParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse {
+        [$parsed, $options] = WebhookListDeliveriesParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'get',
             path: ['webhooks/%1$s/deliveries', $id],
-            options: $requestOptions,
+            query: $parsed,
+            options: $options,
             convert: WebhookListDeliveriesResponse::class,
         );
     }
@@ -227,6 +247,37 @@ final class WebhooksRawService implements WebhooksRawContract
             path: ['webhooks/%1$s/test', $id],
             options: $requestOptions,
             convert: WebhookTestResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns a t.me link to @XquikBot that connects a Telegram chat to the account's monitor events. Opening it & pressing Start connects the chat, which then gets each alert as a message. Alerts that wait together come as 1 digest. A busy chat gets 5 quick messages, then 1 every 30 s. Only 1 message a minute rings. The link works once, within 15 minutes. The chat appears in the webhook list with the URL `telegram:<chat ID>`, with deliveries, retries & resume as any webhook. In the chat, /stop pauses its alerts. It costs no credits.
+     *
+     * @param array<string,mixed>|WebhookCreateTelegramLinkParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<WebhookCreateTelegramLinkResponse>
+     *
+     * @throws APIException
+     */
+    public function createTelegramLink(
+        array|WebhookCreateTelegramLinkParams $params = [],
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = WebhookCreateTelegramLinkParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'post',
+            path: 'webhooks/telegram',
+            body: (object) $parsed,
+            options: $options,
+            convert: WebhookCreateTelegramLinkResponse::class,
         );
     }
 }

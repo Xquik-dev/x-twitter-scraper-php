@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
@@ -13,8 +14,8 @@ use XTwitterScraper\X\Tweets\TweetGetRepliesResponse\Diagnostic\StrategiesAttemp
 /**
  * Evidence for direct-reply coverage and collector behavior.
  *
- * @phpstan-import-type RichnessShape from \XTwitterScraper\X\Tweets\TweetGetRepliesResponse\Diagnostic\Richness
- * @phpstan-import-type StrategiesAttemptedShape from \XTwitterScraper\X\Tweets\TweetGetRepliesResponse\Diagnostic\StrategiesAttempted
+ * @phpstan-import-type RichnessShape from Richness
+ * @phpstan-import-type StrategiesAttemptedShape from StrategiesAttempted
  *
  * @phpstan-type DiagnosticShape = array{
  *   complete: bool,
@@ -35,6 +36,9 @@ use XTwitterScraper\X\Tweets\TweetGetRepliesResponse\Diagnostic\StrategiesAttemp
  *   targetDirectReplies: int,
  *   uniqueDirectReplies: int,
  *   unrelatedCount: int,
+ *   replyTreeComplete?: bool|null,
+ *   replyScopeComplete?: bool|null,
+ *   sourcesEnded?: bool|null,
  * }
  */
 final class Diagnostic implements BaseModel
@@ -155,6 +159,24 @@ final class Diagnostic implements BaseModel
     public int $unrelatedCount;
 
     /**
+     * All child counts are known & match collected replies.
+     */
+    #[Optional]
+    public ?bool $replyTreeComplete;
+
+    /**
+     * Replies are accounted for through the requested scope & depth. Source errors remain separate.
+     */
+    #[Optional]
+    public ?bool $replyScopeComplete;
+
+    /**
+     * True when no more replies can be found. A retry returns the same rows.
+     */
+    #[Optional]
+    public ?bool $sourcesEnded;
+
+    /**
      * `new Diagnostic()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -238,6 +260,9 @@ final class Diagnostic implements BaseModel
         int $targetDirectReplies,
         int $uniqueDirectReplies,
         int $unrelatedCount,
+        ?bool $replyTreeComplete = null,
+        ?bool $replyScopeComplete = null,
+        ?bool $sourcesEnded = null
     ): self {
         $self = new self;
 
@@ -259,6 +284,12 @@ final class Diagnostic implements BaseModel
         $self['targetDirectReplies'] = $targetDirectReplies;
         $self['uniqueDirectReplies'] = $uniqueDirectReplies;
         $self['unrelatedCount'] = $unrelatedCount;
+
+        null !== $replyTreeComplete && $self['replyTreeComplete'] = $replyTreeComplete;
+
+        null !== $replyScopeComplete && $self['replyScopeComplete'] = $replyScopeComplete;
+
+        null !== $sourcesEnded && $self['sourcesEnded'] = $sourcesEnded;
 
         return $self;
     }
@@ -465,6 +496,39 @@ final class Diagnostic implements BaseModel
     {
         $self = clone $this;
         $self['unrelatedCount'] = $unrelatedCount;
+
+        return $self;
+    }
+
+    /**
+     * All child counts are known & match collected replies.
+     */
+    public function withReplyTreeComplete(?bool $replyTreeComplete): self
+    {
+        $self = clone $this;
+        $self['replyTreeComplete'] = $replyTreeComplete;
+
+        return $self;
+    }
+
+    /**
+     * Replies are accounted for through the requested scope & depth. Source errors remain separate.
+     */
+    public function withReplyScopeComplete(?bool $replyScopeComplete): self
+    {
+        $self = clone $this;
+        $self['replyScopeComplete'] = $replyScopeComplete;
+
+        return $self;
+    }
+
+    /**
+     * True when no more replies can be found. A retry returns the same rows.
+     */
+    public function withSourcesEnded(?bool $sourcesEnded): self
+    {
+        $self = clone $this;
+        $self['sourcesEnded'] = $sourcesEnded;
 
         return $self;
     }

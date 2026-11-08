@@ -13,12 +13,15 @@ use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\Credits\CreditGetTopupStatusResponse\Status;
+use XTwitterScraper\Currency;
 
 /**
  * @phpstan-type CreditGetTopupStatusResponseShape = array{
  *   status: Status|value-of<Status>,
  *   amountDollars?: int|null,
  *   credits?: string|null,
+ *   chargedCurrency?: Currency|value-of<Currency>|null,
+ *   chargedMinorUnits?: int|null,
  * }
  */
 final class CreditGetTopupStatusResponse implements BaseModel
@@ -41,6 +44,20 @@ final class CreditGetTopupStatusResponse implements BaseModel
      */
     #[Optional]
     public ?string $credits;
+
+    /**
+     * Currency the checkout charged.
+     *
+     * @var value-of<Currency>|null $chargedCurrency
+     */
+    #[Optional(enum: Currency::class)]
+    public ?string $chargedCurrency;
+
+    /**
+     * Amount the checkout charged before tax, in the currency's smallest unit. JPY and KRW have no decimals, so 1580 JPY is ¥1,580.
+     */
+    #[Optional]
+    public ?int $chargedMinorUnits;
 
     /**
      * `new CreditGetTopupStatusResponse()` is missing required properties by the API.
@@ -67,11 +84,14 @@ final class CreditGetTopupStatusResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Status|value-of<Status> $status
+     * @param Currency|value-of<Currency>|null $chargedCurrency
      */
     public static function with(
         Status|string $status,
         ?int $amountDollars = null,
-        ?string $credits = null
+        ?string $credits = null,
+        Currency|string|null $chargedCurrency = null,
+        ?int $chargedMinorUnits = null
     ): self {
         $self = new self;
 
@@ -79,6 +99,10 @@ final class CreditGetTopupStatusResponse implements BaseModel
 
         null !== $amountDollars && $self['amountDollars'] = $amountDollars;
         null !== $credits && $self['credits'] = $credits;
+
+        null !== $chargedCurrency && $self['chargedCurrency'] = $chargedCurrency;
+
+        null !== $chargedMinorUnits && $self['chargedMinorUnits'] = $chargedMinorUnits;
 
         return $self;
     }
@@ -112,6 +136,30 @@ final class CreditGetTopupStatusResponse implements BaseModel
     {
         $self = clone $this;
         $self['credits'] = $credits;
+
+        return $self;
+    }
+
+    /**
+     * Currency the checkout charged.
+     *
+     * @param Currency|value-of<Currency>|null $chargedCurrency
+     */
+    public function withChargedCurrency(Currency|string|null $chargedCurrency): self
+    {
+        $self = clone $this;
+        $self['chargedCurrency'] = $chargedCurrency;
+
+        return $self;
+    }
+
+    /**
+     * Amount the checkout charged before tax, in the currency's smallest unit. JPY and KRW have no decimals, so 1580 JPY is ¥1,580.
+     */
+    public function withChargedMinorUnits(?int $chargedMinorUnits): self
+    {
+        $self = clone $this;
+        $self['chargedMinorUnits'] = $chargedMinorUnits;
 
         return $self;
     }

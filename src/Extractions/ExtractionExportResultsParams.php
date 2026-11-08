@@ -13,6 +13,7 @@ use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Extractions\ExtractionExportResultsParams\Change;
 use XTwitterScraper\Extractions\ExtractionExportResultsParams\Format;
 
 /**
@@ -40,6 +41,17 @@ use XTwitterScraper\Extractions\ExtractionExportResultsParams\Format;
  *   sinceDate?: string|null,
  *   untilDate?: string|null,
  *   verified?: bool|null,
+ *   compare?: string|null,
+ *   change?: Change|value-of<Change>|null,
+ *   hasWebsite?: bool|null,
+ *   joinedSince?: string|null,
+ *   joinedUntil?: string|null,
+ *   location?: string|null,
+ *   hideInactive?: bool|null,
+ *   hideFake?: bool|null,
+ *   hasEmail?: bool|null,
+ *   businessEmailOnly?: bool|null,
+ *   emailDomains?: string|null,
  * }
  */
 final class ExtractionExportResultsParams implements BaseModel
@@ -165,6 +177,74 @@ final class ExtractionExportResultsParams implements BaseModel
     public ?bool $verified;
 
     /**
+     * ID of another run of this tool. For an earlier whole run of the same account, the export holds only the rows that differ. For a run of another account, it holds only this run's rows that the other run also lists.
+     */
+    #[Optional]
+    public ?string $compare;
+
+    /**
+     * With compare, `added` keeps this run's new rows and `removed` keeps the earlier run's rows that this run lacks. The default is `added`. A run of another account ignores it.
+     *
+     * @var value-of<Change>|null $change
+     */
+    #[Optional(enum: Change::class)]
+    public ?string $change;
+
+    /**
+     * Require a website on the profile.
+     */
+    #[Optional]
+    public ?bool $hasWebsite;
+
+    /**
+     * Keep accounts that joined X on this UTC day or later.
+     */
+    #[Optional]
+    public ?string $joinedSince;
+
+    /**
+     * Keep accounts that joined X before this UTC day.
+     */
+    #[Optional]
+    public ?string $joinedUntil;
+
+    /**
+     * Keep accounts whose location contains this text.
+     */
+    #[Optional]
+    public ?string $location;
+
+    /**
+     * Drop accounts with under 1 post a month since joining that are at least 180 days old.
+     */
+    #[Optional]
+    public ?bool $hideInactive;
+
+    /**
+     * Drop accounts with at least 3 of these signs. No posts, a default picture, an empty bio, or following at least 100 accounts and 10 times their followers.
+     */
+    #[Optional]
+    public ?bool $hideFake;
+
+    /**
+     * Require an email in the row's Email column.
+     */
+    #[Optional]
+    public ?bool $hasEmail;
+
+    /**
+     * Require an email outside free webmail, such as Gmail, in the row's Email column.
+     */
+    #[Optional]
+    public ?bool $businessEmailOnly;
+
+    /**
+     * Require the row's email at one of these domains. Separate domains with commas. Subdomains match.
+     */
+    #[Optional]
+    public ?string $emailDomains;
+
+    /**
      * `new ExtractionExportResultsParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -189,6 +269,7 @@ final class ExtractionExportResultsParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Format|value-of<Format> $format
+     * @param Change|value-of<Change>|null $change
      */
     public static function with(
         Format|string $format,
@@ -210,6 +291,17 @@ final class ExtractionExportResultsParams implements BaseModel
         ?string $sinceDate = null,
         ?string $untilDate = null,
         ?bool $verified = null,
+        ?string $compare = null,
+        Change|string|null $change = null,
+        ?bool $hasWebsite = null,
+        ?string $joinedSince = null,
+        ?string $joinedUntil = null,
+        ?string $location = null,
+        ?bool $hideInactive = null,
+        ?bool $hideFake = null,
+        ?bool $hasEmail = null,
+        ?bool $businessEmailOnly = null,
+        ?string $emailDomains = null
     ): self {
         $self = new self;
 
@@ -233,6 +325,28 @@ final class ExtractionExportResultsParams implements BaseModel
         null !== $sinceDate && $self['sinceDate'] = $sinceDate;
         null !== $untilDate && $self['untilDate'] = $untilDate;
         null !== $verified && $self['verified'] = $verified;
+
+        null !== $compare && $self['compare'] = $compare;
+
+        null !== $change && $self['change'] = $change;
+
+        null !== $hasWebsite && $self['hasWebsite'] = $hasWebsite;
+
+        null !== $joinedSince && $self['joinedSince'] = $joinedSince;
+
+        null !== $joinedUntil && $self['joinedUntil'] = $joinedUntil;
+
+        null !== $location && $self['location'] = $location;
+
+        null !== $hideInactive && $self['hideInactive'] = $hideInactive;
+
+        null !== $hideFake && $self['hideFake'] = $hideFake;
+
+        null !== $hasEmail && $self['hasEmail'] = $hasEmail;
+
+        null !== $businessEmailOnly && $self['businessEmailOnly'] = $businessEmailOnly;
+
+        null !== $emailDomains && $self['emailDomains'] = $emailDomains;
 
         return $self;
     }
@@ -444,6 +558,129 @@ final class ExtractionExportResultsParams implements BaseModel
     {
         $self = clone $this;
         $self['verified'] = $verified;
+
+        return $self;
+    }
+
+    /**
+     * ID of another run of this tool. For an earlier whole run of the same account, the export holds only the rows that differ. For a run of another account, it holds only this run's rows that the other run also lists.
+     */
+    public function withCompare(?string $compare): self
+    {
+        $self = clone $this;
+        $self['compare'] = $compare;
+
+        return $self;
+    }
+
+    /**
+     * With compare, `added` keeps this run's new rows and `removed` keeps the earlier run's rows that this run lacks. The default is `added`. A run of another account ignores it.
+     *
+     * @param Change|value-of<Change>|null $change
+     */
+    public function withChange(Change|string|null $change): self
+    {
+        $self = clone $this;
+        $self['change'] = $change;
+
+        return $self;
+    }
+
+    /**
+     * Require a website on the profile.
+     */
+    public function withHasWebsite(?bool $hasWebsite): self
+    {
+        $self = clone $this;
+        $self['hasWebsite'] = $hasWebsite;
+
+        return $self;
+    }
+
+    /**
+     * Keep accounts that joined X on this UTC day or later.
+     */
+    public function withJoinedSince(?string $joinedSince): self
+    {
+        $self = clone $this;
+        $self['joinedSince'] = $joinedSince;
+
+        return $self;
+    }
+
+    /**
+     * Keep accounts that joined X before this UTC day.
+     */
+    public function withJoinedUntil(?string $joinedUntil): self
+    {
+        $self = clone $this;
+        $self['joinedUntil'] = $joinedUntil;
+
+        return $self;
+    }
+
+    /**
+     * Keep accounts whose location contains this text.
+     */
+    public function withLocation(?string $location): self
+    {
+        $self = clone $this;
+        $self['location'] = $location;
+
+        return $self;
+    }
+
+    /**
+     * Drop accounts with under 1 post a month since joining that are at least 180 days old.
+     */
+    public function withHideInactive(?bool $hideInactive): self
+    {
+        $self = clone $this;
+        $self['hideInactive'] = $hideInactive;
+
+        return $self;
+    }
+
+    /**
+     * Drop accounts with at least 3 of these signs. No posts, a default picture, an empty bio, or following at least 100 accounts and 10 times their followers.
+     */
+    public function withHideFake(?bool $hideFake): self
+    {
+        $self = clone $this;
+        $self['hideFake'] = $hideFake;
+
+        return $self;
+    }
+
+    /**
+     * Require an email in the row's Email column.
+     */
+    public function withHasEmail(?bool $hasEmail): self
+    {
+        $self = clone $this;
+        $self['hasEmail'] = $hasEmail;
+
+        return $self;
+    }
+
+    /**
+     * Require an email outside free webmail, such as Gmail, in the row's Email column.
+     */
+    public function withBusinessEmailOnly(?bool $businessEmailOnly): self
+    {
+        $self = clone $this;
+        $self['businessEmailOnly'] = $businessEmailOnly;
+
+        return $self;
+    }
+
+    /**
+     * Require the row's email at one of these domains. Separate domains with commas. Subdomains match.
+     */
+    public function withEmailDomains(?string $emailDomains): self
+    {
+        $self = clone $this;
+        $self['emailDomains'] = $emailDomains;
 
         return $self;
     }

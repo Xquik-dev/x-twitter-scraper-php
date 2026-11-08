@@ -13,6 +13,7 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Monitors\Keywords\KeywordCreateParams;
 use XTwitterScraper\Monitors\Keywords\KeywordDeactivateResponse;
 use XTwitterScraper\Monitors\Keywords\KeywordGetResponse;
+use XTwitterScraper\Monitors\Keywords\KeywordListParams;
 use XTwitterScraper\Monitors\Keywords\KeywordListResponse;
 use XTwitterScraper\Monitors\Keywords\KeywordNewResponse;
 use XTwitterScraper\Monitors\Keywords\KeywordUpdateParams;
@@ -20,7 +21,7 @@ use XTwitterScraper\Monitors\Keywords\KeywordUpdateResponse;
 use XTwitterScraper\RequestOptions;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface KeywordsRawContract
 {
@@ -74,6 +75,7 @@ interface KeywordsRawContract
     /**
      * @api
      *
+     * @param array<string,mixed>|KeywordListParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<KeywordListResponse>
@@ -81,6 +83,7 @@ interface KeywordsRawContract
      * @throws APIException
      */
     public function list(
+        array|KeywordListParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 

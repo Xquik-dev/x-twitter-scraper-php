@@ -11,14 +11,15 @@ namespace XTwitterScraper\Account;
 use XTwitterScraper\Account\AccountGetResponse\CreditInfo;
 use XTwitterScraper\Account\AccountGetResponse\MonitorBilling;
 use XTwitterScraper\Account\AccountGetResponse\Plan;
+use XTwitterScraper\Account\AccountGetResponse\Subscription;
 use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-import-type MonitorBillingShape from \XTwitterScraper\Account\AccountGetResponse\MonitorBilling
- * @phpstan-import-type CreditInfoShape from \XTwitterScraper\Account\AccountGetResponse\CreditInfo
+ * @phpstan-import-type MonitorBillingShape from MonitorBilling
+ * @phpstan-import-type CreditInfoShape from CreditInfo
  *
  * @phpstan-type AccountGetResponseShape = array{
  *   monitorBilling: MonitorBilling|MonitorBillingShape,
@@ -27,6 +28,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   plan: Plan|value-of<Plan>,
  *   creditInfo?: null|CreditInfo|CreditInfoShape,
  *   xUsername?: string|null,
+ *   subscription?: Subscription|array<string,mixed>|null,
  * }
  */
 final class AccountGetResponse implements BaseModel
@@ -62,6 +64,12 @@ final class AccountGetResponse implements BaseModel
     public ?string $xUsername;
 
     /**
+     * Subscription state without billing provider identifiers.
+     */
+    #[Optional]
+    public ?Subscription $subscription;
+
+    /**
      * `new AccountGetResponse()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -94,6 +102,7 @@ final class AccountGetResponse implements BaseModel
      * @param MonitorBilling|MonitorBillingShape $monitorBilling
      * @param Plan|value-of<Plan> $plan
      * @param CreditInfo|CreditInfoShape|null $creditInfo
+     * @param Subscription|array<string,mixed>|null $subscription
      */
     public static function with(
         MonitorBilling|array $monitorBilling,
@@ -102,6 +111,7 @@ final class AccountGetResponse implements BaseModel
         Plan|string $plan,
         CreditInfo|array|null $creditInfo = null,
         ?string $xUsername = null,
+        Subscription|array|null $subscription = null
     ): self {
         $self = new self;
 
@@ -112,6 +122,8 @@ final class AccountGetResponse implements BaseModel
 
         null !== $creditInfo && $self['creditInfo'] = $creditInfo;
         null !== $xUsername && $self['xUsername'] = $xUsername;
+
+        null !== $subscription && $self['subscription'] = $subscription;
 
         return $self;
     }
@@ -176,6 +188,19 @@ final class AccountGetResponse implements BaseModel
     {
         $self = clone $this;
         $self['xUsername'] = $xUsername;
+
+        return $self;
+    }
+
+    /**
+     * Subscription state without billing provider identifiers.
+     *
+     * @param Subscription|array<string,mixed>|null $subscription
+     */
+    public function withSubscription(Subscription|array|null $subscription): self
+    {
+        $self = clone $this;
+        $self['subscription'] = $subscription;
 
         return $self;
     }

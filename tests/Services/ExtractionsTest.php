@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
+use XTwitterScraper\Extractions\ExtractionCancelResponse;
 use XTwitterScraper\Extractions\ExtractionEstimateCostResponse;
 use XTwitterScraper\Extractions\ExtractionGetResponse;
 use XTwitterScraper\Extractions\ExtractionListResponse;
@@ -324,5 +325,14 @@ final class ExtractionsTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(ExtractionRunResponse::class, $result);
+    }
+
+    #[Test]
+    public function testCancel(): void
+    {
+        $result = $this->client->extractions->cancel('id');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(ExtractionCancelResponse::class, $result);
     }
 }

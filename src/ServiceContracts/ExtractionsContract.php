@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Extractions\ExtractionCancelResponse;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\CollectionStrategy;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\DedupeMode;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\MediaType;
@@ -18,8 +19,12 @@ use XTwitterScraper\Extractions\ExtractionEstimateCostParams\RelationTarget;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Replies;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Retweets;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Scope;
+use XTwitterScraper\Extractions\ExtractionEstimateCostParams\SinceTime;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Sort;
+use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Target;
+use XTwitterScraper\Extractions\ExtractionEstimateCostParams\UntilTime;
 use XTwitterScraper\Extractions\ExtractionEstimateCostResponse;
+use XTwitterScraper\Extractions\ExtractionExportResultsParams\Change;
 use XTwitterScraper\Extractions\ExtractionExportResultsParams\Format;
 use XTwitterScraper\Extractions\ExtractionGetResponse;
 use XTwitterScraper\Extractions\ExtractionListParams\Status;
@@ -32,15 +37,15 @@ use XTwitterScraper\Extractions\ExtractionRunResponse;
 use XTwitterScraper\RequestOptions;
 
 /**
- * @phpstan-import-type RelationTargetShape from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\RelationTarget
- * @phpstan-import-type SinceTimeShape from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\SinceTime
- * @phpstan-import-type TargetShape from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\Target
- * @phpstan-import-type UntilTimeShape from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\UntilTime
+ * @phpstan-import-type RelationTargetShape from RelationTarget
+ * @phpstan-import-type SinceTimeShape from SinceTime
+ * @phpstan-import-type TargetShape from Target
+ * @phpstan-import-type UntilTimeShape from UntilTime
  * @phpstan-import-type RelationTargetShape from \XTwitterScraper\Extractions\ExtractionRunParams\RelationTarget as RelationTargetShape1
  * @phpstan-import-type SinceTimeShape from \XTwitterScraper\Extractions\ExtractionRunParams\SinceTime as SinceTimeShape1
  * @phpstan-import-type TargetShape from \XTwitterScraper\Extractions\ExtractionRunParams\Target as TargetShape1
  * @phpstan-import-type UntilTimeShape from \XTwitterScraper\Extractions\ExtractionRunParams\UntilTime as UntilTimeShape1
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface ExtractionsContract
 {
@@ -54,6 +59,7 @@ interface ExtractionsContract
      * @param int $limit Maximum number of results to return (1-1000, default 100)
      * @param OutputMode|value-of<OutputMode> $outputMode select compact, full, or raw-compatible result fields
      * @param OutputPreset|value-of<OutputPreset> $outputPreset keep enrichment nested or merge it into each result
+     * @param int|null $wait wait up to this many seconds when the job is active
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -66,6 +72,7 @@ interface ExtractionsContract
         int $limit = 100,
         OutputMode|string $outputMode = 'full',
         OutputPreset|string $outputPreset = 'nested',
+        ?int $wait = null,
         RequestOptions|array|null $requestOptions = null,
     ): ExtractionGetResponse;
 
@@ -187,6 +194,11 @@ interface ExtractionsContract
      * @param string $verifiedType exact profile verification type
      * @param string $within set the radius for the near filter
      * @param string $withinTime match Tweets inside a recent time window
+     * @param bool|null $enrichProfiles Add each user's full profile to follower_explorer, following_explorer, verified_follower_explorer, people_search & repost_extractor rows. Jobs take longer.
+     * @param string|null $textOnlyTerms Collects a post only when 1 of these words or quoted phrases is in its text, a link, its card or a quoted post. The author's name and username don't count.
+     * @param bool|null $hasEmail require an email the profile publishes
+     * @param bool|null $businessEmailOnly require an email the profile publishes outside free webmail, such as Gmail
+     * @param string|null $emailDomains Require an email at one of these domains. Separate domains with commas. Subdomains match.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -290,6 +302,11 @@ interface ExtractionsContract
         ?string $verifiedType = null,
         ?string $within = null,
         ?string $withinTime = null,
+        ?bool $enrichProfiles = null,
+        ?string $textOnlyTerms = null,
+        ?bool $hasEmail = null,
+        ?bool $businessEmailOnly = null,
+        ?string $emailDomains = null,
         RequestOptions|array|null $requestOptions = null,
     ): ExtractionEstimateCostResponse;
 
@@ -316,6 +333,17 @@ interface ExtractionsContract
      * @param string $sinceDate include results on or after this date
      * @param string $untilDate include results on or before this date
      * @param bool $verified filter by verified status
+     * @param string|null $compare ID of another run of this tool. For an earlier whole run of the same account, the export holds only the rows that differ. For a run of another account, it holds only this run's rows that the other run also lists.
+     * @param Change|value-of<Change>|null $change With compare, `added` keeps this run's new rows and `removed` keeps the earlier run's rows that this run lacks. The default is `added`. A run of another account ignores it.
+     * @param bool|null $hasWebsite require a website on the profile
+     * @param string|null $joinedSince keep accounts that joined X on this UTC day or later
+     * @param string|null $joinedUntil keep accounts that joined X before this UTC day
+     * @param string|null $location keep accounts whose location contains this text
+     * @param bool|null $hideInactive drop accounts with under 1 post a month since joining that are at least 180 days old
+     * @param bool|null $hideFake Drop accounts with at least 3 of these signs. No posts, a default picture, an empty bio, or following at least 100 accounts and 10 times their followers.
+     * @param bool|null $hasEmail require an email in the row's Email column
+     * @param bool|null $businessEmailOnly require an email outside free webmail, such as Gmail, in the row's Email column
+     * @param string|null $emailDomains Require the row's email at one of these domains. Separate domains with commas. Subdomains match.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -341,6 +369,17 @@ interface ExtractionsContract
         ?string $sinceDate = null,
         ?string $untilDate = null,
         ?bool $verified = null,
+        ?string $compare = null,
+        Change|string|null $change = null,
+        ?bool $hasWebsite = null,
+        ?string $joinedSince = null,
+        ?string $joinedUntil = null,
+        ?string $location = null,
+        ?bool $hideInactive = null,
+        ?bool $hideFake = null,
+        ?bool $hasEmail = null,
+        ?bool $businessEmailOnly = null,
+        ?string $emailDomains = null,
         RequestOptions|array|null $requestOptions = null,
     ): string;
 
@@ -446,6 +485,11 @@ interface ExtractionsContract
      * @param string $verifiedType body param: Exact profile verification type
      * @param string $within body param: Set the radius for the near filter
      * @param string $withinTime body param: Match Tweets inside a recent time window
+     * @param bool|null $enrichProfiles Add each user's full profile to follower_explorer, following_explorer, verified_follower_explorer, people_search & repost_extractor rows. Jobs take longer.
+     * @param string|null $textOnlyTerms Collects a post only when 1 of these words or quoted phrases is in its text, a link, its card or a quoted post. The author's name and username don't count.
+     * @param bool|null $hasEmail require an email the profile publishes
+     * @param bool|null $businessEmailOnly require an email the profile publishes outside free webmail, such as Gmail
+     * @param string|null $emailDomains Require an email at one of these domains. Separate domains with commas. Subdomains match.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -550,6 +594,23 @@ interface ExtractionsContract
         ?string $verifiedType = null,
         ?string $within = null,
         ?string $withinTime = null,
+        ?bool $enrichProfiles = null,
+        ?string $textOnlyTerms = null,
+        ?bool $hasEmail = null,
+        ?bool $businessEmailOnly = null,
+        ?string $emailDomains = null,
         RequestOptions|array|null $requestOptions = null,
     ): ExtractionRunResponse;
+
+    /**
+     * @api
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function cancel(
+        string $id,
+        RequestOptions|array|null $requestOptions = null,
+    ): ExtractionCancelResponse;
 }

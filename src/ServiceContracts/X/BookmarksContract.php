@@ -14,7 +14,7 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Bookmarks\BookmarkGetFoldersResponse;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface BookmarksContract
 {
@@ -36,11 +36,13 @@ interface BookmarksContract
     /**
      * @api
      *
+     * @param string|null $cursor Pagination cursor for collection results. Also read as next_cursor, next_token, pagination_token or continuation_token.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function retrieveFolders(
+        ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null
     ): BookmarkGetFoldersResponse;
 }

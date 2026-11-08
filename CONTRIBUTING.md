@@ -88,7 +88,7 @@ GET /api/v1/monitors response enum monitors[].eventTypes[]
 ```
 
 - `missing` means the spec has the field and the SDK does not. Add it to the SDK.
-- `extra` means the SDK has a field the spec does not list. Keep it when callers may use it, and accept it.
+- `extra` means the SDK has a field the spec does not list. Keep it when callers may use it, and accept it. A property marked `@deprecated` stays out of `extra`, since it is kept only for old code.
 - `enum` means both sides list values and the values differ. Add the missing values, and accept values the SDK keeps.
 - `required` means the spec's required list and the property's `Required` or `Optional` attribute differ. Fix it only when the change keeps old calls and old responses working.
 - `nullable` means the spec and the property's null handling differ.

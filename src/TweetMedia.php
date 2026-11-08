@@ -15,17 +15,19 @@ use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\Core\Conversion\ListOf;
 use XTwitterScraper\TweetMedia\FaceRect;
 use XTwitterScraper\TweetMedia\FocusRect;
+use XTwitterScraper\TweetMedia\GrokImageAnnotation;
 use XTwitterScraper\TweetMedia\Size;
+use XTwitterScraper\TweetMedia\Tags;
 use XTwitterScraper\TweetMedia\Type;
 use XTwitterScraper\TweetMedia\VideoVariant;
 
 /**
  * Normalized media attached to a tweet.
  *
- * @phpstan-import-type FaceRectShape from \XTwitterScraper\TweetMedia\FaceRect
- * @phpstan-import-type FocusRectShape from \XTwitterScraper\TweetMedia\FocusRect
- * @phpstan-import-type SizeShape from \XTwitterScraper\TweetMedia\Size
- * @phpstan-import-type VideoVariantShape from \XTwitterScraper\TweetMedia\VideoVariant
+ * @phpstan-import-type FaceRectShape from FaceRect
+ * @phpstan-import-type FocusRectShape from FocusRect
+ * @phpstan-import-type SizeShape from Size
+ * @phpstan-import-type VideoVariantShape from VideoVariant
  *
  * @phpstan-type TweetMediaShape = array{
  *   mediaURL: string,
@@ -48,6 +50,22 @@ use XTwitterScraper\TweetMedia\VideoVariant;
  *   sizes?: array<string,Size|SizeShape>|null,
  *   videoVariants?: list<VideoVariant|VideoVariantShape>|null,
  *   width?: int|null,
+ *   adultContent?: bool|null,
+ *   availabilityReason?: string|null,
+ *   description?: string|null,
+ *   editedWithNativeEditor?: bool|null,
+ *   embeddable?: bool|null,
+ *   grokImageAnnotation?: GrokImageAnnotation|array<string,mixed>|null,
+ *   grokPostID?: string|null,
+ *   graphicViolence?: bool|null,
+ *   otherSensitiveContent?: bool|null,
+ *   sourceStatusID?: string|null,
+ *   sourceUser?: UserProfile|array<string,mixed>|null,
+ *   sourceUserID?: string|null,
+ *   tags?: list<Tags|array<string,mixed>>|null,
+ *   title?: string|null,
+ *   watchNowUrl?: string|null,
+ *   visitSiteUrl?: string|null,
  * }
  */
 final class TweetMedia implements BaseModel
@@ -186,6 +204,101 @@ final class TweetMedia implements BaseModel
     public ?int $width;
 
     /**
+     * Adult-content warning.
+     */
+    #[Optional]
+    public ?bool $adultContent;
+
+    /**
+     * Why X made the media unavailable, such as `Dmcaed` after a copyright report. Omitted on available media.
+     */
+    #[Optional]
+    public ?string $availabilityReason;
+
+    /**
+     * Media description.
+     */
+    #[Optional]
+    public ?string $description;
+
+    /**
+     * True when the author edited this media in X's own editor before posting. Absent when X sends no editor info.
+     */
+    #[Optional]
+    public ?bool $editedWithNativeEditor;
+
+    /**
+     * Embeddable status.
+     */
+    #[Optional]
+    public ?bool $embeddable;
+
+    /**
+     * Prompt a Grok image came from. Absent on other media & when X sends no prompt.
+     */
+    #[Optional]
+    public ?GrokImageAnnotation $grokImageAnnotation;
+
+    /**
+     * Grok post ID associated with the media.
+     */
+    #[Optional('grokPostId')]
+    public ?string $grokPostID;
+
+    /**
+     * Graphic-violence warning.
+     */
+    #[Optional]
+    public ?bool $graphicViolence;
+
+    #[Optional]
+    public ?bool $otherSensitiveContent;
+
+    /**
+     * Source tweet ID for copied media.
+     */
+    #[Optional('sourceStatusId')]
+    public ?string $sourceStatusID;
+
+    /**
+     * The account that first posted the media. Some reads carry only its name, picture & badges.
+     */
+    #[Optional]
+    public ?UserProfile $sourceUser;
+
+    /**
+     * Source profile ID for copied media.
+     */
+    #[Optional('sourceUserId')]
+    public ?string $sourceUserID;
+
+    /**
+     * Public profiles tagged in the media.
+     *
+     * @var list<Tags>|null $tags
+     */
+    #[Optional(list: Tags::class)]
+    public ?array $tags;
+
+    /**
+     * Media title.
+     */
+    #[Optional]
+    public ?string $title;
+
+    /**
+     * Public media action URL.
+     */
+    #[Optional]
+    public ?string $watchNowUrl;
+
+    /**
+     * Public destination URL.
+     */
+    #[Optional]
+    public ?string $visitSiteUrl;
+
+    /**
      * `new TweetMedia()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -216,6 +329,9 @@ final class TweetMedia implements BaseModel
      * @param list<int>|null $indices
      * @param array<string,Size|SizeShape>|null $sizes
      * @param list<VideoVariant|VideoVariantShape>|null $videoVariants
+     * @param GrokImageAnnotation|array<string,mixed>|null $grokImageAnnotation
+     * @param UserProfile|array<string,mixed>|null $sourceUser
+     * @param list<Tags|array<string,mixed>>|null $tags
      */
     public static function with(
         string $mediaURL,
@@ -238,6 +354,22 @@ final class TweetMedia implements BaseModel
         ?array $sizes = null,
         ?array $videoVariants = null,
         ?int $width = null,
+        ?bool $adultContent = null,
+        ?string $availabilityReason = null,
+        ?string $description = null,
+        ?bool $editedWithNativeEditor = null,
+        ?bool $embeddable = null,
+        GrokImageAnnotation|array|null $grokImageAnnotation = null,
+        ?string $grokPostID = null,
+        ?bool $graphicViolence = null,
+        ?bool $otherSensitiveContent = null,
+        ?string $sourceStatusID = null,
+        UserProfile|array|null $sourceUser = null,
+        ?string $sourceUserID = null,
+        ?array $tags = null,
+        ?string $title = null,
+        ?string $watchNowUrl = null,
+        ?string $visitSiteUrl = null
     ): self {
         $self = new self;
 
@@ -262,6 +394,38 @@ final class TweetMedia implements BaseModel
         null !== $sizes && $self['sizes'] = $sizes;
         null !== $videoVariants && $self['videoVariants'] = $videoVariants;
         null !== $width && $self['width'] = $width;
+
+        null !== $adultContent && $self['adultContent'] = $adultContent;
+
+        null !== $availabilityReason && $self['availabilityReason'] = $availabilityReason;
+
+        null !== $description && $self['description'] = $description;
+
+        null !== $editedWithNativeEditor && $self['editedWithNativeEditor'] = $editedWithNativeEditor;
+
+        null !== $embeddable && $self['embeddable'] = $embeddable;
+
+        null !== $grokImageAnnotation && $self['grokImageAnnotation'] = $grokImageAnnotation;
+
+        null !== $grokPostID && $self['grokPostID'] = $grokPostID;
+
+        null !== $graphicViolence && $self['graphicViolence'] = $graphicViolence;
+
+        null !== $otherSensitiveContent && $self['otherSensitiveContent'] = $otherSensitiveContent;
+
+        null !== $sourceStatusID && $self['sourceStatusID'] = $sourceStatusID;
+
+        null !== $sourceUser && $self['sourceUser'] = $sourceUser;
+
+        null !== $sourceUserID && $self['sourceUserID'] = $sourceUserID;
+
+        null !== $tags && $self['tags'] = $tags;
+
+        null !== $title && $self['title'] = $title;
+
+        null !== $watchNowUrl && $self['watchNowUrl'] = $watchNowUrl;
+
+        null !== $visitSiteUrl && $self['visitSiteUrl'] = $visitSiteUrl;
 
         return $self;
     }
@@ -494,6 +658,185 @@ final class TweetMedia implements BaseModel
     {
         $self = clone $this;
         $self['width'] = $width;
+
+        return $self;
+    }
+
+    /**
+     * Adult-content warning.
+     */
+    public function withAdultContent(?bool $adultContent): self
+    {
+        $self = clone $this;
+        $self['adultContent'] = $adultContent;
+
+        return $self;
+    }
+
+    /**
+     * Why X made the media unavailable, such as `Dmcaed` after a copyright report. Omitted on available media.
+     */
+    public function withAvailabilityReason(?string $availabilityReason): self
+    {
+        $self = clone $this;
+        $self['availabilityReason'] = $availabilityReason;
+
+        return $self;
+    }
+
+    /**
+     * Media description.
+     */
+    public function withDescription(?string $description): self
+    {
+        $self = clone $this;
+        $self['description'] = $description;
+
+        return $self;
+    }
+
+    /**
+     * True when the author edited this media in X's own editor before posting. Absent when X sends no editor info.
+     */
+    public function withEditedWithNativeEditor(?bool $editedWithNativeEditor): self
+    {
+        $self = clone $this;
+        $self['editedWithNativeEditor'] = $editedWithNativeEditor;
+
+        return $self;
+    }
+
+    /**
+     * Embeddable status.
+     */
+    public function withEmbeddable(?bool $embeddable): self
+    {
+        $self = clone $this;
+        $self['embeddable'] = $embeddable;
+
+        return $self;
+    }
+
+    /**
+     * Prompt a Grok image came from. Absent on other media & when X sends no prompt.
+     *
+     * @param GrokImageAnnotation|array<string,mixed>|null $grokImageAnnotation
+     */
+    public function withGrokImageAnnotation(GrokImageAnnotation|array|null $grokImageAnnotation): self
+    {
+        $self = clone $this;
+        $self['grokImageAnnotation'] = $grokImageAnnotation;
+
+        return $self;
+    }
+
+    /**
+     * Grok post ID associated with the media.
+     */
+    public function withGrokPostID(?string $grokPostID): self
+    {
+        $self = clone $this;
+        $self['grokPostID'] = $grokPostID;
+
+        return $self;
+    }
+
+    /**
+     * Graphic-violence warning.
+     */
+    public function withGraphicViolence(?bool $graphicViolence): self
+    {
+        $self = clone $this;
+        $self['graphicViolence'] = $graphicViolence;
+
+        return $self;
+    }
+
+    public function withOtherSensitiveContent(?bool $otherSensitiveContent): self
+    {
+        $self = clone $this;
+        $self['otherSensitiveContent'] = $otherSensitiveContent;
+
+        return $self;
+    }
+
+    /**
+     * Source tweet ID for copied media.
+     */
+    public function withSourceStatusID(?string $sourceStatusID): self
+    {
+        $self = clone $this;
+        $self['sourceStatusID'] = $sourceStatusID;
+
+        return $self;
+    }
+
+    /**
+     * The account that first posted the media. Some reads carry only its name, picture & badges.
+     *
+     * @param UserProfile|array<string,mixed>|null $sourceUser
+     */
+    public function withSourceUser(UserProfile|array|null $sourceUser): self
+    {
+        $self = clone $this;
+        $self['sourceUser'] = $sourceUser;
+
+        return $self;
+    }
+
+    /**
+     * Source profile ID for copied media.
+     */
+    public function withSourceUserID(?string $sourceUserID): self
+    {
+        $self = clone $this;
+        $self['sourceUserID'] = $sourceUserID;
+
+        return $self;
+    }
+
+    /**
+     * Public profiles tagged in the media.
+     *
+     * @param list<Tags|array<string,mixed>>|null $tags
+     */
+    public function withTags(?array $tags): self
+    {
+        $self = clone $this;
+        $self['tags'] = $tags;
+
+        return $self;
+    }
+
+    /**
+     * Media title.
+     */
+    public function withTitle(?string $title): self
+    {
+        $self = clone $this;
+        $self['title'] = $title;
+
+        return $self;
+    }
+
+    /**
+     * Public media action URL.
+     */
+    public function withWatchNowUrl(?string $watchNowUrl): self
+    {
+        $self = clone $this;
+        $self['watchNowUrl'] = $watchNowUrl;
+
+        return $self;
+    }
+
+    /**
+     * Public destination URL.
+     */
+    public function withVisitSiteUrl(?string $visitSiteUrl): self
+    {
+        $self = clone $this;
+        $self['visitSiteUrl'] = $visitSiteUrl;
 
         return $self;
     }

@@ -15,9 +15,10 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\DmContract;
 use XTwitterScraper\X\Dm\DmGetHistoryResponse;
 use XTwitterScraper\X\Dm\DmSendResponse;
+use XTwitterScraper\XWriteAction;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class DmService implements DmContract
 {
@@ -97,6 +98,34 @@ final class DmService implements DmContract
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->send($userID, params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Deletes 1 DM from the account's side. The other person keeps it. Success means the DM is gone from the account's conversation. A DM that stays gets 422 `x_dm_not_deleted`, and Xquik charges nothing.
+     *
+     * @param string $account connected X account (@username or ID) that sees the DM
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function deleteMessage(
+        string $userID,
+        string $messageID,
+        string $account,
+        RequestOptions|array|null $requestOptions = null,
+    ): XWriteAction {
+        $params = Util::removeNulls(
+            [
+                'account' => $account,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->deleteMessage($userID, $messageID, params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

@@ -15,6 +15,7 @@ use XTwitterScraper\EventType;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\WebhooksContract;
 use XTwitterScraper\Webhooks\Webhook;
+use XTwitterScraper\Webhooks\WebhookCreateTelegramLinkResponse;
 use XTwitterScraper\Webhooks\WebhookDeactivateResponse;
 use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse;
 use XTwitterScraper\Webhooks\WebhookListResponse;
@@ -25,7 +26,7 @@ use XTwitterScraper\Webhooks\WebhookTestResponse;
 /**
  * Webhook endpoint management and delivery.
  *
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class WebhooksService implements WebhooksContract
 {
@@ -99,15 +100,26 @@ final class WebhooksService implements WebhooksContract
      *
      * List webhooks
      *
+     * @param int|null $limit Maximum items per page, from 1 to 10,000. Default 200. Pass nextCursor as cursor for the next page.
+     * @param string|null $cursor Previous nextCursor. The after alias also works. Offset pagination is not supported.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function list(
+        ?int $limit = null,
+        ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null
     ): WebhookListResponse {
+        $params = Util::removeNulls(
+            [
+                'limit' => $limit,
+                'cursor' => $cursor,
+            ],
+        );
+
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->list(requestOptions: $requestOptions);
+        $response = $this->raw->list(params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }
@@ -138,16 +150,27 @@ final class WebhooksService implements WebhooksContract
      * List webhook deliveries
      *
      * @param string $id resource ID returned by the matching create or list endpoint
+     * @param int|null $limit Maximum deliveries per page, from 1 to 10,000. Default 100. Pass nextCursor as cursor for the next page.
+     * @param string|null $cursor Previous nextCursor. The after alias also works. Offset pagination is not supported.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function listDeliveries(
         string $id,
+        ?int $limit = null,
+        ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null
     ): WebhookListDeliveriesResponse {
+        $params = Util::removeNulls(
+            [
+                'limit' => $limit,
+                'cursor' => $cursor,
+            ],
+        );
+
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->listDeliveries($id, requestOptions: $requestOptions);
+        $response = $this->raw->listDeliveries($id, params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }
@@ -188,6 +211,32 @@ final class WebhooksService implements WebhooksContract
     ): WebhookTestResponse {
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->test($id, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Returns a t.me link to @XquikBot that connects a Telegram chat to the account's monitor events. Opening it & pressing Start connects the chat, which then gets each alert as a message. Alerts that wait together come as 1 digest. A busy chat gets 5 quick messages, then 1 every 30 s. Only 1 message a minute rings. The link works once, within 15 minutes. The chat appears in the webhook list with the URL `telegram:<chat ID>`, with deliveries, retries & resume as any webhook. In the chat, /stop pauses its alerts. It costs no credits.
+     *
+     * @param list<EventType|value-of<EventType>>|null $eventTypes array of event types to subscribe to
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function createTelegramLink(
+        ?array $eventTypes = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): WebhookCreateTelegramLinkResponse {
+        $params = Util::removeNulls(
+            [
+                'eventTypes' => $eventTypes,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->createTelegramLink(params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

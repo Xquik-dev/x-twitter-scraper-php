@@ -12,6 +12,7 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\X\Lists\ListRetrieveMembersParams\Mode;
 
 /**
  * List members of an X List.
@@ -35,6 +36,15 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   usernameContains?: string|null,
  *   verifiedOnly?: bool|null,
  *   verifiedType?: string|null,
+ *   mode?: Mode|value-of<Mode>|null,
+ *   after?: string|null,
+ *   maxScan?: int|null,
+ *   blueVerifiedOnly?: bool|null,
+ *   hasEmail?: bool|null,
+ *   businessEmailOnly?: bool|null,
+ *   emailDomains?: string|null,
+ *   fields?: string|null,
+ *   omit?: string|null,
  * }
  */
 final class ListRetrieveMembersParams implements BaseModel
@@ -139,6 +149,62 @@ final class ListRetrieveMembersParams implements BaseModel
     #[Optional]
     public ?string $verifiedType;
 
+    /**
+     * Omit mode for resumable maximum coverage. Standard keeps legacy pagination. Coverage returns diagnostics once and rejects cursors.
+     *
+     * @var value-of<Mode>|null $mode
+     */
+    #[Optional(enum: Mode::class)]
+    public ?string $mode;
+
+    /**
+     * Legacy cursor alias. Prefer cursor.
+     */
+    #[Optional]
+    public ?string $after;
+
+    /**
+     * Most profiles 1 request reads, kept or dropped by the filters. The request then answers the profiles it kept, the count it dropped & the cursor to read on. Each request of a cursor may send its own value. Without it, a filtered read scans at most 100,000 profiles of the list across all its pages, & the page that reaches them ends the list with `scanLimit`. An unfiltered read has no scan limit. Automatic mode only.
+     */
+    #[Optional]
+    public ?int $maxScan;
+
+    /**
+     * Only return profiles X marks as blue verified. X marks many business & government accounts blue too. Use verifiedType for 1 badge type.
+     */
+    #[Optional]
+    public ?bool $blueVerifiedOnly;
+
+    /**
+     * Only return profiles that publish an email.
+     */
+    #[Optional]
+    public ?bool $hasEmail;
+
+    /**
+     * Only return profiles that publish an email outside free webmail, such as Gmail.
+     */
+    #[Optional]
+    public ?bool $businessEmailOnly;
+
+    /**
+     * Only return profiles with an email at one of these domains. Separate domains with commas. Subdomains match.
+     */
+    #[Optional]
+    public ?string $emailDomains;
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     */
+    #[Optional]
+    public ?string $fields;
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     */
+    #[Optional]
+    public ?string $omit;
+
     public function __construct()
     {
         $this->initialize();
@@ -148,6 +214,8 @@ final class ListRetrieveMembersParams implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param Mode|value-of<Mode>|null $mode
      */
     public static function with(
         ?string $bioContains = null,
@@ -166,6 +234,15 @@ final class ListRetrieveMembersParams implements BaseModel
         ?string $usernameContains = null,
         ?bool $verifiedOnly = null,
         ?string $verifiedType = null,
+        Mode|string|null $mode = null,
+        ?string $after = null,
+        ?int $maxScan = null,
+        ?bool $blueVerifiedOnly = null,
+        ?bool $hasEmail = null,
+        ?bool $businessEmailOnly = null,
+        ?string $emailDomains = null,
+        ?string $fields = null,
+        ?string $omit = null
     ): self {
         $self = new self;
 
@@ -185,6 +262,24 @@ final class ListRetrieveMembersParams implements BaseModel
         null !== $usernameContains && $self['usernameContains'] = $usernameContains;
         null !== $verifiedOnly && $self['verifiedOnly'] = $verifiedOnly;
         null !== $verifiedType && $self['verifiedType'] = $verifiedType;
+
+        null !== $mode && $self['mode'] = $mode;
+
+        null !== $after && $self['after'] = $after;
+
+        null !== $maxScan && $self['maxScan'] = $maxScan;
+
+        null !== $blueVerifiedOnly && $self['blueVerifiedOnly'] = $blueVerifiedOnly;
+
+        null !== $hasEmail && $self['hasEmail'] = $hasEmail;
+
+        null !== $businessEmailOnly && $self['businessEmailOnly'] = $businessEmailOnly;
+
+        null !== $emailDomains && $self['emailDomains'] = $emailDomains;
+
+        null !== $fields && $self['fields'] = $fields;
+
+        null !== $omit && $self['omit'] = $omit;
 
         return $self;
     }
@@ -361,6 +456,107 @@ final class ListRetrieveMembersParams implements BaseModel
     {
         $self = clone $this;
         $self['verifiedType'] = $verifiedType;
+
+        return $self;
+    }
+
+    /**
+     * Omit mode for resumable maximum coverage. Standard keeps legacy pagination. Coverage returns diagnostics once and rejects cursors.
+     *
+     * @param Mode|value-of<Mode>|null $mode
+     */
+    public function withMode(Mode|string|null $mode): self
+    {
+        $self = clone $this;
+        $self['mode'] = $mode;
+
+        return $self;
+    }
+
+    /**
+     * Legacy cursor alias. Prefer cursor.
+     */
+    public function withAfter(?string $after): self
+    {
+        $self = clone $this;
+        $self['after'] = $after;
+
+        return $self;
+    }
+
+    /**
+     * Most profiles 1 request reads, kept or dropped by the filters. The request then answers the profiles it kept, the count it dropped & the cursor to read on. Each request of a cursor may send its own value. Without it, a filtered read scans at most 100,000 profiles of the list across all its pages, & the page that reaches them ends the list with `scanLimit`. An unfiltered read has no scan limit. Automatic mode only.
+     */
+    public function withMaxScan(?int $maxScan): self
+    {
+        $self = clone $this;
+        $self['maxScan'] = $maxScan;
+
+        return $self;
+    }
+
+    /**
+     * Only return profiles X marks as blue verified. X marks many business & government accounts blue too. Use verifiedType for 1 badge type.
+     */
+    public function withBlueVerifiedOnly(?bool $blueVerifiedOnly): self
+    {
+        $self = clone $this;
+        $self['blueVerifiedOnly'] = $blueVerifiedOnly;
+
+        return $self;
+    }
+
+    /**
+     * Only return profiles that publish an email.
+     */
+    public function withHasEmail(?bool $hasEmail): self
+    {
+        $self = clone $this;
+        $self['hasEmail'] = $hasEmail;
+
+        return $self;
+    }
+
+    /**
+     * Only return profiles that publish an email outside free webmail, such as Gmail.
+     */
+    public function withBusinessEmailOnly(?bool $businessEmailOnly): self
+    {
+        $self = clone $this;
+        $self['businessEmailOnly'] = $businessEmailOnly;
+
+        return $self;
+    }
+
+    /**
+     * Only return profiles with an email at one of these domains. Separate domains with commas. Subdomains match.
+     */
+    public function withEmailDomains(?string $emailDomains): self
+    {
+        $self = clone $this;
+        $self['emailDomains'] = $emailDomains;
+
+        return $self;
+    }
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     */
+    public function withFields(?string $fields): self
+    {
+        $self = clone $this;
+        $self['fields'] = $fields;
+
+        return $self;
+    }
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     */
+    public function withOmit(?string $omit): self
+    {
+        $self = clone $this;
+        $self['omit'] = $omit;
 
         return $self;
     }

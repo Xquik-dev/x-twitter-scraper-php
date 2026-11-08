@@ -13,6 +13,7 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\Support\Tickets\TicketCreateParams;
 use XTwitterScraper\Support\Tickets\TicketGetResponse;
+use XTwitterScraper\Support\Tickets\TicketListParams;
 use XTwitterScraper\Support\Tickets\TicketListResponse;
 use XTwitterScraper\Support\Tickets\TicketNewResponse;
 use XTwitterScraper\Support\Tickets\TicketReplyParams;
@@ -21,7 +22,7 @@ use XTwitterScraper\Support\Tickets\TicketUpdateParams;
 use XTwitterScraper\Support\Tickets\TicketUpdateResponse;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface TicketsRawContract
 {
@@ -75,6 +76,7 @@ interface TicketsRawContract
     /**
      * @api
      *
+     * @param array<string,mixed>|TicketListParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<TicketListResponse>
@@ -82,6 +84,7 @@ interface TicketsRawContract
      * @throws APIException
      */
     public function list(
+        array|TicketListParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 

@@ -9,11 +9,15 @@ namespace Tests\Services\X;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use XTwitterScraper\Client;
+use XTwitterScraper\CommunityAnalytics;
+use XTwitterScraper\CommunityPage;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\X\Communities\CommunityDeleteResponse;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse;
+use XTwitterScraper\X\Communities\CommunityListSuggestedResponse;
+use XTwitterScraper\X\Communities\CommunityListTopicsResponse;
 use XTwitterScraper\X\Communities\CommunityNewResponse;
 
 /**
@@ -144,5 +148,59 @@ final class CommunitiesTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(PaginatedTweets::class, $result);
+    }
+
+    #[Test]
+    public function testRetrieveAnalytics(): void
+    {
+        $result = $this->client->x->communities->retrieveAnalytics('id');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(CommunityAnalytics::class, $result);
+    }
+
+    #[Test]
+    public function testSearchMembers(): void
+    {
+        $result = $this->client->x->communities->searchMembers('id', q: 'q');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(PaginatedUsers::class, $result);
+    }
+
+    #[Test]
+    public function testFind(): void
+    {
+        $result = $this->client->x->communities->find(q: 'q');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(CommunityPage::class, $result);
+    }
+
+    #[Test]
+    public function testListPopular(): void
+    {
+        $result = $this->client->x->communities->listPopular();
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(CommunityPage::class, $result);
+    }
+
+    #[Test]
+    public function testListTopics(): void
+    {
+        $result = $this->client->x->communities->listTopics();
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(CommunityListTopicsResponse::class, $result);
+    }
+
+    #[Test]
+    public function testListSuggested(): void
+    {
+        $result = $this->client->x->communities->listSuggested();
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(CommunityListSuggestedResponse::class, $result);
     }
 }

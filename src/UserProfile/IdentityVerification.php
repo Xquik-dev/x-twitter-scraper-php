@@ -15,6 +15,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   description?: string|null,
  *   isIdentityVerified?: bool|null,
  *   verifiedSinceMsec?: string|null,
+ *   overrideVerifiedYear?: int|null,
  * }
  */
 final class IdentityVerification implements BaseModel
@@ -31,6 +32,12 @@ final class IdentityVerification implements BaseModel
     #[Optional]
     public ?string $verifiedSinceMsec;
 
+    /**
+     * The year X shows as the start of verification, in place of verifiedSinceMsec.
+     */
+    #[Optional]
+    public ?int $overrideVerifiedYear;
+
     public function __construct()
     {
         $this->initialize();
@@ -45,12 +52,15 @@ final class IdentityVerification implements BaseModel
         ?string $description = null,
         ?bool $isIdentityVerified = null,
         ?string $verifiedSinceMsec = null,
+        ?int $overrideVerifiedYear = null
     ): self {
         $self = new self;
 
         null !== $description && $self['description'] = $description;
         null !== $isIdentityVerified && $self['isIdentityVerified'] = $isIdentityVerified;
         null !== $verifiedSinceMsec && $self['verifiedSinceMsec'] = $verifiedSinceMsec;
+
+        null !== $overrideVerifiedYear && $self['overrideVerifiedYear'] = $overrideVerifiedYear;
 
         return $self;
     }
@@ -75,6 +85,17 @@ final class IdentityVerification implements BaseModel
     {
         $self = clone $this;
         $self['verifiedSinceMsec'] = $verifiedSinceMsec;
+
+        return $self;
+    }
+
+    /**
+     * The year X shows as the start of verification, in place of verifiedSinceMsec.
+     */
+    public function withOverrideVerifiedYear(?int $overrideVerifiedYear): self
+    {
+        $self = clone $this;
+        $self['overrideVerifiedYear'] = $overrideVerifiedYear;
 
         return $self;
     }
