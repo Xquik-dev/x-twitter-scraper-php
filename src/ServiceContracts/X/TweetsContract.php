@@ -524,6 +524,7 @@ interface TweetsContract
      * @param string $fromUser filter by author username
      * @param string $geocode match latitude, longitude, and radius
      * @param string $hashtags hashtags separated by spaces, commas, or lines
+     * @param string $imageShows Keep only posts whose photos show this. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Other posts stay out at no charge. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. imageFilter states the cutoff & counts.
      * @param string $inReplyToTweetID only replies to this tweet ID
      * @param string $language Language code filter, e.g. en or tr.
      * @param int $limit Result upper bound. Omit it for the existing 20-row page size. Explicit coverage defaults to 2000 and allows 10000. For paid requests, remaining credits can reduce results. Zero affordable results returns 402.
@@ -559,6 +560,7 @@ interface TweetsContract
      * @param string $sinceID return Tweets newer than this Tweet ID
      * @param string $sinceTime inclusive ISO bound
      * @param string $source match the source application
+     * @param string $topic Keep only posts about this topic. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. It reads post text & safe photos. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. limit counts checked posts, & only kept posts come back. topicFilter states the cutoff & counts.
      * @param string $toUser filter replies sent to a username
      * @param string $untilDate end date in YYYY-MM-DD format
      * @param string $untilTime exclusive ISO bound
@@ -586,6 +588,7 @@ interface TweetsContract
         ?string $fromUser = null,
         ?string $geocode = null,
         ?string $hashtags = null,
+        ?string $imageShows = null,
         ?string $inReplyToTweetID = null,
         ?string $language = null,
         ?int $limit = null,
@@ -621,6 +624,7 @@ interface TweetsContract
         ?string $sinceID = null,
         ?string $sinceTime = null,
         ?string $source = null,
+        ?string $topic = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         ?string $untilTime = null,

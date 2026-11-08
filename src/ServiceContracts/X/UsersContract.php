@@ -338,6 +338,7 @@ interface UsersContract
      * @param string $fromUser filter by author username
      * @param string $geocode match latitude, longitude, and radius
      * @param string $hashtags hashtags separated by spaces, commas, or lines
+     * @param string $imageShows Keep only posts whose photos show this. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Other posts stay out at no charge. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. imageFilter states the cutoff & counts.
      * @param string $inReplyToTweetID only replies to this tweet ID
      * @param string $language Language code filter, e.g. en or tr.
      * @param int $maxFaves Maximum likes threshold. maxLikes is also accepted.
@@ -366,6 +367,7 @@ interface UsersContract
      * @param string $sinceDate start date in YYYY-MM-DD format
      * @param string $sinceID return Tweets newer than this Tweet ID
      * @param string $source match the source application
+     * @param string $topic Keep only posts about this topic. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. It reads post text & safe photos. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. limit counts checked posts, & only kept posts come back. topicFilter states the cutoff & counts.
      * @param string $toUser filter replies sent to a username
      * @param string $untilDate end date in YYYY-MM-DD format
      * @param string $url URL substring or domain filter
@@ -390,6 +392,7 @@ interface UsersContract
         ?string $fromUser = null,
         ?string $geocode = null,
         ?string $hashtags = null,
+        ?string $imageShows = null,
         ?string $inReplyToTweetID = null,
         ?string $language = null,
         ?int $maxFaves = null,
@@ -418,6 +421,7 @@ interface UsersContract
         ?string $sinceDate = null,
         ?string $sinceID = null,
         ?string $source = null,
+        ?string $topic = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         ?string $url = null,
@@ -552,6 +556,7 @@ interface UsersContract
      * @param string $fromUser filter by author username
      * @param string $geocode match latitude, longitude, and radius
      * @param string $hashtags hashtags separated by spaces, commas, or lines
+     * @param string $imageShows Keep only posts whose photos show this. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Other posts stay out at no charge. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. imageFilter states the cutoff & counts.
      * @param bool $includeParentTweet include each reply's parent tweet
      * @param string $inReplyToTweetID only replies to this tweet ID
      * @param string $language Language code filter, e.g. en or tr.
@@ -581,6 +586,7 @@ interface UsersContract
      * @param string $sinceDate start date in YYYY-MM-DD format
      * @param string $sinceID return Tweets newer than this Tweet ID
      * @param string $source match the source application
+     * @param string $topic Keep only posts about this topic. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. It reads post text & safe photos. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. limit counts checked posts, & only kept posts come back. topicFilter states the cutoff & counts.
      * @param string $toUser filter replies sent to a username
      * @param string $untilDate end date in YYYY-MM-DD format
      * @param string $url URL substring or domain filter
@@ -605,6 +611,7 @@ interface UsersContract
         ?string $fromUser = null,
         ?string $geocode = null,
         ?string $hashtags = null,
+        ?string $imageShows = null,
         bool $includeParentTweet = false,
         ?string $inReplyToTweetID = null,
         ?string $language = null,
@@ -634,6 +641,7 @@ interface UsersContract
         ?string $sinceDate = null,
         ?string $sinceID = null,
         ?string $source = null,
+        ?string $topic = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         ?string $url = null,
@@ -702,6 +710,7 @@ interface UsersContract
      * @param string $fromUser filter by author username
      * @param string $geocode match latitude, longitude, and radius
      * @param string $hashtags hashtags separated by spaces, commas, or lines
+     * @param string $imageShows Keep only posts whose photos show this. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Other posts stay out at no charge. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. imageFilter states the cutoff & counts.
      * @param bool $includeParentTweet Include parent tweet for replies
      * @param bool $includeReplies Include reply tweets
      * @param string $inReplyToTweetID only replies to this tweet ID
@@ -732,6 +741,7 @@ interface UsersContract
      * @param string $sinceDate start date in YYYY-MM-DD format
      * @param string $sinceID return Tweets newer than this Tweet ID
      * @param string $source match the source application
+     * @param string $topic Keep only posts about this topic. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. It reads post text & safe photos. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. limit counts checked posts, & only kept posts come back. topicFilter states the cutoff & counts.
      * @param string $toUser filter replies sent to a username
      * @param string $untilDate end date in YYYY-MM-DD format
      * @param string $url URL substring or domain filter
@@ -756,6 +766,7 @@ interface UsersContract
         ?string $fromUser = null,
         ?string $geocode = null,
         ?string $hashtags = null,
+        ?string $imageShows = null,
         bool $includeParentTweet = false,
         bool $includeReplies = false,
         ?string $inReplyToTweetID = null,
@@ -786,6 +797,7 @@ interface UsersContract
         ?string $sinceDate = null,
         ?string $sinceID = null,
         ?string $source = null,
+        ?string $topic = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         ?string $url = null,
