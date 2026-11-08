@@ -37,7 +37,7 @@ Run every gate before requesting review.
 ./bin/check-local
 ```
 
-It installs locked dependencies, then runs PHP CS Fixer, PHPStan, ShellCheck and the script tests.
+It installs locked dependencies and compares the SDK's fields with the API spec, then runs PHP CS Fixer, PHPStan, ShellCheck and the script tests.
 Then it runs REUSE 6.2.0 through `uvx`, the platform and syntax checks, tests and coverage.
 Last, it runs the dependency audit, the reproducible archive check and Semgrep.
 It stops at the first failure and says what to fix.
@@ -70,6 +70,46 @@ PHPStan validates every generated SDK type.
 `TEST_API_BASE_URL` accepts literal loopback IPv4 only.
 
 This guard prevents tests from mutating remote services.
+
+## API fields
+
+The check right after the dependency install fails when the SDK's fields differ from the API spec.
+Run it alone with `./scripts/api-fields`. It reads the installed classes, so it needs `vendor` and no server.
+
+For each operation in the API spec, it reads the request each class in `src/Services` builds and the params and response types that request names, then compares their fields with the spec's query parameters, JSON body and JSON response.
+It reads the spec's fields through `$ref`, `allOf`, `oneOf` and `anyOf`.
+Path parameters, header parameters, free-form objects and fields under an object that allows extra properties stay out.
+A field missing on 1 side counts once, at its top position.
+
+Each difference prints as 1 line with the method, the full path, `request` or `response`, a kind and the field's JSON path.
+
+```text
+GET /api/v1/monitors response enum monitors[].eventTypes[]
+```
+
+- `missing` means the spec has the field and the SDK does not. Add it to the SDK.
+- `extra` means the SDK has a field the spec does not list. Keep it when callers may use it, and accept it.
+- `enum` means both sides list values and the values differ. Add the missing values, and accept values the SDK keeps.
+- `required` means the spec's required list and the property's `Required` or `Optional` attribute differ. Fix it only when the change keeps old calls and old responses working.
+- `nullable` means the spec and the property's null handling differ.
+
+An operation in the spec that the SDK lacks fails as well. Add it, or list it in `excluded-operations.json` with a reason.
+Fixes stay additive. Never remove or rename a public field or parameter to satisfy the check. Accept it instead.
+
+`accepted-field-differences.json` holds the differences the SDK keeps, in groups with a non-empty `reason`.
+A difference appears at most once.
+An accepted line the check no longer finds fails as stale, so remove it in the change that fixes it.
+
+```json
+[
+  {
+    "reason": "Deprecated alias of minLikes, which the API still reads. The SDK keeps it so existing calls still run.",
+    "differences": ["GET /api/v1/x/tweets/search request extra minFaves"]
+  }
+]
+```
+
+Set `XQUIK_OPENAPI_SPEC` to a local copy of the spec to check against it. Pass `--list` to print every difference without failing.
 
 ## Submit changes
 

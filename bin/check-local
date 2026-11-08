@@ -135,6 +135,10 @@ start_check "Locked dependencies" "install" "Fix composer.json or composer.lock,
 ./scripts/bootstrap
 pass_check
 
+start_check "API fields" "API fields" "Fix each line above, or list it with a reason as CONTRIBUTING.md shows, then rerun."
+./scripts/api-fields
+pass_check
+
 start_check "PHP formatting and types" "lint" "Run ./scripts/format, fix the PHPStan errors above, then rerun."
 ./scripts/lint
 pass_check
@@ -186,7 +190,7 @@ start_check "Dependency audit" "audit" "Update the packages named above, or list
 ./scripts/audit
 pass_check
 
-start_check "Reproducible archive" "reproducible archive" "Fix the Composer archive setting named above, then rerun."
+start_check "Reproducible archive" "archive" "Fix the Composer archive setting named above, then rerun."
 ./scripts/check-reproducible
 pass_check
 
