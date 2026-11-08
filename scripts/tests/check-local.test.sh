@@ -10,6 +10,7 @@ set -euo pipefail
 source "$(dirname -- "${BASH_SOURCE[0]}")/support.sh"
 
 readonly check_order="bootstrap
+api-fields
 lint
 shellcheck
 test-scripts
@@ -21,13 +22,13 @@ coverage
 audit
 check-reproducible
 semgrep"
-readonly passed_line="Passed install, lint, shellcheck, script tests, REUSE, platform, syntax, 12 tests, coverage, audit, reproducible archive and Semgrep."
+readonly passed_line="Passed install, API fields, lint, shellcheck, script tests, REUSE, platform, syntax, 12 tests, coverage, audit, archive and Semgrep."
 readonly statuses="repos/Xquik-dev/x-twitter-scraper-php/statuses"
 
 prepare_checks() {
   local name
   copy_file bin/check-local
-  for name in bootstrap lint test-scripts coverage audit check-reproducible semgrep; do
+  for name in bootstrap api-fields lint test-scripts coverage audit check-reproducible semgrep; do
     stub "scripts/$name" <<EOF
 #!/usr/bin/env bash
 echo "$name" >>"\$FAKE_LOGS/order"
@@ -125,7 +126,7 @@ EOF
   run_in_repo bin/check-local --no-status
 
   assert_equal 0 "$run_status" "the exit code"
-  assert_equal "--external-sources bin/check-local scripts/audit scripts/bootstrap scripts/check-reproducible scripts/coverage scripts/lint scripts/semgrep scripts/test scripts/test-scripts scripts/tests/sample.test.sh" \
+  assert_equal "--external-sources bin/check-local scripts/api-fields scripts/audit scripts/bootstrap scripts/check-reproducible scripts/coverage scripts/lint scripts/semgrep scripts/test scripts/test-scripts scripts/tests/sample.test.sh" \
     "$(log_of shellcheck)" "the shellcheck call"
 }
 
@@ -153,7 +154,7 @@ test_the_success_text_counts_the_tests_that_ran_and_leaves_out_skipped_ones() {
 
   assert_equal 0 "$run_status" "the exit code"
   assert_equal "$statuses/$head pending Local checks are running.
-$statuses/$head success Passed install, lint, shellcheck, script tests, REUSE, platform, syntax, 240 tests, coverage, audit, reproducible archive and Semgrep." \
+$statuses/$head success Passed install, API fields, lint, shellcheck, script tests, REUSE, platform, syntax, 240 tests, coverage, audit, archive and Semgrep." \
     "$(log_of gh)" "the posted statuses"
 }
 
@@ -166,7 +167,7 @@ test_the_success_text_fits_the_140_character_limit_of_a_commit_status() {
 
   assert_equal 0 "$run_status" "the exit code"
   description="$(log_of gh | sed -n 's/^.* success //p')"
-  assert_ends_with "$description" "98765 tests, coverage, audit, reproducible archive and Semgrep." "the success text"
+  assert_ends_with "$description" "98765 tests, coverage, audit, archive and Semgrep." "the success text"
   if ((${#description} >= 140)); then
     fail_test "The success text has ${#description} characters. GitHub accepts at most 140."
   fi
@@ -223,6 +224,19 @@ test_a_run_without_semgrep_stops_with_the_install_command() {
   assert_equal "" "$(log_of order)" "the checks that ran"
 }
 
+test_an_api_field_difference_stops_the_run_before_lint() {
+  prepare_checks
+  run_env+=("FAKE_FAILING_CHECK=api-fields")
+
+  run_in_repo bin/check-local --no-status
+
+  assert_equal 1 "$run_status" "the exit code"
+  assert_equal "Check failed at API fields. Fix each line above, or list it with a reason as CONTRIBUTING.md shows, then rerun." \
+    "$run_stderr" "stderr"
+  assert_equal "bootstrap
+api-fields" "$(log_of order)" "the checks that ran"
+}
+
 test_a_failing_check_stops_the_run_and_posts_a_failure_status_that_names_it() {
   local head
   prepare_checks
@@ -234,6 +248,7 @@ test_a_failing_check_stops_the_run_and_posts_a_failure_status_that_names_it() {
   assert_equal 1 "$run_status" "the exit code"
   assert_equal "Check failed at Tests. Fix the failing tests above, then rerun." "$run_stderr" "stderr"
   assert_equal "bootstrap
+api-fields
 lint
 shellcheck
 test-scripts

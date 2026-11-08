@@ -12,6 +12,8 @@
 /.phpactor.json                export-ignore
 /.release-please-manifest.json export-ignore
 /.stats.yml                    export-ignore
+/accepted-field-differences.json export-ignore
 /audit-exceptions.json         export-ignore
+/excluded-operations.json      export-ignore
 /phpstan.dist.neon             export-ignore
 /phpunit.xml.dist              export-ignore
