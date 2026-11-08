@@ -20,6 +20,8 @@ use XTwitterScraper\Core\Conversion\MapOf;
  *   job: array<string,mixed>,
  *   results: list<array<string,mixed>>,
  *   nextCursor?: string|null,
+ *   pollAfterMs?: int|null,
+ *   waitUrl?: string|null,
  * }
  */
 final class ExtractionGetResponse implements BaseModel
@@ -44,6 +46,12 @@ final class ExtractionGetResponse implements BaseModel
 
     #[Optional]
     public ?string $nextCursor;
+
+    #[Optional]
+    public ?int $pollAfterMs;
+
+    #[Optional]
+    public ?string $waitUrl;
 
     /**
      * `new ExtractionGetResponse()` is missing required properties by the API.
@@ -76,7 +84,9 @@ final class ExtractionGetResponse implements BaseModel
         bool $hasMore,
         array $job,
         array $results,
-        ?string $nextCursor = null
+        ?string $nextCursor = null,
+        ?int $pollAfterMs = null,
+        ?string $waitUrl = null
     ): self {
         $self = new self;
 
@@ -85,6 +95,10 @@ final class ExtractionGetResponse implements BaseModel
         $self['results'] = $results;
 
         null !== $nextCursor && $self['nextCursor'] = $nextCursor;
+
+        null !== $pollAfterMs && $self['pollAfterMs'] = $pollAfterMs;
+
+        null !== $waitUrl && $self['waitUrl'] = $waitUrl;
 
         return $self;
     }
@@ -125,6 +139,22 @@ final class ExtractionGetResponse implements BaseModel
     {
         $self = clone $this;
         $self['nextCursor'] = $nextCursor;
+
+        return $self;
+    }
+
+    public function withPollAfterMs(?int $pollAfterMs): self
+    {
+        $self = clone $this;
+        $self['pollAfterMs'] = $pollAfterMs;
+
+        return $self;
+    }
+
+    public function withWaitUrl(?string $waitUrl): self
+    {
+        $self = clone $this;
+        $self['waitUrl'] = $waitUrl;
 
         return $self;
     }

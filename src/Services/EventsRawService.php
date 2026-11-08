@@ -15,6 +15,7 @@ use XTwitterScraper\Core\Util;
 use XTwitterScraper\Events\EventDetail;
 use XTwitterScraper\Events\EventListParams;
 use XTwitterScraper\Events\EventListResponse;
+use XTwitterScraper\Events\EventStreamParams;
 use XTwitterScraper\EventType;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\EventsRawContract;
@@ -22,7 +23,7 @@ use XTwitterScraper\ServiceContracts\EventsRawContract;
 /**
  * Activity events from monitored accounts.
  *
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class EventsRawService implements EventsRawContract
 {
@@ -94,6 +95,38 @@ final class EventsRawService implements EventsRawContract
             ),
             options: $options,
             convert: EventListResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Streams the account's monitor events as server-sent events, each named by its event type and numbered by its event ID. A reconnect that sends Last-Event-ID first gets every event after that one from the last 30 days, then each new event. Set lookBack to also get events saved late. A connection lasts up to 30 minutes and sends a comment every 15 seconds while idle. Keep up to 200 streams open per account. Events and streams cost no credits. Add include=post_metrics to also get post.metrics frames. The first poll sends 1 for each post monitor with a check or a pause. After that, a frame comes when a monitor's saved numbers or status change. These frames carry no ID, so Last-Event-ID never moves.
+     *
+     * @param array<string,mixed>|EventStreamParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<string>
+     *
+     * @throws APIException
+     */
+    public function stream(
+        array|EventStreamParams $params = [],
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = EventStreamParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: 'events/stream',
+            query: $parsed,
+            headers: ['Accept' => 'text/event-stream'],
+            options: $options,
+            convert: 'string',
         );
     }
 }

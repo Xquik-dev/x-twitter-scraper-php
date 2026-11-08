@@ -20,7 +20,8 @@ use XTwitterScraper\EventType;
  * @see XTwitterScraper\Services\MonitorsService::update()
  *
  * @phpstan-type MonitorUpdateParamsShape = array{
- *   eventTypes?: list<EventType|value-of<EventType>>|null, isActive?: bool|null
+ *   eventTypes?: list<EventType|value-of<EventType>>|null, isActive?: bool|null,
+ *   name?: string|null,
  * }
  */
 final class MonitorUpdateParams implements BaseModel
@@ -40,6 +41,12 @@ final class MonitorUpdateParams implements BaseModel
     #[Optional]
     public ?bool $isActive;
 
+    /**
+     * New label for the account monitor. Send null to remove the label.
+     */
+    #[Optional(nullable: true)]
+    public ?string $name;
+
     public function __construct()
     {
         $this->initialize();
@@ -54,12 +61,15 @@ final class MonitorUpdateParams implements BaseModel
      */
     public static function with(
         ?array $eventTypes = null,
-        ?bool $isActive = null
+        ?bool $isActive = null,
+        ?string $name = null
     ): self {
         $self = new self;
 
         null !== $eventTypes && $self['eventTypes'] = $eventTypes;
         null !== $isActive && $self['isActive'] = $isActive;
+
+        null !== $name && $self['name'] = $name;
 
         return $self;
     }
@@ -81,6 +91,17 @@ final class MonitorUpdateParams implements BaseModel
     {
         $self = clone $this;
         $self['isActive'] = $isActive;
+
+        return $self;
+    }
+
+    /**
+     * New label for the account monitor. Send null to remove the label.
+     */
+    public function withName(?string $name): self
+    {
+        $self = clone $this;
+        $self['name'] = $name;
 
         return $self;
     }

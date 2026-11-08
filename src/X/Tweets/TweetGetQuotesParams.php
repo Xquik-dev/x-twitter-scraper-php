@@ -13,6 +13,8 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams\MediaType;
+use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Mode;
+use XTwitterScraper\X\Tweets\TweetGetQuotesParams\QueryType;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Quotes;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Replies;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Retweets;
@@ -72,6 +74,18 @@ use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Retweets;
  *   verifiedOnly?: bool|null,
  *   within?: string|null,
  *   withinTime?: string|null,
+ *   mode?: Mode|value-of<Mode>|null,
+ *   queryType?: QueryType|value-of<QueryType>|null,
+ *   minLikes?: int|null,
+ *   keywords?: string|null,
+ *   listID?: string|null,
+ *   place?: string|null,
+ *   placeCountry?: string|null,
+ *   pointRadius?: string|null,
+ *   boundingBox?: string|null,
+ *   advancedQuery?: string|null,
+ *   fields?: string|null,
+ *   omit?: string|null,
  * }
  */
 final class TweetGetQuotesParams implements BaseModel
@@ -382,6 +396,82 @@ final class TweetGetQuotesParams implements BaseModel
     #[Optional]
     public ?string $withinTime;
 
+    /**
+     * Optional legacy pagination override. Filters such as keywords don't apply with it.
+     *
+     * @var value-of<Mode>|null $mode
+     */
+    #[Optional(enum: Mode::class)]
+    public ?string $mode;
+
+    /**
+     * Latest for newest first, or Top for the quotes X ranks highest. A later Latest page can hold a newer quote. Top is X's ranking, not a count order, & a later page can hold a quote X ranks higher. Any case works. Alias sort, which also takes Recency & Relevance. Send the same value with each cursor. Standard pages list Latest.
+     *
+     * @var value-of<QueryType>|null $queryType
+     */
+    #[Optional(enum: QueryType::class)]
+    public ?string $queryType;
+
+    /**
+     * Minimum likes. Its aliases are minFaves, min_likes & min_faves.
+     */
+    #[Optional]
+    public ?int $minLikes;
+
+    /**
+     * Words the Tweets must match, in X search syntax.
+     */
+    #[Optional]
+    public ?string $keywords;
+
+    /**
+     * Search within a list ID.
+     */
+    #[Optional('listId')]
+    public ?string $listID;
+
+    /**
+     * Search within a place ID.
+     */
+    #[Optional]
+    public ?string $place;
+
+    /**
+     * Search within a country code.
+     */
+    #[Optional]
+    public ?string $placeCountry;
+
+    /**
+     * Geo point radius, such as -73.99 40.73 25mi.
+     */
+    #[Optional]
+    public ?string $pointRadius;
+
+    /**
+     * Geo bounding box, such as -74.1 40.6 -73.9 40.8.
+     */
+    #[Optional]
+    public ?string $boundingBox;
+
+    /**
+     * Raw advanced search query appended as-is.
+     */
+    #[Optional]
+    public ?string $advancedQuery;
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     */
+    #[Optional]
+    public ?string $fields;
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     */
+    #[Optional]
+    public ?string $omit;
+
     public function __construct()
     {
         $this->initialize();
@@ -396,6 +486,8 @@ final class TweetGetQuotesParams implements BaseModel
      * @param Quotes|value-of<Quotes>|null $quotes
      * @param Replies|value-of<Replies>|null $replies
      * @param Retweets|value-of<Retweets>|null $retweets
+     * @param Mode|value-of<Mode>|null $mode
+     * @param QueryType|value-of<QueryType>|null $queryType
      */
     public static function with(
         ?string $anyWords = null,
@@ -447,6 +539,18 @@ final class TweetGetQuotesParams implements BaseModel
         ?bool $verifiedOnly = null,
         ?string $within = null,
         ?string $withinTime = null,
+        Mode|string|null $mode = null,
+        QueryType|string|null $queryType = null,
+        ?int $minLikes = null,
+        ?string $keywords = null,
+        ?string $listID = null,
+        ?string $place = null,
+        ?string $placeCountry = null,
+        ?string $pointRadius = null,
+        ?string $boundingBox = null,
+        ?string $advancedQuery = null,
+        ?string $fields = null,
+        ?string $omit = null
     ): self {
         $self = new self;
 
@@ -499,6 +603,30 @@ final class TweetGetQuotesParams implements BaseModel
         null !== $verifiedOnly && $self['verifiedOnly'] = $verifiedOnly;
         null !== $within && $self['within'] = $within;
         null !== $withinTime && $self['withinTime'] = $withinTime;
+
+        null !== $mode && $self['mode'] = $mode;
+
+        null !== $queryType && $self['queryType'] = $queryType;
+
+        null !== $minLikes && $self['minLikes'] = $minLikes;
+
+        null !== $keywords && $self['keywords'] = $keywords;
+
+        null !== $listID && $self['listID'] = $listID;
+
+        null !== $place && $self['place'] = $place;
+
+        null !== $placeCountry && $self['placeCountry'] = $placeCountry;
+
+        null !== $pointRadius && $self['pointRadius'] = $pointRadius;
+
+        null !== $boundingBox && $self['boundingBox'] = $boundingBox;
+
+        null !== $advancedQuery && $self['advancedQuery'] = $advancedQuery;
+
+        null !== $fields && $self['fields'] = $fields;
+
+        null !== $omit && $self['omit'] = $omit;
 
         return $self;
     }
@@ -1046,6 +1174,142 @@ final class TweetGetQuotesParams implements BaseModel
     {
         $self = clone $this;
         $self['withinTime'] = $withinTime;
+
+        return $self;
+    }
+
+    /**
+     * Optional legacy pagination override. Filters such as keywords don't apply with it.
+     *
+     * @param Mode|value-of<Mode>|null $mode
+     */
+    public function withMode(Mode|string|null $mode): self
+    {
+        $self = clone $this;
+        $self['mode'] = $mode;
+
+        return $self;
+    }
+
+    /**
+     * Latest for newest first, or Top for the quotes X ranks highest. A later Latest page can hold a newer quote. Top is X's ranking, not a count order, & a later page can hold a quote X ranks higher. Any case works. Alias sort, which also takes Recency & Relevance. Send the same value with each cursor. Standard pages list Latest.
+     *
+     * @param QueryType|value-of<QueryType>|null $queryType
+     */
+    public function withQueryType(QueryType|string|null $queryType): self
+    {
+        $self = clone $this;
+        $self['queryType'] = $queryType;
+
+        return $self;
+    }
+
+    /**
+     * Minimum likes. Its aliases are minFaves, min_likes & min_faves.
+     */
+    public function withMinLikes(?int $minLikes): self
+    {
+        $self = clone $this;
+        $self['minLikes'] = $minLikes;
+
+        return $self;
+    }
+
+    /**
+     * Words the Tweets must match, in X search syntax.
+     */
+    public function withKeywords(?string $keywords): self
+    {
+        $self = clone $this;
+        $self['keywords'] = $keywords;
+
+        return $self;
+    }
+
+    /**
+     * Search within a list ID.
+     */
+    public function withListID(?string $listID): self
+    {
+        $self = clone $this;
+        $self['listID'] = $listID;
+
+        return $self;
+    }
+
+    /**
+     * Search within a place ID.
+     */
+    public function withPlace(?string $place): self
+    {
+        $self = clone $this;
+        $self['place'] = $place;
+
+        return $self;
+    }
+
+    /**
+     * Search within a country code.
+     */
+    public function withPlaceCountry(?string $placeCountry): self
+    {
+        $self = clone $this;
+        $self['placeCountry'] = $placeCountry;
+
+        return $self;
+    }
+
+    /**
+     * Geo point radius, such as -73.99 40.73 25mi.
+     */
+    public function withPointRadius(?string $pointRadius): self
+    {
+        $self = clone $this;
+        $self['pointRadius'] = $pointRadius;
+
+        return $self;
+    }
+
+    /**
+     * Geo bounding box, such as -74.1 40.6 -73.9 40.8.
+     */
+    public function withBoundingBox(?string $boundingBox): self
+    {
+        $self = clone $this;
+        $self['boundingBox'] = $boundingBox;
+
+        return $self;
+    }
+
+    /**
+     * Raw advanced search query appended as-is.
+     */
+    public function withAdvancedQuery(?string $advancedQuery): self
+    {
+        $self = clone $this;
+        $self['advancedQuery'] = $advancedQuery;
+
+        return $self;
+    }
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     */
+    public function withFields(?string $fields): self
+    {
+        $self = clone $this;
+        $self['fields'] = $fields;
+
+        return $self;
+    }
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     */
+    public function withOmit(?string $omit): self
+    {
+        $self = clone $this;
+        $self['omit'] = $omit;
 
         return $self;
     }

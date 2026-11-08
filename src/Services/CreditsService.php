@@ -14,13 +14,14 @@ use XTwitterScraper\Core\Util;
 use XTwitterScraper\Credits\CreditGetBalanceResponse;
 use XTwitterScraper\Credits\CreditGetTopupStatusResponse;
 use XTwitterScraper\Credits\CreditTopupBalanceResponse;
+use XTwitterScraper\Currency;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\CreditsContract;
 
 /**
  * Subscription, billing, and credits.
  *
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class CreditsService implements CreditsContract
 {
@@ -106,6 +107,8 @@ final class CreditsService implements CreditsContract
      *
      * @param int $dollars Amount to top up in US dollars. Minimum 10.
      * @param string $locale Optional checkout locale. Defaults to en.
+     * @param Currency|value-of<Currency>|null $currency Currency to pay in. Xquik converts the dollar amount at the latest daily ECB rate. If the newest rates are more than 3 ECB working days old, it charges USD instead, and Checkout shows that before payment. `chargedCurrency` shows the currency charged. Credits always match the dollar amount. Lowercase codes work too.
+     * @param string|null $returnPath optional Xquik tool page to return to after Checkout, such as /en/x-article-reader
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -113,9 +116,11 @@ final class CreditsService implements CreditsContract
     public function topupBalance(
         int $dollars,
         ?string $locale = null,
+        Currency|string|null $currency = null,
+        ?string $returnPath = null,
         RequestOptions|array|null $requestOptions = null,
     ): CreditTopupBalanceResponse {
-        $params = Util::removeNulls(['dollars' => $dollars, 'locale' => $locale]);
+        $params = Util::removeNulls(['returnPath' => $returnPath, 'currency' => $currency, 'dollars' => $dollars, 'locale' => $locale]);
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->topupBalance(params: $params, requestOptions: $requestOptions);

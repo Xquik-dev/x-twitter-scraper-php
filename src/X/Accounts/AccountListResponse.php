@@ -8,15 +8,18 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\Accounts;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-import-type XAccountShape from \XTwitterScraper\X\Accounts\XAccount
+ * @phpstan-import-type XAccountShape from XAccount
  *
  * @phpstan-type AccountListResponseShape = array{
- *   accounts: list<XAccount|XAccountShape>
+ *   accounts: list<XAccount|XAccountShape>,
+ *   hasMore?: bool|null,
+ *   nextCursor?: string|null,
  * }
  */
 final class AccountListResponse implements BaseModel
@@ -27,6 +30,18 @@ final class AccountListResponse implements BaseModel
     /** @var list<XAccount> $accounts */
     #[Required(list: XAccount::class)]
     public array $accounts;
+
+    /**
+     * Present on cursor-paginated responses.
+     */
+    #[Optional]
+    public ?bool $hasMore;
+
+    /**
+     * Pass unchanged as cursor when hasMore is true.
+     */
+    #[Optional]
+    public ?string $nextCursor;
 
     /**
      * `new AccountListResponse()` is missing required properties by the API.
@@ -54,11 +69,15 @@ final class AccountListResponse implements BaseModel
      *
      * @param list<XAccount|XAccountShape> $accounts
      */
-    public static function with(array $accounts): self
+    public static function with(array $accounts, ?bool $hasMore = null, ?string $nextCursor = null): self
     {
         $self = new self;
 
         $self['accounts'] = $accounts;
+
+        null !== $hasMore && $self['hasMore'] = $hasMore;
+
+        null !== $nextCursor && $self['nextCursor'] = $nextCursor;
 
         return $self;
     }
@@ -70,6 +89,28 @@ final class AccountListResponse implements BaseModel
     {
         $self = clone $this;
         $self['accounts'] = $accounts;
+
+        return $self;
+    }
+
+    /**
+     * Present on cursor-paginated responses.
+     */
+    public function withHasMore(?bool $hasMore): self
+    {
+        $self = clone $this;
+        $self['hasMore'] = $hasMore;
+
+        return $self;
+    }
+
+    /**
+     * Pass unchanged as cursor when hasMore is true.
+     */
+    public function withNextCursor(?string $nextCursor): self
+    {
+        $self = clone $this;
+        $self['nextCursor'] = $nextCursor;
 
         return $self;
     }

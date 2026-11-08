@@ -12,12 +12,18 @@ use XTwitterScraper\Client;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedTweets2;
+use XTwitterScraper\PaginatedUserIDs;
 use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\TweetsContract;
 use XTwitterScraper\Services\X\Tweets\LikeService;
 use XTwitterScraper\Services\X\Tweets\RetweetService;
+use XTwitterScraper\X\Tweets\TweetCheckRepostResponse;
 use XTwitterScraper\X\Tweets\TweetDeleteResponse;
+use XTwitterScraper\X\Tweets\TweetEmbedParams\Theme;
+use XTwitterScraper\X\Tweets\TweetEmbedResponse;
+use XTwitterScraper\X\Tweets\TweetGetInsightsResponse;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams\MediaType;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Quotes;
 use XTwitterScraper\X\Tweets\TweetGetQuotesParams\Replies;
@@ -27,12 +33,18 @@ use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Scope;
 use XTwitterScraper\X\Tweets\TweetGetRepliesParams\Sort;
 use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
 use XTwitterScraper\X\Tweets\TweetGetResponse;
+use XTwitterScraper\X\Tweets\TweetGetSubtitlesResponse;
+use XTwitterScraper\X\Tweets\TweetListTopParams\Metric;
+use XTwitterScraper\X\Tweets\TweetListTopParams\Window;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
+use XTwitterScraper\X\Tweets\TweetResolveLinksResponse;
 use XTwitterScraper\X\Tweets\TweetSearchParams\QueryType;
 use XTwitterScraper\X\Tweets\TweetSearchResponse\TweetSearchCoverageResponse;
+use XTwitterScraper\X\Tweets\TweetTranslateResponse;
+use XTwitterScraper\XWriteAction;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class TweetsService implements TweetsContract
 {
@@ -111,16 +123,27 @@ final class TweetsService implements TweetsContract
      * Get tweet with full text, author, metrics and media
      *
      * @param string $id Numeric tweet ID, 15-20 digits
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function retrieve(
         string $id,
+        ?string $fields = null,
+        ?string $omit = null,
         RequestOptions|array|null $requestOptions = null
     ): TweetGetResponse {
+        $params = Util::removeNulls(
+            [
+                'fields' => $fields,
+                'omit' => $omit,
+            ],
+        );
+
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->retrieve($id, requestOptions: $requestOptions);
+        $response = $this->raw->retrieve($id, params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }
@@ -131,15 +154,19 @@ final class TweetsService implements TweetsContract
      * Get multiple tweets by IDs
      *
      * @param string $ids Comma-separated tweet IDs (max 100)
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function list(
         string $ids,
+        ?string $fields = null,
+        ?string $omit = null,
         RequestOptions|array|null $requestOptions = null
     ): PaginatedTweets {
-        $params = Util::removeNulls(['ids' => $ids]);
+        $params = Util::removeNulls(['omit' => $omit, 'fields' => $fields, 'ids' => $ids]);
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->list(params: $params, requestOptions: $requestOptions);
@@ -197,6 +224,12 @@ final class TweetsService implements TweetsContract
      * @param string $usernameContains match a username substring, ignoring case
      * @param bool $verifiedOnly only return verified profiles
      * @param string $verifiedType match the verification type exactly, ignoring case
+     * @param bool|null $blueVerifiedOnly Only return profiles X marks as blue verified. X marks many business & government accounts blue too. Use verifiedType for 1 badge type.
+     * @param bool|null $hasEmail only return profiles that publish an email
+     * @param bool|null $businessEmailOnly only return profiles that publish an email outside free webmail, such as Gmail
+     * @param string|null $emailDomains Only return profiles with an email at one of these domains. Separate domains with commas. Subdomains match.
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -219,10 +252,16 @@ final class TweetsService implements TweetsContract
         ?string $usernameContains = null,
         ?bool $verifiedOnly = null,
         ?string $verifiedType = null,
+        ?bool $blueVerifiedOnly = null,
+        ?bool $hasEmail = null,
+        ?bool $businessEmailOnly = null,
+        ?string $emailDomains = null,
+        ?string $fields = null,
+        ?string $omit = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers {
         $params = Util::removeNulls(
-            [
+            ['omit' => $omit, 'fields' => $fields, 'emailDomains' => $emailDomains, 'businessEmailOnly' => $businessEmailOnly, 'hasEmail' => $hasEmail, 'blueVerifiedOnly' => $blueVerifiedOnly,
                 'bioContains' => $bioContains,
                 'cursor' => $cursor,
                 'hasLocation' => $hasLocation,
@@ -303,6 +342,18 @@ final class TweetsService implements TweetsContract
      * @param bool $verifiedOnly only return tweets from verified authors
      * @param string $within set the radius for the near filter
      * @param string $withinTime match Tweets inside a recent time window
+     * @param \XTwitterScraper\X\Tweets\TweetGetQuotesParams\Mode|value-of<\XTwitterScraper\X\Tweets\TweetGetQuotesParams\Mode>|null $mode Optional legacy pagination override. Filters such as keywords don't apply with it.
+     * @param \XTwitterScraper\X\Tweets\TweetGetQuotesParams\QueryType|value-of<\XTwitterScraper\X\Tweets\TweetGetQuotesParams\QueryType>|null $queryType Latest for newest first, or Top for the quotes X ranks highest. A later Latest page can hold a newer quote. Top is X's ranking, not a count order, & a later page can hold a quote X ranks higher. Any case works. Alias sort, which also takes Recency & Relevance. Send the same value with each cursor. Standard pages list Latest.
+     * @param int|null $minLikes Minimum likes. Its aliases are minFaves, min_likes & min_faves.
+     * @param string|null $keywords words the Tweets must match, in X search syntax
+     * @param string|null $listID search within a list ID
+     * @param string|null $place search within a place ID
+     * @param string|null $placeCountry search within a country code
+     * @param string|null $pointRadius Geo point radius, such as -73.99 40.73 25mi.
+     * @param string|null $boundingBox Geo bounding box, such as -74.1 40.6 -73.9 40.8.
+     * @param string|null $advancedQuery raw advanced search query appended as-is
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -358,10 +409,22 @@ final class TweetsService implements TweetsContract
         ?bool $verifiedOnly = null,
         ?string $within = null,
         ?string $withinTime = null,
+        \XTwitterScraper\X\Tweets\TweetGetQuotesParams\Mode|string|null $mode = null,
+        \XTwitterScraper\X\Tweets\TweetGetQuotesParams\QueryType|string|null $queryType = null,
+        ?int $minLikes = null,
+        ?string $keywords = null,
+        ?string $listID = null,
+        ?string $place = null,
+        ?string $placeCountry = null,
+        ?string $pointRadius = null,
+        ?string $boundingBox = null,
+        ?string $advancedQuery = null,
+        ?string $fields = null,
+        ?string $omit = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets {
         $params = Util::removeNulls(
-            [
+            ['omit' => $omit, 'fields' => $fields, 'advancedQuery' => $advancedQuery, 'boundingBox' => $boundingBox, 'pointRadius' => $pointRadius, 'placeCountry' => $placeCountry, 'place' => $place, 'listID' => $listID, 'keywords' => $keywords, 'minLikes' => $minLikes, 'queryType' => $queryType, 'mode' => $mode,
                 'anyWords' => $anyWords,
                 'blueVerifiedOnly' => $blueVerifiedOnly,
                 'cardName' => $cardName,
@@ -482,6 +545,11 @@ final class TweetsService implements TweetsContract
      * @param bool $verifiedOnly only return tweets from verified authors
      * @param string $within set the radius for the near filter
      * @param string $withinTime match Tweets inside a recent time window
+     * @param string|null $after Legacy cursor alias. Prefer cursor.
+     * @param bool|null $includeHidden Complete mode only. Adds the replies the post's author hid, each with hiddenByAuthor true. They count toward limit like any reply. A paged read answers 400. Get its hidden replies from GET /x/tweets/{id}/hidden-replies.
+     * @param int|null $minLikes Minimum likes. Its aliases are minFaves, min_likes & min_faves.
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -544,10 +612,15 @@ final class TweetsService implements TweetsContract
         ?bool $verifiedOnly = null,
         ?string $within = null,
         ?string $withinTime = null,
+        ?string $after = null,
+        ?bool $includeHidden = null,
+        ?int $minLikes = null,
+        ?string $fields = null,
+        ?string $omit = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetGetRepliesResponse {
         $params = Util::removeNulls(
-            [
+            ['omit' => $omit, 'fields' => $fields, 'minLikes' => $minLikes, 'includeHidden' => $includeHidden, 'after' => $after,
                 'anyWords' => $anyWords,
                 'blueVerifiedOnly' => $blueVerifiedOnly,
                 'cardName' => $cardName,
@@ -635,6 +708,14 @@ final class TweetsService implements TweetsContract
      * @param string $usernameContains match a username substring, ignoring case
      * @param bool $verifiedOnly only return verified profiles
      * @param string $verifiedType match the verification type exactly, ignoring case
+     * @param bool|null $includeRetweetTimestamp look up repost event times
+     * @param bool|null $blueVerifiedOnly Only return profiles X marks as blue verified. X marks many business & government accounts blue too. Use verifiedType for 1 badge type.
+     * @param bool|null $hasEmail only return profiles that publish an email
+     * @param bool|null $businessEmailOnly only return profiles that publish an email outside free webmail, such as Gmail
+     * @param string|null $emailDomains Only return profiles with an email at one of these domains. Separate domains with commas. Subdomains match.
+     * @param bool|null $enrichProfiles Add each row's full profile, as GET /x/users/{id} returns it. Pages take several seconds longer.
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -657,10 +738,18 @@ final class TweetsService implements TweetsContract
         ?string $usernameContains = null,
         ?bool $verifiedOnly = null,
         ?string $verifiedType = null,
+        ?bool $includeRetweetTimestamp = null,
+        ?bool $blueVerifiedOnly = null,
+        ?bool $hasEmail = null,
+        ?bool $businessEmailOnly = null,
+        ?string $emailDomains = null,
+        ?bool $enrichProfiles = null,
+        ?string $fields = null,
+        ?string $omit = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers {
         $params = Util::removeNulls(
-            [
+            ['omit' => $omit, 'fields' => $fields, 'enrichProfiles' => $enrichProfiles, 'emailDomains' => $emailDomains, 'businessEmailOnly' => $businessEmailOnly, 'hasEmail' => $hasEmail, 'blueVerifiedOnly' => $blueVerifiedOnly, 'includeRetweetTimestamp' => $includeRetweetTimestamp,
                 'bioContains' => $bioContains,
                 'cursor' => $cursor,
                 'hasLocation' => $hasLocation,
@@ -726,6 +815,13 @@ final class TweetsService implements TweetsContract
      * @param string $untilDate end date in YYYY-MM-DD format
      * @param string $url URL substring or domain filter
      * @param bool $verifiedOnly only return tweets from verified authors
+     * @param int|null $minLikes Minimum likes. Its aliases are minFaves, min_likes & min_faves.
+     * @param string|null $sinceID Return Tweets whose IDs exceed this ID. Searches accept `since_id` & `max_id` bounds.
+     * @param string|null $maxID return Tweets at or below this ID
+     * @param string|null $withinTime Keeps Tweets from a recent window, such as 90m or 7d. Use a whole number & s, m, h or d.
+     * @param bool|null $nativeRetweets only return native reposts
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -766,10 +862,17 @@ final class TweetsService implements TweetsContract
         ?string $untilDate = null,
         ?string $url = null,
         ?bool $verifiedOnly = null,
+        ?int $minLikes = null,
+        ?string $sinceID = null,
+        ?string $maxID = null,
+        ?string $withinTime = null,
+        ?bool $nativeRetweets = null,
+        ?string $fields = null,
+        ?string $omit = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets {
         $params = Util::removeNulls(
-            [
+            ['omit' => $omit, 'fields' => $fields, 'nativeRetweets' => $nativeRetweets, 'withinTime' => $withinTime, 'maxID' => $maxID, 'sinceID' => $sinceID, 'minLikes' => $minLikes,
                 'anyWords' => $anyWords,
                 'blueVerifiedOnly' => $blueVerifiedOnly,
                 'cashtags' => $cashtags,
@@ -877,6 +980,11 @@ final class TweetsService implements TweetsContract
      * @param bool $verifiedOnly only return tweets from verified authors
      * @param string $within set the radius for the near filter
      * @param string $withinTime match Tweets inside a recent time window
+     * @param int|null $minLikes Minimum likes. Its aliases are minFaves, min_likes & min_faves.
+     * @param string|null $textOnlyTerms keeps a post only when at least 1 of these words or quoted phrases appears outside the author's name and username, such as in its text, a link, its card or a quoted post
+     * @param string|null $keywords words the Tweets must match, in X search syntax
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -941,10 +1049,15 @@ final class TweetsService implements TweetsContract
         ?bool $verifiedOnly = null,
         ?string $within = null,
         ?string $withinTime = null,
+        ?int $minLikes = null,
+        ?string $textOnlyTerms = null,
+        ?string $keywords = null,
+        ?string $fields = null,
+        ?string $omit = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets|TweetSearchCoverageResponse {
         $params = Util::removeNulls(
-            [
+            ['omit' => $omit, 'fields' => $fields, 'keywords' => $keywords, 'textOnlyTerms' => $textOnlyTerms, 'minLikes' => $minLikes,
                 'q' => $q,
                 'advancedQuery' => $advancedQuery,
                 'anyWords' => $anyWords,
@@ -1009,6 +1122,487 @@ final class TweetsService implements TweetsContract
 
         // @phpstan-ignore-next-line argument.type
         $response = $this->raw->search(params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Returns the tweets X ranks highest by 1 metric over the last day, week or month. Covers all of X unless you pick a country or a language. Pages hold up to 20 tweets, and the list ends at 100. Each tweet costs 1 credit.
+     *
+     * Top tweet lists come back reliably.
+     *
+     * @param Metric|value-of<Metric>|null $metric What to rank tweets by. Defaults to likes. Singular names work too, such as like.
+     * @param Window|value-of<Window>|null $window How far back to look. Defaults to day. Also takes 24h, 7d, 30d, daily, weekly and monthly.
+     * @param string|null $country Only tweets from 1 country, as a 2- or 3-letter ISO 3166 code, such as US or USA. Send country or language, not both.
+     * @param string|null $language Only tweets in 1 language, as a 2-letter code, such as en. Send country or language, not both.
+     * @param string|null $cursor Pagination cursor for collection results. Also read as next_cursor, next_token, pagination_token or continuation_token.
+     * @param int|null $pageSize Items per page (1-100, default 20). Source, filters or credits can return fewer. Follow next_cursor for more pages. Its aliases are limit, count, max_results, maxItems, max_items & per_page.
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function listTop(
+        Metric|string|null $metric = null,
+        Window|string|null $window = null,
+        ?string $country = null,
+        ?string $language = null,
+        ?string $cursor = null,
+        ?int $pageSize = null,
+        ?string $fields = null,
+        ?string $omit = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): PaginatedTweets2 {
+        $params = Util::removeNulls(
+            [
+                'metric' => $metric,
+                'window' => $window,
+                'country' => $country,
+                'language' => $language,
+                'cursor' => $cursor,
+                'pageSize' => $pageSize,
+                'fields' => $fields,
+                'omit' => $omit,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->listTop(params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Bookmarks a post through a connected X account. Only that account sees its bookmarks, and GET /x/bookmarks lists them.
+     *
+     * @param string $account X account identifier (@username or account ID)
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function bookmark(
+        string $id,
+        string $account,
+        RequestOptions|array|null $requestOptions = null,
+    ): XWriteAction {
+        $params = Util::removeNulls(
+            [
+                'account' => $account,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->bookmark($id, params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Removes a bookmark through a connected X account.
+     *
+     * @param string $account X account identifier (@username or account ID)
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function unbookmark(
+        string $id,
+        string $account,
+        RequestOptions|array|null $requestOptions = null,
+    ): XWriteAction {
+        $params = Util::removeNulls(
+            [
+                'account' => $account,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->unbookmark($id, params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Returns whether 1 account reposted the post. It finds recent reposts. An older repost can return false, with complete false. Each check costs 1 credit.
+     *
+     * @param string $user user ID, username with or without @, or profile URL
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function checkRepost(
+        string $id,
+        string $user,
+        ?string $fields = null,
+        ?string $omit = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): TweetCheckRepostResponse {
+        $params = Util::removeNulls(
+            [
+                'user' => $user,
+                'fields' => $fields,
+                'omit' => $omit,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->checkRepost($id, params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Returns the user IDs of a post's reposters, in the order & pages of /x/tweets/{id}/retweeters. Use it when you need IDs only. Each ID costs 1 credit. A post nobody reposted returns an empty list for free.
+     *
+     * @param string|null $cursor Pagination cursor for collection results. Also read as next_cursor, next_token, pagination_token or continuation_token.
+     * @param int|null $pageSize Profiles to request from this page (1-200, default 200). Source, filters or credits can return fewer. Follow next_cursor for more pages. Its aliases are limit, count, max_results, maxItems, max_items & per_page.
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function getRetweeterIds(
+        string $id,
+        ?string $cursor = null,
+        ?int $pageSize = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): PaginatedUserIDs {
+        $params = Util::removeNulls(
+            [
+                'cursor' => $cursor,
+                'pageSize' => $pageSize,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->getRetweeterIds($id, params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Returns the replies the post's author hid, oldest first, with the replies to them. A post without hidden replies returns an empty list.
+     *
+     * @param string|null $cursor Pagination cursor for collection results. Also read as next_cursor, next_token, pagination_token or continuation_token.
+     * @param int|null $pageSize Items per page (1-100, default 20). Source, filters or credits can return fewer. Follow next_cursor for more pages. Its aliases are limit, count, max_results, maxItems, max_items & per_page.
+     * @param string|null $fromUser Filter by author username. Account searches include all of the account's posts & reposts.
+     * @param string|null $toUser filter replies sent to a username
+     * @param string|null $mentioning filter tweets mentioning a username
+     * @param string|null $language Filter by language. Its alias is `lang`. Language filters work for every language X tags.
+     * @param string|null $sinceDate Start date in YYYY-MM-DD format, as a UTC day. A date means one thing in any common form.
+     * @param string|null $untilDate end date in YYYY-MM-DD format, as a UTC day, inclusive, so its own posts count
+     * @param \XTwitterScraper\X\Tweets\TweetGetHiddenRepliesParams\MediaType|value-of<\XTwitterScraper\X\Tweets\TweetGetHiddenRepliesParams\MediaType>|null $mediaType Filter media. Its aliases are has_video & has_media.
+     * @param int|null $minLikes Minimum likes. Its aliases are minFaves, min_likes & min_faves.
+     * @param int|null $minRetweets minimum retweets threshold
+     * @param int|null $minReplies minimum replies threshold
+     * @param int|null $minQuotes minimum quote count threshold
+     * @param int|null $minViews minimum view count threshold
+     * @param int|null $minBookmarks minimum bookmark count threshold
+     * @param int|null $maxFaves Maximum likes threshold. maxLikes & max_likes also work.
+     * @param int|null $maxRetweets maximum retweets threshold
+     * @param int|null $maxReplies maximum replies threshold
+     * @param int|null $maxQuotes maximum quotes threshold
+     * @param bool|null $blueVerifiedOnly only return tweets from Blue-verified authors
+     * @param string|null $sinceID Return Tweets whose IDs exceed this ID. Searches accept `since_id` & `max_id` bounds.
+     * @param string|null $maxID return Tweets at or below this ID
+     * @param string|null $withinTime Keeps Tweets from a recent window, such as 90m or 7d. Use a whole number & s, m, h or d.
+     * @param bool|null $nativeRetweets only return native reposts
+     * @param bool|null $verifiedOnly only return tweets from verified authors
+     * @param \XTwitterScraper\X\Tweets\TweetGetHiddenRepliesParams\Replies|value-of<\XTwitterScraper\X\Tweets\TweetGetHiddenRepliesParams\Replies>|null $replies Reply mode. Exclude keeps own-thread replies.
+     * @param \XTwitterScraper\X\Tweets\TweetGetHiddenRepliesParams\Retweets|value-of<\XTwitterScraper\X\Tweets\TweetGetHiddenRepliesParams\Retweets>|null $retweets only when the caller requests a repost mode
+     * @param \XTwitterScraper\X\Tweets\TweetGetHiddenRepliesParams\Quotes|value-of<\XTwitterScraper\X\Tweets\TweetGetHiddenRepliesParams\Quotes>|null $quotes only when the caller requests a quote mode
+     * @param string|null $exactPhrase match this exact phrase, word for word
+     * @param string|null $excludeWords Words or quoted phrases to exclude. Separate with spaces, commas, or lines.
+     * @param string|null $anyWords Words or quoted phrases where any one can match. Separate with spaces, commas, or lines.
+     * @param string|null $hashtags hashtags separated by spaces, commas, or lines
+     * @param string|null $cashtags cashtags separated by spaces, commas, or lines
+     * @param string|null $url URL substring or domain filter
+     * @param string|null $conversationID conversation ID filter
+     * @param string|null $inReplyToTweetID only replies to this tweet ID
+     * @param string|null $quotesOfTweetID only quotes of this tweet ID
+     * @param string|null $retweetsOfTweetID only retweets of this tweet ID
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function getHiddenReplies(
+        string $id,
+        ?string $cursor = null,
+        ?int $pageSize = null,
+        ?string $fromUser = null,
+        ?string $toUser = null,
+        ?string $mentioning = null,
+        ?string $language = null,
+        ?string $sinceDate = null,
+        ?string $untilDate = null,
+        \XTwitterScraper\X\Tweets\TweetGetHiddenRepliesParams\MediaType|string|null $mediaType = null,
+        ?int $minLikes = null,
+        ?int $minRetweets = null,
+        ?int $minReplies = null,
+        ?int $minQuotes = null,
+        ?int $minViews = null,
+        ?int $minBookmarks = null,
+        ?int $maxFaves = null,
+        ?int $maxRetweets = null,
+        ?int $maxReplies = null,
+        ?int $maxQuotes = null,
+        ?bool $blueVerifiedOnly = null,
+        ?string $sinceID = null,
+        ?string $maxID = null,
+        ?string $withinTime = null,
+        ?bool $nativeRetweets = null,
+        ?bool $verifiedOnly = null,
+        \XTwitterScraper\X\Tweets\TweetGetHiddenRepliesParams\Replies|string|null $replies = null,
+        \XTwitterScraper\X\Tweets\TweetGetHiddenRepliesParams\Retweets|string|null $retweets = null,
+        \XTwitterScraper\X\Tweets\TweetGetHiddenRepliesParams\Quotes|string|null $quotes = null,
+        ?string $exactPhrase = null,
+        ?string $excludeWords = null,
+        ?string $anyWords = null,
+        ?string $hashtags = null,
+        ?string $cashtags = null,
+        ?string $url = null,
+        ?string $conversationID = null,
+        ?string $inReplyToTweetID = null,
+        ?string $quotesOfTweetID = null,
+        ?string $retweetsOfTweetID = null,
+        ?string $fields = null,
+        ?string $omit = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): PaginatedTweets2 {
+        $params = Util::removeNulls(
+            [
+                'cursor' => $cursor,
+                'pageSize' => $pageSize,
+                'fromUser' => $fromUser,
+                'toUser' => $toUser,
+                'mentioning' => $mentioning,
+                'language' => $language,
+                'sinceDate' => $sinceDate,
+                'untilDate' => $untilDate,
+                'mediaType' => $mediaType,
+                'minLikes' => $minLikes,
+                'minRetweets' => $minRetweets,
+                'minReplies' => $minReplies,
+                'minQuotes' => $minQuotes,
+                'minViews' => $minViews,
+                'minBookmarks' => $minBookmarks,
+                'maxFaves' => $maxFaves,
+                'maxRetweets' => $maxRetweets,
+                'maxReplies' => $maxReplies,
+                'maxQuotes' => $maxQuotes,
+                'blueVerifiedOnly' => $blueVerifiedOnly,
+                'sinceID' => $sinceID,
+                'maxID' => $maxID,
+                'withinTime' => $withinTime,
+                'nativeRetweets' => $nativeRetweets,
+                'verifiedOnly' => $verifiedOnly,
+                'replies' => $replies,
+                'retweets' => $retweets,
+                'quotes' => $quotes,
+                'exactPhrase' => $exactPhrase,
+                'excludeWords' => $excludeWords,
+                'anyWords' => $anyWords,
+                'hashtags' => $hashtags,
+                'cashtags' => $cashtags,
+                'url' => $url,
+                'conversationID' => $conversationID,
+                'inReplyToTweetID' => $inReplyToTweetID,
+                'quotesOfTweetID' => $quotesOfTweetID,
+                'retweetsOfTweetID' => $retweetsOfTweetID,
+                'fields' => $fields,
+                'omit' => $omit,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->getHiddenReplies($id, params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Returns X's own translation of 1 public tweet into the language you pick, with the links, mentions, and tags X places in the translated text.
+     *
+     * Posts & bios can be translated into your language.
+     *
+     * @param string $language Language code to translate into, such as `en`, `tr`, `pt-br`, or `zh-tw`. Upper and lower case both work.
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function translate(
+        string $id,
+        string $language,
+        ?string $fields = null,
+        ?string $omit = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): TweetTranslateResponse {
+        $params = Util::removeNulls(
+            [
+                'language' => $language,
+                'fields' => $fields,
+                'omit' => $omit,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->translate($id, params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Returns engagement insights for 1 tweet. They are engagements per hour since it went up, per view and per follower of its author, and how far it spread. Each report costs 1 credit, whatever it reads.
+     *
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function getInsights(
+        string $id,
+        ?string $fields = null,
+        ?string $omit = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): TweetGetInsightsResponse {
+        $params = Util::removeNulls(
+            [
+                'fields' => $fields,
+                'omit' => $omit,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->getInsights($id, params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Returns the HTML that X gives websites to embed 1 public tweet, with the tweet's link and author.
+     *
+     * @param Theme|value-of<Theme>|null $theme Color theme of the embed. X uses light when left out.
+     * @param bool|null $hideMedia set `true` to leave photos, videos, and link cards out
+     * @param bool|null $hideThread set `true` to leave the tweet this one replies to out
+     * @param bool|null $omitScript set `true` to leave the widget script tag out, for pages that load it once themselves
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function embed(
+        string $id,
+        Theme|string|null $theme = null,
+        ?bool $hideMedia = null,
+        ?bool $hideThread = null,
+        ?bool $omitScript = null,
+        ?string $fields = null,
+        ?string $omit = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): TweetEmbedResponse {
+        $params = Util::removeNulls(
+            [
+                'theme' => $theme,
+                'hideMedia' => $hideMedia,
+                'hideThread' => $hideThread,
+                'omitScript' => $omitScript,
+                'fields' => $fields,
+                'omit' => $omit,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->embed($id, params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Returns the caption tracks of 1 public tweet's videos. Each track has its language, name, timed cues, and full text. A tweet without video, or a video without captions, returns no track and costs nothing.
+     *
+     * Video subtitles come with timed cues.
+     *
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function getSubtitles(
+        string $id,
+        ?string $fields = null,
+        ?string $omit = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): TweetGetSubtitlesResponse {
+        $params = Util::removeNulls(
+            [
+                'fields' => $fields,
+                'omit' => $omit,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->getSubtitles($id, params: $params, requestOptions: $requestOptions);
+
+        return $response->parse();
+    }
+
+    /**
+     * @api
+     *
+     * Returns where each t.co link leads, as X's own redirect says. Xquik reads the redirect and never visits the target site. A link t.co does not have comes back without `resolvedUrl` and costs nothing. A link X does not answer for in time comes back in `unprocessedUrls`, free. Each resolved link costs 1 credit.
+     *
+     * @param string $urls 1 to 100 links of the form `https://t.co/Xe1nm2pkSX`, separated by commas. Any other link is refused. A link sent twice counts once. A longer URL fails at the edge before Xquik reads it.
+     * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function resolveLinks(
+        string $urls,
+        ?string $fields = null,
+        ?string $omit = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): TweetResolveLinksResponse {
+        $params = Util::removeNulls(
+            [
+                'urls' => $urls,
+                'fields' => $fields,
+                'omit' => $omit,
+            ],
+        );
+
+        // @phpstan-ignore-next-line argument.type
+        $response = $this->raw->resolveLinks(params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

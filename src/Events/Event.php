@@ -28,6 +28,12 @@ use XTwitterScraper\EventType;
  *   keywordMonitorID?: string|null,
  *   query?: string|null,
  *   username?: string|null,
+ *   xUserID?: string|null,
+ *   monitorName?: string|null,
+ *   postID?: string|null,
+ *   postUrl?: string|null,
+ *   authorID?: string|null,
+ *   authorUsername?: string|null,
  * }
  */
 final class Event implements BaseModel
@@ -86,6 +92,42 @@ final class Event implements BaseModel
     public ?string $username;
 
     /**
+     * Permanent X user ID of the monitored account, present for account monitor events. It stays the same after a username change.
+     */
+    #[Optional('xUserId')]
+    public ?string $xUserID;
+
+    /**
+     * Your monitor label when Xquik created the event, present when set. A rename leaves the event's label unchanged.
+     */
+    #[Optional]
+    public ?string $monitorName;
+
+    /**
+     * ID of the monitored post, present for post events.
+     */
+    #[Optional('postId')]
+    public ?string $postID;
+
+    /**
+     * Link to the monitored post, present for post events.
+     */
+    #[Optional]
+    public ?string $postUrl;
+
+    /**
+     * Permanent X user ID of the monitored post's author, present for post events.
+     */
+    #[Optional('authorId')]
+    public ?string $authorID;
+
+    /**
+     * Username of the monitored post's author, present for post events.
+     */
+    #[Optional]
+    public ?string $authorUsername;
+
+    /**
      * `new Event()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -136,6 +178,12 @@ final class Event implements BaseModel
         ?string $keywordMonitorID = null,
         ?string $query = null,
         ?string $username = null,
+        ?string $xUserID = null,
+        ?string $monitorName = null,
+        ?string $postID = null,
+        ?string $postUrl = null,
+        ?string $authorID = null,
+        ?string $authorUsername = null
     ): self {
         $self = new self;
 
@@ -149,6 +197,18 @@ final class Event implements BaseModel
         null !== $keywordMonitorID && $self['keywordMonitorID'] = $keywordMonitorID;
         null !== $query && $self['query'] = $query;
         null !== $username && $self['username'] = $username;
+
+        null !== $xUserID && $self['xUserID'] = $xUserID;
+
+        null !== $monitorName && $self['monitorName'] = $monitorName;
+
+        null !== $postID && $self['postID'] = $postID;
+
+        null !== $postUrl && $self['postUrl'] = $postUrl;
+
+        null !== $authorID && $self['authorID'] = $authorID;
+
+        null !== $authorUsername && $self['authorUsername'] = $authorUsername;
 
         return $self;
     }
@@ -246,6 +306,72 @@ final class Event implements BaseModel
     {
         $self = clone $this;
         $self['username'] = $username;
+
+        return $self;
+    }
+
+    /**
+     * Permanent X user ID of the monitored account, present for account monitor events. It stays the same after a username change.
+     */
+    public function withXUserID(?string $xUserID): self
+    {
+        $self = clone $this;
+        $self['xUserID'] = $xUserID;
+
+        return $self;
+    }
+
+    /**
+     * Your monitor label when Xquik created the event, present when set. A rename leaves the event's label unchanged.
+     */
+    public function withMonitorName(?string $monitorName): self
+    {
+        $self = clone $this;
+        $self['monitorName'] = $monitorName;
+
+        return $self;
+    }
+
+    /**
+     * ID of the monitored post, present for post events.
+     */
+    public function withPostID(?string $postID): self
+    {
+        $self = clone $this;
+        $self['postID'] = $postID;
+
+        return $self;
+    }
+
+    /**
+     * Link to the monitored post, present for post events.
+     */
+    public function withPostUrl(?string $postUrl): self
+    {
+        $self = clone $this;
+        $self['postUrl'] = $postUrl;
+
+        return $self;
+    }
+
+    /**
+     * Permanent X user ID of the monitored post's author, present for post events.
+     */
+    public function withAuthorID(?string $authorID): self
+    {
+        $self = clone $this;
+        $self['authorID'] = $authorID;
+
+        return $self;
+    }
+
+    /**
+     * Username of the monitored post's author, present for post events.
+     */
+    public function withAuthorUsername(?string $authorUsername): self
+    {
+        $self = clone $this;
+        $self['authorUsername'] = $authorUsername;
 
         return $self;
     }

@@ -8,15 +8,18 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Monitors;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-import-type MonitorShape from \XTwitterScraper\Monitors\Monitor
+ * @phpstan-import-type MonitorShape from Monitor
  *
  * @phpstan-type MonitorListResponseShape = array{
- *   monitors: list<Monitor|MonitorShape>, total: int
+ *   monitors: list<Monitor|MonitorShape>, total: int,
+ *   hasMore?: bool|null,
+ *   nextCursor?: string|null,
  * }
  */
 final class MonitorListResponse implements BaseModel
@@ -30,6 +33,12 @@ final class MonitorListResponse implements BaseModel
 
     #[Required]
     public int $total;
+
+    #[Optional]
+    public ?bool $hasMore;
+
+    #[Optional]
+    public ?string $nextCursor;
 
     /**
      * `new MonitorListResponse()` is missing required properties by the API.
@@ -57,12 +66,16 @@ final class MonitorListResponse implements BaseModel
      *
      * @param list<Monitor|MonitorShape> $monitors
      */
-    public static function with(array $monitors, int $total): self
+    public static function with(array $monitors, int $total, ?bool $hasMore = null, ?string $nextCursor = null): self
     {
         $self = new self;
 
         $self['monitors'] = $monitors;
         $self['total'] = $total;
+
+        null !== $hasMore && $self['hasMore'] = $hasMore;
+
+        null !== $nextCursor && $self['nextCursor'] = $nextCursor;
 
         return $self;
     }
@@ -82,6 +95,22 @@ final class MonitorListResponse implements BaseModel
     {
         $self = clone $this;
         $self['total'] = $total;
+
+        return $self;
+    }
+
+    public function withHasMore(?bool $hasMore): self
+    {
+        $self = clone $this;
+        $self['hasMore'] = $hasMore;
+
+        return $self;
+    }
+
+    public function withNextCursor(?string $nextCursor): self
+    {
+        $self = clone $this;
+        $self['nextCursor'] = $nextCursor;
 
         return $self;
     }

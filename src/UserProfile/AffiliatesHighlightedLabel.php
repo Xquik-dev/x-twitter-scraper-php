@@ -7,6 +7,7 @@ namespace XTwitterScraper\UserProfile;
 use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\UserAuxiliaryLabel;
 
 /**
  * Organization affiliation label shown on an X profile.
@@ -18,6 +19,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   urlType?: string|null,
  *   userLabelDisplayType?: string|null,
  *   userLabelType?: string|null,
+ *   auxiliaryLabels?: list<UserAuxiliaryLabel|array<string,mixed>>|null,
+ *   longDescription?: array<string,mixed>|null,
  * }
  */
 final class AffiliatesHighlightedLabel implements BaseModel
@@ -43,6 +46,22 @@ final class AffiliatesHighlightedLabel implements BaseModel
     #[Optional]
     public ?string $userLabelType;
 
+    /**
+     * More labels X shows beside the affiliation, such as an automated account's owner.
+     *
+     * @var list<UserAuxiliaryLabel>|null $auxiliaryLabels
+     */
+    #[Optional(list: UserAuxiliaryLabel::class)]
+    public ?array $auxiliaryLabels;
+
+    /**
+     * Public text, ranges, references, and mention data.
+     *
+     * @var array<string,mixed>|null $longDescription
+     */
+    #[Optional(map: 'mixed')]
+    public ?array $longDescription;
+
     public function __construct()
     {
         $this->initialize();
@@ -52,6 +71,9 @@ final class AffiliatesHighlightedLabel implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param list<UserAuxiliaryLabel|array<string,mixed>>|null $auxiliaryLabels
+     * @param array<string,mixed>|null $longDescription
      */
     public static function with(
         ?string $badgeURL = null,
@@ -60,6 +82,8 @@ final class AffiliatesHighlightedLabel implements BaseModel
         ?string $urlType = null,
         ?string $userLabelDisplayType = null,
         ?string $userLabelType = null,
+        ?array $auxiliaryLabels = null,
+        ?array $longDescription = null
     ): self {
         $self = new self;
 
@@ -69,6 +93,10 @@ final class AffiliatesHighlightedLabel implements BaseModel
         null !== $urlType && $self['urlType'] = $urlType;
         null !== $userLabelDisplayType && $self['userLabelDisplayType'] = $userLabelDisplayType;
         null !== $userLabelType && $self['userLabelType'] = $userLabelType;
+
+        null !== $auxiliaryLabels && $self['auxiliaryLabels'] = $auxiliaryLabels;
+
+        null !== $longDescription && $self['longDescription'] = $longDescription;
 
         return $self;
     }
@@ -117,6 +145,32 @@ final class AffiliatesHighlightedLabel implements BaseModel
     {
         $self = clone $this;
         $self['userLabelType'] = $userLabelType;
+
+        return $self;
+    }
+
+    /**
+     * More labels X shows beside the affiliation, such as an automated account's owner.
+     *
+     * @param list<UserAuxiliaryLabel|array<string,mixed>>|null $auxiliaryLabels
+     */
+    public function withAuxiliaryLabels(?array $auxiliaryLabels): self
+    {
+        $self = clone $this;
+        $self['auxiliaryLabels'] = $auxiliaryLabels;
+
+        return $self;
+    }
+
+    /**
+     * Public text, ranges, references, and mention data.
+     *
+     * @param array<string,mixed>|null $longDescription
+     */
+    public function withLongDescription(?array $longDescription): self
+    {
+        $self = clone $this;
+        $self['longDescription'] = $longDescription;
 
         return $self;
     }

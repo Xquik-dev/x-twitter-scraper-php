@@ -22,22 +22,24 @@ use XTwitterScraper\Extractions\ExtractionEstimateCostParams\RelationTarget;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Replies;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Retweets;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Scope;
+use XTwitterScraper\Extractions\ExtractionEstimateCostParams\SinceTime;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Sort;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\Target;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams\ToolType;
+use XTwitterScraper\Extractions\ExtractionEstimateCostParams\UntilTime;
 
 /**
  * Estimate extraction cost.
  *
  * @see XTwitterScraper\Services\ExtractionsService::estimateCost()
  *
- * @phpstan-import-type SinceTimeVariants from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\SinceTime
- * @phpstan-import-type TargetVariants from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\Target
- * @phpstan-import-type UntilTimeVariants from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\UntilTime
- * @phpstan-import-type RelationTargetShape from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\RelationTarget
- * @phpstan-import-type SinceTimeShape from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\SinceTime
- * @phpstan-import-type TargetShape from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\Target
- * @phpstan-import-type UntilTimeShape from \XTwitterScraper\Extractions\ExtractionEstimateCostParams\UntilTime
+ * @phpstan-import-type SinceTimeVariants from SinceTime
+ * @phpstan-import-type TargetVariants from Target
+ * @phpstan-import-type UntilTimeVariants from UntilTime
+ * @phpstan-import-type RelationTargetShape from RelationTarget
+ * @phpstan-import-type SinceTimeShape from SinceTime
+ * @phpstan-import-type TargetShape from Target
+ * @phpstan-import-type UntilTimeShape from UntilTime
  *
  * @phpstan-type ExtractionEstimateCostParamsShape = array{
  *   toolType: ToolType|value-of<ToolType>,
@@ -138,6 +140,11 @@ use XTwitterScraper\Extractions\ExtractionEstimateCostParams\ToolType;
  *   verifiedType?: string|null,
  *   within?: string|null,
  *   withinTime?: string|null,
+ *   enrichProfiles?: bool|null,
+ *   textOnlyTerms?: string|null,
+ *   hasEmail?: bool|null,
+ *   businessEmailOnly?: bool|null,
+ *   emailDomains?: string|null,
  * }
  */
 final class ExtractionEstimateCostParams implements BaseModel
@@ -767,6 +774,36 @@ final class ExtractionEstimateCostParams implements BaseModel
     public ?string $withinTime;
 
     /**
+     * Add each user's full profile to follower_explorer, following_explorer, verified_follower_explorer, people_search & repost_extractor rows. Jobs take longer.
+     */
+    #[Optional]
+    public ?bool $enrichProfiles;
+
+    /**
+     * Collects a post only when 1 of these words or quoted phrases is in its text, a link, its card or a quoted post. The author's name and username don't count.
+     */
+    #[Optional]
+    public ?string $textOnlyTerms;
+
+    /**
+     * Require an email the profile publishes.
+     */
+    #[Optional]
+    public ?bool $hasEmail;
+
+    /**
+     * Require an email the profile publishes outside free webmail, such as Gmail.
+     */
+    #[Optional]
+    public ?bool $businessEmailOnly;
+
+    /**
+     * Require an email at one of these domains. Separate domains with commas. Subdomains match.
+     */
+    #[Optional]
+    public ?string $emailDomains;
+
+    /**
      * `new ExtractionEstimateCostParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -909,6 +946,11 @@ final class ExtractionEstimateCostParams implements BaseModel
         ?string $verifiedType = null,
         ?string $within = null,
         ?string $withinTime = null,
+        ?bool $enrichProfiles = null,
+        ?string $textOnlyTerms = null,
+        ?bool $hasEmail = null,
+        ?bool $businessEmailOnly = null,
+        ?string $emailDomains = null
     ): self {
         $self = new self;
 
@@ -1011,6 +1053,16 @@ final class ExtractionEstimateCostParams implements BaseModel
         null !== $verifiedType && $self['verifiedType'] = $verifiedType;
         null !== $within && $self['within'] = $within;
         null !== $withinTime && $self['withinTime'] = $withinTime;
+
+        null !== $enrichProfiles && $self['enrichProfiles'] = $enrichProfiles;
+
+        null !== $textOnlyTerms && $self['textOnlyTerms'] = $textOnlyTerms;
+
+        null !== $hasEmail && $self['hasEmail'] = $hasEmail;
+
+        null !== $businessEmailOnly && $self['businessEmailOnly'] = $businessEmailOnly;
+
+        null !== $emailDomains && $self['emailDomains'] = $emailDomains;
 
         return $self;
     }
@@ -2122,6 +2174,61 @@ final class ExtractionEstimateCostParams implements BaseModel
     {
         $self = clone $this;
         $self['withinTime'] = $withinTime;
+
+        return $self;
+    }
+
+    /**
+     * Add each user's full profile to follower_explorer, following_explorer, verified_follower_explorer, people_search & repost_extractor rows. Jobs take longer.
+     */
+    public function withEnrichProfiles(?bool $enrichProfiles): self
+    {
+        $self = clone $this;
+        $self['enrichProfiles'] = $enrichProfiles;
+
+        return $self;
+    }
+
+    /**
+     * Collects a post only when 1 of these words or quoted phrases is in its text, a link, its card or a quoted post. The author's name and username don't count.
+     */
+    public function withTextOnlyTerms(?string $textOnlyTerms): self
+    {
+        $self = clone $this;
+        $self['textOnlyTerms'] = $textOnlyTerms;
+
+        return $self;
+    }
+
+    /**
+     * Require an email the profile publishes.
+     */
+    public function withHasEmail(?bool $hasEmail): self
+    {
+        $self = clone $this;
+        $self['hasEmail'] = $hasEmail;
+
+        return $self;
+    }
+
+    /**
+     * Require an email the profile publishes outside free webmail, such as Gmail.
+     */
+    public function withBusinessEmailOnly(?bool $businessEmailOnly): self
+    {
+        $self = clone $this;
+        $self['businessEmailOnly'] = $businessEmailOnly;
+
+        return $self;
+    }
+
+    /**
+     * Require an email at one of these domains. Separate domains with commas. Subdomains match.
+     */
+    public function withEmailDomains(?string $emailDomains): self
+    {
+        $self = clone $this;
+        $self['emailDomains'] = $emailDomains;
 
         return $self;
     }

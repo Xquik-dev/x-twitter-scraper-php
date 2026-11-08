@@ -19,7 +19,7 @@ use XTwitterScraper\X\Bookmarks\BookmarkGetFoldersResponse;
 /**
  * Look up, search, and analyze individual tweets.
  *
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class BookmarksService implements BookmarksContract
 {
@@ -65,15 +65,23 @@ final class BookmarksService implements BookmarksContract
      *
      * Get bookmark folders
      *
+     * @param string|null $cursor Pagination cursor for collection results. Also read as next_cursor, next_token, pagination_token or continuation_token.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function retrieveFolders(
+        ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null
     ): BookmarkGetFoldersResponse {
+        $params = Util::removeNulls(
+            [
+                'cursor' => $cursor,
+            ],
+        );
+
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->retrieveFolders(requestOptions: $requestOptions);
+        $response = $this->raw->retrieveFolders(params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

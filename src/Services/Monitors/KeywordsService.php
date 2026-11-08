@@ -23,7 +23,7 @@ use XTwitterScraper\ServiceContracts\Monitors\KeywordsContract;
 /**
  * X account monitoring with 1-second checks.
  *
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class KeywordsService implements KeywordsContract
 {
@@ -47,6 +47,7 @@ final class KeywordsService implements KeywordsContract
      *
      * @param list<EventType|value-of<EventType>> $eventTypes array of event types to subscribe to
      * @param string $query X search query to monitor. Whitespace is normalized.
+     * @param string|null $name Your own label for the keyword monitor. Its events carry it as monitorName.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -54,10 +55,11 @@ final class KeywordsService implements KeywordsContract
     public function create(
         array $eventTypes,
         string $query,
+        ?string $name = null,
         RequestOptions|array|null $requestOptions = null,
     ): KeywordNewResponse {
         $params = Util::removeNulls(
-            ['eventTypes' => $eventTypes, 'query' => $query]
+            ['name' => $name, 'eventTypes' => $eventTypes, 'query' => $query]
         );
 
         // @phpstan-ignore-next-line argument.type
@@ -93,6 +95,7 @@ final class KeywordsService implements KeywordsContract
      *
      * @param string $id resource ID returned by the matching create or list endpoint
      * @param list<EventType|value-of<EventType>> $eventTypes array of event types to subscribe to
+     * @param string|null $name New label for the keyword monitor. Send null to remove it.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -101,10 +104,11 @@ final class KeywordsService implements KeywordsContract
         string $id,
         ?array $eventTypes = null,
         ?bool $isActive = null,
+        ?string $name = null,
         RequestOptions|array|null $requestOptions = null,
     ): KeywordUpdateResponse {
         $params = Util::removeNulls(
-            ['eventTypes' => $eventTypes, 'isActive' => $isActive]
+            ['name' => $name, 'eventTypes' => $eventTypes, 'isActive' => $isActive]
         );
 
         // @phpstan-ignore-next-line argument.type
@@ -118,15 +122,26 @@ final class KeywordsService implements KeywordsContract
      *
      * List keyword monitors
      *
+     * @param int|null $limit Maximum items per page, from 1 to 10,000. Default 200. Pass nextCursor as cursor for the next page.
+     * @param string|null $cursor Previous nextCursor. The after alias also works. Offset pagination is not supported.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function list(
+        ?int $limit = null,
+        ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null
     ): KeywordListResponse {
+        $params = Util::removeNulls(
+            [
+                'limit' => $limit,
+                'cursor' => $cursor,
+            ],
+        );
+
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->list(requestOptions: $requestOptions);
+        $response = $this->raw->list(params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

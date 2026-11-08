@@ -15,6 +15,7 @@ use XTwitterScraper\EventType;
 use XTwitterScraper\Monitors\Keywords\KeywordCreateParams;
 use XTwitterScraper\Monitors\Keywords\KeywordDeactivateResponse;
 use XTwitterScraper\Monitors\Keywords\KeywordGetResponse;
+use XTwitterScraper\Monitors\Keywords\KeywordListParams;
 use XTwitterScraper\Monitors\Keywords\KeywordListResponse;
 use XTwitterScraper\Monitors\Keywords\KeywordNewResponse;
 use XTwitterScraper\Monitors\Keywords\KeywordUpdateParams;
@@ -25,7 +26,7 @@ use XTwitterScraper\ServiceContracts\Monitors\KeywordsRawContract;
 /**
  * X account monitoring with 1-second checks.
  *
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class KeywordsRawService implements KeywordsRawContract
 {
@@ -133,6 +134,7 @@ final class KeywordsRawService implements KeywordsRawContract
      *
      * List keyword monitors
      *
+     * @param array<string,mixed>|KeywordListParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<KeywordListResponse>
@@ -140,13 +142,20 @@ final class KeywordsRawService implements KeywordsRawContract
      * @throws APIException
      */
     public function list(
+        array|KeywordListParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse {
+        [$parsed, $options] = KeywordListParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'get',
             path: 'monitors/keywords',
-            options: $requestOptions,
+            query: $parsed,
+            options: $options,
             convert: KeywordListResponse::class,
         );
     }

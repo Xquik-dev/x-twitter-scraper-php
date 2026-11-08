@@ -15,12 +15,13 @@ use XTwitterScraper\Styles\StyleAnalyzeParams;
 use XTwitterScraper\Styles\StyleCompareParams;
 use XTwitterScraper\Styles\StyleCompareResponse;
 use XTwitterScraper\Styles\StyleGetPerformanceResponse;
+use XTwitterScraper\Styles\StyleListParams;
 use XTwitterScraper\Styles\StyleListResponse;
 use XTwitterScraper\Styles\StyleProfile;
 use XTwitterScraper\Styles\StyleUpdateParams;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface StylesRawContract
 {
@@ -59,6 +60,7 @@ interface StylesRawContract
     /**
      * @api
      *
+     * @param array<string,mixed>|StyleListParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<StyleListResponse>
@@ -66,6 +68,7 @@ interface StylesRawContract
      * @throws APIException
      */
     public function list(
+        array|StyleListParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 

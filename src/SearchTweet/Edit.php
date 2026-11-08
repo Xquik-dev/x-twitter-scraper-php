@@ -12,7 +12,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * Edit history metadata returned by X.
  *
  * @phpstan-type EditShape = array{
- *   editableUntilMsecs?: string|null, editTweetIDs?: list<string>|null
+ *   editableUntilMsecs?: string|null, editTweetIDs?: list<string>|null,
+ *   initialTweetID?: string|null,
  * }
  */
 final class Edit implements BaseModel
@@ -26,6 +27,9 @@ final class Edit implements BaseModel
     /** @var list<string>|null $editTweetIDs */
     #[Optional('editTweetIds', list: 'string')]
     public ?array $editTweetIDs;
+
+    #[Optional('initialTweetId')]
+    public ?string $initialTweetID;
 
     public function __construct()
     {
@@ -41,12 +45,15 @@ final class Edit implements BaseModel
      */
     public static function with(
         ?string $editableUntilMsecs = null,
-        ?array $editTweetIDs = null
+        ?array $editTweetIDs = null,
+        ?string $initialTweetID = null
     ): self {
         $self = new self;
 
         null !== $editableUntilMsecs && $self['editableUntilMsecs'] = $editableUntilMsecs;
         null !== $editTweetIDs && $self['editTweetIDs'] = $editTweetIDs;
+
+        null !== $initialTweetID && $self['initialTweetID'] = $initialTweetID;
 
         return $self;
     }
@@ -66,6 +73,14 @@ final class Edit implements BaseModel
     {
         $self = clone $this;
         $self['editTweetIDs'] = $editTweetIDs;
+
+        return $self;
+    }
+
+    public function withInitialTweetID(?string $initialTweetID): self
+    {
+        $self = clone $this;
+        $self['initialTweetID'] = $initialTweetID;
 
         return $self;
     }

@@ -7,7 +7,9 @@ namespace XTwitterScraper\Radar\RadarItem;
 use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\Radar\RadarItem\Metadata\Sentiment;
 use XTwitterScraper\Radar\RadarItem\Metadata\SourceFormat;
+use XTwitterScraper\Radar\RadarItem\Metadata\Windows;
 
 /**
  * Source-specific fields. Shape varies per source:
@@ -45,6 +47,8 @@ use XTwitterScraper\Radar\RadarItem\Metadata\SourceFormat;
  *   sourceFormat?: null|SourceFormat|value-of<SourceFormat>,
  *   subreddit?: string|null,
  *   upvoteRatio?: float|null,
+ *   sentiment?: Sentiment|value-of<Sentiment>|null,
+ *   windows?: list<Windows|value-of<Windows>>|null,
  * }
  */
 final class Metadata implements BaseModel
@@ -87,6 +91,22 @@ final class Metadata implements BaseModel
     #[Optional]
     public ?float $upvoteRatio;
 
+    /**
+     * Tone of an English post title, from the VADER word list.
+     *
+     * @var value-of<Sentiment>|null $sentiment
+     */
+    #[Optional(enum: Sentiment::class)]
+    public ?string $sentiment;
+
+    /**
+     * Reddit lists the post ranks in. now is the popular feed, and the rest are top lists of that window.
+     *
+     * @var list<value-of<Windows>>|null $windows
+     */
+    #[Optional(list: Windows::class)]
+    public ?array $windows;
+
     public function __construct()
     {
         $this->initialize();
@@ -98,6 +118,8 @@ final class Metadata implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param SourceFormat|value-of<SourceFormat>|null $sourceFormat
+     * @param Sentiment|value-of<Sentiment>|null $sentiment
+     * @param list<Windows|value-of<Windows>>|null $windows
      */
     public static function with(
         ?string $author = null,
@@ -110,6 +132,8 @@ final class Metadata implements BaseModel
         SourceFormat|string|null $sourceFormat = null,
         ?string $subreddit = null,
         ?float $upvoteRatio = null,
+        Sentiment|string|null $sentiment = null,
+        ?array $windows = null
     ): self {
         $self = new self;
 
@@ -123,6 +147,10 @@ final class Metadata implements BaseModel
         null !== $sourceFormat && $self['sourceFormat'] = $sourceFormat;
         null !== $subreddit && $self['subreddit'] = $subreddit;
         null !== $upvoteRatio && $self['upvoteRatio'] = $upvoteRatio;
+
+        null !== $sentiment && $self['sentiment'] = $sentiment;
+
+        null !== $windows && $self['windows'] = $windows;
 
         return $self;
     }
@@ -208,6 +236,32 @@ final class Metadata implements BaseModel
     {
         $self = clone $this;
         $self['upvoteRatio'] = $upvoteRatio;
+
+        return $self;
+    }
+
+    /**
+     * Tone of an English post title, from the VADER word list.
+     *
+     * @param Sentiment|value-of<Sentiment>|null $sentiment
+     */
+    public function withSentiment(Sentiment|string|null $sentiment): self
+    {
+        $self = clone $this;
+        $self['sentiment'] = $sentiment;
+
+        return $self;
+    }
+
+    /**
+     * Reddit lists the post ranks in. now is the popular feed, and the rest are top lists of that window.
+     *
+     * @param list<Windows|value-of<Windows>>|null $windows
+     */
+    public function withWindows(?array $windows): self
+    {
+        $self = clone $this;
+        $self['windows'] = $windows;
 
         return $self;
     }

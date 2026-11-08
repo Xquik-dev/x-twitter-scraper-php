@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\Media;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
@@ -19,7 +20,9 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\X\MediaService::upload()
  *
  * @phpstan-type MediaUploadParamsShape = array{
- *   account: string, url: string, idempotencyKey: string
+ *   account: string, url: string, idempotencyKey: string,
+ *   file?: string|null,
+ *   isLongVideo?: bool|null,
  * }
  */
 final class MediaUploadParams implements BaseModel
@@ -42,6 +45,18 @@ final class MediaUploadParams implements BaseModel
 
     #[Required]
     public string $idempotencyKey;
+
+    /**
+     * Media file to upload, up to 95 MB. A larger file gets 413 `media_too_large` before any account lookup.
+     */
+    #[Optional]
+    public ?string $file;
+
+    /**
+     * Set true only for video/mp4 multipart uploads longer than 140 seconds.
+     */
+    #[Optional('is_long_video')]
+    public ?bool $isLongVideo;
 
     /**
      * `new MediaUploadParams()` is missing required properties by the API.
@@ -70,13 +85,19 @@ final class MediaUploadParams implements BaseModel
     public static function with(
         string $account,
         string $url,
-        string $idempotencyKey
+        string $idempotencyKey,
+        ?string $file = null,
+        ?bool $isLongVideo = null
     ): self {
         $self = new self;
 
         $self['account'] = $account;
         $self['url'] = $url;
         $self['idempotencyKey'] = $idempotencyKey;
+
+        null !== $file && $self['file'] = $file;
+
+        null !== $isLongVideo && $self['isLongVideo'] = $isLongVideo;
 
         return $self;
     }
@@ -107,6 +128,28 @@ final class MediaUploadParams implements BaseModel
     {
         $self = clone $this;
         $self['idempotencyKey'] = $idempotencyKey;
+
+        return $self;
+    }
+
+    /**
+     * Media file to upload, up to 95 MB. A larger file gets 413 `media_too_large` before any account lookup.
+     */
+    public function withFile(?string $file): self
+    {
+        $self = clone $this;
+        $self['file'] = $file;
+
+        return $self;
+    }
+
+    /**
+     * Set true only for video/mp4 multipart uploads longer than 140 seconds.
+     */
+    public function withIsLongVideo(?bool $isLongVideo): self
+    {
+        $self = clone $this;
+        $self['isLongVideo'] = $isLongVideo;
 
         return $self;
     }

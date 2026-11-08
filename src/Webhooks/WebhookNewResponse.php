@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Webhooks;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
@@ -20,6 +21,7 @@ use XTwitterScraper\EventType;
  *   eventTypes: list<EventType|value-of<EventType>>,
  *   secret: string,
  *   url: string,
+ *   ignoredFields?: list<string>|null,
  * }
  */
 final class WebhookNewResponse implements BaseModel
@@ -49,6 +51,14 @@ final class WebhookNewResponse implements BaseModel
 
     #[Required]
     public string $url;
+
+    /**
+     * Fields the request sent that this route does not read, in the order sent. They changed nothing. The answer leaves this out when the route read every field.
+     *
+     * @var list<string>|null $ignoredFields
+     */
+    #[Optional(list: 'string')]
+    public ?array $ignoredFields;
 
     /**
      * `new WebhookNewResponse()` is missing required properties by the API.
@@ -82,6 +92,7 @@ final class WebhookNewResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param list<EventType|value-of<EventType>> $eventTypes
+     * @param list<string>|null $ignoredFields
      */
     public static function with(
         string $id,
@@ -89,6 +100,7 @@ final class WebhookNewResponse implements BaseModel
         array $eventTypes,
         string $secret,
         string $url,
+        ?array $ignoredFields = null
     ): self {
         $self = new self;
 
@@ -97,6 +109,8 @@ final class WebhookNewResponse implements BaseModel
         $self['eventTypes'] = $eventTypes;
         $self['secret'] = $secret;
         $self['url'] = $url;
+
+        null !== $ignoredFields && $self['ignoredFields'] = $ignoredFields;
 
         return $self;
     }
@@ -145,6 +159,19 @@ final class WebhookNewResponse implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * Fields the request sent that this route does not read, in the order sent. They changed nothing. The answer leaves this out when the route read every field.
+     *
+     * @param list<string>|null $ignoredFields
+     */
+    public function withIgnoredFields(?array $ignoredFields): self
+    {
+        $self = clone $this;
+        $self['ignoredFields'] = $ignoredFields;
 
         return $self;
     }

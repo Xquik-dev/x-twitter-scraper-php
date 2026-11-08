@@ -8,15 +8,18 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Webhooks;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
- * @phpstan-import-type DeliveryShape from \XTwitterScraper\Webhooks\Delivery
+ * @phpstan-import-type DeliveryShape from Delivery
  *
  * @phpstan-type WebhookListDeliveriesResponseShape = array{
- *   deliveries: list<Delivery|DeliveryShape>
+ *   deliveries: list<Delivery|DeliveryShape>,
+ *   hasMore?: bool|null,
+ *   nextCursor?: string|null,
  * }
  */
 final class WebhookListDeliveriesResponse implements BaseModel
@@ -27,6 +30,12 @@ final class WebhookListDeliveriesResponse implements BaseModel
     /** @var list<Delivery> $deliveries */
     #[Required(list: Delivery::class)]
     public array $deliveries;
+
+    #[Optional]
+    public ?bool $hasMore;
+
+    #[Optional]
+    public ?string $nextCursor;
 
     /**
      * `new WebhookListDeliveriesResponse()` is missing required properties by the API.
@@ -54,11 +63,15 @@ final class WebhookListDeliveriesResponse implements BaseModel
      *
      * @param list<Delivery|DeliveryShape> $deliveries
      */
-    public static function with(array $deliveries): self
+    public static function with(array $deliveries, ?bool $hasMore = null, ?string $nextCursor = null): self
     {
         $self = new self;
 
         $self['deliveries'] = $deliveries;
+
+        null !== $hasMore && $self['hasMore'] = $hasMore;
+
+        null !== $nextCursor && $self['nextCursor'] = $nextCursor;
 
         return $self;
     }
@@ -70,6 +83,22 @@ final class WebhookListDeliveriesResponse implements BaseModel
     {
         $self = clone $this;
         $self['deliveries'] = $deliveries;
+
+        return $self;
+    }
+
+    public function withHasMore(?bool $hasMore): self
+    {
+        $self = clone $this;
+        $self['hasMore'] = $hasMore;
+
+        return $self;
+    }
+
+    public function withNextCursor(?string $nextCursor): self
+    {
+        $self = clone $this;
+        $self['nextCursor'] = $nextCursor;
 
         return $self;
     }

@@ -11,18 +11,22 @@ namespace XTwitterScraper\Services\X;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\PaginatedLists;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\PaginatedUsers;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\ListsRawContract;
 use XTwitterScraper\X\Lists\ListRetrieveFollowersParams;
 use XTwitterScraper\X\Lists\ListRetrieveMembersParams;
+use XTwitterScraper\X\Lists\ListRetrieveParams;
+use XTwitterScraper\X\Lists\ListRetrieveResponse;
+use XTwitterScraper\X\Lists\ListRetrieveSearchParams;
 use XTwitterScraper\X\Lists\ListRetrieveTweetsParams;
 
 /**
  * X List followers, members, and tweets.
  *
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class ListsRawService implements ListsRawContract
 {
@@ -168,6 +172,69 @@ final class ListsRawService implements ListsRawContract
             query: $parsed,
             options: $options,
             convert: PaginatedTweets::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns 1 page of public Lists with member counts, banners & owner profiles. X may rank the Lists differently per request. Pass next_cursor as cursor for the next page.
+     *
+     * @param array<string,mixed>|ListRetrieveSearchParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<PaginatedLists>
+     *
+     * @throws APIException
+     */
+    public function retrieveSearch(
+        array|ListRetrieveSearchParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = ListRetrieveSearchParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: 'x/lists/search',
+            query: $parsed,
+            options: $options,
+            convert: PaginatedLists::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns 1 public X List as its page on X shows it. Accepts the List ID or the URL-encoded List URL, such as x.com/i/lists/4143408. A private List answers 404 list_not_found.
+     *
+     * @param array<string,mixed>|ListRetrieveParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<ListRetrieveResponse>
+     *
+     * @throws APIException
+     */
+    public function retrieve(
+        string $id,
+        array|ListRetrieveParams $params = [],
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = ListRetrieveParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: ['x/lists/%1$s', $id],
+            query: $parsed,
+            options: $options,
+            convert: ListRetrieveResponse::class,
         );
     }
 }

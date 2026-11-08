@@ -12,6 +12,7 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\EventType;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\Webhooks\Webhook;
+use XTwitterScraper\Webhooks\WebhookCreateTelegramLinkResponse;
 use XTwitterScraper\Webhooks\WebhookDeactivateResponse;
 use XTwitterScraper\Webhooks\WebhookListDeliveriesResponse;
 use XTwitterScraper\Webhooks\WebhookListResponse;
@@ -20,7 +21,7 @@ use XTwitterScraper\Webhooks\WebhookResumeResponse;
 use XTwitterScraper\Webhooks\WebhookTestResponse;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface WebhooksContract
 {
@@ -59,11 +60,15 @@ interface WebhooksContract
     /**
      * @api
      *
+     * @param int|null $limit Maximum items per page, from 1 to 10,000. Default 200. Pass nextCursor as cursor for the next page.
+     * @param string|null $cursor Previous nextCursor. The after alias also works. Offset pagination is not supported.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function list(
+        ?int $limit = null,
+        ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null
     ): WebhookListResponse;
 
@@ -84,12 +89,16 @@ interface WebhooksContract
      * @api
      *
      * @param string $id resource ID returned by the matching create or list endpoint
+     * @param int|null $limit Maximum deliveries per page, from 1 to 10,000. Default 100. Pass nextCursor as cursor for the next page.
+     * @param string|null $cursor Previous nextCursor. The after alias also works. Offset pagination is not supported.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function listDeliveries(
         string $id,
+        ?int $limit = null,
+        ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null
     ): WebhookListDeliveriesResponse;
 
@@ -118,4 +127,17 @@ interface WebhooksContract
         string $id,
         RequestOptions|array|null $requestOptions = null
     ): WebhookTestResponse;
+
+    /**
+     * @api
+     *
+     * @param list<EventType|value-of<EventType>>|null $eventTypes array of event types to subscribe to
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function createTelegramLink(
+        ?array $eventTypes = null,
+        RequestOptions|array|null $requestOptions = null,
+    ): WebhookCreateTelegramLinkResponse;
 }

@@ -13,13 +13,16 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Monitors\Monitor;
 use XTwitterScraper\Monitors\MonitorCreateParams;
 use XTwitterScraper\Monitors\MonitorDeactivateResponse;
+use XTwitterScraper\Monitors\MonitorListParams;
 use XTwitterScraper\Monitors\MonitorListResponse;
 use XTwitterScraper\Monitors\MonitorNewResponse;
 use XTwitterScraper\Monitors\MonitorUpdateParams;
+use XTwitterScraper\Monitors\MonitorUpsertByUsernameParams;
+use XTwitterScraper\Monitors\MonitorUpsertByUsernameResponse;
 use XTwitterScraper\RequestOptions;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface MonitorsRawContract
 {
@@ -73,6 +76,7 @@ interface MonitorsRawContract
     /**
      * @api
      *
+     * @param array<string,mixed>|MonitorListParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<MonitorListResponse>
@@ -80,6 +84,7 @@ interface MonitorsRawContract
      * @throws APIException
      */
     public function list(
+        array|MonitorListParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 
@@ -96,5 +101,21 @@ interface MonitorsRawContract
     public function deactivate(
         string $id,
         RequestOptions|array|null $requestOptions = null
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|MonitorUpsertByUsernameParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<MonitorUpsertByUsernameResponse>
+     *
+     * @throws APIException
+     */
+    public function upsertByUsername(
+        string $username,
+        array|MonitorUpsertByUsernameParams $params,
+        RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 }

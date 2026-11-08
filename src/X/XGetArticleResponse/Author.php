@@ -35,6 +35,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   protected?: bool|null,
  *   statusesCount?: int|null,
  *   url?: string|null,
+ *   profilePictureOriginal?: string|null,
  * }
  */
 final class Author implements BaseModel
@@ -97,6 +98,12 @@ final class Author implements BaseModel
     public ?string $url;
 
     /**
+     * The same profile picture at full size.
+     */
+    #[Optional]
+    public ?string $profilePictureOriginal;
+
+    /**
      * `new Author()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -139,6 +146,7 @@ final class Author implements BaseModel
         ?bool $protected = null,
         ?int $statusesCount = null,
         ?string $url = null,
+        ?string $profilePictureOriginal = null
     ): self {
         $self = new self;
 
@@ -161,6 +169,8 @@ final class Author implements BaseModel
         null !== $protected && $self['protected'] = $protected;
         null !== $statusesCount && $self['statusesCount'] = $statusesCount;
         null !== $url && $self['url'] = $url;
+
+        null !== $profilePictureOriginal && $self['profilePictureOriginal'] = $profilePictureOriginal;
 
         return $self;
     }
@@ -305,6 +315,17 @@ final class Author implements BaseModel
     {
         $self = clone $this;
         $self['url'] = $url;
+
+        return $self;
+    }
+
+    /**
+     * The same profile picture at full size.
+     */
+    public function withProfilePictureOriginal(?string $profilePictureOriginal): self
+    {
+        $self = clone $this;
+        $self['profilePictureOriginal'] = $profilePictureOriginal;
 
         return $self;
     }

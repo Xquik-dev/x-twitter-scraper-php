@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\Followers;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
@@ -18,6 +19,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   isFollowing: bool,
  *   sourceUsername: string,
  *   targetUsername: string,
+ *   sourceID?: string|null,
+ *   targetID?: string|null,
  * }
  */
 final class FollowerCheckResponse implements BaseModel
@@ -36,6 +39,18 @@ final class FollowerCheckResponse implements BaseModel
 
     #[Required]
     public string $targetUsername;
+
+    /**
+     * The source account's user ID, as X gives it.
+     */
+    #[Optional('sourceId')]
+    public ?string $sourceID;
+
+    /**
+     * The target account's user ID, as X gives it.
+     */
+    #[Optional('targetId')]
+    public ?string $targetID;
 
     /**
      * `new FollowerCheckResponse()` is missing required properties by the API.
@@ -72,6 +87,8 @@ final class FollowerCheckResponse implements BaseModel
         bool $isFollowing,
         string $sourceUsername,
         string $targetUsername,
+        ?string $sourceID = null,
+        ?string $targetID = null
     ): self {
         $self = new self;
 
@@ -79,6 +96,10 @@ final class FollowerCheckResponse implements BaseModel
         $self['isFollowing'] = $isFollowing;
         $self['sourceUsername'] = $sourceUsername;
         $self['targetUsername'] = $targetUsername;
+
+        null !== $sourceID && $self['sourceID'] = $sourceID;
+
+        null !== $targetID && $self['targetID'] = $targetID;
 
         return $self;
     }
@@ -111,6 +132,28 @@ final class FollowerCheckResponse implements BaseModel
     {
         $self = clone $this;
         $self['targetUsername'] = $targetUsername;
+
+        return $self;
+    }
+
+    /**
+     * The source account's user ID, as X gives it.
+     */
+    public function withSourceID(?string $sourceID): self
+    {
+        $self = clone $this;
+        $self['sourceID'] = $sourceID;
+
+        return $self;
+    }
+
+    /**
+     * The target account's user ID, as X gives it.
+     */
+    public function withTargetID(?string $targetID): self
+    {
+        $self = clone $this;
+        $self['targetID'] = $targetID;
 
         return $self;
     }

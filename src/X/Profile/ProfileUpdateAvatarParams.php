@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\Profile;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
@@ -19,7 +20,8 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\X\ProfileService::updateAvatar()
  *
  * @phpstan-type ProfileUpdateAvatarParamsShape = array{
- *   account: string, url: string, idempotencyKey: string
+ *   account: string, url: string, idempotencyKey: string,
+ *   file?: string|null,
  * }
  */
 final class ProfileUpdateAvatarParams implements BaseModel
@@ -42,6 +44,12 @@ final class ProfileUpdateAvatarParams implements BaseModel
 
     #[Required]
     public string $idempotencyKey;
+
+    /**
+     * Avatar image (max 95 MiB).
+     */
+    #[Optional]
+    public ?string $file;
 
     /**
      * `new ProfileUpdateAvatarParams()` is missing required properties by the API.
@@ -73,13 +81,16 @@ final class ProfileUpdateAvatarParams implements BaseModel
     public static function with(
         string $account,
         string $url,
-        string $idempotencyKey
+        string $idempotencyKey,
+        ?string $file = null
     ): self {
         $self = new self;
 
         $self['account'] = $account;
         $self['url'] = $url;
         $self['idempotencyKey'] = $idempotencyKey;
+
+        null !== $file && $self['file'] = $file;
 
         return $self;
     }
@@ -110,6 +121,17 @@ final class ProfileUpdateAvatarParams implements BaseModel
     {
         $self = clone $this;
         $self['idempotencyKey'] = $idempotencyKey;
+
+        return $self;
+    }
+
+    /**
+     * Avatar image (max 95 MiB).
+     */
+    public function withFile(?string $file): self
+    {
+        $self = clone $this;
+        $self['file'] = $file;
 
         return $self;
     }

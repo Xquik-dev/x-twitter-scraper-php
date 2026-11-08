@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\Users;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
@@ -16,7 +17,7 @@ use XTwitterScraper\UserProfile;
 /**
  * Batch user lookup results. Duplicate requested IDs are ignored while preserving first-seen order. unavailable_ids identifies processed IDs with no returned profile. unprocessed_ids identifies IDs skipped when available credits limit processing.
  *
- * @phpstan-import-type UserProfileShape from \XTwitterScraper\UserProfile
+ * @phpstan-import-type UserProfileShape from UserProfile
  *
  * @phpstan-type UserGetBatchResponseShape = array{
  *   hasNextPage: bool,
@@ -27,6 +28,8 @@ use XTwitterScraper\UserProfile;
  *   unavailableIDs: list<string>,
  *   unprocessedIDs: list<string>,
  *   users: list<UserProfile|UserProfileShape>,
+ *   filteredCount?: int|null,
+ *   failedIDs?: list<string>|null,
  * }
  */
 final class UserGetBatchResponse implements BaseModel
@@ -85,6 +88,20 @@ final class UserGetBatchResponse implements BaseModel
     public array $users;
 
     /**
+     * Profiles rejected by the requested filters.
+     */
+    #[Optional('filtered_count')]
+    public ?int $filteredCount;
+
+    /**
+     * Processed IDs that failed to load, in first-seen request order. They cost nothing. Retry them.
+     *
+     * @var list<string>|null $failedIDs
+     */
+    #[Optional('failed_ids', list: 'string')]
+    public ?array $failedIDs;
+
+    /**
      * `new UserGetBatchResponse()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -126,6 +143,7 @@ final class UserGetBatchResponse implements BaseModel
      * @param list<string> $unavailableIDs
      * @param list<string> $unprocessedIDs
      * @param list<UserProfile|UserProfileShape> $users
+     * @param list<string>|null $failedIDs
      */
     public static function with(
         string $nextCursor,
@@ -135,6 +153,8 @@ final class UserGetBatchResponse implements BaseModel
         array $unavailableIDs,
         array $unprocessedIDs,
         array $users,
+        ?int $filteredCount = null,
+        ?array $failedIDs = null
     ): self {
         $self = new self;
 
@@ -145,6 +165,10 @@ final class UserGetBatchResponse implements BaseModel
         $self['unavailableIDs'] = $unavailableIDs;
         $self['unprocessedIDs'] = $unprocessedIDs;
         $self['users'] = $users;
+
+        null !== $filteredCount && $self['filteredCount'] = $filteredCount;
+
+        null !== $failedIDs && $self['failedIDs'] = $failedIDs;
 
         return $self;
     }
@@ -237,6 +261,30 @@ final class UserGetBatchResponse implements BaseModel
     {
         $self = clone $this;
         $self['users'] = $users;
+
+        return $self;
+    }
+
+    /**
+     * Profiles rejected by the requested filters.
+     */
+    public function withFilteredCount(?int $filteredCount): self
+    {
+        $self = clone $this;
+        $self['filteredCount'] = $filteredCount;
+
+        return $self;
+    }
+
+    /**
+     * Processed IDs that failed to load, in first-seen request order. They cost nothing. Retry them.
+     *
+     * @param list<string>|null $failedIDs
+     */
+    public function withFailedIDs(?array $failedIDs): self
+    {
+        $self = clone $this;
+        $self['failedIDs'] = $failedIDs;
 
         return $self;
     }

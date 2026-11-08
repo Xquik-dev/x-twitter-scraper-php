@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Monitors;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
@@ -20,7 +21,8 @@ use XTwitterScraper\EventType;
  * @see XTwitterScraper\Services\MonitorsService::create()
  *
  * @phpstan-type MonitorCreateParamsShape = array{
- *   eventTypes: list<EventType|value-of<EventType>>, username: string
+ *   eventTypes: list<EventType|value-of<EventType>>, username: string,
+ *   name?: string|null,
  * }
  */
 final class MonitorCreateParams implements BaseModel
@@ -42,6 +44,12 @@ final class MonitorCreateParams implements BaseModel
      */
     #[Required]
     public string $username;
+
+    /**
+     * Your label for the monitor. Its events carry it as monitorName. Xquik normalizes whitespace.
+     */
+    #[Optional]
+    public ?string $name;
 
     /**
      * `new MonitorCreateParams()` is missing required properties by the API.
@@ -69,12 +77,14 @@ final class MonitorCreateParams implements BaseModel
      *
      * @param list<EventType|value-of<EventType>> $eventTypes
      */
-    public static function with(array $eventTypes, string $username): self
+    public static function with(array $eventTypes, string $username, ?string $name = null): self
     {
         $self = new self;
 
         $self['eventTypes'] = $eventTypes;
         $self['username'] = $username;
+
+        null !== $name && $self['name'] = $name;
 
         return $self;
     }
@@ -99,6 +109,17 @@ final class MonitorCreateParams implements BaseModel
     {
         $self = clone $this;
         $self['username'] = $username;
+
+        return $self;
+    }
+
+    /**
+     * Your label for the monitor. Its events carry it as monitorName. Xquik normalizes whitespace.
+     */
+    public function withName(?string $name): self
+    {
+        $self = clone $this;
+        $self['name'] = $name;
 
         return $self;
     }

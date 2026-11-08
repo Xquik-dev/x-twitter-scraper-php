@@ -14,9 +14,10 @@ use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Bookmarks\BookmarkGetFoldersResponse;
 use XTwitterScraper\X\Bookmarks\BookmarkListParams;
+use XTwitterScraper\X\Bookmarks\BookmarkRetrieveFoldersParams;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface BookmarksRawContract
 {
@@ -38,6 +39,7 @@ interface BookmarksRawContract
     /**
      * @api
      *
+     * @param array<string,mixed>|BookmarkRetrieveFoldersParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BookmarkGetFoldersResponse>
@@ -45,6 +47,7 @@ interface BookmarksRawContract
      * @throws APIException
      */
     public function retrieveFolders(
+        array|BookmarkRetrieveFoldersParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 }

@@ -1,0 +1,99 @@
+<?php
+
+// SPDX-FileCopyrightText: 2026 Xquik contributors
+//
+// SPDX-License-Identifier: Apache-2.0
+
+declare(strict_types=1);
+
+namespace XTwitterScraper;
+
+use XTwitterScraper\Core\Attributes\Required;
+use XTwitterScraper\Core\Concerns\SdkModel;
+use XTwitterScraper\Core\Contracts\BaseModel;
+
+/**
+ * @phpstan-type XWriteActionRequestShape = array{
+ *   hash: string|null,
+ *   payload: array<string,mixed>|null,
+ * }
+ */
+final class XWriteActionRequest implements BaseModel
+{
+    /** @use SdkModel<XWriteActionRequestShape> */
+    use SdkModel;
+
+    /**
+     * Stable hash of account, action, target, and payload.
+     */
+    #[Required]
+    public ?string $hash;
+
+    /**
+     * Exact sanitized payload dispatched for this action.
+     *
+     * @var array<string,mixed>|null $payload
+     */
+    #[Required(map: 'mixed')]
+    public ?array $payload;
+
+    /**
+     * `new XWriteActionRequest()` is missing required properties by the API.
+     *
+     * To enforce required parameters use
+     * ```
+     * XWriteActionRequest::with(hash: ..., payload: ...)
+     * ```
+     *
+     * Otherwise ensure the following setters are called
+     *
+     * ```
+     * (new XWriteActionRequest)->withHash(...)->withPayload(...)
+     * ```
+     */
+    public function __construct()
+    {
+        $this->initialize();
+    }
+
+    /**
+     * Construct an instance from the required parameters.
+     *
+     * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param array<string,mixed>|null $payload
+     */
+    public static function with(?string $hash, ?array $payload): self
+    {
+        $self = new self;
+
+        $self['hash'] = $hash;
+        $self['payload'] = $payload;
+
+        return $self;
+    }
+
+    /**
+     * Stable hash of account, action, target, and payload.
+     */
+    public function withHash(?string $hash): self
+    {
+        $self = clone $this;
+        $self['hash'] = $hash;
+
+        return $self;
+    }
+
+    /**
+     * Exact sanitized payload dispatched for this action.
+     *
+     * @param array<string,mixed>|null $payload
+     */
+    public function withPayload(?array $payload): self
+    {
+        $self = clone $this;
+        $self['payload'] = $payload;
+
+        return $self;
+    }
+}

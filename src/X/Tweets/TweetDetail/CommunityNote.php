@@ -19,6 +19,9 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   subtitle?: string|null,
  *   title?: string|null,
  *   visualStyle?: string|null,
+ *   footerIconType?: string|null,
+ *   iconType?: string|null,
+ *   metadata?: array<string,mixed>|null,
  * }
  */
 final class CommunityNote implements BaseModel
@@ -47,6 +50,20 @@ final class CommunityNote implements BaseModel
     #[Optional]
     public ?string $visualStyle;
 
+    #[Optional]
+    public ?string $footerIconType;
+
+    #[Optional]
+    public ?string $iconType;
+
+    /**
+     * Public metadata whose fields X defines.
+     *
+     * @var array<string,mixed>|null $metadata
+     */
+    #[Optional(map: 'mixed')]
+    public ?array $metadata;
+
     public function __construct()
     {
         $this->initialize();
@@ -56,6 +73,8 @@ final class CommunityNote implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param array<string,mixed>|null $metadata
      */
     public static function with(
         ?string $id = null,
@@ -65,6 +84,9 @@ final class CommunityNote implements BaseModel
         ?string $subtitle = null,
         ?string $title = null,
         ?string $visualStyle = null,
+        ?string $footerIconType = null,
+        ?string $iconType = null,
+        ?array $metadata = null
     ): self {
         $self = new self;
 
@@ -75,6 +97,12 @@ final class CommunityNote implements BaseModel
         null !== $subtitle && $self['subtitle'] = $subtitle;
         null !== $title && $self['title'] = $title;
         null !== $visualStyle && $self['visualStyle'] = $visualStyle;
+
+        null !== $footerIconType && $self['footerIconType'] = $footerIconType;
+
+        null !== $iconType && $self['iconType'] = $iconType;
+
+        null !== $metadata && $self['metadata'] = $metadata;
 
         return $self;
     }
@@ -131,6 +159,35 @@ final class CommunityNote implements BaseModel
     {
         $self = clone $this;
         $self['visualStyle'] = $visualStyle;
+
+        return $self;
+    }
+
+    public function withFooterIconType(?string $footerIconType): self
+    {
+        $self = clone $this;
+        $self['footerIconType'] = $footerIconType;
+
+        return $self;
+    }
+
+    public function withIconType(?string $iconType): self
+    {
+        $self = clone $this;
+        $self['iconType'] = $iconType;
+
+        return $self;
+    }
+
+    /**
+     * Public metadata whose fields X defines.
+     *
+     * @param array<string,mixed>|null $metadata
+     */
+    public function withMetadata(?array $metadata): self
+    {
+        $self = clone $this;
+        $self['metadata'] = $metadata;
 
         return $self;
     }

@@ -22,8 +22,8 @@ use XTwitterScraper\Styles\StyleUpdateParams\Tweet;
 /**
  * AI tweet composition, drafts, writing styles, and radar.
  *
- * @phpstan-import-type TweetShape from \XTwitterScraper\Styles\StyleUpdateParams\Tweet
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type TweetShape from Tweet
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class StylesService implements StylesContract
 {
@@ -91,15 +91,26 @@ final class StylesService implements StylesContract
      *
      * List cached style profiles
      *
+     * @param int|null $limit Maximum items per page, from 1 to 10,000. Default 200. Pass nextCursor as cursor for the next page.
+     * @param string|null $cursor Previous nextCursor. The after alias also works. Offset pagination is not supported.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function list(
+        ?int $limit = null,
+        ?string $cursor = null,
         RequestOptions|array|null $requestOptions = null
     ): StyleListResponse {
+        $params = Util::removeNulls(
+            [
+                'limit' => $limit,
+                'cursor' => $cursor,
+            ],
+        );
+
         // @phpstan-ignore-next-line argument.type
-        $response = $this->raw->list(requestOptions: $requestOptions);
+        $response = $this->raw->list(params: $params, requestOptions: $requestOptions);
 
         return $response->parse();
     }

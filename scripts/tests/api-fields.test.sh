@@ -54,6 +54,16 @@ test_an_accepted_difference_passes_the_check() {
   assert_contains "$run_stdout" "The SDK's fields match the API for 1 operations" "stdout"
 }
 
+test_a_deprecated_sdk_field_stays_out_of_the_extra_list() {
+  prepare_check
+  write_spec "$account_path"
+
+  run_in_repo php scripts/verify-api-fields.php --list
+
+  assert_contains "$run_stdout" "GET /api/v1/account response extra plan" "stdout"
+  assert_not_contains "$run_stdout" "GET /api/v1/account response extra monitorsAllowed" "stdout"
+}
+
 test_an_operation_the_sdk_lacks_fails_the_check() {
   prepare_check
   write_spec "$new_path"

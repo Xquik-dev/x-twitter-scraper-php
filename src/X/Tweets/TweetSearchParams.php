@@ -85,6 +85,11 @@ use XTwitterScraper\X\Tweets\TweetSearchParams\Retweets;
  *   verifiedOnly?: bool|null,
  *   within?: string|null,
  *   withinTime?: string|null,
+ *   minLikes?: int|null,
+ *   textOnlyTerms?: string|null,
+ *   keywords?: string|null,
+ *   fields?: string|null,
+ *   omit?: string|null,
  * }
  */
 final class TweetSearchParams implements BaseModel
@@ -460,6 +465,36 @@ final class TweetSearchParams implements BaseModel
     public ?string $withinTime;
 
     /**
+     * Minimum likes. Its aliases are minFaves, min_likes & min_faves.
+     */
+    #[Optional]
+    public ?int $minLikes;
+
+    /**
+     * Keeps a post only when at least 1 of these words or quoted phrases appears outside the author's name and username, such as in its text, a link, its card or a quoted post.
+     */
+    #[Optional]
+    public ?string $textOnlyTerms;
+
+    /**
+     * Words the Tweets must match, in X search syntax.
+     */
+    #[Optional]
+    public ?string $keywords;
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     */
+    #[Optional]
+    public ?string $fields;
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     */
+    #[Optional]
+    public ?string $omit;
+
+    /**
      * `new TweetSearchParams()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -550,6 +585,11 @@ final class TweetSearchParams implements BaseModel
         ?bool $verifiedOnly = null,
         ?string $within = null,
         ?string $withinTime = null,
+        ?int $minLikes = null,
+        ?string $textOnlyTerms = null,
+        ?string $keywords = null,
+        ?string $fields = null,
+        ?string $omit = null
     ): self {
         $self = new self;
 
@@ -613,6 +653,16 @@ final class TweetSearchParams implements BaseModel
         null !== $verifiedOnly && $self['verifiedOnly'] = $verifiedOnly;
         null !== $within && $self['within'] = $within;
         null !== $withinTime && $self['withinTime'] = $withinTime;
+
+        null !== $minLikes && $self['minLikes'] = $minLikes;
+
+        null !== $textOnlyTerms && $self['textOnlyTerms'] = $textOnlyTerms;
+
+        null !== $keywords && $self['keywords'] = $keywords;
+
+        null !== $fields && $self['fields'] = $fields;
+
+        null !== $omit && $self['omit'] = $omit;
 
         return $self;
     }
@@ -1274,6 +1324,61 @@ final class TweetSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['withinTime'] = $withinTime;
+
+        return $self;
+    }
+
+    /**
+     * Minimum likes. Its aliases are minFaves, min_likes & min_faves.
+     */
+    public function withMinLikes(?int $minLikes): self
+    {
+        $self = clone $this;
+        $self['minLikes'] = $minLikes;
+
+        return $self;
+    }
+
+    /**
+     * Keeps a post only when at least 1 of these words or quoted phrases appears outside the author's name and username, such as in its text, a link, its card or a quoted post.
+     */
+    public function withTextOnlyTerms(?string $textOnlyTerms): self
+    {
+        $self = clone $this;
+        $self['textOnlyTerms'] = $textOnlyTerms;
+
+        return $self;
+    }
+
+    /**
+     * Words the Tweets must match, in X search syntax.
+     */
+    public function withKeywords(?string $keywords): self
+    {
+        $self = clone $this;
+        $self['keywords'] = $keywords;
+
+        return $self;
+    }
+
+    /**
+     * Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
+     */
+    public function withFields(?string $fields): self
+    {
+        $self = clone $this;
+        $self['fields'] = $fields;
+
+        return $self;
+    }
+
+    /**
+     * Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     */
+    public function withOmit(?string $omit): self
+    {
+        $self = clone $this;
+        $self['omit'] = $omit;
 
         return $self;
     }

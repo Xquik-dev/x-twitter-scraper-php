@@ -17,6 +17,7 @@ use XTwitterScraper\Styles\StyleAnalyzeParams;
 use XTwitterScraper\Styles\StyleCompareParams;
 use XTwitterScraper\Styles\StyleCompareResponse;
 use XTwitterScraper\Styles\StyleGetPerformanceResponse;
+use XTwitterScraper\Styles\StyleListParams;
 use XTwitterScraper\Styles\StyleListResponse;
 use XTwitterScraper\Styles\StyleProfile;
 use XTwitterScraper\Styles\StyleUpdateParams;
@@ -25,8 +26,8 @@ use XTwitterScraper\Styles\StyleUpdateParams\Tweet;
 /**
  * AI tweet composition, drafts, writing styles, and radar.
  *
- * @phpstan-import-type TweetShape from \XTwitterScraper\Styles\StyleUpdateParams\Tweet
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type TweetShape from Tweet
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class StylesRawService implements StylesRawContract
 {
@@ -101,6 +102,7 @@ final class StylesRawService implements StylesRawContract
      *
      * List cached style profiles
      *
+     * @param array<string,mixed>|StyleListParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<StyleListResponse>
@@ -108,13 +110,20 @@ final class StylesRawService implements StylesRawContract
      * @throws APIException
      */
     public function list(
+        array|StyleListParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse {
+        [$parsed, $options] = StyleListParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'get',
             path: 'styles',
-            options: $requestOptions,
+            query: $parsed,
+            options: $options,
             convert: StyleListResponse::class,
         );
     }

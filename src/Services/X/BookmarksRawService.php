@@ -17,11 +17,12 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\BookmarksRawContract;
 use XTwitterScraper\X\Bookmarks\BookmarkGetFoldersResponse;
 use XTwitterScraper\X\Bookmarks\BookmarkListParams;
+use XTwitterScraper\X\Bookmarks\BookmarkRetrieveFoldersParams;
 
 /**
  * Look up, search, and analyze individual tweets.
  *
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class BookmarksRawService implements BookmarksRawContract
 {
@@ -67,6 +68,7 @@ final class BookmarksRawService implements BookmarksRawContract
      *
      * Get bookmark folders
      *
+     * @param array<string,mixed>|BookmarkRetrieveFoldersParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<BookmarkGetFoldersResponse>
@@ -74,13 +76,20 @@ final class BookmarksRawService implements BookmarksRawContract
      * @throws APIException
      */
     public function retrieveFolders(
+        array|BookmarkRetrieveFoldersParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse {
+        [$parsed, $options] = BookmarkRetrieveFoldersParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'get',
             path: 'x/bookmarks/folders',
-            options: $requestOptions,
+            query: $parsed,
+            options: $options,
             convert: BookmarkGetFoldersResponse::class,
         );
     }

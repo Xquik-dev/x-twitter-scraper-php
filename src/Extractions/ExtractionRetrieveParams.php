@@ -28,6 +28,7 @@ use XTwitterScraper\Extractions\ExtractionRetrieveParams\OutputPreset;
  *   limit?: int|null,
  *   outputMode?: null|OutputMode|value-of<OutputMode>,
  *   outputPreset?: null|OutputPreset|value-of<OutputPreset>,
+ *   wait?: int|null,
  * }
  */
 final class ExtractionRetrieveParams implements BaseModel
@@ -78,6 +79,12 @@ final class ExtractionRetrieveParams implements BaseModel
     #[Optional(enum: OutputPreset::class)]
     public ?string $outputPreset;
 
+    /**
+     * Wait up to this many seconds when the job is active.
+     */
+    #[Optional]
+    public ?int $wait;
+
     public function __construct()
     {
         $this->initialize();
@@ -99,6 +106,7 @@ final class ExtractionRetrieveParams implements BaseModel
         ?int $limit = null,
         OutputMode|string|null $outputMode = null,
         OutputPreset|string|null $outputPreset = null,
+        ?int $wait = null
     ): self {
         $self = new self;
 
@@ -108,6 +116,8 @@ final class ExtractionRetrieveParams implements BaseModel
         null !== $limit && $self['limit'] = $limit;
         null !== $outputMode && $self['outputMode'] = $outputMode;
         null !== $outputPreset && $self['outputPreset'] = $outputPreset;
+
+        null !== $wait && $self['wait'] = $wait;
 
         return $self;
     }
@@ -180,6 +190,17 @@ final class ExtractionRetrieveParams implements BaseModel
     {
         $self = clone $this;
         $self['outputPreset'] = $outputPreset;
+
+        return $self;
+    }
+
+    /**
+     * Wait up to this many seconds when the job is active.
+     */
+    public function withWait(?int $wait): self
+    {
+        $self = clone $this;
+        $self['wait'] = $wait;
 
         return $self;
     }

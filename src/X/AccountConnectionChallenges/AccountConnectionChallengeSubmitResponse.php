@@ -8,10 +8,12 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\AccountConnectionChallenges;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\AccountConnectionChallenges\AccountConnectionChallengeSubmitResponse\Health;
+use XTwitterScraper\X\AccountConnectionChallenges\AccountConnectionChallengeSubmitResponse\ObjectModel;
 
 /**
  * Sanitized X account summary returned by connect and reauth.
@@ -23,6 +25,10 @@ use XTwitterScraper\X\AccountConnectionChallenges\AccountConnectionChallengeSubm
  *   status: 'active',
  *   xUserID: string,
  *   xUsername: string,
+ *   object?: ObjectModel|value-of<ObjectModel>|null,
+ *   expiresAt?: \DateTimeInterface|null,
+ *   message?: string|null,
+ *   username?: string|null,
  * }
  */
 final class AccountConnectionChallengeSubmitResponse implements BaseModel
@@ -49,6 +55,21 @@ final class AccountConnectionChallengeSubmitResponse implements BaseModel
 
     #[Required]
     public string $xUsername;
+
+    /**
+     * @var value-of<ObjectModel>|null $object
+     */
+    #[Optional(enum: ObjectModel::class)]
+    public ?string $object;
+
+    #[Optional]
+    public ?\DateTimeInterface $expiresAt;
+
+    #[Optional]
+    public ?string $message;
+
+    #[Optional]
+    public ?string $username;
 
     /**
      * `new AccountConnectionChallengeSubmitResponse()` is missing required properties by the API.
@@ -82,6 +103,7 @@ final class AccountConnectionChallengeSubmitResponse implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param Health|value-of<Health> $health
+     * @param ObjectModel|value-of<ObjectModel>|null $object
      */
     public static function with(
         string $id,
@@ -89,6 +111,10 @@ final class AccountConnectionChallengeSubmitResponse implements BaseModel
         Health|string $health,
         string $xUserID,
         string $xUsername,
+        ObjectModel|string|null $object = null,
+        ?\DateTimeInterface $expiresAt = null,
+        ?string $message = null,
+        ?string $username = null
     ): self {
         $self = new self;
 
@@ -97,6 +123,14 @@ final class AccountConnectionChallengeSubmitResponse implements BaseModel
         $self['health'] = $health;
         $self['xUserID'] = $xUserID;
         $self['xUsername'] = $xUsername;
+
+        null !== $object && $self['object'] = $object;
+
+        null !== $expiresAt && $self['expiresAt'] = $expiresAt;
+
+        null !== $message && $self['message'] = $message;
+
+        null !== $username && $self['username'] = $username;
 
         return $self;
     }
@@ -151,6 +185,41 @@ final class AccountConnectionChallengeSubmitResponse implements BaseModel
     {
         $self = clone $this;
         $self['xUsername'] = $xUsername;
+
+        return $self;
+    }
+
+    /**
+     * @param ObjectModel|value-of<ObjectModel>|null $object
+     */
+    public function withObject(ObjectModel|string|null $object): self
+    {
+        $self = clone $this;
+        $self['object'] = $object;
+
+        return $self;
+    }
+
+    public function withExpiresAt(?\DateTimeInterface $expiresAt): self
+    {
+        $self = clone $this;
+        $self['expiresAt'] = $expiresAt;
+
+        return $self;
+    }
+
+    public function withMessage(?string $message): self
+    {
+        $self = clone $this;
+        $self['message'] = $message;
+
+        return $self;
+    }
+
+    public function withUsername(?string $username): self
+    {
+        $self = clone $this;
+        $self['username'] = $username;
 
         return $self;
     }

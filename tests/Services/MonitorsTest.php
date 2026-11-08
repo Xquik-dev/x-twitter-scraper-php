@@ -15,6 +15,7 @@ use XTwitterScraper\Monitors\Monitor;
 use XTwitterScraper\Monitors\MonitorDeactivateResponse;
 use XTwitterScraper\Monitors\MonitorListResponse;
 use XTwitterScraper\Monitors\MonitorNewResponse;
+use XTwitterScraper\Monitors\MonitorUpsertByUsernameResponse;
 
 /**
  * @internal
@@ -95,5 +96,14 @@ final class MonitorsTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(MonitorDeactivateResponse::class, $result);
+    }
+
+    #[Test]
+    public function testUpsertByUsername(): void
+    {
+        $result = $this->client->monitors->upsertByUsername('username', eventTypes: [EventType::TWEET_NEW]);
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(MonitorUpsertByUsernameResponse::class, $result);
     }
 }

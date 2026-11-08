@@ -29,6 +29,8 @@ use XTwitterScraper\EventType;
  *   query?: string|null,
  *   username?: string|null,
  *   xEventID?: string|null,
+ *   xUserID?: string|null,
+ *   monitorName?: string|null,
  * }
  */
 final class EventDetail implements BaseModel
@@ -94,6 +96,18 @@ final class EventDetail implements BaseModel
     public ?string $xEventID;
 
     /**
+     * Permanent X user ID of the monitored account on account events. It stays the same after a username change.
+     */
+    #[Optional('xUserId')]
+    public ?string $xUserID;
+
+    /**
+     * Your monitor label when Xquik created this event, present when set. A rename leaves the event's label unchanged.
+     */
+    #[Optional]
+    public ?string $monitorName;
+
+    /**
      * `new EventDetail()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -145,6 +159,8 @@ final class EventDetail implements BaseModel
         ?string $query = null,
         ?string $username = null,
         ?string $xEventID = null,
+        ?string $xUserID = null,
+        ?string $monitorName = null
     ): self {
         $self = new self;
 
@@ -159,6 +175,10 @@ final class EventDetail implements BaseModel
         null !== $query && $self['query'] = $query;
         null !== $username && $self['username'] = $username;
         null !== $xEventID && $self['xEventID'] = $xEventID;
+
+        null !== $xUserID && $self['xUserID'] = $xUserID;
+
+        null !== $monitorName && $self['monitorName'] = $monitorName;
 
         return $self;
     }
@@ -266,6 +286,28 @@ final class EventDetail implements BaseModel
     {
         $self = clone $this;
         $self['xEventID'] = $xEventID;
+
+        return $self;
+    }
+
+    /**
+     * Permanent X user ID of the monitored account on account events. It stays the same after a username change.
+     */
+    public function withXUserID(?string $xUserID): self
+    {
+        $self = clone $this;
+        $self['xUserID'] = $xUserID;
+
+        return $self;
+    }
+
+    /**
+     * Your monitor label when Xquik created this event, present when set. A rename leaves the event's label unchanged.
+     */
+    public function withMonitorName(?string $monitorName): self
+    {
+        $self = clone $this;
+        $self['monitorName'] = $monitorName;
 
         return $self;
     }

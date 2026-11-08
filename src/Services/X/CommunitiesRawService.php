@@ -9,6 +9,8 @@ declare(strict_types=1);
 namespace XTwitterScraper\Services\X;
 
 use XTwitterScraper\Client;
+use XTwitterScraper\CommunityAnalytics;
+use XTwitterScraper\CommunityPage;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\Core\Util;
@@ -19,15 +21,24 @@ use XTwitterScraper\ServiceContracts\X\CommunitiesRawContract;
 use XTwitterScraper\X\Communities\CommunityCreateParams;
 use XTwitterScraper\X\Communities\CommunityDeleteParams;
 use XTwitterScraper\X\Communities\CommunityDeleteResponse;
+use XTwitterScraper\X\Communities\CommunityFindParams;
 use XTwitterScraper\X\Communities\CommunityGetInfoResponse;
+use XTwitterScraper\X\Communities\CommunityListPopularParams;
+use XTwitterScraper\X\Communities\CommunityListSuggestedParams;
+use XTwitterScraper\X\Communities\CommunityListSuggestedResponse;
+use XTwitterScraper\X\Communities\CommunityListTopicsParams;
+use XTwitterScraper\X\Communities\CommunityListTopicsResponse;
 use XTwitterScraper\X\Communities\CommunityNewResponse;
+use XTwitterScraper\X\Communities\CommunityRetrieveAnalyticsParams;
+use XTwitterScraper\X\Communities\CommunityRetrieveInfoParams;
 use XTwitterScraper\X\Communities\CommunityRetrieveMembersParams;
 use XTwitterScraper\X\Communities\CommunityRetrieveModeratorsParams;
 use XTwitterScraper\X\Communities\CommunityRetrieveSearchParams;
 use XTwitterScraper\X\Communities\CommunityRetrieveSearchParams\QueryType;
+use XTwitterScraper\X\Communities\CommunitySearchMembersParams;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class CommunitiesRawService implements CommunitiesRawContract
 {
@@ -127,6 +138,7 @@ final class CommunitiesRawService implements CommunitiesRawContract
      * Get community name, description and member count
      *
      * @param string $id Community ID
+     * @param array<string,mixed>|CommunityRetrieveInfoParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<CommunityGetInfoResponse>
@@ -135,13 +147,20 @@ final class CommunitiesRawService implements CommunitiesRawContract
      */
     public function retrieveInfo(
         string $id,
+        array|CommunityRetrieveInfoParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse {
+        [$parsed, $options] = CommunityRetrieveInfoParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'get',
             path: ['x/communities/%1$s/info', $id],
-            options: $requestOptions,
+            query: $parsed,
+            options: $options,
             convert: CommunityGetInfoResponse::class,
         );
     }
@@ -282,6 +301,194 @@ final class CommunitiesRawService implements CommunitiesRawContract
             ),
             options: $options,
             convert: PaginatedTweets::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns community activity for X's latest period. Includes likes, new members, posts, replies & unique posters. Each metric has a count and a changePercent. Each request costs 1 credit.
+     *
+     * @param array<string,mixed>|CommunityRetrieveAnalyticsParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<CommunityAnalytics>
+     *
+     * @throws APIException
+     */
+    public function retrieveAnalytics(
+        string $id,
+        array|CommunityRetrieveAnalyticsParams $params = [],
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = CommunityRetrieveAnalyticsParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: ['x/communities/%1$s/analytics', $id],
+            query: $parsed,
+            options: $options,
+            convert: CommunityAnalytics::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Finds a community's members by name or username, each with its role. An answer holds up to 10 members. Each member costs 1 credit. An answer without members is free.
+     *
+     * @param array<string,mixed>|CommunitySearchMembersParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<PaginatedUsers>
+     *
+     * @throws APIException
+     */
+    public function searchMembers(
+        string $id,
+        array|CommunitySearchMembersParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = CommunitySearchMembersParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: ['x/communities/%1$s/members/search', $id],
+            query: $parsed,
+            options: $options,
+            convert: PaginatedUsers::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns the communities X finds for a keyword, in X's order. Each community costs 1 credit. To search the tweets in Communities, use /x/communities/search.
+     *
+     * @param array<string,mixed>|CommunityFindParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<CommunityPage>
+     *
+     * @throws APIException
+     */
+    public function find(
+        array|CommunityFindParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = CommunityFindParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: 'x/communities/find',
+            query: $parsed,
+            options: $options,
+            convert: CommunityPage::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns the communities X ranks highest under a topic or subtopic. Name it by topicId or by topic name from /x/communities/topics. Each community costs 1 credit. A missing or unknown topic returns invalid_community_topic & lists the topic names.
+     *
+     * @param array<string,mixed>|CommunityListPopularParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<CommunityPage>
+     *
+     * @throws APIException
+     */
+    public function listPopular(
+        array|CommunityListPopularParams $params = [],
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = CommunityListPopularParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: 'x/communities/popular',
+            query: $parsed,
+            options: $options,
+            convert: CommunityPage::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns the community topics with their subtopics. Pass an ID as topicId, or a name as topic, to /x/communities/popular. Each top-level topic costs 1 credit, its subtopics included.
+     *
+     * @param array<string,mixed>|CommunityListTopicsParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<CommunityListTopicsResponse>
+     *
+     * @throws APIException
+     */
+    public function listTopics(
+        array|CommunityListTopicsParams $params = [],
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = CommunityListTopicsParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: 'x/communities/topics',
+            query: $parsed,
+            options: $options,
+            convert: CommunityListTopicsResponse::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * Returns the communities X suggests, with their full public fields. X picks them per request, so 2 calls can differ. An empty list is free. Each community costs 1 credit.
+     *
+     * @param array<string,mixed>|CommunityListSuggestedParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<CommunityListSuggestedResponse>
+     *
+     * @throws APIException
+     */
+    public function listSuggested(
+        array|CommunityListSuggestedParams $params = [],
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse {
+        [$parsed, $options] = CommunityListSuggestedParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: 'x/communities/suggested',
+            query: $parsed,
+            options: $options,
+            convert: CommunityListSuggestedResponse::class,
         );
     }
 }

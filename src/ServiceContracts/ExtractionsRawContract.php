@@ -10,6 +10,7 @@ namespace XTwitterScraper\ServiceContracts;
 
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
+use XTwitterScraper\Extractions\ExtractionCancelResponse;
 use XTwitterScraper\Extractions\ExtractionEstimateCostParams;
 use XTwitterScraper\Extractions\ExtractionEstimateCostResponse;
 use XTwitterScraper\Extractions\ExtractionExportResultsParams;
@@ -22,7 +23,7 @@ use XTwitterScraper\Extractions\ExtractionRunResponse;
 use XTwitterScraper\RequestOptions;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface ExtractionsRawContract
 {
@@ -102,6 +103,20 @@ interface ExtractionsRawContract
      */
     public function run(
         array|ExtractionRunParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<ExtractionCancelResponse>
+     *
+     * @throws APIException
+     */
+    public function cancel(
+        string $id,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 }

@@ -12,11 +12,20 @@ use Tests\UnsupportedMockTests;
 use XTwitterScraper\Client;
 use XTwitterScraper\Core\Util;
 use XTwitterScraper\PaginatedTweets;
+use XTwitterScraper\PaginatedTweets2;
+use XTwitterScraper\PaginatedUserIDs;
 use XTwitterScraper\PaginatedUsers;
+use XTwitterScraper\X\Tweets\TweetCheckRepostResponse;
 use XTwitterScraper\X\Tweets\TweetDeleteResponse;
+use XTwitterScraper\X\Tweets\TweetEmbedResponse;
+use XTwitterScraper\X\Tweets\TweetGetInsightsResponse;
 use XTwitterScraper\X\Tweets\TweetGetRepliesResponse;
 use XTwitterScraper\X\Tweets\TweetGetResponse;
+use XTwitterScraper\X\Tweets\TweetGetSubtitlesResponse;
 use XTwitterScraper\X\Tweets\TweetNewResponse;
+use XTwitterScraper\X\Tweets\TweetResolveLinksResponse;
+use XTwitterScraper\X\Tweets\TweetTranslateResponse;
+use XTwitterScraper\XWriteAction;
 
 /**
  * @internal
@@ -248,5 +257,104 @@ final class TweetsTest extends TestCase
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertNotNull($result);
+    }
+
+    #[Test]
+    public function testListTop(): void
+    {
+        $result = $this->client->x->tweets->listTop();
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(PaginatedTweets2::class, $result);
+    }
+
+    #[Test]
+    public function testBookmark(): void
+    {
+        $result = $this->client->x->tweets->bookmark('id', account: 'account');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(XWriteAction::class, $result);
+    }
+
+    #[Test]
+    public function testUnbookmark(): void
+    {
+        $result = $this->client->x->tweets->unbookmark('id', account: 'account');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(XWriteAction::class, $result);
+    }
+
+    #[Test]
+    public function testCheckRepost(): void
+    {
+        $result = $this->client->x->tweets->checkRepost('id', user: 'user');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(TweetCheckRepostResponse::class, $result);
+    }
+
+    #[Test]
+    public function testGetRetweeterIds(): void
+    {
+        $result = $this->client->x->tweets->getRetweeterIds('id');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(PaginatedUserIDs::class, $result);
+    }
+
+    #[Test]
+    public function testGetHiddenReplies(): void
+    {
+        $result = $this->client->x->tweets->getHiddenReplies('id');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(PaginatedTweets2::class, $result);
+    }
+
+    #[Test]
+    public function testTranslate(): void
+    {
+        $result = $this->client->x->tweets->translate('id', language: 'language');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(TweetTranslateResponse::class, $result);
+    }
+
+    #[Test]
+    public function testGetInsights(): void
+    {
+        $result = $this->client->x->tweets->getInsights('id');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(TweetGetInsightsResponse::class, $result);
+    }
+
+    #[Test]
+    public function testEmbed(): void
+    {
+        $result = $this->client->x->tweets->embed('id');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(TweetEmbedResponse::class, $result);
+    }
+
+    #[Test]
+    public function testGetSubtitles(): void
+    {
+        $result = $this->client->x->tweets->getSubtitles('id');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(TweetGetSubtitlesResponse::class, $result);
+    }
+
+    #[Test]
+    public function testResolveLinks(): void
+    {
+        $result = $this->client->x->tweets->resolveLinks(urls: 'urls');
+
+        // @phpstan-ignore-next-line method.alreadyNarrowedType
+        $this->assertInstanceOf(TweetResolveLinksResponse::class, $result);
     }
 }

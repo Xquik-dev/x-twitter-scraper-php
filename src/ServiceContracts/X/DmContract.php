@@ -12,9 +12,10 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\Dm\DmGetHistoryResponse;
 use XTwitterScraper\X\Dm\DmSendResponse;
+use XTwitterScraper\XWriteAction;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface DmContract
 {
@@ -57,4 +58,19 @@ interface DmContract
         ?array $mediaIDs = null,
         RequestOptions|array|null $requestOptions = null,
     ): DmSendResponse;
+
+    /**
+     * @api
+     *
+     * @param string $account connected X account (@username or ID) that sees the DM
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function deleteMessage(
+        string $userID,
+        string $messageID,
+        string $account,
+        RequestOptions|array|null $requestOptions = null,
+    ): XWriteAction;
 }

@@ -13,9 +13,11 @@ use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\AccountsRawContract;
+use XTwitterScraper\X\Accounts\AccountBulkRetryParams;
 use XTwitterScraper\X\Accounts\AccountBulkRetryResponse;
 use XTwitterScraper\X\Accounts\AccountCreateParams;
 use XTwitterScraper\X\Accounts\AccountDeleteResponse;
+use XTwitterScraper\X\Accounts\AccountListParams;
 use XTwitterScraper\X\Accounts\AccountListResponse;
 use XTwitterScraper\X\Accounts\AccountNewResponse;
 use XTwitterScraper\X\Accounts\AccountNewResponse\SanitizedXAccount;
@@ -28,7 +30,7 @@ use XTwitterScraper\X\Accounts\XAccountDetail;
 /**
  * Connected X account management.
  *
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 final class AccountsRawService implements AccountsRawContract
 {
@@ -101,6 +103,7 @@ final class AccountsRawService implements AccountsRawContract
      *
      * List connected X accounts
      *
+     * @param array<string,mixed>|AccountListParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<AccountListResponse>
@@ -108,13 +111,20 @@ final class AccountsRawService implements AccountsRawContract
      * @throws APIException
      */
     public function list(
+        array|AccountListParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse {
+        [$parsed, $options] = AccountListParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'get',
             path: 'x/accounts',
-            options: $requestOptions,
+            query: $parsed,
+            options: $options,
             convert: AccountListResponse::class,
         );
     }
@@ -149,6 +159,7 @@ final class AccountsRawService implements AccountsRawContract
      *
      * Clears loginFailedAt and loginFailureReason for all accounts with transient or automated failure reasons, making them eligible for retry on next use.
      *
+     * @param array<string,mixed>|AccountBulkRetryParams $params
      * @param RequestOpts|null $requestOptions
      *
      * @return BaseResponse<AccountBulkRetryResponse>
@@ -156,13 +167,20 @@ final class AccountsRawService implements AccountsRawContract
      * @throws APIException
      */
     public function bulkRetry(
+        array|AccountBulkRetryParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse {
+        [$parsed, $options] = AccountBulkRetryParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
         // @phpstan-ignore-next-line return.type
         return $this->client->request(
             method: 'post',
             path: 'x/accounts/bulk-retry',
-            options: $requestOptions,
+            body: [] === $parsed ? null : (object) $parsed,
+            options: $options,
             convert: AccountBulkRetryResponse::class,
         );
     }

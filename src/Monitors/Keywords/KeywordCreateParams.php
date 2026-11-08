@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\Monitors\Keywords;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
@@ -20,7 +21,8 @@ use XTwitterScraper\EventType;
  * @see XTwitterScraper\Services\Monitors\KeywordsService::create()
  *
  * @phpstan-type KeywordCreateParamsShape = array{
- *   eventTypes: list<EventType|value-of<EventType>>, query: string
+ *   eventTypes: list<EventType|value-of<EventType>>, query: string,
+ *   name?: string|null,
  * }
  */
 final class KeywordCreateParams implements BaseModel
@@ -42,6 +44,12 @@ final class KeywordCreateParams implements BaseModel
      */
     #[Required]
     public string $query;
+
+    /**
+     * Your own label for the keyword monitor. Its events carry it as monitorName.
+     */
+    #[Optional]
+    public ?string $name;
 
     /**
      * `new KeywordCreateParams()` is missing required properties by the API.
@@ -69,12 +77,14 @@ final class KeywordCreateParams implements BaseModel
      *
      * @param list<EventType|value-of<EventType>> $eventTypes
      */
-    public static function with(array $eventTypes, string $query): self
+    public static function with(array $eventTypes, string $query, ?string $name = null): self
     {
         $self = new self;
 
         $self['eventTypes'] = $eventTypes;
         $self['query'] = $query;
+
+        null !== $name && $self['name'] = $name;
 
         return $self;
     }
@@ -99,6 +109,17 @@ final class KeywordCreateParams implements BaseModel
     {
         $self = clone $this;
         $self['query'] = $query;
+
+        return $self;
+    }
+
+    /**
+     * Your own label for the keyword monitor. Its events carry it as monitorName.
+     */
+    public function withName(?string $name): self
+    {
+        $self = clone $this;
+        $self['name'] = $name;
 
         return $self;
     }

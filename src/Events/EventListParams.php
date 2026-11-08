@@ -25,6 +25,7 @@ use XTwitterScraper\EventType;
  *   keywordMonitorID?: string|null,
  *   limit?: int|null,
  *   monitorID?: string|null,
+ *   postMonitorID?: string|null,
  * }
  */
 final class EventListParams implements BaseModel
@@ -65,6 +66,12 @@ final class EventListParams implements BaseModel
     #[Optional]
     public ?string $monitorID;
 
+    /**
+     * Post monitor ID. The post_monitor_id alias also works.
+     */
+    #[Optional('postMonitorId')]
+    public ?string $postMonitorID;
+
     public function __construct()
     {
         $this->initialize();
@@ -83,6 +90,7 @@ final class EventListParams implements BaseModel
         ?string $keywordMonitorID = null,
         ?int $limit = null,
         ?string $monitorID = null,
+        ?string $postMonitorID = null
     ): self {
         $self = new self;
 
@@ -91,6 +99,8 @@ final class EventListParams implements BaseModel
         null !== $keywordMonitorID && $self['keywordMonitorID'] = $keywordMonitorID;
         null !== $limit && $self['limit'] = $limit;
         null !== $monitorID && $self['monitorID'] = $monitorID;
+
+        null !== $postMonitorID && $self['postMonitorID'] = $postMonitorID;
 
         return $self;
     }
@@ -148,6 +158,17 @@ final class EventListParams implements BaseModel
     {
         $self = clone $this;
         $self['monitorID'] = $monitorID;
+
+        return $self;
+    }
+
+    /**
+     * Post monitor ID. The post_monitor_id alias also works.
+     */
+    public function withPostMonitorID(?string $postMonitorID): self
+    {
+        $self = clone $this;
+        $self['postMonitorID'] = $postMonitorID;
 
         return $self;
     }

@@ -11,13 +11,15 @@ namespace XTwitterScraper\ServiceContracts\X;
 use XTwitterScraper\Core\Contracts\BaseResponse;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
+use XTwitterScraper\X\Dm\DmDeleteMessageParams;
 use XTwitterScraper\X\Dm\DmGetHistoryResponse;
 use XTwitterScraper\X\Dm\DmRetrieveHistoryParams;
 use XTwitterScraper\X\Dm\DmSendParams;
 use XTwitterScraper\X\Dm\DmSendResponse;
+use XTwitterScraper\XWriteAction;
 
 /**
- * @phpstan-import-type RequestOpts from \XTwitterScraper\RequestOptions
+ * @phpstan-import-type RequestOpts from RequestOptions
  */
 interface DmRawContract
 {
@@ -52,6 +54,23 @@ interface DmRawContract
     public function send(
         string $userID,
         array|DmSendParams $params,
+        RequestOptions|array|null $requestOptions = null,
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array<string,mixed>|DmDeleteMessageParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<XWriteAction>
+     *
+     * @throws APIException
+     */
+    public function deleteMessage(
+        string $userID,
+        string $messageID,
+        array|DmDeleteMessageParams $params,
         RequestOptions|array|null $requestOptions = null,
     ): BaseResponse;
 }
