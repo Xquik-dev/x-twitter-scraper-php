@@ -41,6 +41,7 @@ use XTwitterScraper\X\Tweets\TweetSearchParams\Retweets;
  *   fromUser?: string|null,
  *   geocode?: string|null,
  *   hashtags?: string|null,
+ *   imageShows?: string|null,
  *   inReplyToTweetID?: string|null,
  *   language?: string|null,
  *   limit?: int|null,
@@ -76,6 +77,7 @@ use XTwitterScraper\X\Tweets\TweetSearchParams\Retweets;
  *   sinceID?: string|null,
  *   sinceTime?: string|null,
  *   source?: string|null,
+ *   topic?: string|null,
  *   toUser?: string|null,
  *   untilDate?: string|null,
  *   untilTime?: string|null,
@@ -180,6 +182,12 @@ final class TweetSearchParams implements BaseModel
      */
     #[Optional]
     public ?string $hashtags;
+
+    /**
+     * Keep only posts whose photos show this. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Other posts stay out at no charge. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. imageFilter states the cutoff & counts.
+     */
+    #[Optional]
+    public ?string $imageShows;
 
     /**
      * Only replies to this tweet ID.
@@ -404,6 +412,12 @@ final class TweetSearchParams implements BaseModel
     public ?string $source;
 
     /**
+     * Keep only posts about this topic. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. It reads post text & safe photos. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. limit counts checked posts, & only kept posts come back. topicFilter states the cutoff & counts.
+     */
+    #[Optional]
+    public ?string $topic;
+
+    /**
      * Filter replies sent to a username.
      */
     #[Optional]
@@ -492,6 +506,7 @@ final class TweetSearchParams implements BaseModel
         ?string $fromUser = null,
         ?string $geocode = null,
         ?string $hashtags = null,
+        ?string $imageShows = null,
         ?string $inReplyToTweetID = null,
         ?string $language = null,
         ?int $limit = null,
@@ -527,6 +542,7 @@ final class TweetSearchParams implements BaseModel
         ?string $sinceID = null,
         ?string $sinceTime = null,
         ?string $source = null,
+        ?string $topic = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         ?string $untilTime = null,
@@ -553,6 +569,7 @@ final class TweetSearchParams implements BaseModel
         null !== $fromUser && $self['fromUser'] = $fromUser;
         null !== $geocode && $self['geocode'] = $geocode;
         null !== $hashtags && $self['hashtags'] = $hashtags;
+        null !== $imageShows && $self['imageShows'] = $imageShows;
         null !== $inReplyToTweetID && $self['inReplyToTweetID'] = $inReplyToTweetID;
         null !== $language && $self['language'] = $language;
         null !== $limit && $self['limit'] = $limit;
@@ -588,6 +605,7 @@ final class TweetSearchParams implements BaseModel
         null !== $sinceID && $self['sinceID'] = $sinceID;
         null !== $sinceTime && $self['sinceTime'] = $sinceTime;
         null !== $source && $self['source'] = $source;
+        null !== $topic && $self['topic'] = $topic;
         null !== $toUser && $self['toUser'] = $toUser;
         null !== $untilDate && $self['untilDate'] = $untilDate;
         null !== $untilTime && $self['untilTime'] = $untilTime;
@@ -760,6 +778,17 @@ final class TweetSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['hashtags'] = $hashtags;
+
+        return $self;
+    }
+
+    /**
+     * Keep only posts whose photos show this. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Other posts stay out at no charge. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. imageFilter states the cutoff & counts.
+     */
+    public function withImageShows(string $imageShows): self
+    {
+        $self = clone $this;
+        $self['imageShows'] = $imageShows;
 
         return $self;
     }
@@ -1157,6 +1186,17 @@ final class TweetSearchParams implements BaseModel
     {
         $self = clone $this;
         $self['source'] = $source;
+
+        return $self;
+    }
+
+    /**
+     * Keep only posts about this topic. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. It reads post text & safe photos. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. limit counts checked posts, & only kept posts come back. topicFilter states the cutoff & counts.
+     */
+    public function withTopic(string $topic): self
+    {
+        $self = clone $this;
+        $self['topic'] = $topic;
 
         return $self;
     }

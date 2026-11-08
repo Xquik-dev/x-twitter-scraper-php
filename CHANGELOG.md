@@ -5,6 +5,8 @@
 ### Features
 
 * Extraction tool types gain `USER_AFFILIATES`.
+* `x->tweets->search`, `x->users->retrieveTweets`, `retrieveReplies` and `retrieveMedia` take `topic` and `imageShows`. `extractions->run` and `estimateCost` take both, and `x->media->download` takes `imageShows`.
+* A filtered page carries `topicFilter` or `imageFilter`, and each kept post carries `topicScore` or `imageScore`. Extraction jobs carry both summaries, and a media download carries `imageFilter`.
 
 ## 0.13.5 (2026-10-22)
 

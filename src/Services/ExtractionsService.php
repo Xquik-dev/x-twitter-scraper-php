@@ -167,6 +167,7 @@ final class ExtractionsService implements ExtractionsContract
      * @param bool $hasLocation require a profile location
      * @param bool $hasMediaOnly return only replies with media
      * @param bool $hasWebsite require a profile website
+     * @param string $imageShows Keep only the posts whose photos show this. Use charts, screenshots, product_photos, memes or people, or describe it in your own words. Each post with a safe photo is checked, & each stored post costs 2 credits instead of its read price. Posts without a safe photo aren't checked, billed or stored, & a post the filter drops costs nothing. resultsLimit caps the posts read. Works with tools that return posts. Send topic or imageShows, not both.
      * @param bool $includeOriginalPost include the source post in reply results
      * @param bool $includeSearchTerms add matching search terms to collection metadata
      * @param bool $includeTargetMetadata add source target metadata to each result
@@ -230,6 +231,7 @@ final class ExtractionsService implements ExtractionsContract
      * @param string $targetSpaceID required for space_explorer
      * @param list<string> $targetTweetIDs tweet IDs processed as one collection job
      * @param list<string> $targetUsernames usernames processed as one collection job
+     * @param string $topic Keep only the posts about this topic, such as "the Rust programming language". Each post the job reads is checked, only matching posts are stored, & each stored post costs 2 credits instead of its read price. A post the filter drops costs nothing. resultsLimit caps the posts read & checked. Works with tools that return posts. Send topic or imageShows, not both.
      * @param string $toUser Filter replies sent to a username (tweet_search_extractor)
      * @param string $untilDate End date YYYY-MM-DD (tweet_search_extractor)
      * @param UntilTimeShape $untilTime reply end time as ISO 8601 or Unix seconds
@@ -266,6 +268,7 @@ final class ExtractionsService implements ExtractionsContract
         bool $hasLocation = false,
         bool $hasMediaOnly = false,
         bool $hasWebsite = false,
+        ?string $imageShows = null,
         bool $includeOriginalPost = false,
         bool $includeSearchTerms = false,
         bool $includeTargetMetadata = true,
@@ -331,6 +334,7 @@ final class ExtractionsService implements ExtractionsContract
         ?array $targetTweetIDs = null,
         ?string $targetUsername = null,
         ?array $targetUsernames = null,
+        ?string $topic = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         int|\DateTimeInterface|null $untilTime = null,
@@ -366,6 +370,7 @@ final class ExtractionsService implements ExtractionsContract
                 'hasLocation' => $hasLocation,
                 'hasMediaOnly' => $hasMediaOnly,
                 'hasWebsite' => $hasWebsite,
+                'imageShows' => $imageShows,
                 'includeOriginalPost' => $includeOriginalPost,
                 'includeSearchTerms' => $includeSearchTerms,
                 'includeTargetMetadata' => $includeTargetMetadata,
@@ -431,6 +436,7 @@ final class ExtractionsService implements ExtractionsContract
                 'targetTweetIDs' => $targetTweetIDs,
                 'targetUsername' => $targetUsername,
                 'targetUsernames' => $targetUsernames,
+                'topic' => $topic,
                 'toUser' => $toUser,
                 'untilDate' => $untilDate,
                 'untilTime' => $untilTime,
@@ -559,6 +565,7 @@ final class ExtractionsService implements ExtractionsContract
      * @param bool $hasLocation body param: Require a profile location
      * @param bool $hasMediaOnly body param: Return only replies with media
      * @param bool $hasWebsite body param: Require a profile website
+     * @param string $imageShows Keep only the posts whose photos show this. Use charts, screenshots, product_photos, memes or people, or describe it in your own words. Each post with a safe photo is checked, & each stored post costs 2 credits instead of its read price. Posts without a safe photo aren't checked, billed or stored, & a post the filter drops costs nothing. resultsLimit caps the posts read. Works with tools that return posts. Send topic or imageShows, not both.
      * @param bool $includeOriginalPost body param: Include the source post in reply results
      * @param bool $includeSearchTerms body param: Add matching search terms to collection metadata
      * @param bool $includeTargetMetadata body param: Add source target metadata to each result
@@ -624,6 +631,7 @@ final class ExtractionsService implements ExtractionsContract
      * @param list<string> $targetTweetIDs body param: Tweet IDs processed as one collection job
      * @param string $targetUsername Body param
      * @param list<string> $targetUsernames body param: Usernames processed as one collection job
+     * @param string $topic Keep only the posts about this topic, such as "the Rust programming language". Each post the job reads is checked, only matching posts are stored, & each stored post costs 2 credits instead of its read price. A post the filter drops costs nothing. resultsLimit caps the posts read & checked. Works with tools that return posts. Send topic or imageShows, not both.
      * @param string $toUser Body param: Filter replies sent to a username (tweet_search_extractor)
      * @param string $untilDate Body param: End date YYYY-MM-DD (tweet_search_extractor)
      * @param UntilTimeShape1 $untilTime body param: Reply end time as ISO 8601 or Unix seconds
@@ -661,6 +669,7 @@ final class ExtractionsService implements ExtractionsContract
         bool $hasLocation = false,
         bool $hasMediaOnly = false,
         bool $hasWebsite = false,
+        ?string $imageShows = null,
         bool $includeOriginalPost = false,
         bool $includeSearchTerms = false,
         bool $includeTargetMetadata = true,
@@ -726,6 +735,7 @@ final class ExtractionsService implements ExtractionsContract
         ?array $targetTweetIDs = null,
         ?string $targetUsername = null,
         ?array $targetUsernames = null,
+        ?string $topic = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         int|\DateTimeInterface|null $untilTime = null,
@@ -762,6 +772,7 @@ final class ExtractionsService implements ExtractionsContract
                 'hasLocation' => $hasLocation,
                 'hasMediaOnly' => $hasMediaOnly,
                 'hasWebsite' => $hasWebsite,
+                'imageShows' => $imageShows,
                 'includeOriginalPost' => $includeOriginalPost,
                 'includeSearchTerms' => $includeSearchTerms,
                 'includeTargetMetadata' => $includeTargetMetadata,
@@ -827,6 +838,7 @@ final class ExtractionsService implements ExtractionsContract
                 'targetTweetIDs' => $targetTweetIDs,
                 'targetUsername' => $targetUsername,
                 'targetUsernames' => $targetUsernames,
+                'topic' => $topic,
                 'toUser' => $toUser,
                 'untilDate' => $untilDate,
                 'untilTime' => $untilTime,

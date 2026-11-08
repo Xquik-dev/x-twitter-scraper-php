@@ -14,9 +14,14 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\Extractions\ExtractionJob\Status;
 use XTwitterScraper\Extractions\ExtractionJob\ToolType;
+use XTwitterScraper\ImageFilterSummary;
+use XTwitterScraper\TopicFilterSummary;
 
 /**
  * Extraction job tracking status, tool type, and result count.
+ *
+ * @phpstan-import-type ImageFilterSummaryShape from \XTwitterScraper\ImageFilterSummary
+ * @phpstan-import-type TopicFilterSummaryShape from \XTwitterScraper\TopicFilterSummary
  *
  * @phpstan-type ExtractionJobShape = array{
  *   id: string,
@@ -25,6 +30,8 @@ use XTwitterScraper\Extractions\ExtractionJob\ToolType;
  *   toolType: ToolType|value-of<ToolType>,
  *   totalResults: int,
  *   completedAt?: \DateTimeInterface|null,
+ *   imageFilter?: null|ImageFilterSummary|ImageFilterSummaryShape,
+ *   topicFilter?: null|TopicFilterSummary|TopicFilterSummaryShape,
  * }
  */
 final class ExtractionJob implements BaseModel
@@ -55,6 +62,18 @@ final class ExtractionJob implements BaseModel
 
     #[Optional]
     public ?\DateTimeInterface $completedAt;
+
+    /**
+     * What the image filter asked & how many posts it kept. Present when you send imageShows.
+     */
+    #[Optional]
+    public ?ImageFilterSummary $imageFilter;
+
+    /**
+     * What the topic filter asked & how many posts it kept. Present when you send topic.
+     */
+    #[Optional]
+    public ?TopicFilterSummary $topicFilter;
 
     /**
      * `new ExtractionJob()` is missing required properties by the API.
@@ -89,6 +108,8 @@ final class ExtractionJob implements BaseModel
      *
      * @param Status|value-of<Status> $status
      * @param ToolType|value-of<ToolType> $toolType
+     * @param ImageFilterSummary|ImageFilterSummaryShape|null $imageFilter
+     * @param TopicFilterSummary|TopicFilterSummaryShape|null $topicFilter
      */
     public static function with(
         string $id,
@@ -97,6 +118,8 @@ final class ExtractionJob implements BaseModel
         ToolType|string $toolType,
         int $totalResults,
         ?\DateTimeInterface $completedAt = null,
+        ImageFilterSummary|array|null $imageFilter = null,
+        TopicFilterSummary|array|null $topicFilter = null,
     ): self {
         $self = new self;
 
@@ -107,6 +130,8 @@ final class ExtractionJob implements BaseModel
         $self['totalResults'] = $totalResults;
 
         null !== $completedAt && $self['completedAt'] = $completedAt;
+        null !== $imageFilter && $self['imageFilter'] = $imageFilter;
+        null !== $topicFilter && $self['topicFilter'] = $topicFilter;
 
         return $self;
     }
@@ -163,6 +188,32 @@ final class ExtractionJob implements BaseModel
     {
         $self = clone $this;
         $self['completedAt'] = $completedAt;
+
+        return $self;
+    }
+
+    /**
+     * What the image filter asked & how many posts it kept. Present when you send imageShows.
+     *
+     * @param ImageFilterSummary|ImageFilterSummaryShape $imageFilter
+     */
+    public function withImageFilter(ImageFilterSummary|array $imageFilter): self
+    {
+        $self = clone $this;
+        $self['imageFilter'] = $imageFilter;
+
+        return $self;
+    }
+
+    /**
+     * What the topic filter asked & how many posts it kept. Present when you send topic.
+     *
+     * @param TopicFilterSummary|TopicFilterSummaryShape $topicFilter
+     */
+    public function withTopicFilter(TopicFilterSummary|array $topicFilter): self
+    {
+        $self = clone $this;
+        $self['topicFilter'] = $topicFilter;
 
         return $self;
     }

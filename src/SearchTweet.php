@@ -54,6 +54,7 @@ use XTwitterScraper\SearchTweet\PreviousCounts;
  *   displayTextRange?: list<int>|null,
  *   edit?: null|Edit|EditShape,
  *   entities?: array<string,mixed>|null,
+ *   imageScore?: float|null,
  *   inReplyToID?: string|null,
  *   inReplyToUserID?: string|null,
  *   inReplyToUsername?: string|null,
@@ -71,6 +72,7 @@ use XTwitterScraper\SearchTweet\PreviousCounts;
  *   quotedTweet?: null|EmbeddedTweet|EmbeddedTweetShape,
  *   retweetedTweet?: null|EmbeddedTweet|EmbeddedTweetShape,
  *   source?: string|null,
+ *   topicScore?: float|null,
  *   type?: string|null,
  *   url?: string|null,
  *   viewState?: string|null,
@@ -165,6 +167,12 @@ final class SearchTweet implements BaseModel
      */
     #[Optional(map: 'mixed')]
     public ?array $entities;
+
+    /**
+     * How likely a photo shows what you asked for. Present on pages the image filter kept.
+     */
+    #[Optional]
+    public ?float $imageScore;
 
     /**
      * ID of the tweet this result replies to.
@@ -264,6 +272,12 @@ final class SearchTweet implements BaseModel
     #[Optional]
     public ?string $source;
 
+    /**
+     * How likely the post is about the topic. Present on pages the topic filter kept.
+     */
+    #[Optional]
+    public ?float $topicScore;
+
     #[Optional]
     public ?string $type;
 
@@ -351,6 +365,7 @@ final class SearchTweet implements BaseModel
         ?array $displayTextRange = null,
         Edit|array|null $edit = null,
         ?array $entities = null,
+        ?float $imageScore = null,
         ?string $inReplyToID = null,
         ?string $inReplyToUserID = null,
         ?string $inReplyToUsername = null,
@@ -368,6 +383,7 @@ final class SearchTweet implements BaseModel
         EmbeddedTweet|array|null $quotedTweet = null,
         EmbeddedTweet|array|null $retweetedTweet = null,
         ?string $source = null,
+        ?float $topicScore = null,
         ?string $type = null,
         ?string $url = null,
         ?string $viewState = null,
@@ -393,6 +409,7 @@ final class SearchTweet implements BaseModel
         null !== $displayTextRange && $self['displayTextRange'] = $displayTextRange;
         null !== $edit && $self['edit'] = $edit;
         null !== $entities && $self['entities'] = $entities;
+        null !== $imageScore && $self['imageScore'] = $imageScore;
         null !== $inReplyToID && $self['inReplyToID'] = $inReplyToID;
         null !== $inReplyToUserID && $self['inReplyToUserID'] = $inReplyToUserID;
         null !== $inReplyToUsername && $self['inReplyToUsername'] = $inReplyToUsername;
@@ -410,6 +427,7 @@ final class SearchTweet implements BaseModel
         null !== $quotedTweet && $self['quotedTweet'] = $quotedTweet;
         null !== $retweetedTweet && $self['retweetedTweet'] = $retweetedTweet;
         null !== $source && $self['source'] = $source;
+        null !== $topicScore && $self['topicScore'] = $topicScore;
         null !== $type && $self['type'] = $type;
         null !== $url && $self['url'] = $url;
         null !== $viewState && $self['viewState'] = $viewState;
@@ -606,6 +624,17 @@ final class SearchTweet implements BaseModel
     }
 
     /**
+     * How likely a photo shows what you asked for. Present on pages the image filter kept.
+     */
+    public function withImageScore(float $imageScore): self
+    {
+        $self = clone $this;
+        $self['imageScore'] = $imageScore;
+
+        return $self;
+    }
+
+    /**
      * ID of the tweet this result replies to.
      */
     public function withInReplyToID(string $inReplyToID): self
@@ -796,6 +825,17 @@ final class SearchTweet implements BaseModel
     {
         $self = clone $this;
         $self['source'] = $source;
+
+        return $self;
+    }
+
+    /**
+     * How likely the post is about the topic. Present on pages the topic filter kept.
+     */
+    public function withTopicScore(float $topicScore): self
+    {
+        $self = clone $this;
+        $self['topicScore'] = $topicScore;
 
         return $self;
     }

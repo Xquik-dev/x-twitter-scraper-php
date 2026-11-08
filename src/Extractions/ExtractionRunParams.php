@@ -63,6 +63,7 @@ use XTwitterScraper\Extractions\ExtractionRunParams\ToolType;
  *   hasLocation?: bool|null,
  *   hasMediaOnly?: bool|null,
  *   hasWebsite?: bool|null,
+ *   imageShows?: string|null,
  *   includeOriginalPost?: bool|null,
  *   includeSearchTerms?: bool|null,
  *   includeTargetMetadata?: bool|null,
@@ -128,6 +129,7 @@ use XTwitterScraper\Extractions\ExtractionRunParams\ToolType;
  *   targetTweetIDs?: list<string>|null,
  *   targetUsername?: string|null,
  *   targetUsernames?: list<string>|null,
+ *   topic?: string|null,
  *   toUser?: string|null,
  *   untilDate?: string|null,
  *   untilTime?: UntilTimeShape|null,
@@ -288,6 +290,12 @@ final class ExtractionRunParams implements BaseModel
      */
     #[Optional]
     public ?bool $hasWebsite;
+
+    /**
+     * Keep only the posts whose photos show this. Use charts, screenshots, product_photos, memes or people, or describe it in your own words. Each post with a safe photo is checked, & each stored post costs 2 credits instead of its read price. Posts without a safe photo aren't checked, billed or stored, & a post the filter drops costs nothing. resultsLimit caps the posts read. Works with tools that return posts. Send topic or imageShows, not both.
+     */
+    #[Optional]
+    public ?string $imageShows;
 
     /**
      * Include the source post in reply results.
@@ -704,6 +712,12 @@ final class ExtractionRunParams implements BaseModel
     public ?array $targetUsernames;
 
     /**
+     * Keep only the posts about this topic, such as "the Rust programming language". Each post the job reads is checked, only matching posts are stored, & each stored post costs 2 credits instead of its read price. A post the filter drops costs nothing. resultsLimit caps the posts read & checked. Works with tools that return posts. Send topic or imageShows, not both.
+     */
+    #[Optional]
+    public ?string $topic;
+
+    /**
      * Filter replies sent to a username (tweet_search_extractor).
      */
     #[Optional]
@@ -827,6 +841,7 @@ final class ExtractionRunParams implements BaseModel
         ?bool $hasLocation = null,
         ?bool $hasMediaOnly = null,
         ?bool $hasWebsite = null,
+        ?string $imageShows = null,
         ?bool $includeOriginalPost = null,
         ?bool $includeSearchTerms = null,
         ?bool $includeTargetMetadata = null,
@@ -892,6 +907,7 @@ final class ExtractionRunParams implements BaseModel
         ?array $targetTweetIDs = null,
         ?string $targetUsername = null,
         ?array $targetUsernames = null,
+        ?string $topic = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         int|\DateTimeInterface|null $untilTime = null,
@@ -928,6 +944,7 @@ final class ExtractionRunParams implements BaseModel
         null !== $hasLocation && $self['hasLocation'] = $hasLocation;
         null !== $hasMediaOnly && $self['hasMediaOnly'] = $hasMediaOnly;
         null !== $hasWebsite && $self['hasWebsite'] = $hasWebsite;
+        null !== $imageShows && $self['imageShows'] = $imageShows;
         null !== $includeOriginalPost && $self['includeOriginalPost'] = $includeOriginalPost;
         null !== $includeSearchTerms && $self['includeSearchTerms'] = $includeSearchTerms;
         null !== $includeTargetMetadata && $self['includeTargetMetadata'] = $includeTargetMetadata;
@@ -993,6 +1010,7 @@ final class ExtractionRunParams implements BaseModel
         null !== $targetTweetIDs && $self['targetTweetIDs'] = $targetTweetIDs;
         null !== $targetUsername && $self['targetUsername'] = $targetUsername;
         null !== $targetUsernames && $self['targetUsernames'] = $targetUsernames;
+        null !== $topic && $self['topic'] = $topic;
         null !== $toUser && $self['toUser'] = $toUser;
         null !== $untilDate && $self['untilDate'] = $untilDate;
         null !== $untilTime && $self['untilTime'] = $untilTime;
@@ -1262,6 +1280,17 @@ final class ExtractionRunParams implements BaseModel
     {
         $self = clone $this;
         $self['hasWebsite'] = $hasWebsite;
+
+        return $self;
+    }
+
+    /**
+     * Keep only the posts whose photos show this. Use charts, screenshots, product_photos, memes or people, or describe it in your own words. Each post with a safe photo is checked, & each stored post costs 2 credits instead of its read price. Posts without a safe photo aren't checked, billed or stored, & a post the filter drops costs nothing. resultsLimit caps the posts read. Works with tools that return posts. Send topic or imageShows, not both.
+     */
+    public function withImageShows(string $imageShows): self
+    {
+        $self = clone $this;
+        $self['imageShows'] = $imageShows;
 
         return $self;
     }
@@ -2001,6 +2030,17 @@ final class ExtractionRunParams implements BaseModel
     {
         $self = clone $this;
         $self['targetUsernames'] = $targetUsernames;
+
+        return $self;
+    }
+
+    /**
+     * Keep only the posts about this topic, such as "the Rust programming language". Each post the job reads is checked, only matching posts are stored, & each stored post costs 2 credits instead of its read price. A post the filter drops costs nothing. resultsLimit caps the posts read & checked. Works with tools that return posts. Send topic or imageShows, not both.
+     */
+    public function withTopic(string $topic): self
+    {
+        $self = clone $this;
+        $self['topic'] = $topic;
 
         return $self;
     }

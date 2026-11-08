@@ -39,6 +39,7 @@ final class MediaService implements MediaContract
      *
      * Download images and videos from tweets
      *
+     * @param string $imageShows Save only posts whose photos show this. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Each post saved costs 2 credits, the AI analysis price, on top of its save price, & a post the filter drops costs nothing. imageFilter states the cutoff & counts.
      * @param string $tweetID Numeric tweet ID alias for tweetInput
      * @param list<string> $tweetIDs Array of tweet URLs or IDs (bulk, max 50 string items)
      * @param string $tweetInput Tweet URL or ID (single tweet)
@@ -48,6 +49,7 @@ final class MediaService implements MediaContract
      * @throws APIException
      */
     public function download(
+        ?string $imageShows = null,
         ?string $tweetID = null,
         ?array $tweetIDs = null,
         ?string $tweetInput = null,
@@ -56,6 +58,7 @@ final class MediaService implements MediaContract
     ): MediaDownloadResponse {
         $params = Util::removeNulls(
             [
+                'imageShows' => $imageShows,
                 'tweetID' => $tweetID,
                 'tweetIDs' => $tweetIDs,
                 'tweetInput' => $tweetInput,
