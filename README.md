@@ -1,5 +1,9 @@
 # X (Twitter) API PHP SDK & Scraper by Xquik
 
+[![Framer builds a tweet ticker with Xquik](https://img.youtube.com/vi/4UOSpoOoC3Y/maxresdefault.jpg)](https://youtu.be/4UOSpoOoC3Y?t=367)\
+[Watch Framer build a tweet ticker with Xquik, from 6:07](https://youtu.be/4UOSpoOoC3Y?t=367).
+This PHP SDK calls the Xquik API.
+
 Add this X (Twitter) scraper PHP SDK by Xquik to search tweets & posts.
 Calls take named arguments and return typed value objects.
 Public reads need no X (Twitter) developer account.
