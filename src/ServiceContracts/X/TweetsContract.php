@@ -53,6 +53,7 @@ interface TweetsContract
      * @param list<string> $media Body param: Array of public media URLs to attach. Supports up to 4 images or exactly 1 MP4 video up to 100 MB. Each URL must be publicly reachable. Attached media adds 2 credits per started MB across all files.
      * @param string $replyToTweetID Body param
      * @param string $text Body param: Tweet text (optional when media is provided)
+     * @param list<string> $mediaIDs Body param: Media IDs from `POST /x/media`, uploaded with this account. IDs last 24 hours. Send up to 4 image IDs or exactly 1 video ID. Send `media` or `mediaIDs`, not both.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -65,6 +66,7 @@ interface TweetsContract
         ?array $media = null,
         ?string $replyToTweetID = null,
         ?string $text = null,
+        ?array $mediaIDs = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetNewResponse;
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\AccountConnectionAttempts\AccountConnectionAttemptGetResponse;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
@@ -12,7 +13,10 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * The account connected successfully.
  *
  * @phpstan-type XAccountConnectionAttemptSuccessShape = array{
- *   id: string, object: 'x_account_connection_attempt', status: 'success'
+ *   id: string,
+ *   object: 'x_account_connection_attempt',
+ *   status: 'success',
+ *   accountID?: string|null,
  * }
  */
 final class XAccountConnectionAttemptSuccess implements BaseModel
@@ -30,6 +34,12 @@ final class XAccountConnectionAttemptSuccess implements BaseModel
 
     #[Required]
     public string $id;
+
+    /**
+     * The connected account's ID.
+     */
+    #[Optional('accountId')]
+    public ?string $accountID;
 
     /**
      * `new XAccountConnectionAttemptSuccess()` is missing required properties by the API.
@@ -55,11 +65,13 @@ final class XAccountConnectionAttemptSuccess implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(string $id): self
+    public static function with(string $id, ?string $accountID = null): self
     {
         $self = new self;
 
         $self['id'] = $id;
+
+        null !== $accountID && $self['accountID'] = $accountID;
 
         return $self;
     }
@@ -90,6 +102,17 @@ final class XAccountConnectionAttemptSuccess implements BaseModel
     {
         $self = clone $this;
         $self['status'] = $status;
+
+        return $self;
+    }
+
+    /**
+     * The connected account's ID.
+     */
+    public function withAccountID(string $accountID): self
+    {
+        $self = clone $this;
+        $self['accountID'] = $accountID;
 
         return $self;
     }

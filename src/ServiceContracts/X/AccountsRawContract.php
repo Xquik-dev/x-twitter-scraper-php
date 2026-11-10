@@ -111,7 +111,7 @@ interface AccountsRawContract
      * @param array<string,mixed>|AccountReauthParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<AccountReauthResponse>
+     * @return BaseResponse<AccountReauthResponse|XAccountConnectionAttemptPending|XAccountConnectionChallenge>
      *
      * @throws APIException
      */

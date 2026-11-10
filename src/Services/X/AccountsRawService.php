@@ -25,6 +25,7 @@ use XTwitterScraper\X\Accounts\AccountNewResponse\XAccountConnectionAttemptPendi
 use XTwitterScraper\X\Accounts\AccountNewResponse\XAccountConnectionChallenge;
 use XTwitterScraper\X\Accounts\AccountReauthParams;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
+use XTwitterScraper\X\Accounts\AccountReauthResponseUnion;
 use XTwitterScraper\X\Accounts\XAccountDetail;
 
 /**
@@ -46,7 +47,11 @@ final class AccountsRawService implements AccountsRawContract
      * Connect X account
      *
      * @param array{
-     *   email: string, password: string, totpSecret: string, username: string
+     *   email: string,
+     *   password: string,
+     *   totpSecret: string,
+     *   username: string,
+     *   connectionAttemptID?: string,
      * }|AccountCreateParams $params
      * @param RequestOpts|null $requestOptions
      *
@@ -192,11 +197,14 @@ final class AccountsRawService implements AccountsRawContract
      *
      * @param string $id resource ID returned by the matching create or list endpoint
      * @param array{
-     *   password: string, email?: string, totpSecret?: string
+     *   password: string,
+     *   email?: string,
+     *   totpSecret?: string,
+     *   connectionAttemptID?: string,
      * }|AccountReauthParams $params
      * @param RequestOpts|null $requestOptions
      *
-     * @return BaseResponse<AccountReauthResponse>
+     * @return BaseResponse<AccountReauthResponse|XAccountConnectionAttemptPending|XAccountConnectionChallenge>
      *
      * @throws APIException
      */
@@ -216,7 +224,7 @@ final class AccountsRawService implements AccountsRawContract
             path: ['x/accounts/%1$s/reauth', $id],
             body: (object) $parsed,
             options: $options,
-            convert: AccountReauthResponse::class,
+            convert: AccountReauthResponseUnion::class,
         );
     }
 }

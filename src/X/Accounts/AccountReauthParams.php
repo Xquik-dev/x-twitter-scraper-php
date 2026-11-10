@@ -20,7 +20,10 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\X\AccountsService::reauth()
  *
  * @phpstan-type AccountReauthParamsShape = array{
- *   password: string, email?: string|null, totpSecret?: string|null
+ *   password: string,
+ *   email?: string|null,
+ *   totpSecret?: string|null,
+ *   connectionAttemptID?: string|null,
  * }
  */
 final class AccountReauthParams implements BaseModel
@@ -46,6 +49,12 @@ final class AccountReauthParams implements BaseModel
      */
     #[Optional('totp_secret')]
     public ?string $totpSecret;
+
+    /**
+     * An ID you generate to read this reconnect's status, even if the response never reaches you. Leave it out to get one in a pending response.
+     */
+    #[Optional('connection_attempt_id')]
+    public ?string $connectionAttemptID;
 
     /**
      * `new AccountReauthParams()` is missing required properties by the API.
@@ -74,7 +83,8 @@ final class AccountReauthParams implements BaseModel
     public static function with(
         string $password,
         ?string $email = null,
-        ?string $totpSecret = null
+        ?string $totpSecret = null,
+        ?string $connectionAttemptID = null
     ): self {
         $self = new self;
 
@@ -82,6 +92,7 @@ final class AccountReauthParams implements BaseModel
 
         null !== $email && $self['email'] = $email;
         null !== $totpSecret && $self['totpSecret'] = $totpSecret;
+        null !== $connectionAttemptID && $self['connectionAttemptID'] = $connectionAttemptID;
 
         return $self;
     }
@@ -115,6 +126,17 @@ final class AccountReauthParams implements BaseModel
     {
         $self = clone $this;
         $self['totpSecret'] = $totpSecret;
+
+        return $self;
+    }
+
+    /**
+     * An ID you generate to read this reconnect's status, even if the response never reaches you. Leave it out to get one in a pending response.
+     */
+    public function withConnectionAttemptID(string $connectionAttemptID): self
+    {
+        $self = clone $this;
+        $self['connectionAttemptID'] = $connectionAttemptID;
 
         return $self;
     }

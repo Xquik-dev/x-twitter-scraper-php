@@ -31,6 +31,7 @@ interface AccountsContract
      * @param string $password Account password
      * @param string $totpSecret Authenticator App TOTP secret required for durable login
      * @param string $username X username
+     * @param string $connectionAttemptID An ID you generate to read this attempt's status, even if the response never reaches you. Leave it out to get one in a pending response.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -40,6 +41,7 @@ interface AccountsContract
         string $password,
         string $totpSecret,
         string $username,
+        ?string $connectionAttemptID = null,
         RequestOptions|array|null $requestOptions = null,
     ): SanitizedXAccount|XAccountConnectionAttemptPending|XAccountConnectionChallenge;
 
@@ -104,6 +106,7 @@ interface AccountsContract
      * @param string $password Updated account password
      * @param string $email Email for the X account (updates stored email)
      * @param string $totpSecret Replacement Authenticator App TOTP secret. Omit it to reuse the saved secret.
+     * @param string $connectionAttemptID An ID you generate to read this reconnect's status, even if the response never reaches you. Leave it out to get one in a pending response.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -113,6 +116,7 @@ interface AccountsContract
         string $password,
         ?string $email = null,
         ?string $totpSecret = null,
+        ?string $connectionAttemptID = null,
         RequestOptions|array|null $requestOptions = null,
-    ): AccountReauthResponse;
+    ): AccountReauthResponse|XAccountConnectionAttemptPending|XAccountConnectionChallenge;
 }

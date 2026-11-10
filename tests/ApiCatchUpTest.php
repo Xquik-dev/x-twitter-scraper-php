@@ -13,12 +13,34 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use XTwitterScraper\ActivityLogRow;
 use XTwitterScraper\Client;
+use XTwitterScraper\X\AccountConnectionAttempts\AccountConnectionAttemptGetResponse\XAccountConnectionAttemptSuccess;
+use XTwitterScraper\X\Accounts\AccountNewResponse\XAccountConnectionAttemptPending;
+use XTwitterScraper\X\Accounts\AccountReauthResponse;
 
 /**
  * @internal
  */
 final class ApiCatchUpTest extends TestCase
 {
+    private const CONNECT_LINK = [
+        'object' => 'x_account_connection_link',
+        'id' => 'xlink_AAAAAAAAAAAAAAAA',
+        'purpose' => 'connect',
+        'status' => 'pending',
+        'reference' => 'user-42',
+        'returnUrl' => 'https://example.com/connected',
+        'accountId' => null,
+        'xUserId' => null,
+        'xUsername' => null,
+        'health' => null,
+        'failure' => null,
+        'createdAt' => '2025-01-15T12:00:00Z',
+        'expiresAt' => '2025-01-15T12:30:00Z',
+        'completedAt' => null,
+    ];
+
+    private const PENDING_ATTEMPT = '{"object":"x_account_connection_attempt","id":"xatt_0123456789abcdef0123456789abcdef","status":"pending","pollAfterMs":1000}';
+
     private MockClient $transporter;
 
     private Client $client;
@@ -113,6 +135,142 @@ final class ApiCatchUpTest extends TestCase
         $this->assertCount(1, $rows);
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(ActivityLogRow::class, $rows[0]);
+    }
+
+    #[Test]
+    public function testAConnectLinkSendsItsOptionsUnderTheirAPINames(): void
+    {
+        $this->respond(
+            'application/json',
+            json_encode(self::CONNECT_LINK + ['url' => 'https://example.com/connect#token'], JSON_THROW_ON_ERROR),
+        );
+
+        $link = $this->client->x->accountConnectionLinks->create(
+            accountID: '42',
+            reference: 'user-42',
+            returnURL: 'https://example.com/connected',
+        );
+
+        $this->assertSame('POST', $this->lastRequest()->getMethod());
+        $this->assertStringEndsWith('/x/account-connection-links', $this->lastRequest()->getUri()->getPath());
+        $this->assertEquals(
+            ['accountId' => '42', 'reference' => 'user-42', 'returnUrl' => 'https://example.com/connected'],
+            json_decode((string) $this->lastRequest()->getBody(), true),
+        );
+        $this->assertSame('https://example.com/connect#token', $link->url);
+    }
+
+    #[Test]
+    public function testAConnectLinkIsReadByItsID(): void
+    {
+        $this->respond('application/json', json_encode(self::CONNECT_LINK, JSON_THROW_ON_ERROR));
+
+        $link = $this->client->x->accountConnectionLinks->retrieve('xlink_AAAAAAAAAAAAAAAA');
+
+        $this->assertSame('GET', $this->lastRequest()->getMethod());
+        $this->assertStringEndsWith(
+            '/x/account-connection-links/xlink_AAAAAAAAAAAAAAAA',
+            $this->lastRequest()->getUri()->getPath(),
+        );
+        $this->assertSame('user-42', $link->reference);
+        $this->assertNull($link->accountID);
+    }
+
+    #[Test]
+    public function testAConnectLinkIsRevokedByItsID(): void
+    {
+        $this->respond('application/json', '{"success":true}');
+
+        $result = $this->client->x->accountConnectionLinks->delete('xlink_AAAAAAAAAAAAAAAA');
+
+        $this->assertSame('DELETE', $this->lastRequest()->getMethod());
+        $this->assertStringEndsWith(
+            '/x/account-connection-links/xlink_AAAAAAAAAAAAAAAA',
+            $this->lastRequest()->getUri()->getPath(),
+        );
+        $this->assertTrue($result->success);
+    }
+
+    #[Test]
+    public function testAnAccountSendsItsConnectionAttemptID(): void
+    {
+        $this->respond('application/json', self::PENDING_ATTEMPT);
+
+        $answer = $this->client->x->accounts->create(
+            email: 'account@example.invalid',
+            password: '<ACCOUNT_PASSWORD>',
+            totpSecret: '<TOTP_SECRET>',
+            username: 'your_x_username',
+            connectionAttemptID: 'xatt_0123456789abcdef0123456789abcdef',
+        );
+
+        $body = json_decode((string) $this->lastRequest()->getBody(), true);
+        $this->assertIsArray($body);
+        $this->assertSame('xatt_0123456789abcdef0123456789abcdef', $body['connection_attempt_id']);
+        $this->assertInstanceOf(XAccountConnectionAttemptPending::class, $answer);
+    }
+
+    #[Test]
+    public function testAReauthStillRunningReadsAsAPendingAttempt(): void
+    {
+        $this->respond('application/json', self::PENDING_ATTEMPT);
+
+        $answer = $this->client->x->accounts->reauth(
+            '42',
+            password: '<ACCOUNT_PASSWORD>',
+            connectionAttemptID: 'xatt_0123456789abcdef0123456789abcdef',
+        );
+
+        $this->assertEquals(
+            ['password' => '<ACCOUNT_PASSWORD>', 'connection_attempt_id' => 'xatt_0123456789abcdef0123456789abcdef'],
+            json_decode((string) $this->lastRequest()->getBody(), true),
+        );
+        $this->assertInstanceOf(XAccountConnectionAttemptPending::class, $answer);
+        $this->assertSame(1000, $answer->pollAfterMs);
+    }
+
+    #[Test]
+    public function testAFinishedReauthStillReadsAsTheAccount(): void
+    {
+        $this->respond(
+            'application/json',
+            '{"id":"42","createdAt":"2025-01-15T12:00:00Z","health":"healthy","status":"active","xUserId":"1234567890","xUsername":"test_account"}',
+        );
+
+        $answer = $this->client->x->accounts->reauth('42', password: '<ACCOUNT_PASSWORD>');
+
+        $this->assertInstanceOf(AccountReauthResponse::class, $answer);
+        $this->assertSame('test_account', $answer->xUsername);
+    }
+
+    #[Test]
+    public function testAFinishedAttemptNamesTheConnectedAccount(): void
+    {
+        $this->respond(
+            'application/json',
+            '{"object":"x_account_connection_attempt","id":"xatt_0123456789abcdef0123456789abcdef","status":"success","accountId":"42"}',
+        );
+
+        $attempt = $this->client->x->accountConnectionAttempts->retrieve('xatt_0123456789abcdef0123456789abcdef');
+
+        $this->assertInstanceOf(XAccountConnectionAttemptSuccess::class, $attempt);
+        $this->assertSame('42', $attempt->accountID);
+    }
+
+    #[Test]
+    public function testAPostSendsItsMediaIDsUnderTheirAPIName(): void
+    {
+        $this->respond('application/json', '{}');
+
+        $this->client->x->tweets->create(
+            account: '@elonmusk',
+            idempotencyKey: 'write-1',
+            mediaIDs: ['2104371968258560001'],
+        );
+
+        $body = json_decode((string) $this->lastRequest()->getBody(), true);
+        $this->assertIsArray($body);
+        $this->assertSame(['2104371968258560001'], $body['media_ids']);
     }
 
     private function respond(string $contentType, string $text): void
