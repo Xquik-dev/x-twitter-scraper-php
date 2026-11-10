@@ -23,6 +23,7 @@ interface BookmarksContract
      *
      * @param string $cursor Pagination cursor for bookmarks
      * @param string $folderID Optional bookmark folder ID
+     * @param int $pageSize Items per page, 1 to 100, default 20. Follow the next cursor for more.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -30,6 +31,7 @@ interface BookmarksContract
     public function list(
         ?string $cursor = null,
         ?string $folderID = null,
+        ?int $pageSize = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 

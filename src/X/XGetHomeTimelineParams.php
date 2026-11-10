@@ -19,7 +19,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\XService::getHomeTimeline()
  *
  * @phpstan-type XGetHomeTimelineParamsShape = array{
- *   cursor?: string|null, seenTweetIDs?: string|null
+ *   cursor?: string|null, seenTweetIDs?: string|null, pageSize?: int|null
  * }
  */
 final class XGetHomeTimelineParams implements BaseModel
@@ -40,6 +40,12 @@ final class XGetHomeTimelineParams implements BaseModel
     #[Optional]
     public ?string $seenTweetIDs;
 
+    /**
+     * Items per page, 1 to 100, default 20. Follow the next cursor for more.
+     */
+    #[Optional]
+    public ?int $pageSize;
+
     public function __construct()
     {
         $this->initialize();
@@ -52,12 +58,14 @@ final class XGetHomeTimelineParams implements BaseModel
      */
     public static function with(
         ?string $cursor = null,
-        ?string $seenTweetIDs = null
+        ?string $seenTweetIDs = null,
+        ?int $pageSize = null,
     ): self {
         $self = new self;
 
         null !== $cursor && $self['cursor'] = $cursor;
         null !== $seenTweetIDs && $self['seenTweetIDs'] = $seenTweetIDs;
+        null !== $pageSize && $self['pageSize'] = $pageSize;
 
         return $self;
     }
@@ -80,6 +88,17 @@ final class XGetHomeTimelineParams implements BaseModel
     {
         $self = clone $this;
         $self['seenTweetIDs'] = $seenTweetIDs;
+
+        return $self;
+    }
+
+    /**
+     * Items per page, 1 to 100, default 20. Follow the next cursor for more.
+     */
+    public function withPageSize(int $pageSize): self
+    {
+        $self = clone $this;
+        $self['pageSize'] = $pageSize;
 
         return $self;
     }

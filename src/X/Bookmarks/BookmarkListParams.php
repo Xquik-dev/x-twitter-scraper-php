@@ -19,7 +19,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\X\BookmarksService::list()
  *
  * @phpstan-type BookmarkListParamsShape = array{
- *   cursor?: string|null, folderID?: string|null
+ *   cursor?: string|null, folderID?: string|null, pageSize?: int|null
  * }
  */
 final class BookmarkListParams implements BaseModel
@@ -40,6 +40,12 @@ final class BookmarkListParams implements BaseModel
     #[Optional]
     public ?string $folderID;
 
+    /**
+     * Items per page, 1 to 100, default 20. Follow the next cursor for more.
+     */
+    #[Optional]
+    public ?int $pageSize;
+
     public function __construct()
     {
         $this->initialize();
@@ -52,12 +58,14 @@ final class BookmarkListParams implements BaseModel
      */
     public static function with(
         ?string $cursor = null,
-        ?string $folderID = null
+        ?string $folderID = null,
+        ?int $pageSize = null,
     ): self {
         $self = new self;
 
         null !== $cursor && $self['cursor'] = $cursor;
         null !== $folderID && $self['folderID'] = $folderID;
+        null !== $pageSize && $self['pageSize'] = $pageSize;
 
         return $self;
     }
@@ -80,6 +88,17 @@ final class BookmarkListParams implements BaseModel
     {
         $self = clone $this;
         $self['folderID'] = $folderID;
+
+        return $self;
+    }
+
+    /**
+     * Items per page, 1 to 100, default 20. Follow the next cursor for more.
+     */
+    public function withPageSize(int $pageSize): self
+    {
+        $self = clone $this;
+        $self['pageSize'] = $pageSize;
 
         return $self;
     }
