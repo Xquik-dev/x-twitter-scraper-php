@@ -30,7 +30,11 @@ if ('/compose' === $path) {
     exit;
 }
 
-if ('/x/accounts' === $path && 'POST' === ($_SERVER['REQUEST_METHOD'] ?? '')) {
+if (
+    is_string($path)
+    && preg_match('#^/x/accounts(?:/[^/]+/reauth)?$#', $path)
+    && 'POST' === ($_SERVER['REQUEST_METHOD'] ?? '')
+) {
     echo json_encode([
         'id' => 'xacct_test',
         'createdAt' => '2026-07-31T12:00:00Z',
