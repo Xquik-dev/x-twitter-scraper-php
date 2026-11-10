@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\Accounts;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
@@ -19,7 +20,11 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  * @see XTwitterScraper\Services\X\AccountsService::create()
  *
  * @phpstan-type AccountCreateParamsShape = array{
- *   email: string, password: string, totpSecret: string, username: string
+ *   email: string,
+ *   password: string,
+ *   totpSecret: string,
+ *   username: string,
+ *   connectionAttemptID?: string|null,
  * }
  */
 final class AccountCreateParams implements BaseModel
@@ -51,6 +56,12 @@ final class AccountCreateParams implements BaseModel
      */
     #[Required]
     public string $username;
+
+    /**
+     * An ID you generate to read this attempt's status, even if the response never reaches you. Leave it out to get one in a pending response.
+     */
+    #[Optional('connection_attempt_id')]
+    public ?string $connectionAttemptID;
 
     /**
      * `new AccountCreateParams()` is missing required properties by the API.
@@ -86,7 +97,8 @@ final class AccountCreateParams implements BaseModel
         string $email,
         string $password,
         string $totpSecret,
-        string $username
+        string $username,
+        ?string $connectionAttemptID = null
     ): self {
         $self = new self;
 
@@ -94,6 +106,8 @@ final class AccountCreateParams implements BaseModel
         $self['password'] = $password;
         $self['totpSecret'] = $totpSecret;
         $self['username'] = $username;
+
+        null !== $connectionAttemptID && $self['connectionAttemptID'] = $connectionAttemptID;
 
         return $self;
     }
@@ -138,6 +152,17 @@ final class AccountCreateParams implements BaseModel
     {
         $self = clone $this;
         $self['username'] = $username;
+
+        return $self;
+    }
+
+    /**
+     * An ID you generate to read this attempt's status, even if the response never reaches you. Leave it out to get one in a pending response.
+     */
+    public function withConnectionAttemptID(string $connectionAttemptID): self
+    {
+        $self = clone $this;
+        $self['connectionAttemptID'] = $connectionAttemptID;
 
         return $self;
     }

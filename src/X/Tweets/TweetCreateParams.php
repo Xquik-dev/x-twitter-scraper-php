@@ -25,6 +25,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   communityID?: string|null,
  *   isNoteTweet?: bool|null,
  *   media?: list<string>|null,
+ *   mediaIDs?: list<string>|null,
  *   replyToTweetID?: string|null,
  *   text?: string|null,
  * }
@@ -57,6 +58,14 @@ final class TweetCreateParams implements BaseModel
      */
     #[Optional(list: 'string')]
     public ?array $media;
+
+    /**
+     * Media IDs from `POST /x/media`, uploaded with this account. IDs last 24 hours. Send up to 4 image IDs or exactly 1 video ID. Send `media` or `mediaIDs`, not both. Media adds 2 credits per started MB across all files.
+     *
+     * @var list<string>|null $mediaIDs
+     */
+    #[Optional('media_ids', list: 'string')]
+    public ?array $mediaIDs;
 
     #[Optional('reply_to_tweet_id')]
     public ?string $replyToTweetID;
@@ -92,6 +101,7 @@ final class TweetCreateParams implements BaseModel
      * You must use named parameters to construct any parameters with a default value.
      *
      * @param list<string>|null $media
+     * @param list<string>|null $mediaIDs
      */
     public static function with(
         string $account,
@@ -101,6 +111,7 @@ final class TweetCreateParams implements BaseModel
         ?array $media = null,
         ?string $replyToTweetID = null,
         ?string $text = null,
+        ?array $mediaIDs = null,
     ): self {
         $self = new self;
 
@@ -112,6 +123,7 @@ final class TweetCreateParams implements BaseModel
         null !== $media && $self['media'] = $media;
         null !== $replyToTweetID && $self['replyToTweetID'] = $replyToTweetID;
         null !== $text && $self['text'] = $text;
+        null !== $mediaIDs && $self['mediaIDs'] = $mediaIDs;
 
         return $self;
     }
@@ -179,6 +191,19 @@ final class TweetCreateParams implements BaseModel
     {
         $self = clone $this;
         $self['text'] = $text;
+
+        return $self;
+    }
+
+    /**
+     * Media IDs from `POST /x/media`, uploaded with this account. IDs last 24 hours. Send up to 4 image IDs or exactly 1 video ID. Send `media` or `mediaIDs`, not both. Media adds 2 credits per started MB across all files.
+     *
+     * @param list<string> $mediaIDs
+     */
+    public function withMediaIDs(array $mediaIDs): self
+    {
+        $self = clone $this;
+        $self['mediaIDs'] = $mediaIDs;
 
         return $self;
     }

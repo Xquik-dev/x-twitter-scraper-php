@@ -83,6 +83,7 @@ final class TweetsRawService implements TweetsRawContract
      *   communityID?: string,
      *   isNoteTweet?: bool,
      *   media?: list<string>,
+     *   mediaIDs?: list<string>,
      *   replyToTweetID?: string,
      *   text?: string,
      * }|TweetCreateParams $params

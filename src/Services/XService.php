@@ -17,6 +17,7 @@ use XTwitterScraper\SearchSuggestions;
 use XTwitterScraper\ServiceContracts\XContract;
 use XTwitterScraper\Services\X\AccountConnectionAttemptsService;
 use XTwitterScraper\Services\X\AccountConnectionChallengesService;
+use XTwitterScraper\Services\X\AccountConnectionLinksService;
 use XTwitterScraper\Services\X\AccountsService;
 use XTwitterScraper\Services\X\AnalysisService;
 use XTwitterScraper\Services\X\BookmarksService;
@@ -113,6 +114,11 @@ final class XService implements XContract
     /**
      * @api
      */
+    public AccountConnectionLinksService $accountConnectionLinks;
+
+    /**
+     * @api
+     */
     public BookmarksService $bookmarks;
 
     /**
@@ -173,6 +179,7 @@ final class XService implements XContract
         $this->accounts = new AccountsService($client);
         $this->accountConnectionChallenges = new AccountConnectionChallengesService($client);
         $this->accountConnectionAttempts = new AccountConnectionAttemptsService($client);
+        $this->accountConnectionLinks = new AccountConnectionLinksService($client);
         $this->bookmarks = new BookmarksService($client);
         $this->lists = new ListsService($client);
     }
@@ -215,6 +222,7 @@ final class XService implements XContract
      *
      * @param string $cursor Pagination cursor for timeline
      * @param string $seenTweetIDs Comma-separated tweet IDs to exclude from results. Empty entries are ignored.
+     * @param int $pageSize Items per page, 1 to 100, default 20. Follow the next cursor for more.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -222,10 +230,15 @@ final class XService implements XContract
     public function getHomeTimeline(
         ?string $cursor = null,
         ?string $seenTweetIDs = null,
+        ?int $pageSize = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets {
         $params = Util::removeNulls(
-            ['cursor' => $cursor, 'seenTweetIDs' => $seenTweetIDs]
+            [
+                'cursor' => $cursor,
+                'seenTweetIDs' => $seenTweetIDs,
+                'pageSize' => $pageSize,
+            ]
         );
 
         // @phpstan-ignore-next-line argument.type

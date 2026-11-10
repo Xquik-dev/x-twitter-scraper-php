@@ -50,6 +50,7 @@ interface XContract
      *
      * @param string $cursor Pagination cursor for timeline
      * @param string $seenTweetIDs Comma-separated tweet IDs to exclude from results. Empty entries are ignored.
+     * @param int $pageSize Items per page, 1 to 100, default 20. Follow the next cursor for more.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -57,6 +58,7 @@ interface XContract
     public function getHomeTimeline(
         ?string $cursor = null,
         ?string $seenTweetIDs = null,
+        ?int $pageSize = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 
