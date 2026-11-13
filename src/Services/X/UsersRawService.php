@@ -568,6 +568,7 @@ final class UsersRawService implements UsersRawContract
      *   quotes?: UserRetrieveMentionsParams\Quotes|value-of<UserRetrieveMentionsParams\Quotes>,
      *   quotesOfTweetID?: string,
      *   replies?: UserRetrieveMentionsParams\Replies|value-of<UserRetrieveMentionsParams\Replies>,
+     *   ownThreads?: UserRetrieveMentionsParams\OwnThreads|value-of<UserRetrieveMentionsParams\OwnThreads>,
      *   retweets?: UserRetrieveMentionsParams\Retweets|value-of<UserRetrieveMentionsParams\Retweets>,
      *   retweetsOfTweetID?: string,
      *   safe?: bool,

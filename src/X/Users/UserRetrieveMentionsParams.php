@@ -13,6 +13,7 @@ use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Concerns\SdkParams;
 use XTwitterScraper\Core\Contracts\BaseModel;
 use XTwitterScraper\X\Users\UserRetrieveMentionsParams\MediaType;
+use XTwitterScraper\X\Users\UserRetrieveMentionsParams\OwnThreads;
 use XTwitterScraper\X\Users\UserRetrieveMentionsParams\Quotes;
 use XTwitterScraper\X\Users\UserRetrieveMentionsParams\Replies;
 use XTwitterScraper\X\Users\UserRetrieveMentionsParams\Retweets;
@@ -74,6 +75,7 @@ use XTwitterScraper\X\Users\UserRetrieveMentionsParams\Retweets;
  *   minLikes?: int|null,
  *   fields?: string|null,
  *   omit?: string|null,
+ *   ownThreads?: null|OwnThreads|value-of<OwnThreads>,
  * }
  */
 final class UserRetrieveMentionsParams implements BaseModel
@@ -396,6 +398,14 @@ final class UserRetrieveMentionsParams implements BaseModel
     #[Optional]
     public ?string $omit;
 
+    /**
+     * With replies=exclude, also leaves out replies to the author's own posts, so the search skips every reply.
+     *
+     * @var value-of<OwnThreads>|null $ownThreads
+     */
+    #[Optional(enum: OwnThreads::class)]
+    public ?string $ownThreads;
+
     public function __construct()
     {
         $this->initialize();
@@ -410,6 +420,7 @@ final class UserRetrieveMentionsParams implements BaseModel
      * @param Quotes|value-of<Quotes>|null $quotes
      * @param Replies|value-of<Replies>|null $replies
      * @param Retweets|value-of<Retweets>|null $retweets
+     * @param OwnThreads|value-of<OwnThreads>|null $ownThreads
      */
     public static function with(
         ?string $anyWords = null,
@@ -462,7 +473,8 @@ final class UserRetrieveMentionsParams implements BaseModel
         ?string $withinTime = null,
         ?int $minLikes = null,
         ?string $fields = null,
-        ?string $omit = null
+        ?string $omit = null,
+        OwnThreads|string|null $ownThreads = null,
     ): self {
         $self = new self;
 
@@ -520,6 +532,7 @@ final class UserRetrieveMentionsParams implements BaseModel
         null !== $fields && $self['fields'] = $fields;
 
         null !== $omit && $self['omit'] = $omit;
+        null !== $ownThreads && $self['ownThreads'] = $ownThreads;
 
         return $self;
     }
@@ -1089,6 +1102,19 @@ final class UserRetrieveMentionsParams implements BaseModel
     {
         $self = clone $this;
         $self['omit'] = $omit;
+
+        return $self;
+    }
+
+    /**
+     * With replies=exclude, also leaves out replies to the author's own posts, so the search skips every reply.
+     *
+     * @param OwnThreads|value-of<OwnThreads>|null $ownThreads
+     */
+    public function withOwnThreads(OwnThreads|string|null $ownThreads): self
+    {
+        $self = clone $this;
+        $self['ownThreads'] = $ownThreads;
 
         return $self;
     }

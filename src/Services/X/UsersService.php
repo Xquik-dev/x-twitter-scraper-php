@@ -33,6 +33,7 @@ use XTwitterScraper\X\Users\UserRetrieveLikesParams\MediaType;
 use XTwitterScraper\X\Users\UserRetrieveLikesParams\Quotes;
 use XTwitterScraper\X\Users\UserRetrieveLikesParams\Replies;
 use XTwitterScraper\X\Users\UserRetrieveLikesParams\Retweets;
+use XTwitterScraper\X\Users\UserRetrieveMentionsParams\OwnThreads;
 use XTwitterScraper\X\Users\UserTranslateBioResponse;
 use XTwitterScraper\XWriteAction;
 
@@ -865,6 +866,7 @@ final class UsersService implements UsersContract
      * @param int|null $minLikes Minimum likes. Its aliases are minFaves, min_likes & min_faves.
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
+     * @param OwnThreads|value-of<OwnThreads>|null $ownThreads with replies=exclude, also leaves out replies to the author's own posts, so the search skips every reply
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -922,6 +924,7 @@ final class UsersService implements UsersContract
         ?int $minLikes = null,
         ?string $fields = null,
         ?string $omit = null,
+        OwnThreads|string|null $ownThreads = null,
         RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets {
         $params = Util::removeNulls(
@@ -974,6 +977,7 @@ final class UsersService implements UsersContract
                 'verifiedOnly' => $verifiedOnly,
                 'within' => $within,
                 'withinTime' => $withinTime,
+                'ownThreads' => $ownThreads,
             ],
         );
 
