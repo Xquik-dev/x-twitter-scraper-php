@@ -25,6 +25,7 @@ use XTwitterScraper\X\Tweets\TweetGetRepliesResponse\SearchContext;
  *   nestedReplies?: list<mixed>|null,
  *   filteredCount?: int|null,
  *   readBackTo?: \DateTimeInterface|null,
+ *   hiddenTimeline?: bool|null,
  *   windowComplete?: bool|null,
  *   searchedQuery?: string|null,
  *   searchContext?: SearchContext|array<string,mixed>|null,
@@ -76,6 +77,12 @@ final class TweetGetRepliesResponse implements BaseModel
      */
     #[Optional]
     public ?\DateTimeInterface $readBackTo;
+
+    /**
+     * Present on an empty last page when X shows this account's timeline to nobody. The page is empty because of that, so it doesn't mean the account posted nothing. A retry returns the same page.
+     */
+    #[Optional]
+    public ?bool $hiddenTimeline;
 
     /**
      * Present on a last page whose sources all read past its start time.
@@ -171,6 +178,7 @@ final class TweetGetRepliesResponse implements BaseModel
         ?array $nestedReplies = null,
         ?int $filteredCount = null,
         ?\DateTimeInterface $readBackTo = null,
+        ?bool $hiddenTimeline = null,
         ?bool $windowComplete = null,
         ?string $searchedQuery = null,
         SearchContext|array|null $searchContext = null,
@@ -193,6 +201,8 @@ final class TweetGetRepliesResponse implements BaseModel
         null !== $filteredCount && $self['filteredCount'] = $filteredCount;
 
         null !== $readBackTo && $self['readBackTo'] = $readBackTo;
+
+        null !== $hiddenTimeline && $self['hiddenTimeline'] = $hiddenTimeline;
 
         null !== $windowComplete && $self['windowComplete'] = $windowComplete;
 
@@ -286,6 +296,17 @@ final class TweetGetRepliesResponse implements BaseModel
     {
         $self = clone $this;
         $self['readBackTo'] = $readBackTo;
+
+        return $self;
+    }
+
+    /**
+     * Present on an empty last page when X shows this account's timeline to nobody. The page is empty because of that, so it doesn't mean the account posted nothing. A retry returns the same page.
+     */
+    public function withHiddenTimeline(?bool $hiddenTimeline): self
+    {
+        $self = clone $this;
+        $self['hiddenTimeline'] = $hiddenTimeline;
 
         return $self;
     }

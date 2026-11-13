@@ -4,6 +4,8 @@
 
 ### Features
 
+* `PaginatedTweets`, `PaginatedTweets2`, `SportsGamePosts` and `TweetGetRepliesResponse` carry `hiddenTimeline`, present on an empty last page when X shows the account's timeline to nobody, so the page doesn't mean the account posted nothing.
+* Follower, following, verified follower, list member and list follower pages carry `windowComplete`, present on the last page of an empty list whose profile counts 0 accounts in it.
 * Extraction tool types gain `USER_AFFILIATES`.
 * `x->tweets->search`, `x->users->retrieveTweets`, `retrieveReplies` and `retrieveMedia` take `topic` and `imageShows`. `extractions->run` and `estimateCost` take both, and `x->media->download` takes `imageShows`.
 * A filtered page carries `topicFilter` or `imageFilter`, and each kept post carries `topicScore` or `imageScore`. Extraction jobs carry both summaries, and a media download carries `imageFilter`.
