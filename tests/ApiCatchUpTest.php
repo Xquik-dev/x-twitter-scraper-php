@@ -16,6 +16,8 @@ use XTwitterScraper\Client;
 use XTwitterScraper\X\AccountConnectionAttempts\AccountConnectionAttemptGetResponse\XAccountConnectionAttemptSuccess;
 use XTwitterScraper\X\Accounts\AccountNewResponse\XAccountConnectionAttemptPending;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
+use XTwitterScraper\X\Users\UserRetrieveMentionsParams;
+use XTwitterScraper\X\Users\UserRetrieveMentionsParams\OwnThreads;
 
 /**
  * @internal
@@ -271,6 +273,22 @@ final class ApiCatchUpTest extends TestCase
         $body = json_decode((string) $this->lastRequest()->getBody(), true);
         $this->assertIsArray($body);
         $this->assertSame(['2104371968258560001'], $body['media_ids']);
+    }
+
+    #[Test]
+    public function testAMentionsReadSendsOwnThreads(): void
+    {
+        $this->respond('application/json', '{"tweets":[],"has_next_page":false,"next_cursor":""}');
+
+        $this->client->x->users->retrieveMentions('44196397', replies: 'exclude', ownThreads: OwnThreads::EXCLUDE);
+
+        parse_str($this->lastRequest()->getUri()->getQuery(), $query);
+        $this->assertSame('exclude', $query['replies'] ?? null);
+        $this->assertSame('exclude', $query['ownThreads'] ?? null);
+
+        $params = UserRetrieveMentionsParams::with(ownThreads: 'exclude');
+        $this->assertSame('exclude', $params->ownThreads);
+        $this->assertSame('exclude', (new UserRetrieveMentionsParams)->withOwnThreads(OwnThreads::EXCLUDE)->ownThreads);
     }
 
     private function respond(string $contentType, string $text): void

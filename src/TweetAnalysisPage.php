@@ -8,17 +8,23 @@ declare(strict_types=1);
 
 namespace XTwitterScraper;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
 
 /**
+ * @phpstan-import-type ImageFilterSummaryShape from ImageFilterSummary
+ * @phpstan-import-type TopicFilterSummaryShape from TopicFilterSummary
+ *
  * @phpstan-type TweetAnalysisPageShape = array{
  *   results: list<TweetAnalysisResult|array<string,mixed>>,
  *   unanalyzed: list<UnanalyzedTweet|array<string,mixed>>,
  *   analysisSummary: TweetAnalysisSummary|array<string,mixed>,
  *   hasNextPage: bool,
  *   nextCursor: string,
+ *   imageFilter?: null|ImageFilterSummary|ImageFilterSummaryShape,
+ *   topicFilter?: null|TopicFilterSummary|TopicFilterSummaryShape,
  * }
  */
 final class TweetAnalysisPage implements BaseModel
@@ -61,6 +67,18 @@ final class TweetAnalysisPage implements BaseModel
     public string $nextCursor;
 
     /**
+     * What the image filter asked & how many posts it kept. Present when you send imageShows.
+     */
+    #[Optional]
+    public ?ImageFilterSummary $imageFilter;
+
+    /**
+     * What the topic filter asked & how many posts it kept. Present when you send topic.
+     */
+    #[Optional]
+    public ?TopicFilterSummary $topicFilter;
+
+    /**
      * `new TweetAnalysisPage()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -87,9 +105,18 @@ final class TweetAnalysisPage implements BaseModel
      * @param list<TweetAnalysisResult|array<string,mixed>> $results
      * @param list<UnanalyzedTweet|array<string,mixed>> $unanalyzed
      * @param TweetAnalysisSummary|array<string,mixed> $analysisSummary
+     * @param ImageFilterSummary|ImageFilterSummaryShape|null $imageFilter
+     * @param TopicFilterSummary|TopicFilterSummaryShape|null $topicFilter
      */
-    public static function with(array $results, array $unanalyzed, TweetAnalysisSummary|array $analysisSummary, bool $hasNextPage, string $nextCursor): self
-    {
+    public static function with(
+        array $results,
+        array $unanalyzed,
+        TweetAnalysisSummary|array $analysisSummary,
+        bool $hasNextPage,
+        string $nextCursor,
+        ImageFilterSummary|array|null $imageFilter = null,
+        TopicFilterSummary|array|null $topicFilter = null,
+    ): self {
         $self = new self;
 
         $self['results'] = $results;
@@ -97,6 +124,9 @@ final class TweetAnalysisPage implements BaseModel
         $self['analysisSummary'] = $analysisSummary;
         $self['hasNextPage'] = $hasNextPage;
         $self['nextCursor'] = $nextCursor;
+
+        null !== $imageFilter && $self['imageFilter'] = $imageFilter;
+        null !== $topicFilter && $self['topicFilter'] = $topicFilter;
 
         return $self;
     }
@@ -158,6 +188,32 @@ final class TweetAnalysisPage implements BaseModel
     {
         $self = clone $this;
         $self['nextCursor'] = $nextCursor;
+
+        return $self;
+    }
+
+    /**
+     * What the image filter asked & how many posts it kept. Present when you send imageShows.
+     *
+     * @param ImageFilterSummary|ImageFilterSummaryShape $imageFilter
+     */
+    public function withImageFilter(ImageFilterSummary|array $imageFilter): self
+    {
+        $self = clone $this;
+        $self['imageFilter'] = $imageFilter;
+
+        return $self;
+    }
+
+    /**
+     * What the topic filter asked & how many posts it kept. Present when you send topic.
+     *
+     * @param TopicFilterSummary|TopicFilterSummaryShape $topicFilter
+     */
+    public function withTopicFilter(TopicFilterSummary|array $topicFilter): self
+    {
+        $self = clone $this;
+        $self['topicFilter'] = $topicFilter;
 
         return $self;
     }

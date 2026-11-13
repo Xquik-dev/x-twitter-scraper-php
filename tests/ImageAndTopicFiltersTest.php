@@ -18,9 +18,19 @@ use XTwitterScraper\ImageFilterSummary;
 use XTwitterScraper\PaginatedTweets;
 use XTwitterScraper\SearchTweet;
 use XTwitterScraper\TopicFilterSummary;
+use XTwitterScraper\TweetAnalysisPage;
+use XTwitterScraper\X\Analysis\AnalysisBrandParams;
+use XTwitterScraper\X\Analysis\AnalysisClassifyParams;
+use XTwitterScraper\X\Analysis\AnalysisMarketSignalsParams;
+use XTwitterScraper\X\Analysis\AnalysisNewsParams;
+use XTwitterScraper\X\Analysis\AnalysisSentimentParams;
+use XTwitterScraper\X\Analysis\AnalysisViralScoreParams;
 
 /**
  * @internal
+ *
+ * @phpstan-import-type ImageFilterSummaryShape from ImageFilterSummary
+ * @phpstan-import-type TopicFilterSummaryShape from TopicFilterSummary
  */
 final class ImageAndTopicFiltersTest extends TestCase
 {
@@ -165,6 +175,109 @@ final class ImageAndTopicFiltersTest extends TestCase
         $this->assertSame('charts', $result->imageFilter->imageShows);
     }
 
+    #[Test]
+    #[DataProvider('analysisRoutes')]
+    public function testAnalysisSendsTheFiltersAndReadsBothSummaries(string $method, string $path): void
+    {
+        $this->respond([
+            'results' => [],
+            'unanalyzed' => [],
+            'analysisSummary' => [
+                'schemaVersion' => 1,
+                'rows' => ['analyzed' => 1, 'failed' => 0, 'skipped' => 0],
+                'engagement' => 0,
+                'questions' => [],
+            ],
+            'has_next_page' => false,
+            'next_cursor' => '',
+            'topicFilter' => self::topicFilter(),
+            'imageFilter' => self::imageFilter(),
+        ]);
+
+        $page = $this->client->x->analysis->{$method}(
+            query: 'rust',
+            topic: 'the Rust programming language',
+            imageShows: 'charts',
+        );
+
+        $body = $this->body();
+        $this->assertStringEndsWith('/x/analysis/'.$path, $this->lastRequest()->getUri()->getPath());
+        $this->assertSame('the Rust programming language', $body['topic'] ?? null);
+        $this->assertSame('charts', $body['imageShows'] ?? null);
+        $this->assertInstanceOf(TweetAnalysisPage::class, $page);
+        $this->assertInstanceOf(TopicFilterSummary::class, $page->topicFilter);
+        $this->assertSame('the Rust programming language', $page->topicFilter->topic);
+        $this->assertSame(1, $page->topicFilter->kept);
+        $this->assertInstanceOf(ImageFilterSummary::class, $page->imageFilter);
+        $this->assertSame('charts', $page->imageFilter->imageShows);
+        $this->assertSame(4, $page->imageFilter->kept);
+    }
+
+    /**
+     * @return list<array{string,string}>
+     */
+    public static function analysisRoutes(): array
+    {
+        return [
+            ['sentiment', 'sentiment'],
+            ['brand', 'brand'],
+            ['news', 'news'],
+            ['marketSignals', 'market-signals'],
+            ['viralScore', 'viral-score'],
+            ['classify', 'classify'],
+        ];
+    }
+
+    #[Test]
+    public function testAnAnalysisPageWithoutFiltersHasNoSummaries(): void
+    {
+        $page = TweetAnalysisPage::with(
+            results: [],
+            unanalyzed: [],
+            analysisSummary: ['schemaVersion' => 1, 'rows' => ['analyzed' => 0, 'failed' => 0, 'skipped' => 0], 'engagement' => 0, 'questions' => []],
+            hasNextPage: false,
+            nextCursor: '',
+        );
+
+        $this->assertNull($page->topicFilter);
+        $this->assertNull($page->imageFilter);
+
+        $filtered = $page->withTopicFilter(self::topicFilter())->withImageFilter(self::imageFilter());
+        $this->assertSame(3, $filtered->topicFilter?->checked);
+        $this->assertSame(16, $filtered->imageFilter?->checked);
+    }
+
+    /**
+     * @param class-string<AnalysisBrandParams|AnalysisClassifyParams|AnalysisMarketSignalsParams|AnalysisNewsParams|AnalysisSentimentParams|AnalysisViralScoreParams> $class
+     */
+    #[Test]
+    #[DataProvider('analysisParams')]
+    public function testAnalysisParamsCarryTheFilters(string $class): void
+    {
+        $built = $class::with(topic: 'rockets', imageShows: 'charts');
+        $this->assertSame('rockets', $built->topic);
+        $this->assertSame('charts', $built->imageShows);
+
+        $chained = (new $class)->withTopic('rockets')->withImageShows('charts');
+        $this->assertSame('rockets', $chained->topic);
+        $this->assertSame('charts', $chained->imageShows);
+    }
+
+    /**
+     * @return list<array{class-string<AnalysisBrandParams|AnalysisClassifyParams|AnalysisMarketSignalsParams|AnalysisNewsParams|AnalysisSentimentParams|AnalysisViralScoreParams>}>
+     */
+    public static function analysisParams(): array
+    {
+        return [
+            [AnalysisSentimentParams::class],
+            [AnalysisBrandParams::class],
+            [AnalysisNewsParams::class],
+            [AnalysisMarketSignalsParams::class],
+            [AnalysisViralScoreParams::class],
+            [AnalysisClassifyParams::class],
+        ];
+    }
+
     private static function post(PaginatedTweets $page): SearchTweet
     {
         $post = $page->tweets[0];
@@ -200,7 +313,7 @@ final class ImageAndTopicFiltersTest extends TestCase
     }
 
     /**
-     * @return array<string,mixed>
+     * @return TopicFilterSummaryShape
      */
     private static function topicFilter(): array
     {
@@ -215,7 +328,7 @@ final class ImageAndTopicFiltersTest extends TestCase
     }
 
     /**
-     * @return array<string,mixed>
+     * @return ImageFilterSummaryShape
      */
     private static function imageFilter(): array
     {

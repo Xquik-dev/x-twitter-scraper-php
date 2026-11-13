@@ -37,6 +37,8 @@ interface AnalysisContract
      * @param list<string>|null $texts Your own texts to analyze, such as drafts. Reads nothing from X. Each text costs the same as 1 analyzed post.
      * @param TweetAnalysisSettings|array<string,mixed>|null $analysis Analysis settings, the same as the analysis input of Xquik's AI Actors, plus images. Leave it out for the route's own questions.
      * @param list<Baseline|array<string,mixed>>|null $baseline Rows of an earlier answer to compare with, such as its results. Each needs the post's id, or tweet.id, & its answers. Send monitor too, so other settings show as not_comparable. Each result's monitor says whether the post is new, changed or unchanged. The comparison costs nothing extra.
+     * @param string|null $topic Keep only posts about this topic, the same as the Actors' topic input. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each, & a post the filter drops costs nothing. topicFilter states the cutoff & counts. Send topic or imageShows, not both.
+     * @param string|null $imageShows Keep only posts whose photos show this, the same as the Actors' imageShows input. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each. imageFilter states the cutoff & counts. Send topic or imageShows, not both.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -56,6 +58,8 @@ interface AnalysisContract
         ?array $texts = null,
         TweetAnalysisSettings|array|null $analysis = null,
         ?array $baseline = null,
+        ?string $topic = null,
+        ?string $imageShows = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetAnalysisPage;
 
@@ -76,6 +80,8 @@ interface AnalysisContract
      * @param list<string>|null $texts Your own texts to analyze, such as drafts. Reads nothing from X. Each text costs the same as 1 analyzed post.
      * @param TweetAnalysisSettings|array<string,mixed>|null $analysis Analysis settings, the same as the analysis input of Xquik's AI Actors, plus images. Leave it out for the route's own questions.
      * @param list<\XTwitterScraper\X\Analysis\AnalysisBrandParams\Baseline|array<string,mixed>>|null $baseline Rows of an earlier answer to compare with, such as its results. Each needs the post's id, or tweet.id, & its answers. Send monitor too, so other settings show as not_comparable. Each result's monitor says whether the post is new, changed or unchanged. The comparison costs nothing extra.
+     * @param string|null $topic Keep only posts about this topic, the same as the Actors' topic input. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each, & a post the filter drops costs nothing. topicFilter states the cutoff & counts. Send topic or imageShows, not both.
+     * @param string|null $imageShows Keep only posts whose photos show this, the same as the Actors' imageShows input. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each. imageFilter states the cutoff & counts. Send topic or imageShows, not both.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -95,6 +101,8 @@ interface AnalysisContract
         ?array $texts = null,
         TweetAnalysisSettings|array|null $analysis = null,
         ?array $baseline = null,
+        ?string $topic = null,
+        ?string $imageShows = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetAnalysisPage;
 
@@ -115,6 +123,8 @@ interface AnalysisContract
      * @param list<string>|null $texts Your own texts to analyze, such as drafts. Reads nothing from X. Each text costs the same as 1 analyzed post.
      * @param TweetAnalysisSettings|array<string,mixed>|null $analysis Analysis settings, the same as the analysis input of Xquik's AI Actors, plus images. Leave it out for the route's own questions.
      * @param list<\XTwitterScraper\X\Analysis\AnalysisNewsParams\Baseline|array<string,mixed>>|null $baseline Rows of an earlier answer to compare with, such as its results. Each needs the post's id, or tweet.id, & its answers. Send monitor too, so other settings show as not_comparable. Each result's monitor says whether the post is new, changed or unchanged. The comparison costs nothing extra.
+     * @param string|null $topic Keep only posts about this topic, the same as the Actors' topic input. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each, & a post the filter drops costs nothing. topicFilter states the cutoff & counts. Send topic or imageShows, not both.
+     * @param string|null $imageShows Keep only posts whose photos show this, the same as the Actors' imageShows input. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each. imageFilter states the cutoff & counts. Send topic or imageShows, not both.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -134,6 +144,8 @@ interface AnalysisContract
         ?array $texts = null,
         TweetAnalysisSettings|array|null $analysis = null,
         ?array $baseline = null,
+        ?string $topic = null,
+        ?string $imageShows = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetAnalysisPage;
 
@@ -154,6 +166,8 @@ interface AnalysisContract
      * @param list<string>|null $texts Your own texts to analyze, such as drafts. Reads nothing from X. Each text costs the same as 1 analyzed post.
      * @param TweetAnalysisSettings|array<string,mixed>|null $analysis Analysis settings, the same as the analysis input of Xquik's AI Actors, plus images. Leave it out for the route's own questions.
      * @param list<\XTwitterScraper\X\Analysis\AnalysisMarketSignalsParams\Baseline|array<string,mixed>>|null $baseline Rows of an earlier answer to compare with, such as its results. Each needs the post's id, or tweet.id, & its answers. Send monitor too, so other settings show as not_comparable. Each result's monitor says whether the post is new, changed or unchanged. The comparison costs nothing extra.
+     * @param string|null $topic Keep only posts about this topic, the same as the Actors' topic input. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each, & a post the filter drops costs nothing. topicFilter states the cutoff & counts. Send topic or imageShows, not both.
+     * @param string|null $imageShows Keep only posts whose photos show this, the same as the Actors' imageShows input. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each. imageFilter states the cutoff & counts. Send topic or imageShows, not both.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -173,6 +187,8 @@ interface AnalysisContract
         ?array $texts = null,
         TweetAnalysisSettings|array|null $analysis = null,
         ?array $baseline = null,
+        ?string $topic = null,
+        ?string $imageShows = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetAnalysisPage;
 
@@ -193,6 +209,8 @@ interface AnalysisContract
      * @param list<string>|null $texts Your own texts to analyze, such as drafts. Reads nothing from X. Each text costs the same as 1 analyzed post.
      * @param TweetAnalysisSettings|array<string,mixed>|null $analysis Analysis settings, the same as the analysis input of Xquik's AI Actors, plus images. Leave it out for the route's own questions.
      * @param list<\XTwitterScraper\X\Analysis\AnalysisViralScoreParams\Baseline|array<string,mixed>>|null $baseline Rows of an earlier answer to compare with, such as its results. Each needs the post's id, or tweet.id, & its answers. Send monitor too, so other settings show as not_comparable. Each result's monitor says whether the post is new, changed or unchanged. The comparison costs nothing extra.
+     * @param string|null $topic Keep only posts about this topic, the same as the Actors' topic input. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each, & a post the filter drops costs nothing. topicFilter states the cutoff & counts. Send topic or imageShows, not both.
+     * @param string|null $imageShows Keep only posts whose photos show this, the same as the Actors' imageShows input. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each. imageFilter states the cutoff & counts. Send topic or imageShows, not both.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -212,6 +230,8 @@ interface AnalysisContract
         ?array $texts = null,
         TweetAnalysisSettings|array|null $analysis = null,
         ?array $baseline = null,
+        ?string $topic = null,
+        ?string $imageShows = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetAnalysisPage;
 
@@ -232,6 +252,8 @@ interface AnalysisContract
      * @param list<string>|null $texts Your own texts to analyze, such as drafts. Reads nothing from X. Each text costs the same as 1 analyzed post.
      * @param TweetAnalysisSettings|array<string,mixed>|null $analysis Analysis settings, the same as the analysis input of Xquik's AI Actors, plus images. Leave it out for the route's own questions.
      * @param list<\XTwitterScraper\X\Analysis\AnalysisClassifyParams\Baseline|array<string,mixed>>|null $baseline Rows of an earlier answer to compare with, such as its results. Each needs the post's id, or tweet.id, & its answers. Send monitor too, so other settings show as not_comparable. Each result's monitor says whether the post is new, changed or unchanged. The comparison costs nothing extra.
+     * @param string|null $topic Keep only posts about this topic, the same as the Actors' topic input. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each, & a post the filter drops costs nothing. topicFilter states the cutoff & counts. Send topic or imageShows, not both.
+     * @param string|null $imageShows Keep only posts whose photos show this, the same as the Actors' imageShows input. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each. imageFilter states the cutoff & counts. Send topic or imageShows, not both.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -251,6 +273,8 @@ interface AnalysisContract
         ?array $texts = null,
         TweetAnalysisSettings|array|null $analysis = null,
         ?array $baseline = null,
+        ?string $topic = null,
+        ?string $imageShows = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetAnalysisPage;
 }

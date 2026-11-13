@@ -4,6 +4,8 @@
 
 ### Features
 
+* The 6 `x->analysis` methods take `topic` and `imageShows`, and a filtered `TweetAnalysisPage` carries `topicFilter` or `imageFilter`. Send 1 of the 2, not both.
+* `x->users->retrieveMentions` takes `ownThreads`. With `replies: 'exclude'` it also leaves out replies to the author's own posts.
 * `PaginatedTweets`, `PaginatedTweets2`, `SportsGamePosts` and `TweetGetRepliesResponse` carry `hiddenTimeline`, present on an empty last page when X shows the account's timeline to nobody, so the page doesn't mean the account posted nothing.
 * Follower, following, verified follower, list member and list follower pages carry `windowComplete`, present on the last page of an empty list whose profile counts 0 accounts in it.
 * Extraction tool types gain `USER_AFFILIATES`.
