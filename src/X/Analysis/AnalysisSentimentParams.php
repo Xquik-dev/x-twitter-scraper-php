@@ -37,6 +37,8 @@ use XTwitterScraper\X\Analysis\AnalysisSentimentParams\QueryType;
  *   texts?: list<string>|null,
  *   analysis?: TweetAnalysisSettings|array<string,mixed>|null,
  *   baseline?: list<Baseline|array<string,mixed>>|null,
+ *   topic?: string|null,
+ *   imageShows?: string|null,
  * }
  */
 final class AnalysisSentimentParams implements BaseModel
@@ -137,6 +139,18 @@ final class AnalysisSentimentParams implements BaseModel
     #[Optional(list: Baseline::class)]
     public ?array $baseline;
 
+    /**
+     * Keep only posts about this topic, the same as the Actors' topic input. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each, & a post the filter drops costs nothing. topicFilter states the cutoff & counts. Send topic or imageShows, not both.
+     */
+    #[Optional]
+    public ?string $topic;
+
+    /**
+     * Keep only posts whose photos show this, the same as the Actors' imageShows input. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each. imageFilter states the cutoff & counts. Send topic or imageShows, not both.
+     */
+    #[Optional]
+    public ?string $imageShows;
+
     public function __construct()
     {
         $this->initialize();
@@ -153,7 +167,7 @@ final class AnalysisSentimentParams implements BaseModel
      * @param TweetAnalysisSettings|array<string,mixed>|null $analysis
      * @param list<Baseline|array<string,mixed>>|null $baseline
      */
-    public static function with(?array $tweetIDs = null, ?string $query = null, ?string $username = null, ?string $listID = null, ?string $quotesOf = null, ?string $repliesTo = null, mixed $sinceTime = null, mixed $untilTime = null, QueryType|string|null $queryType = null, ?int $limit = null, ?string $cursor = null, ?array $texts = null, TweetAnalysisSettings|array|null $analysis = null, ?array $baseline = null): self
+    public static function with(?array $tweetIDs = null, ?string $query = null, ?string $username = null, ?string $listID = null, ?string $quotesOf = null, ?string $repliesTo = null, mixed $sinceTime = null, mixed $untilTime = null, QueryType|string|null $queryType = null, ?int $limit = null, ?string $cursor = null, ?array $texts = null, TweetAnalysisSettings|array|null $analysis = null, ?array $baseline = null, ?string $topic = null, ?string $imageShows = null): self
     {
         $self = new self;
 
@@ -171,6 +185,8 @@ final class AnalysisSentimentParams implements BaseModel
         null !== $texts && $self['texts'] = $texts;
         null !== $analysis && $self['analysis'] = $analysis;
         null !== $baseline && $self['baseline'] = $baseline;
+        null !== $topic && $self['topic'] = $topic;
+        null !== $imageShows && $self['imageShows'] = $imageShows;
 
         return $self;
     }
@@ -335,6 +351,28 @@ final class AnalysisSentimentParams implements BaseModel
     {
         $self = clone $this;
         $self['baseline'] = $baseline;
+
+        return $self;
+    }
+
+    /**
+     * Keep only posts about this topic, the same as the Actors' topic input. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each, & a post the filter drops costs nothing. topicFilter states the cutoff & counts. Send topic or imageShows, not both.
+     */
+    public function withTopic(?string $topic): self
+    {
+        $self = clone $this;
+        $self['topic'] = $topic;
+
+        return $self;
+    }
+
+    /**
+     * Keep only posts whose photos show this, the same as the Actors' imageShows input. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each. imageFilter states the cutoff & counts. Send topic or imageShows, not both.
+     */
+    public function withImageShows(?string $imageShows): self
+    {
+        $self = clone $this;
+        $self['imageShows'] = $imageShows;
 
         return $self;
     }
