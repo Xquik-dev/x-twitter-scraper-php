@@ -24,6 +24,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   users: list<UserProfile|UserProfileShape>,
  *   filteredCount?: int|null,
  *   scanLimit?: UserListScanLimit|array<string,mixed>|null,
+ *   windowComplete?: bool|null,
  *   diagnostic?: UserListCoverageDiagnostic|array<string,mixed>|null,
  * }
  */
@@ -53,6 +54,12 @@ final class PaginatedUsers implements BaseModel
      */
     #[Optional]
     public ?UserListScanLimit $scanLimit;
+
+    /**
+     * Present on the last page of an empty list whose profile counts 0 accounts in it.
+     */
+    #[Optional]
+    public ?bool $windowComplete;
 
     /**
      * How completely the list came back, with its counts.
@@ -94,7 +101,8 @@ final class PaginatedUsers implements BaseModel
         array $users,
         ?int $filteredCount = null,
         UserListScanLimit|array|null $scanLimit = null,
-        UserListCoverageDiagnostic|array|null $diagnostic = null
+        UserListCoverageDiagnostic|array|null $diagnostic = null,
+        ?bool $windowComplete = null
     ): self {
         $self = new self;
 
@@ -107,6 +115,8 @@ final class PaginatedUsers implements BaseModel
         null !== $scanLimit && $self['scanLimit'] = $scanLimit;
 
         null !== $diagnostic && $self['diagnostic'] = $diagnostic;
+
+        null !== $windowComplete && $self['windowComplete'] = $windowComplete;
 
         return $self;
     }
@@ -171,6 +181,17 @@ final class PaginatedUsers implements BaseModel
     {
         $self = clone $this;
         $self['diagnostic'] = $diagnostic;
+
+        return $self;
+    }
+
+    /**
+     * Present on the last page of an empty list whose profile counts 0 accounts in it.
+     */
+    public function withWindowComplete(?bool $windowComplete): self
+    {
+        $self = clone $this;
+        $self['windowComplete'] = $windowComplete;
 
         return $self;
     }
