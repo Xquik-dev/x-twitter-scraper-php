@@ -4,6 +4,7 @@
 
 ### Features
 
+* Every request sends `X-Xquik-SDK: php` beside the existing headers, so Xquik can count PHP SDK requests.
 * The 6 `x->analysis` methods take `topic` and `imageShows`, and a filtered `TweetAnalysisPage` carries `topicFilter` or `imageFilter`. Send 1 of the 2, not both.
 * `x->users->retrieveMentions` takes `ownThreads`. With `replies: 'exclude'` it also leaves out replies to the author's own posts.
 * `PaginatedTweets`, `PaginatedTweets2`, `SportsGamePosts` and `TweetGetRepliesResponse` carry `hiddenTimeline`, present on an empty last page when X shows the account's timeline to nobody, so the page doesn't mean the account posted nothing.
