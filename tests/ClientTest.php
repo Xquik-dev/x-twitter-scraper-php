@@ -47,5 +47,7 @@ class ClientTest extends TestCase
         }
 
         $this->assertSame(VERSION, $requested->getHeaderLine('X-Stainless-Package-Version'));
+        $this->assertSame('php', $requested->getHeaderLine('X-Xquik-SDK'));
+        $this->assertSame('php', $requested->getHeaderLine('X-Stainless-Lang'));
     }
 }
