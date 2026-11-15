@@ -39,6 +39,13 @@ interface AnalysisContract
      * @param list<Baseline|array<string,mixed>>|null $baseline Rows of an earlier answer to compare with, such as its results. Each needs the post's id, or tweet.id, & its answers. Send monitor too, so other settings show as not_comparable. Each result's monitor says whether the post is new, changed or unchanged. The comparison costs nothing extra.
      * @param string|null $topic Keep only posts about this topic, the same as the Actors' topic input. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each, & a post the filter drops costs nothing. topicFilter states the cutoff & counts. Send topic or imageShows, not both.
      * @param string|null $imageShows Keep only posts whose photos show this, the same as the Actors' imageShows input. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each. imageFilter states the cutoff & counts. Send topic or imageShows, not both.
+     * @param list<string>|null $queries X searches to analyze as 1 search. A post matching any of them counts. Each takes the operators of query. query, when sent, joins them. X searches up to 512 characters, counted with the other search fields.
+     * @param list<string>|null $usernames Analyze the posts of several accounts in 1 search. Send handles, with or without @, or profile URLs. username, when sent, joins them.
+     * @param list<string>|null $listIDs Analyze the posts of several public Lists in 1 search. Send their IDs or URLs. listId, when sent, joins them.
+     * @param string|null $threadOf Analyze 1 post's thread, as /x/tweets/{id}/thread reads it. Send the post's ID or URL. Send no other posts or search with it.
+     * @param string|null $repliesBy Analyze 1 account's posts & replies, as its Replies tab shows them. /x/users/{id}/replies reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     * @param string|null $mediaBy Analyze 1 account's posts with photos or videos, as its Media tab shows them. /x/users/{id}/media reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     * @param string|null $likedBy Analyze the posts 1 account liked, as /x/users/{id}/likes reads them. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -60,6 +67,13 @@ interface AnalysisContract
         ?array $baseline = null,
         ?string $topic = null,
         ?string $imageShows = null,
+        ?array $queries = null,
+        ?array $usernames = null,
+        ?array $listIDs = null,
+        ?string $threadOf = null,
+        ?string $repliesBy = null,
+        ?string $mediaBy = null,
+        ?string $likedBy = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetAnalysisPage;
 
@@ -82,6 +96,13 @@ interface AnalysisContract
      * @param list<\XTwitterScraper\X\Analysis\AnalysisBrandParams\Baseline|array<string,mixed>>|null $baseline Rows of an earlier answer to compare with, such as its results. Each needs the post's id, or tweet.id, & its answers. Send monitor too, so other settings show as not_comparable. Each result's monitor says whether the post is new, changed or unchanged. The comparison costs nothing extra.
      * @param string|null $topic Keep only posts about this topic, the same as the Actors' topic input. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each, & a post the filter drops costs nothing. topicFilter states the cutoff & counts. Send topic or imageShows, not both.
      * @param string|null $imageShows Keep only posts whose photos show this, the same as the Actors' imageShows input. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each. imageFilter states the cutoff & counts. Send topic or imageShows, not both.
+     * @param list<string>|null $queries X searches to analyze as 1 search. A post matching any of them counts. Each takes the operators of query. query, when sent, joins them. X searches up to 512 characters, counted with the other search fields.
+     * @param list<string>|null $usernames Analyze the posts of several accounts in 1 search. Send handles, with or without @, or profile URLs. username, when sent, joins them.
+     * @param list<string>|null $listIDs Analyze the posts of several public Lists in 1 search. Send their IDs or URLs. listId, when sent, joins them.
+     * @param string|null $threadOf Analyze 1 post's thread, as /x/tweets/{id}/thread reads it. Send the post's ID or URL. Send no other posts or search with it.
+     * @param string|null $repliesBy Analyze 1 account's posts & replies, as its Replies tab shows them. /x/users/{id}/replies reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     * @param string|null $mediaBy Analyze 1 account's posts with photos or videos, as its Media tab shows them. /x/users/{id}/media reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     * @param string|null $likedBy Analyze the posts 1 account liked, as /x/users/{id}/likes reads them. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -103,6 +124,13 @@ interface AnalysisContract
         ?array $baseline = null,
         ?string $topic = null,
         ?string $imageShows = null,
+        ?array $queries = null,
+        ?array $usernames = null,
+        ?array $listIDs = null,
+        ?string $threadOf = null,
+        ?string $repliesBy = null,
+        ?string $mediaBy = null,
+        ?string $likedBy = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetAnalysisPage;
 
@@ -125,6 +153,13 @@ interface AnalysisContract
      * @param list<\XTwitterScraper\X\Analysis\AnalysisNewsParams\Baseline|array<string,mixed>>|null $baseline Rows of an earlier answer to compare with, such as its results. Each needs the post's id, or tweet.id, & its answers. Send monitor too, so other settings show as not_comparable. Each result's monitor says whether the post is new, changed or unchanged. The comparison costs nothing extra.
      * @param string|null $topic Keep only posts about this topic, the same as the Actors' topic input. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each, & a post the filter drops costs nothing. topicFilter states the cutoff & counts. Send topic or imageShows, not both.
      * @param string|null $imageShows Keep only posts whose photos show this, the same as the Actors' imageShows input. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each. imageFilter states the cutoff & counts. Send topic or imageShows, not both.
+     * @param list<string>|null $queries X searches to analyze as 1 search. A post matching any of them counts. Each takes the operators of query. query, when sent, joins them. X searches up to 512 characters, counted with the other search fields.
+     * @param list<string>|null $usernames Analyze the posts of several accounts in 1 search. Send handles, with or without @, or profile URLs. username, when sent, joins them.
+     * @param list<string>|null $listIDs Analyze the posts of several public Lists in 1 search. Send their IDs or URLs. listId, when sent, joins them.
+     * @param string|null $threadOf Analyze 1 post's thread, as /x/tweets/{id}/thread reads it. Send the post's ID or URL. Send no other posts or search with it.
+     * @param string|null $repliesBy Analyze 1 account's posts & replies, as its Replies tab shows them. /x/users/{id}/replies reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     * @param string|null $mediaBy Analyze 1 account's posts with photos or videos, as its Media tab shows them. /x/users/{id}/media reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     * @param string|null $likedBy Analyze the posts 1 account liked, as /x/users/{id}/likes reads them. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -146,6 +181,13 @@ interface AnalysisContract
         ?array $baseline = null,
         ?string $topic = null,
         ?string $imageShows = null,
+        ?array $queries = null,
+        ?array $usernames = null,
+        ?array $listIDs = null,
+        ?string $threadOf = null,
+        ?string $repliesBy = null,
+        ?string $mediaBy = null,
+        ?string $likedBy = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetAnalysisPage;
 
@@ -168,6 +210,13 @@ interface AnalysisContract
      * @param list<\XTwitterScraper\X\Analysis\AnalysisMarketSignalsParams\Baseline|array<string,mixed>>|null $baseline Rows of an earlier answer to compare with, such as its results. Each needs the post's id, or tweet.id, & its answers. Send monitor too, so other settings show as not_comparable. Each result's monitor says whether the post is new, changed or unchanged. The comparison costs nothing extra.
      * @param string|null $topic Keep only posts about this topic, the same as the Actors' topic input. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each, & a post the filter drops costs nothing. topicFilter states the cutoff & counts. Send topic or imageShows, not both.
      * @param string|null $imageShows Keep only posts whose photos show this, the same as the Actors' imageShows input. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each. imageFilter states the cutoff & counts. Send topic or imageShows, not both.
+     * @param list<string>|null $queries X searches to analyze as 1 search. A post matching any of them counts. Each takes the operators of query. query, when sent, joins them. X searches up to 512 characters, counted with the other search fields.
+     * @param list<string>|null $usernames Analyze the posts of several accounts in 1 search. Send handles, with or without @, or profile URLs. username, when sent, joins them.
+     * @param list<string>|null $listIDs Analyze the posts of several public Lists in 1 search. Send their IDs or URLs. listId, when sent, joins them.
+     * @param string|null $threadOf Analyze 1 post's thread, as /x/tweets/{id}/thread reads it. Send the post's ID or URL. Send no other posts or search with it.
+     * @param string|null $repliesBy Analyze 1 account's posts & replies, as its Replies tab shows them. /x/users/{id}/replies reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     * @param string|null $mediaBy Analyze 1 account's posts with photos or videos, as its Media tab shows them. /x/users/{id}/media reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     * @param string|null $likedBy Analyze the posts 1 account liked, as /x/users/{id}/likes reads them. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -189,6 +238,13 @@ interface AnalysisContract
         ?array $baseline = null,
         ?string $topic = null,
         ?string $imageShows = null,
+        ?array $queries = null,
+        ?array $usernames = null,
+        ?array $listIDs = null,
+        ?string $threadOf = null,
+        ?string $repliesBy = null,
+        ?string $mediaBy = null,
+        ?string $likedBy = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetAnalysisPage;
 
@@ -211,6 +267,13 @@ interface AnalysisContract
      * @param list<\XTwitterScraper\X\Analysis\AnalysisViralScoreParams\Baseline|array<string,mixed>>|null $baseline Rows of an earlier answer to compare with, such as its results. Each needs the post's id, or tweet.id, & its answers. Send monitor too, so other settings show as not_comparable. Each result's monitor says whether the post is new, changed or unchanged. The comparison costs nothing extra.
      * @param string|null $topic Keep only posts about this topic, the same as the Actors' topic input. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each, & a post the filter drops costs nothing. topicFilter states the cutoff & counts. Send topic or imageShows, not both.
      * @param string|null $imageShows Keep only posts whose photos show this, the same as the Actors' imageShows input. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each. imageFilter states the cutoff & counts. Send topic or imageShows, not both.
+     * @param list<string>|null $queries X searches to analyze as 1 search. A post matching any of them counts. Each takes the operators of query. query, when sent, joins them. X searches up to 512 characters, counted with the other search fields.
+     * @param list<string>|null $usernames Analyze the posts of several accounts in 1 search. Send handles, with or without @, or profile URLs. username, when sent, joins them.
+     * @param list<string>|null $listIDs Analyze the posts of several public Lists in 1 search. Send their IDs or URLs. listId, when sent, joins them.
+     * @param string|null $threadOf Analyze 1 post's thread, as /x/tweets/{id}/thread reads it. Send the post's ID or URL. Send no other posts or search with it.
+     * @param string|null $repliesBy Analyze 1 account's posts & replies, as its Replies tab shows them. /x/users/{id}/replies reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     * @param string|null $mediaBy Analyze 1 account's posts with photos or videos, as its Media tab shows them. /x/users/{id}/media reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     * @param string|null $likedBy Analyze the posts 1 account liked, as /x/users/{id}/likes reads them. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -232,6 +295,13 @@ interface AnalysisContract
         ?array $baseline = null,
         ?string $topic = null,
         ?string $imageShows = null,
+        ?array $queries = null,
+        ?array $usernames = null,
+        ?array $listIDs = null,
+        ?string $threadOf = null,
+        ?string $repliesBy = null,
+        ?string $mediaBy = null,
+        ?string $likedBy = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetAnalysisPage;
 
@@ -254,6 +324,13 @@ interface AnalysisContract
      * @param list<\XTwitterScraper\X\Analysis\AnalysisClassifyParams\Baseline|array<string,mixed>>|null $baseline Rows of an earlier answer to compare with, such as its results. Each needs the post's id, or tweet.id, & its answers. Send monitor too, so other settings show as not_comparable. Each result's monitor says whether the post is new, changed or unchanged. The comparison costs nothing extra.
      * @param string|null $topic Keep only posts about this topic, the same as the Actors' topic input. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each, & a post the filter drops costs nothing. topicFilter states the cutoff & counts. Send topic or imageShows, not both.
      * @param string|null $imageShows Keep only posts whose photos show this, the same as the Actors' imageShows input. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Only kept posts are analyzed & cost 2 credits each. imageFilter states the cutoff & counts. Send topic or imageShows, not both.
+     * @param list<string>|null $queries X searches to analyze as 1 search. A post matching any of them counts. Each takes the operators of query. query, when sent, joins them. X searches up to 512 characters, counted with the other search fields.
+     * @param list<string>|null $usernames Analyze the posts of several accounts in 1 search. Send handles, with or without @, or profile URLs. username, when sent, joins them.
+     * @param list<string>|null $listIDs Analyze the posts of several public Lists in 1 search. Send their IDs or URLs. listId, when sent, joins them.
+     * @param string|null $threadOf Analyze 1 post's thread, as /x/tweets/{id}/thread reads it. Send the post's ID or URL. Send no other posts or search with it.
+     * @param string|null $repliesBy Analyze 1 account's posts & replies, as its Replies tab shows them. /x/users/{id}/replies reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     * @param string|null $mediaBy Analyze 1 account's posts with photos or videos, as its Media tab shows them. /x/users/{id}/media reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     * @param string|null $likedBy Analyze the posts 1 account liked, as /x/users/{id}/likes reads them. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
      * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
@@ -275,6 +352,13 @@ interface AnalysisContract
         ?array $baseline = null,
         ?string $topic = null,
         ?string $imageShows = null,
+        ?array $queries = null,
+        ?array $usernames = null,
+        ?array $listIDs = null,
+        ?string $threadOf = null,
+        ?string $repliesBy = null,
+        ?string $mediaBy = null,
+        ?string $likedBy = null,
         RequestOptions|array|null $requestOptions = null,
     ): TweetAnalysisPage;
 }

@@ -17,15 +17,27 @@ Install the locked development dependencies.
 
 Never commit credentials or runtime environment files.
 
-## Generated Code
+## Change the SDK by Hand
 
-Most SDK files come from the public OpenAPI contract.
+Maintainers write and review every file in this repository by hand.
+No code generator runs.
 
-Preserve generated method names and response contracts.
+When the API changes, the API coverage and API fields checks fail.
+Each failure names the operation or field that the SDK lacks.
+Add each one in the style of the code around it.
 
-Avoid generated-file changes when a generator fix exists.
+1. Add the method to its service in `src/Services`.
+2. Add its params and response models under `src/`.
+3. Add its tests in `tests/Services`.
+4. Add a line to the `Unreleased` section of `CHANGELOG.md`.
 
-Place stable examples outside generated directories.
+Keep every change additive.
+Never remove or rename a public method, parameter, class, property, or the `xquik/x-twitter-scraper` package.
+To rename something, add the new name beside the old one and keep the old one working.
+
+`excluded-operations.json` lists each API operation the SDK leaves out, with the reason.
+
+Each request sends `X-Xquik-SDK: php`, which Xquik reads to count SDK requests.
 
 ## Verify Changes
 
@@ -65,7 +77,7 @@ Add regression tests for every corrected defect.
 
 Dynamic coverage measures the runtime core and service facades.
 
-PHPStan validates every generated SDK type.
+PHPStan validates every SDK type.
 
 `TEST_API_BASE_URL` accepts literal loopback IPv4 only.
 

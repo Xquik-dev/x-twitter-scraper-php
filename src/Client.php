@@ -172,6 +172,7 @@ class Client extends BaseClient
             'X-Stainless-OS' => Util::ostype(),
             'X-Stainless-Runtime' => php_sapi_name(),
             'X-Stainless-Runtime-Version' => phpversion(),
+            'X-Xquik-SDK' => 'php',
         ];
 
         $customHeadersEnv = Util::getenv('X_TWITTER_SCRAPER_CUSTOM_HEADERS');

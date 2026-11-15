@@ -39,6 +39,13 @@ use XTwitterScraper\X\Analysis\AnalysisNewsParams\QueryType;
  *   baseline?: list<Baseline|array<string,mixed>>|null,
  *   topic?: string|null,
  *   imageShows?: string|null,
+ *   queries?: list<string>|null,
+ *   usernames?: list<string>|null,
+ *   listIDs?: list<string>|null,
+ *   threadOf?: string|null,
+ *   repliesBy?: string|null,
+ *   mediaBy?: string|null,
+ *   likedBy?: string|null,
  * }
  */
 final class AnalysisNewsParams implements BaseModel
@@ -84,6 +91,54 @@ final class AnalysisNewsParams implements BaseModel
      */
     #[Optional]
     public ?string $repliesTo;
+
+    /**
+     * X searches to analyze as 1 search. A post matching any of them counts. Each takes the operators of query. query, when sent, joins them. X searches up to 512 characters, counted with the other search fields.
+     *
+     * @var list<string>|null $queries
+     */
+    #[Optional('queries', list: 'string')]
+    public ?array $queries;
+
+    /**
+     * Analyze the posts of several accounts in 1 search. Send handles, with or without @, or profile URLs. username, when sent, joins them.
+     *
+     * @var list<string>|null $usernames
+     */
+    #[Optional('usernames', list: 'string')]
+    public ?array $usernames;
+
+    /**
+     * Analyze the posts of several public Lists in 1 search. Send their IDs or URLs. listId, when sent, joins them.
+     *
+     * @var list<string>|null $listIDs
+     */
+    #[Optional('listIds', list: 'string')]
+    public ?array $listIDs;
+
+    /**
+     * Analyze 1 post's thread, as /x/tweets/{id}/thread reads it. Send the post's ID or URL. Send no other posts or search with it.
+     */
+    #[Optional]
+    public ?string $threadOf;
+
+    /**
+     * Analyze 1 account's posts & replies, as its Replies tab shows them. /x/users/{id}/replies reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     */
+    #[Optional]
+    public ?string $repliesBy;
+
+    /**
+     * Analyze 1 account's posts with photos or videos, as its Media tab shows them. /x/users/{id}/media reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     */
+    #[Optional]
+    public ?string $mediaBy;
+
+    /**
+     * Analyze the posts 1 account liked, as /x/users/{id}/likes reads them. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     */
+    #[Optional]
+    public ?string $likedBy;
 
     /**
      * Inclusive start of the search, such as 2026-09-25T00:00:00Z. Unix seconds also work. A time without an offset is UTC.
@@ -166,8 +221,11 @@ final class AnalysisNewsParams implements BaseModel
      * @param list<string>|null $texts
      * @param TweetAnalysisSettings|array<string,mixed>|null $analysis
      * @param list<Baseline|array<string,mixed>>|null $baseline
+     * @param list<string>|null $queries
+     * @param list<string>|null $usernames
+     * @param list<string>|null $listIDs
      */
-    public static function with(?array $tweetIDs = null, ?string $query = null, ?string $username = null, ?string $listID = null, ?string $quotesOf = null, ?string $repliesTo = null, mixed $sinceTime = null, mixed $untilTime = null, QueryType|string|null $queryType = null, ?int $limit = null, ?string $cursor = null, ?array $texts = null, TweetAnalysisSettings|array|null $analysis = null, ?array $baseline = null, ?string $topic = null, ?string $imageShows = null): self
+    public static function with(?array $tweetIDs = null, ?string $query = null, ?string $username = null, ?string $listID = null, ?string $quotesOf = null, ?string $repliesTo = null, mixed $sinceTime = null, mixed $untilTime = null, QueryType|string|null $queryType = null, ?int $limit = null, ?string $cursor = null, ?array $texts = null, TweetAnalysisSettings|array|null $analysis = null, ?array $baseline = null, ?string $topic = null, ?string $imageShows = null, ?array $queries = null, ?array $usernames = null, ?array $listIDs = null, ?string $threadOf = null, ?string $repliesBy = null, ?string $mediaBy = null, ?string $likedBy = null): self
     {
         $self = new self;
 
@@ -187,6 +245,13 @@ final class AnalysisNewsParams implements BaseModel
         null !== $baseline && $self['baseline'] = $baseline;
         null !== $topic && $self['topic'] = $topic;
         null !== $imageShows && $self['imageShows'] = $imageShows;
+        null !== $queries && $self['queries'] = $queries;
+        null !== $usernames && $self['usernames'] = $usernames;
+        null !== $listIDs && $self['listIDs'] = $listIDs;
+        null !== $threadOf && $self['threadOf'] = $threadOf;
+        null !== $repliesBy && $self['repliesBy'] = $repliesBy;
+        null !== $mediaBy && $self['mediaBy'] = $mediaBy;
+        null !== $likedBy && $self['likedBy'] = $likedBy;
 
         return $self;
     }
@@ -373,6 +438,89 @@ final class AnalysisNewsParams implements BaseModel
     {
         $self = clone $this;
         $self['imageShows'] = $imageShows;
+
+        return $self;
+    }
+
+    /**
+     * X searches to analyze as 1 search. A post matching any of them counts. Each takes the operators of query. query, when sent, joins them. X searches up to 512 characters, counted with the other search fields.
+     *
+     * @param list<string>|null $queries
+     */
+    public function withQueries(?array $queries): self
+    {
+        $self = clone $this;
+        $self['queries'] = $queries;
+
+        return $self;
+    }
+
+    /**
+     * Analyze the posts of several accounts in 1 search. Send handles, with or without @, or profile URLs. username, when sent, joins them.
+     *
+     * @param list<string>|null $usernames
+     */
+    public function withUsernames(?array $usernames): self
+    {
+        $self = clone $this;
+        $self['usernames'] = $usernames;
+
+        return $self;
+    }
+
+    /**
+     * Analyze the posts of several public Lists in 1 search. Send their IDs or URLs. listId, when sent, joins them.
+     *
+     * @param list<string>|null $listIDs
+     */
+    public function withListIDs(?array $listIDs): self
+    {
+        $self = clone $this;
+        $self['listIDs'] = $listIDs;
+
+        return $self;
+    }
+
+    /**
+     * Analyze 1 post's thread, as /x/tweets/{id}/thread reads it. Send the post's ID or URL. Send no other posts or search with it.
+     */
+    public function withThreadOf(?string $threadOf): self
+    {
+        $self = clone $this;
+        $self['threadOf'] = $threadOf;
+
+        return $self;
+    }
+
+    /**
+     * Analyze 1 account's posts & replies, as its Replies tab shows them. /x/users/{id}/replies reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     */
+    public function withRepliesBy(?string $repliesBy): self
+    {
+        $self = clone $this;
+        $self['repliesBy'] = $repliesBy;
+
+        return $self;
+    }
+
+    /**
+     * Analyze 1 account's posts with photos or videos, as its Media tab shows them. /x/users/{id}/media reads the same posts. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     */
+    public function withMediaBy(?string $mediaBy): self
+    {
+        $self = clone $this;
+        $self['mediaBy'] = $mediaBy;
+
+        return $self;
+    }
+
+    /**
+     * Analyze the posts 1 account liked, as /x/users/{id}/likes reads them. Send a handle, with or without @, a user ID or a profile URL. Send no other posts or search with it.
+     */
+    public function withLikedBy(?string $likedBy): self
+    {
+        $self = clone $this;
+        $self['likedBy'] = $likedBy;
 
         return $self;
     }

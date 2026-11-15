@@ -15,7 +15,6 @@
       "/.phpactor.json",
       "/.phpunit.cache",
       "/.release-please-manifest.json",
-      "/.stats.yml",
       "/AGENTS.md",
       "/CLAUDE.md",
       "/audit-exceptions.json",
