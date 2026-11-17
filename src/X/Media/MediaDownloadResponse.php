@@ -107,10 +107,10 @@ final class MediaDownloadResponse implements BaseModel
     public static function with(
         ?bool $cacheHit = null,
         ?string $galleryURL = null,
-        ImageFilterSummary|array|null $imageFilter = null,
         ?int $totalMedia = null,
         ?int $totalTweets = null,
         ?string $tweetID = null,
+        ImageFilterSummary|array|null $imageFilter = null,
         ?array $items = null,
         ?array $unprocessedTweetIDs = null,
         ?array $failedTweetIDs = null,

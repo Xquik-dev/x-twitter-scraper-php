@@ -77,11 +77,11 @@ final class MediaDownloadParams implements BaseModel
      * @param list<string>|null $tweetIDs
      */
     public static function with(
-        ?string $imageShows = null,
         ?string $tweetID = null,
         ?array $tweetIDs = null,
         ?string $tweetInput = null,
         ?string $tweetURL = null,
+        ?string $imageShows = null,
     ): self {
         $self = new self;
 

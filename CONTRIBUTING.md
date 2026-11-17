@@ -33,6 +33,9 @@ Add each one in the style of the code around it.
 
 Keep every change additive.
 Never remove or rename a public method, parameter, class, property, or the `xquik/x-twitter-scraper` package.
+Add a new parameter after the ones the last release has, `requestOptions` included, so a call that passes arguments by position still binds them.
+`tests/request-signatures.txt` records every public method of the last release that takes `requestOptions`.
+`RequestSignaturesTest` fails when a recorded parameter moves, is renamed, narrows its type or turns required, and when a recorded method gains a required parameter or goes away.
 To rename something, add the new name beside the old one and keep the old one working.
 
 `excluded-operations.json` lists each API operation the SDK leaves out, with the reason.
@@ -141,6 +144,9 @@ Follow [SECURITY.md](SECURITY.md) for private reporting.
 ## Releases
 
 Maintainers release from their own machine, not from GitHub Actions.
+
+The pull request that updates the version also runs `php scripts/record-request-signatures.php`, which records the new release in `tests/request-signatures.txt`.
+It refuses while the record already names the current version, and while a recorded call would bind differently.
 
 After the version and changelog update reaches `main`, run this from a clean `main`.
 

@@ -76,16 +76,16 @@ interface MonitorsRawContract
     /**
      * @api
      *
-     * @param array<string,mixed>|MonitorListParams $params
      * @param RequestOpts|null $requestOptions
+     * @param array<string,mixed>|MonitorListParams $params
      *
      * @return BaseResponse<MonitorListResponse>
      *
      * @throws APIException
      */
     public function list(
-        array|MonitorListParams $params = [],
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        array|MonitorListParams $params = []
     ): BaseResponse;
 
     /**

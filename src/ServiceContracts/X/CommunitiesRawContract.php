@@ -74,8 +74,8 @@ interface CommunitiesRawContract
      * @api
      *
      * @param string $id Community ID
-     * @param array<string,mixed>|CommunityRetrieveInfoParams $params
      * @param RequestOpts|null $requestOptions
+     * @param array<string,mixed>|CommunityRetrieveInfoParams $params
      *
      * @return BaseResponse<CommunityGetInfoResponse>
      *
@@ -83,8 +83,8 @@ interface CommunitiesRawContract
      */
     public function retrieveInfo(
         string $id,
-        array|CommunityRetrieveInfoParams $params = [],
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        array|CommunityRetrieveInfoParams $params = []
     ): BaseResponse;
 
     /**

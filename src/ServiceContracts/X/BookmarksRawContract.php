@@ -39,15 +39,15 @@ interface BookmarksRawContract
     /**
      * @api
      *
-     * @param array<string,mixed>|BookmarkRetrieveFoldersParams $params
      * @param RequestOpts|null $requestOptions
+     * @param array<string,mixed>|BookmarkRetrieveFoldersParams $params
      *
      * @return BaseResponse<BookmarkGetFoldersResponse>
      *
      * @throws APIException
      */
     public function retrieveFolders(
-        array|BookmarkRetrieveFoldersParams $params = [],
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        array|BookmarkRetrieveFoldersParams $params = []
     ): BaseResponse;
 }

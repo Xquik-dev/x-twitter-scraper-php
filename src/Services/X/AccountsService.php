@@ -51,8 +51,8 @@ final class AccountsService implements AccountsContract
      * @param string $password Account password
      * @param string $totpSecret Authenticator App TOTP secret required for durable login
      * @param string $username X username
-     * @param string $connectionAttemptID An ID you generate to read this attempt's status, even if the response never reaches you. Leave it out to get one in a pending response.
      * @param RequestOpts|null $requestOptions
+     * @param string $connectionAttemptID An ID you generate to read this attempt's status, even if the response never reaches you. Leave it out to get one in a pending response.
      *
      * @throws APIException
      */
@@ -61,8 +61,8 @@ final class AccountsService implements AccountsContract
         string $password,
         string $totpSecret,
         string $username,
-        ?string $connectionAttemptID = null,
         RequestOptions|array|null $requestOptions = null,
+        ?string $connectionAttemptID = null,
     ): SanitizedXAccount|XAccountConnectionAttemptPending|XAccountConnectionChallenge {
         $params = Util::removeNulls(
             [
@@ -105,16 +105,16 @@ final class AccountsService implements AccountsContract
      *
      * List connected X accounts
      *
+     * @param RequestOpts|null $requestOptions
      * @param int|null $limit Maximum items per page, from 1 to 10,000. Default 50. A low credit balance can return fewer paid results. When it covers none, the answer is 402 insufficient_credits.
      * @param string|null $cursor Previous nextCursor. The after alias also works. Offset pagination is not supported.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function list(
+        RequestOptions|array|null $requestOptions = null,
         ?int $limit = null,
-        ?string $cursor = null,
-        RequestOptions|array|null $requestOptions = null
+        ?string $cursor = null
     ): AccountListResponse {
         $params = Util::removeNulls(
             [
@@ -154,14 +154,14 @@ final class AccountsService implements AccountsContract
      *
      * Clears loginFailedAt and loginFailureReason for all accounts with transient or automated failure reasons, making them eligible for retry on next use.
      *
-     * @param list<mixed>|null $accountIDs IDs of the X accounts to retry. Accounts that failed for another reason, or belong to someone else, stay as they are.
      * @param RequestOpts|null $requestOptions
+     * @param list<mixed>|null $accountIDs IDs of the X accounts to retry. Accounts that failed for another reason, or belong to someone else, stay as they are.
      *
      * @throws APIException
      */
     public function bulkRetry(
-        ?array $accountIDs = null,
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        ?array $accountIDs = null
     ): AccountBulkRetryResponse {
         $params = Util::removeNulls(
             [
@@ -184,8 +184,8 @@ final class AccountsService implements AccountsContract
      * @param string $password Updated account password
      * @param string $email Email for the X account (updates stored email)
      * @param string $totpSecret Replacement Authenticator App TOTP secret. Omit it to reuse the saved secret.
-     * @param string $connectionAttemptID An ID you generate to read this reconnect's status, even if the response never reaches you. Leave it out to get one in a pending response.
      * @param RequestOpts|null $requestOptions
+     * @param string $connectionAttemptID An ID you generate to read this reconnect's status, even if the response never reaches you. Leave it out to get one in a pending response.
      *
      * @throws APIException
      */
@@ -194,8 +194,8 @@ final class AccountsService implements AccountsContract
         string $password,
         ?string $email = null,
         ?string $totpSecret = null,
-        ?string $connectionAttemptID = null,
         RequestOptions|array|null $requestOptions = null,
+        ?string $connectionAttemptID = null,
     ): AccountReauthResponse|XAccountConnectionAttemptPending|XAccountConnectionChallenge {
         $params = Util::removeNulls(
             [

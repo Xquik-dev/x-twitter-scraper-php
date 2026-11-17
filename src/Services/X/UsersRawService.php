@@ -88,8 +88,8 @@ final class UsersRawService implements UsersRawContract
      * Get user profile with follower counts and verification
      *
      * @param string $id X username (without @) or user ID
-     * @param array<string,mixed>|UserRetrieveParams $params
      * @param RequestOpts|null $requestOptions
+     * @param array<string,mixed>|UserRetrieveParams $params
      *
      * @return BaseResponse<UserProfile>
      *
@@ -97,8 +97,8 @@ final class UsersRawService implements UsersRawContract
      */
     public function retrieve(
         string $id,
-        array|UserRetrieveParams $params = [],
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        array|UserRetrieveParams $params = []
     ): BaseResponse {
         [$parsed, $options] = UserRetrieveParams::parseRequest(
             $params,

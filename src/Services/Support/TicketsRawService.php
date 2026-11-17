@@ -142,16 +142,16 @@ final class TicketsRawService implements TicketsRawContract
      *
      * List user's support tickets
      *
-     * @param array<string,mixed>|TicketListParams $params
      * @param RequestOpts|null $requestOptions
+     * @param array<string,mixed>|TicketListParams $params
      *
      * @return BaseResponse<TicketListResponse>
      *
      * @throws APIException
      */
     public function list(
-        array|TicketListParams $params = [],
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        array|TicketListParams $params = []
     ): BaseResponse {
         [$parsed, $options] = TicketListParams::parseRequest(
             $params,

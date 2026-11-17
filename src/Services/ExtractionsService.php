@@ -79,8 +79,8 @@ final class ExtractionsService implements ExtractionsContract
      * @param int $limit Maximum number of results to return (1-1000, default 100)
      * @param OutputMode|value-of<OutputMode> $outputMode select compact, full, or raw-compatible result fields
      * @param OutputPreset|value-of<OutputPreset> $outputPreset keep enrichment nested or merge it into each result
-     * @param int|null $wait wait up to this many seconds when the job is active
      * @param RequestOpts|null $requestOptions
+     * @param int|null $wait wait up to this many seconds when the job is active
      *
      * @throws APIException
      */
@@ -92,8 +92,8 @@ final class ExtractionsService implements ExtractionsContract
         int $limit = 100,
         OutputMode|string $outputMode = 'full',
         OutputPreset|string $outputPreset = 'nested',
-        ?int $wait = null,
         RequestOptions|array|null $requestOptions = null,
+        ?int $wait = null,
     ): ExtractionGetResponse {
         $params = Util::removeNulls(
             ['wait' => $wait,
@@ -174,7 +174,6 @@ final class ExtractionsService implements ExtractionsContract
      * @param bool $hasLocation require a profile location
      * @param bool $hasMediaOnly return only replies with media
      * @param bool $hasWebsite require a profile website
-     * @param string $imageShows Keep only the posts whose photos show this. Use charts, screenshots, product_photos, memes or people, or describe it in your own words. Each post with a safe photo is checked, & each stored post costs 2 credits instead of its read price. Posts without a safe photo aren't checked, billed or stored, & a post the filter drops costs nothing. resultsLimit caps the posts read. Works with tools that return posts. Send topic or imageShows, not both.
      * @param bool $includeOriginalPost include the source post in reply results
      * @param bool $includeSearchTerms add matching search terms to collection metadata
      * @param bool $includeTargetMetadata add source target metadata to each result
@@ -238,7 +237,6 @@ final class ExtractionsService implements ExtractionsContract
      * @param string $targetSpaceID required for space_explorer
      * @param list<string> $targetTweetIDs tweet IDs processed as one collection job
      * @param list<string> $targetUsernames usernames processed as one collection job
-     * @param string $topic Keep only the posts about this topic, such as "the Rust programming language". Each post the job reads is checked, only matching posts are stored, & each stored post costs 2 credits instead of its read price. A post the filter drops costs nothing. resultsLimit caps the posts read & checked. Works with tools that return posts. Send topic or imageShows, not both.
      * @param string $toUser Filter replies sent to a username (tweet_search_extractor)
      * @param string $untilDate End date YYYY-MM-DD (tweet_search_extractor)
      * @param UntilTimeShape $untilTime reply end time as ISO 8601 or Unix seconds
@@ -248,12 +246,14 @@ final class ExtractionsService implements ExtractionsContract
      * @param string $verifiedType exact profile verification type
      * @param string $within set the radius for the near filter
      * @param string $withinTime match Tweets inside a recent time window
+     * @param RequestOpts|null $requestOptions
+     * @param string $imageShows Keep only the posts whose photos show this. Use charts, screenshots, product_photos, memes or people, or describe it in your own words. Each post with a safe photo is checked, & each stored post costs 2 credits instead of its read price. Posts without a safe photo aren't checked, billed or stored, & a post the filter drops costs nothing. resultsLimit caps the posts read. Works with tools that return posts. Send topic or imageShows, not both.
+     * @param string $topic Keep only the posts about this topic, such as "the Rust programming language". Each post the job reads is checked, only matching posts are stored, & each stored post costs 2 credits instead of its read price. A post the filter drops costs nothing. resultsLimit caps the posts read & checked. Works with tools that return posts. Send topic or imageShows, not both.
      * @param bool|null $enrichProfiles Add each user's full profile to follower_explorer, following_explorer, verified_follower_explorer, people_search & repost_extractor rows. Jobs take longer.
      * @param string|null $textOnlyTerms Collects a post only when 1 of these words or quoted phrases is in its text, a link, its card or a quoted post. The author's name and username don't count.
      * @param bool|null $hasEmail require an email the profile publishes
      * @param bool|null $businessEmailOnly require an email the profile publishes outside free webmail, such as Gmail
      * @param string|null $emailDomains Require an email at one of these domains. Separate domains with commas. Subdomains match.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -280,7 +280,6 @@ final class ExtractionsService implements ExtractionsContract
         bool $hasLocation = false,
         bool $hasMediaOnly = false,
         bool $hasWebsite = false,
-        ?string $imageShows = null,
         bool $includeOriginalPost = false,
         bool $includeSearchTerms = false,
         bool $includeTargetMetadata = true,
@@ -346,7 +345,6 @@ final class ExtractionsService implements ExtractionsContract
         ?array $targetTweetIDs = null,
         ?string $targetUsername = null,
         ?array $targetUsernames = null,
-        ?string $topic = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         int|\DateTimeInterface|null $untilTime = null,
@@ -356,12 +354,14 @@ final class ExtractionsService implements ExtractionsContract
         ?string $verifiedType = null,
         ?string $within = null,
         ?string $withinTime = null,
+        RequestOptions|array|null $requestOptions = null,
+        ?string $imageShows = null,
+        ?string $topic = null,
         ?bool $enrichProfiles = null,
         ?string $textOnlyTerms = null,
         ?bool $hasEmail = null,
         ?bool $businessEmailOnly = null,
         ?string $emailDomains = null,
-        RequestOptions|array|null $requestOptions = null,
     ): ExtractionEstimateCostResponse {
         $params = Util::removeNulls(
             ['emailDomains' => $emailDomains, 'businessEmailOnly' => $businessEmailOnly, 'hasEmail' => $hasEmail, 'textOnlyTerms' => $textOnlyTerms, 'enrichProfiles' => $enrichProfiles,
@@ -497,6 +497,7 @@ final class ExtractionsService implements ExtractionsContract
      * @param string $sinceDate include results on or after this date
      * @param string $untilDate include results on or before this date
      * @param bool $verified filter by verified status
+     * @param RequestOpts|null $requestOptions
      * @param string|null $compare ID of another run of this tool. For an earlier whole run of the same account, the export holds only the rows that differ. For a run of another account, it holds only this run's rows that the other run also lists.
      * @param Change|value-of<Change>|null $change With compare, `added` keeps this run's new rows and `removed` keeps the earlier run's rows that this run lacks. The default is `added`. A run of another account ignores it.
      * @param bool|null $hasWebsite require a website on the profile
@@ -508,7 +509,6 @@ final class ExtractionsService implements ExtractionsContract
      * @param bool|null $hasEmail require an email in the row's Email column
      * @param bool|null $businessEmailOnly require an email outside free webmail, such as Gmail, in the row's Email column
      * @param string|null $emailDomains Require the row's email at one of these domains. Separate domains with commas. Subdomains match.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -533,6 +533,7 @@ final class ExtractionsService implements ExtractionsContract
         ?string $sinceDate = null,
         ?string $untilDate = null,
         ?bool $verified = null,
+        RequestOptions|array|null $requestOptions = null,
         ?string $compare = null,
         Change|string|null $change = null,
         ?bool $hasWebsite = null,
@@ -544,7 +545,6 @@ final class ExtractionsService implements ExtractionsContract
         ?bool $hasEmail = null,
         ?bool $businessEmailOnly = null,
         ?string $emailDomains = null,
-        RequestOptions|array|null $requestOptions = null,
     ): string {
         $params = Util::removeNulls(
             ['emailDomains' => $emailDomains, 'businessEmailOnly' => $businessEmailOnly, 'hasEmail' => $hasEmail, 'hideFake' => $hideFake, 'hideInactive' => $hideInactive, 'location' => $location, 'joinedUntil' => $joinedUntil, 'joinedSince' => $joinedSince, 'hasWebsite' => $hasWebsite, 'change' => $change, 'compare' => $compare,
@@ -604,7 +604,6 @@ final class ExtractionsService implements ExtractionsContract
      * @param bool $hasLocation body param: Require a profile location
      * @param bool $hasMediaOnly body param: Return only replies with media
      * @param bool $hasWebsite body param: Require a profile website
-     * @param string $imageShows Keep only the posts whose photos show this. Use charts, screenshots, product_photos, memes or people, or describe it in your own words. Each post with a safe photo is checked, & each stored post costs 2 credits instead of its read price. Posts without a safe photo aren't checked, billed or stored, & a post the filter drops costs nothing. resultsLimit caps the posts read. Works with tools that return posts. Send topic or imageShows, not both.
      * @param bool $includeOriginalPost body param: Include the source post in reply results
      * @param bool $includeSearchTerms body param: Add matching search terms to collection metadata
      * @param bool $includeTargetMetadata body param: Add source target metadata to each result
@@ -670,7 +669,6 @@ final class ExtractionsService implements ExtractionsContract
      * @param list<string> $targetTweetIDs body param: Tweet IDs processed as one collection job
      * @param string $targetUsername Body param
      * @param list<string> $targetUsernames body param: Usernames processed as one collection job
-     * @param string $topic Keep only the posts about this topic, such as "the Rust programming language". Each post the job reads is checked, only matching posts are stored, & each stored post costs 2 credits instead of its read price. A post the filter drops costs nothing. resultsLimit caps the posts read & checked. Works with tools that return posts. Send topic or imageShows, not both.
      * @param string $toUser Body param: Filter replies sent to a username (tweet_search_extractor)
      * @param string $untilDate Body param: End date YYYY-MM-DD (tweet_search_extractor)
      * @param UntilTimeShape1 $untilTime body param: Reply end time as ISO 8601 or Unix seconds
@@ -680,12 +678,14 @@ final class ExtractionsService implements ExtractionsContract
      * @param string $verifiedType body param: Exact profile verification type
      * @param string $within body param: Set the radius for the near filter
      * @param string $withinTime body param: Match Tweets inside a recent time window
+     * @param RequestOpts|null $requestOptions
+     * @param string $imageShows Keep only the posts whose photos show this. Use charts, screenshots, product_photos, memes or people, or describe it in your own words. Each post with a safe photo is checked, & each stored post costs 2 credits instead of its read price. Posts without a safe photo aren't checked, billed or stored, & a post the filter drops costs nothing. resultsLimit caps the posts read. Works with tools that return posts. Send topic or imageShows, not both.
+     * @param string $topic Keep only the posts about this topic, such as "the Rust programming language". Each post the job reads is checked, only matching posts are stored, & each stored post costs 2 credits instead of its read price. A post the filter drops costs nothing. resultsLimit caps the posts read & checked. Works with tools that return posts. Send topic or imageShows, not both.
      * @param bool|null $enrichProfiles Add each user's full profile to follower_explorer, following_explorer, verified_follower_explorer, people_search & repost_extractor rows. Jobs take longer.
      * @param string|null $textOnlyTerms Collects a post only when 1 of these words or quoted phrases is in its text, a link, its card or a quoted post. The author's name and username don't count.
      * @param bool|null $hasEmail require an email the profile publishes
      * @param bool|null $businessEmailOnly require an email the profile publishes outside free webmail, such as Gmail
      * @param string|null $emailDomains Require an email at one of these domains. Separate domains with commas. Subdomains match.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -713,7 +713,6 @@ final class ExtractionsService implements ExtractionsContract
         bool $hasLocation = false,
         bool $hasMediaOnly = false,
         bool $hasWebsite = false,
-        ?string $imageShows = null,
         bool $includeOriginalPost = false,
         bool $includeSearchTerms = false,
         bool $includeTargetMetadata = true,
@@ -779,7 +778,6 @@ final class ExtractionsService implements ExtractionsContract
         ?array $targetTweetIDs = null,
         ?string $targetUsername = null,
         ?array $targetUsernames = null,
-        ?string $topic = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         int|\DateTimeInterface|null $untilTime = null,
@@ -789,12 +787,14 @@ final class ExtractionsService implements ExtractionsContract
         ?string $verifiedType = null,
         ?string $within = null,
         ?string $withinTime = null,
+        RequestOptions|array|null $requestOptions = null,
+        ?string $imageShows = null,
+        ?string $topic = null,
         ?bool $enrichProfiles = null,
         ?string $textOnlyTerms = null,
         ?bool $hasEmail = null,
         ?bool $businessEmailOnly = null,
         ?string $emailDomains = null,
-        RequestOptions|array|null $requestOptions = null,
     ): ExtractionRunResponse {
         $params = Util::removeNulls(
             ['emailDomains' => $emailDomains, 'businessEmailOnly' => $businessEmailOnly, 'hasEmail' => $hasEmail, 'textOnlyTerms' => $textOnlyTerms, 'enrichProfiles' => $enrichProfiles,

@@ -126,8 +126,8 @@ final class TweetsRawService implements TweetsRawContract
      * Get tweet with full text, author, metrics and media
      *
      * @param string $id Numeric tweet ID, 15-20 digits
-     * @param array<string,mixed>|TweetRetrieveParams $params
      * @param RequestOpts|null $requestOptions
+     * @param array<string,mixed>|TweetRetrieveParams $params
      *
      * @return BaseResponse<TweetGetResponse>
      *
@@ -135,8 +135,8 @@ final class TweetsRawService implements TweetsRawContract
      */
     public function retrieve(
         string $id,
-        array|TweetRetrieveParams $params = [],
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        array|TweetRetrieveParams $params = []
     ): BaseResponse {
         [$parsed, $options] = TweetRetrieveParams::parseRequest(
             $params,

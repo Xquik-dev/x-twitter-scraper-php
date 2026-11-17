@@ -60,16 +60,16 @@ interface WebhooksContract
     /**
      * @api
      *
+     * @param RequestOpts|null $requestOptions
      * @param int|null $limit Maximum items per page, from 1 to 10,000. Default 200. Pass nextCursor as cursor for the next page.
      * @param string|null $cursor Previous nextCursor. The after alias also works. Offset pagination is not supported.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function list(
+        RequestOptions|array|null $requestOptions = null,
         ?int $limit = null,
-        ?string $cursor = null,
-        RequestOptions|array|null $requestOptions = null
+        ?string $cursor = null
     ): WebhookListResponse;
 
     /**
@@ -89,17 +89,17 @@ interface WebhooksContract
      * @api
      *
      * @param string $id resource ID returned by the matching create or list endpoint
+     * @param RequestOpts|null $requestOptions
      * @param int|null $limit Maximum deliveries per page, from 1 to 10,000. Default 100. Pass nextCursor as cursor for the next page.
      * @param string|null $cursor Previous nextCursor. The after alias also works. Offset pagination is not supported.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function listDeliveries(
         string $id,
+        RequestOptions|array|null $requestOptions = null,
         ?int $limit = null,
-        ?string $cursor = null,
-        RequestOptions|array|null $requestOptions = null
+        ?string $cursor = null
     ): WebhookListDeliveriesResponse;
 
     /**

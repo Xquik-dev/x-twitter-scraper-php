@@ -43,15 +43,15 @@ final class SubscribeService implements SubscribeContract
      * Create a subscription checkout or billing-management URL only after the user confirms. The request never completes payment by itself.
      *
      * @param Tier|value-of<Tier> $tier subscription tier to pre-select
-     * @param Currency|value-of<Currency>|null $currency Currency to pay in. Lowercase codes work too. Xquik converts the USD plan price at the latest daily ECB rate. Each renewal charges the same amount before tax. An account that already pays in USD gets a USD checkout. With rates over 3 ECB working days old, the checkout charges USD. `chargedCurrency` shows the currency charged.
      * @param RequestOpts|null $requestOptions
+     * @param Currency|value-of<Currency>|null $currency Currency to pay in. Lowercase codes work too. Xquik converts the USD plan price at the latest daily ECB rate. Each renewal charges the same amount before tax. An account that already pays in USD gets a USD checkout. With rates over 3 ECB working days old, the checkout charges USD. `chargedCurrency` shows the currency charged.
      *
      * @throws APIException
      */
     public function create(
         Tier|string|null $tier = null,
-        Currency|string|null $currency = null,
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        Currency|string|null $currency = null
     ): SubscribeNewResponse {
         $params = Util::removeNulls(['currency' => $currency, 'tier' => $tier]);
 

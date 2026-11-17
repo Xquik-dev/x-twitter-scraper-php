@@ -18,7 +18,7 @@
 * `x->tweets->search`, `x->users->retrieveTweets`, `retrieveReplies` and `retrieveMedia` take `topic` and `imageShows`. `extractions->run` and `estimateCost` take both, and `x->media->download` takes `imageShows`.
 * A filtered page carries `topicFilter` or `imageFilter`, and each kept post carries `topicScore` or `imageScore`. Extraction jobs carry both summaries, and a media download carries `imageFilter`.
 * The SDK gains the 82 operations it lacked, including `activity`, `monitors->posts`, `x->analysis`, `x->broadcasts`, `x->communityNotes`, `x->jobs`, `x->spaces` and `x->sports`, plus the fields the API added on existing operations.
-* `monitors->list`, `webhooks->list`, `styles->list` and other methods that took no arguments take the parameters the API reads. Each one keeps `requestOptions` last, so pass it by name.
+* `monitors->list`, `webhooks->list`, `styles->list` and other methods that took no arguments take the parameters the API reads. Each one keeps `requestOptions` first, as in 0.13.5, so pass the new parameters by name.
 * `x->accountConnectionLinks->create` makes a link to a page Xquik hosts, where a person connects an X account with no Xquik signup. `retrieve` reads the link and its status, and `delete` revokes it. Treat `url` as a secret, since it holds the token.
 * `x->accounts->create` and `reauth` take `connectionAttemptID`, an ID you generate to read the attempt's status even if the response never reaches you. A finished attempt returns `accountID`.
 * `x->accounts->reauth` can also return `XAccountConnectionAttemptPending` or `XAccountConnectionChallenge`, the 2 answers `create` gives while a sign-in still runs or waits on an email code. A finished sign-in still returns `AccountReauthResponse`.
@@ -26,6 +26,7 @@
 
 ### Bug Fixes
 
+* Each method keeps the parameters it took in 0.13.5, `requestOptions` included, at their 0.13.5 positions and takes its new parameters after them. A 0.13.5 call that passes arguments by position, such as `x->media->download($tweetID)` or `x->tweets->retrieve($id, $requestOptions)`, sends the same request again.
 * Reading an optional response field the API left out returns null instead of throwing an `Error`.
 
 ### Chores

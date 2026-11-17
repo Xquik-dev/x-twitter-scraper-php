@@ -69,8 +69,8 @@ final class EventsService implements EventsContract
      * @param string $keywordMonitorID keyword monitor ID
      * @param int $limit Maximum number of items to return (1-100, default 50). For paid per-result endpoints, the returned count may be lower when remaining credits cannot cover the requested page. If zero paid results are affordable, the endpoint returns 402 insufficient_credits.
      * @param string $monitorID account monitor ID
-     * @param string|null $postMonitorID Post monitor ID. The post_monitor_id alias also works.
      * @param RequestOpts|null $requestOptions
+     * @param string|null $postMonitorID Post monitor ID. The post_monitor_id alias also works.
      *
      * @throws APIException
      */
@@ -80,8 +80,8 @@ final class EventsService implements EventsContract
         ?string $keywordMonitorID = null,
         int $limit = 50,
         ?string $monitorID = null,
-        ?string $postMonitorID = null,
         RequestOptions|array|null $requestOptions = null,
+        ?string $postMonitorID = null,
     ): EventListResponse {
         $params = Util::removeNulls(
             ['postMonitorID' => $postMonitorID,

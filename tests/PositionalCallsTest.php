@@ -63,6 +63,26 @@ final class PositionalCallsTest extends TestCase
     }
 
     #[Test]
+    public function testATweetReadByPositionTakesItsRequestOptions(): void
+    {
+        $this->client->x->tweets->retrieve(self::POST, self::OPTIONS);
+
+        $this->assertStringEndsWith('/x/tweets/'.self::POST, $this->lastRequest()->getUri()->getPath());
+        $this->assertSame('', $this->lastRequest()->getUri()->getQuery());
+        $this->assertSame('yes', $this->lastRequest()->getHeaderLine('X-Positional'));
+    }
+
+    #[Test]
+    public function testTrendsByPositionSendTheirCountRegionAndRequestOptions(): void
+    {
+        $this->client->trends->list(10, 23424977, self::OPTIONS);
+
+        parse_str($this->lastRequest()->getUri()->getQuery(), $query);
+        $this->assertSame(['count' => '10', 'woeid' => '23424977'], $query);
+        $this->assertSame('yes', $this->lastRequest()->getHeaderLine('X-Positional'));
+    }
+
+    #[Test]
     public function testARawListByPositionTakesItsRequestOptions(): void
     {
         $this->client->monitors->raw->list(self::OPTIONS);

@@ -102,16 +102,16 @@ final class StylesRawService implements StylesRawContract
      *
      * List cached style profiles
      *
-     * @param array<string,mixed>|StyleListParams $params
      * @param RequestOpts|null $requestOptions
+     * @param array<string,mixed>|StyleListParams $params
      *
      * @return BaseResponse<StyleListResponse>
      *
      * @throws APIException
      */
     public function list(
-        array|StyleListParams $params = [],
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        array|StyleListParams $params = []
     ): BaseResponse {
         [$parsed, $options] = StyleListParams::parseRequest(
             $params,
