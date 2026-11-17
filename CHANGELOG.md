@@ -6,6 +6,7 @@
 
 * `x->accountConnectionLinks->list` pages through your connect links, newest first, as `AccountConnectionLinkListResponse`. Pass `nextCursor` back as `cursor` while `hasMore` is true.
 * `XAccountConnectionLink` and `AccountConnectionLinkNewResponse` carry `apiKeyID`, the API key that made the link, or null when a dashboard session made it. With `list`, it finds the links a leaked key made, so you can revoke them.
+* `PaginatedTweets`, `PaginatedTweets2`, `PaginatedUsers`, `SportsGamePosts` and `TweetGetRepliesResponse` carry `endReason`, a `CoverageEndReason` value present on a last page that X cut short. `stalled` means X returned no new results 2 times in a row, so the list may hold more. Read it again later without `cursor`.
 * Every request sends `X-Xquik-SDK: php` beside the existing headers, so Xquik can count PHP SDK requests.
 * The 6 `x->analysis` methods and their params take `queries`, `usernames` and `listIDs`, which join several searches, accounts or Lists into 1 search, and `threadOf`, `repliesBy`, `mediaBy` and `likedBy`, which analyze 1 post's thread or 1 account's replies, media or likes.
 * The 6 `x->analysis` methods take `topic` and `imageShows`, and a filtered `TweetAnalysisPage` carries `topicFilter` or `imageFilter`. Send 1 of the 2, not both.

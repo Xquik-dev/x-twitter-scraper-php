@@ -25,6 +25,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   filteredCount?: int|null,
  *   scanLimit?: UserListScanLimit|array<string,mixed>|null,
  *   windowComplete?: bool|null,
+ *   endReason?: CoverageEndReason|value-of<CoverageEndReason>|null,
  *   diagnostic?: UserListCoverageDiagnostic|array<string,mixed>|null,
  * }
  */
@@ -62,6 +63,14 @@ final class PaginatedUsers implements BaseModel
     public ?bool $windowComplete;
 
     /**
+     * Present on a last page that X cut short. `stalled` means X returned no new results 2 times in a row, 30 s apart. The list may hold more. Read it again later without cursor.
+     *
+     * @var value-of<CoverageEndReason>|null $endReason
+     */
+    #[Optional(enum: CoverageEndReason::class)]
+    public ?string $endReason;
+
+    /**
      * How completely the list came back, with its counts.
      */
     #[Optional]
@@ -94,6 +103,7 @@ final class PaginatedUsers implements BaseModel
      * @param list<UserProfile|UserProfileShape> $users
      * @param UserListScanLimit|array<string,mixed>|null $scanLimit
      * @param UserListCoverageDiagnostic|array<string,mixed>|null $diagnostic
+     * @param CoverageEndReason|value-of<CoverageEndReason>|null $endReason
      */
     public static function with(
         bool $hasNextPage,
@@ -102,7 +112,8 @@ final class PaginatedUsers implements BaseModel
         ?int $filteredCount = null,
         UserListScanLimit|array|null $scanLimit = null,
         UserListCoverageDiagnostic|array|null $diagnostic = null,
-        ?bool $windowComplete = null
+        ?bool $windowComplete = null,
+        CoverageEndReason|string|null $endReason = null
     ): self {
         $self = new self;
 
@@ -117,6 +128,8 @@ final class PaginatedUsers implements BaseModel
         null !== $diagnostic && $self['diagnostic'] = $diagnostic;
 
         null !== $windowComplete && $self['windowComplete'] = $windowComplete;
+
+        null !== $endReason && $self['endReason'] = $endReason;
 
         return $self;
     }
@@ -192,6 +205,19 @@ final class PaginatedUsers implements BaseModel
     {
         $self = clone $this;
         $self['windowComplete'] = $windowComplete;
+
+        return $self;
+    }
+
+    /**
+     * Present on a last page that X cut short. `stalled` means X returned no new results 2 times in a row, 30 s apart. The list may hold more. Read it again later without cursor.
+     *
+     * @param CoverageEndReason|value-of<CoverageEndReason>|null $endReason
+     */
+    public function withEndReason(CoverageEndReason|string|null $endReason): self
+    {
+        $self = clone $this;
+        $self['endReason'] = $endReason;
 
         return $self;
     }
