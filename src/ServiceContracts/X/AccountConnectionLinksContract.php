@@ -11,6 +11,7 @@ namespace XTwitterScraper\ServiceContracts\X;
 use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkDeleteResponse;
+use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkListResponse;
 use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkNewResponse;
 use XTwitterScraper\X\AccountConnectionLinks\XAccountConnectionLink;
 
@@ -48,6 +49,21 @@ interface AccountConnectionLinksContract
         string $id,
         RequestOptions|array|null $requestOptions = null
     ): XAccountConnectionLink;
+
+    /**
+     * @api
+     *
+     * @param int|null $limit Maximum items per page, from 1 to 10,000. Default 200. Pass nextCursor as cursor for the next page.
+     * @param string|null $cursor Previous nextCursor. The after alias also works. Offset pagination is not supported.
+     * @param RequestOpts|null $requestOptions
+     *
+     * @throws APIException
+     */
+    public function list(
+        ?int $limit = null,
+        ?string $cursor = null,
+        RequestOptions|array|null $requestOptions = null
+    ): AccountConnectionLinkListResponse;
 
     /**
      * @api

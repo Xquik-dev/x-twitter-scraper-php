@@ -15,6 +15,8 @@ use XTwitterScraper\RequestOptions;
 use XTwitterScraper\ServiceContracts\X\AccountConnectionLinksRawContract;
 use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkCreateParams;
 use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkDeleteResponse;
+use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkListParams;
+use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkListResponse;
 use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkNewResponse;
 use XTwitterScraper\X\AccountConnectionLinks\XAccountConnectionLink;
 
@@ -86,6 +88,39 @@ final class AccountConnectionLinksRawService implements AccountConnectionLinksRa
             path: ['x/account-connection-links/%1$s', $id],
             options: $requestOptions,
             convert: XAccountConnectionLink::class,
+        );
+    }
+
+    /**
+     * @api
+     *
+     * List X account connect links
+     *
+     * @param array{
+     *   limit?: int, cursor?: string
+     * }|AccountConnectionLinkListParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<AccountConnectionLinkListResponse>
+     *
+     * @throws APIException
+     */
+    public function list(
+        array|AccountConnectionLinkListParams $params = [],
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse {
+        [$parsed, $options] = AccountConnectionLinkListParams::parseRequest(
+            $params,
+            $requestOptions,
+        );
+
+        // @phpstan-ignore-next-line return.type
+        return $this->client->request(
+            method: 'get',
+            path: 'x/account-connection-links',
+            query: $parsed,
+            options: $options,
+            convert: AccountConnectionLinkListResponse::class,
         );
     }
 
