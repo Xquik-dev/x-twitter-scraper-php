@@ -8,6 +8,7 @@ use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
+use XTwitterScraper\CoverageEndReason;
 use XTwitterScraper\SearchTweet;
 use XTwitterScraper\X\Tweets\TweetGetRepliesResponse\Diagnostic;
 use XTwitterScraper\X\Tweets\TweetGetRepliesResponse\SearchContext;
@@ -27,6 +28,7 @@ use XTwitterScraper\X\Tweets\TweetGetRepliesResponse\SearchContext;
  *   readBackTo?: \DateTimeInterface|null,
  *   hiddenTimeline?: bool|null,
  *   windowComplete?: bool|null,
+ *   endReason?: CoverageEndReason|value-of<CoverageEndReason>|null,
  *   searchedQuery?: string|null,
  *   searchContext?: SearchContext|array<string,mixed>|null,
  *   limitReached?: bool|null,
@@ -89,6 +91,14 @@ final class TweetGetRepliesResponse implements BaseModel
      */
     #[Optional]
     public ?bool $windowComplete;
+
+    /**
+     * Present on a last page that X cut short. `stalled` means X returned no new results 2 times in a row, 30 s apart. The list may hold more. Read it again later without cursor.
+     *
+     * @var value-of<CoverageEndReason>|null $endReason
+     */
+    #[Optional(enum: CoverageEndReason::class)]
+    public ?string $endReason;
 
     /**
      * The query that ran, when it differs from your q.
@@ -169,6 +179,7 @@ final class TweetGetRepliesResponse implements BaseModel
      * @param Diagnostic|DiagnosticShape|null $diagnostic
      * @param list<mixed>|null $nestedReplies
      * @param SearchContext|array<string,mixed>|null $searchContext
+     * @param CoverageEndReason|value-of<CoverageEndReason>|null $endReason
      */
     public static function with(
         bool $hasNextPage,
@@ -187,7 +198,8 @@ final class TweetGetRepliesResponse implements BaseModel
         ?int $hiddenReplies = null,
         ?\DateTimeInterface $partialBefore = null,
         ?int $unreachedReplies = null,
-        ?string $message = null
+        ?string $message = null,
+        CoverageEndReason|string|null $endReason = null
     ): self {
         $self = new self;
 
@@ -205,6 +217,8 @@ final class TweetGetRepliesResponse implements BaseModel
         null !== $hiddenTimeline && $self['hiddenTimeline'] = $hiddenTimeline;
 
         null !== $windowComplete && $self['windowComplete'] = $windowComplete;
+
+        null !== $endReason && $self['endReason'] = $endReason;
 
         null !== $searchedQuery && $self['searchedQuery'] = $searchedQuery;
 
@@ -318,6 +332,19 @@ final class TweetGetRepliesResponse implements BaseModel
     {
         $self = clone $this;
         $self['windowComplete'] = $windowComplete;
+
+        return $self;
+    }
+
+    /**
+     * Present on a last page that X cut short. `stalled` means X returned no new results 2 times in a row, 30 s apart. The list may hold more. Read it again later without cursor.
+     *
+     * @param CoverageEndReason|value-of<CoverageEndReason>|null $endReason
+     */
+    public function withEndReason(CoverageEndReason|string|null $endReason): self
+    {
+        $self = clone $this;
+        $self['endReason'] = $endReason;
 
         return $self;
     }

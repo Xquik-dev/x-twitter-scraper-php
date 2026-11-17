@@ -31,6 +31,7 @@ use XTwitterScraper\PaginatedTweets\Skipped;
  *   readBackTo?: \DateTimeInterface|null,
  *   hiddenTimeline?: bool|null,
  *   windowComplete?: bool|null,
+ *   endReason?: CoverageEndReason|value-of<CoverageEndReason>|null,
  *   searchedQuery?: string|null,
  *   searchContext?: SearchContext|array<string,mixed>|null,
  *   skipped?: list<Skipped|array<string,mixed>>|null,
@@ -88,6 +89,14 @@ final class PaginatedTweets implements BaseModel
     public ?bool $windowComplete;
 
     /**
+     * Present on a last page that X cut short. `stalled` means X returned no new results 2 times in a row, 30 s apart. The list may hold more. Read it again later without cursor.
+     *
+     * @var value-of<CoverageEndReason>|null $endReason
+     */
+    #[Optional(enum: CoverageEndReason::class)]
+    public ?string $endReason;
+
+    /**
      * The query that ran, when it differs from your q.
      */
     #[Optional]
@@ -139,6 +148,7 @@ final class PaginatedTweets implements BaseModel
      * @param TopicFilterSummary|TopicFilterSummaryShape|null $topicFilter
      * @param SearchContext|array<string,mixed>|null $searchContext
      * @param list<Skipped|array<string,mixed>>|null $skipped
+     * @param CoverageEndReason|value-of<CoverageEndReason>|null $endReason
      */
     public static function with(
         bool $hasNextPage,
@@ -152,7 +162,8 @@ final class PaginatedTweets implements BaseModel
         ?bool $windowComplete = null,
         ?string $searchedQuery = null,
         SearchContext|array|null $searchContext = null,
-        ?array $skipped = null
+        ?array $skipped = null,
+        CoverageEndReason|string|null $endReason = null
     ): self {
         $self = new self;
 
@@ -170,6 +181,8 @@ final class PaginatedTweets implements BaseModel
         null !== $hiddenTimeline && $self['hiddenTimeline'] = $hiddenTimeline;
 
         null !== $windowComplete && $self['windowComplete'] = $windowComplete;
+
+        null !== $endReason && $self['endReason'] = $endReason;
 
         null !== $searchedQuery && $self['searchedQuery'] = $searchedQuery;
 
@@ -273,6 +286,19 @@ final class PaginatedTweets implements BaseModel
     {
         $self = clone $this;
         $self['windowComplete'] = $windowComplete;
+
+        return $self;
+    }
+
+    /**
+     * Present on a last page that X cut short. `stalled` means X returned no new results 2 times in a row, 30 s apart. The list may hold more. Read it again later without cursor.
+     *
+     * @param CoverageEndReason|value-of<CoverageEndReason>|null $endReason
+     */
+    public function withEndReason(CoverageEndReason|string|null $endReason): self
+    {
+        $self = clone $this;
+        $self['endReason'] = $endReason;
 
         return $self;
     }
