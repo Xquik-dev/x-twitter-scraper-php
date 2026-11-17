@@ -4,7 +4,7 @@
 
 [Full changelog from v0.13.5 to v0.14.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.13.5...v0.14.0)
 
-This release adds connect links, which you can create, read, revoke and list. Each one names the API key that made it, or null when a dashboard session made it. It also adds the 82 operations the SDK lacked, the analysis sources and filters, and the fields the API added since 0.13.5. Calls written for 0.13.5 keep working, positional arguments included. Extraction `ToolType` enums gain `USER_AFFILIATES`, so a `match` that lists every tool type needs an arm for it. 37 `ServiceContracts` interfaces gain methods, so a class that implements one must add them. `x->accounts->reauth` can now also return the 2 in-progress answers `create` gives, so check the answer's type before you read the account.
+This release adds connect links, which you can create, read, revoke and list. Each one names the API key that made it, or null when a dashboard session made it. It also adds the 82 operations the SDK lacked, the analysis sources and filters, and the fields the API added since 0.13.5. Calls written for 0.13.5 keep working, positional arguments included. Extraction `ToolType` enums gain `USER_AFFILIATES`, so a `match` that lists every tool type needs an arm for it. 37 `ServiceContracts` interfaces change, 20 by gaining methods and 17 by giving existing methods new optional parameters, so a class that implements one must match the new signatures. `x->accounts->reauth` can now also return the 2 in-progress answers `create` gives, so check the answer's type before you read the account.
 
 ### Features
 
@@ -40,6 +40,7 @@ This release adds connect links, which you can create, read, revoke and list. Ea
 
 ### Chores
 
+* `composer.lock` moves the development tool dependency `symfony/filesystem` from 7.4.18 to 7.4.23, and `composer.json` stops listing the deleted `.stats.yml` among archive exclusions. Callers see no difference.
 * `bin/check-local` compares every operation's fields with the live API spec.
 * When `git config checklocal.runner` names a command, `bin/check-local` hands its run to that command, so a maintainer can run the checks on another machine. `bin/release-local` checks the same way.
 
