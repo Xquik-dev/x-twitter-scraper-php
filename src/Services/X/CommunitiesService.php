@@ -142,17 +142,17 @@ final class CommunitiesService implements CommunitiesContract
      * Get community name, description and member count
      *
      * @param string $id Community ID
+     * @param RequestOpts|null $requestOptions
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function retrieveInfo(
         string $id,
+        RequestOptions|array|null $requestOptions = null,
         ?string $fields = null,
-        ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null
+        ?string $omit = null
     ): CommunityGetInfoResponse {
         $params = Util::removeNulls(
             [
@@ -189,13 +189,13 @@ final class CommunitiesService implements CommunitiesContract
      * @param string $usernameContains match a username substring, ignoring case
      * @param bool $verifiedOnly only return verified profiles
      * @param string $verifiedType match the verification type exactly, ignoring case
+     * @param RequestOpts|null $requestOptions
      * @param bool|null $blueVerifiedOnly Only return profiles X marks as blue verified. X marks many business & government accounts blue too. Use verifiedType for 1 badge type.
      * @param bool|null $hasEmail only return profiles that publish an email
      * @param bool|null $businessEmailOnly only return profiles that publish an email outside free webmail, such as Gmail
      * @param string|null $emailDomains Only return profiles with an email at one of these domains. Separate domains with commas. Subdomains match.
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -217,13 +217,13 @@ final class CommunitiesService implements CommunitiesContract
         ?string $usernameContains = null,
         ?bool $verifiedOnly = null,
         ?string $verifiedType = null,
+        RequestOptions|array|null $requestOptions = null,
         ?bool $blueVerifiedOnly = null,
         ?bool $hasEmail = null,
         ?bool $businessEmailOnly = null,
         ?string $emailDomains = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers {
         $params = Util::removeNulls(
             ['omit' => $omit, 'fields' => $fields, 'emailDomains' => $emailDomains, 'businessEmailOnly' => $businessEmailOnly, 'hasEmail' => $hasEmail, 'blueVerifiedOnly' => $blueVerifiedOnly,
@@ -273,13 +273,13 @@ final class CommunitiesService implements CommunitiesContract
      * @param string $usernameContains match a username substring, ignoring case
      * @param bool $verifiedOnly only return verified profiles
      * @param string $verifiedType match the verification type exactly, ignoring case
+     * @param RequestOpts|null $requestOptions
      * @param bool|null $blueVerifiedOnly Only return profiles X marks as blue verified. X marks many business & government accounts blue too. Use verifiedType for 1 badge type.
      * @param bool|null $hasEmail only return profiles that publish an email
      * @param bool|null $businessEmailOnly only return profiles that publish an email outside free webmail, such as Gmail
      * @param string|null $emailDomains Only return profiles with an email at one of these domains. Separate domains with commas. Subdomains match.
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -300,13 +300,13 @@ final class CommunitiesService implements CommunitiesContract
         ?string $usernameContains = null,
         ?bool $verifiedOnly = null,
         ?string $verifiedType = null,
+        RequestOptions|array|null $requestOptions = null,
         ?bool $blueVerifiedOnly = null,
         ?bool $hasEmail = null,
         ?bool $businessEmailOnly = null,
         ?string $emailDomains = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers {
         $params = Util::removeNulls(
             ['omit' => $omit, 'fields' => $fields, 'emailDomains' => $emailDomains, 'businessEmailOnly' => $businessEmailOnly, 'hasEmail' => $hasEmail, 'blueVerifiedOnly' => $blueVerifiedOnly,
@@ -344,6 +344,7 @@ final class CommunitiesService implements CommunitiesContract
      * @param string $cursor Pagination cursor for community search
      * @param int $pageSize Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
      * @param QueryType|value-of<QueryType> $queryType Sort order (Latest or Top)
+     * @param RequestOpts|null $requestOptions
      * @param string|null $language Filter by language. Its alias is `lang`. Language filters work for every language X tags.
      * @param string|null $fromUser Filter by author username. Account searches include all of the account's posts & reposts.
      * @param string|null $toUser filter replies sent to a username
@@ -382,7 +383,6 @@ final class CommunitiesService implements CommunitiesContract
      * @param string|null $retweetsOfTweetID only retweets of this tweet ID
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -392,6 +392,7 @@ final class CommunitiesService implements CommunitiesContract
         ?string $cursor = null,
         int $pageSize = 20,
         QueryType|string $queryType = 'Latest',
+        RequestOptions|array|null $requestOptions = null,
         ?string $language = null,
         ?string $fromUser = null,
         ?string $toUser = null,
@@ -430,7 +431,6 @@ final class CommunitiesService implements CommunitiesContract
         ?string $retweetsOfTweetID = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets {
         $params = Util::removeNulls(
             ['omit' => $omit, 'fields' => $fields, 'retweetsOfTweetID' => $retweetsOfTweetID, 'quotesOfTweetID' => $quotesOfTweetID, 'inReplyToTweetID' => $inReplyToTweetID, 'conversationID' => $conversationID, 'url' => $url, 'cashtags' => $cashtags, 'hashtags' => $hashtags, 'anyWords' => $anyWords, 'excludeWords' => $excludeWords, 'exactPhrase' => $exactPhrase, 'quotes' => $quotes, 'retweets' => $retweets, 'replies' => $replies, 'verifiedOnly' => $verifiedOnly, 'nativeRetweets' => $nativeRetweets, 'maxID' => $maxID, 'sinceID' => $sinceID, 'blueVerifiedOnly' => $blueVerifiedOnly, 'maxQuotes' => $maxQuotes, 'maxReplies' => $maxReplies, 'maxRetweets' => $maxRetweets, 'maxFaves' => $maxFaves, 'minBookmarks' => $minBookmarks, 'minQuotes' => $minQuotes, 'minViews' => $minViews, 'minReplies' => $minReplies, 'minRetweets' => $minRetweets, 'minLikes' => $minLikes, 'mediaType' => $mediaType, 'withinTime' => $withinTime, 'untilDate' => $untilDate, 'sinceDate' => $sinceDate, 'mentioning' => $mentioning, 'toUser' => $toUser, 'fromUser' => $fromUser, 'language' => $language,

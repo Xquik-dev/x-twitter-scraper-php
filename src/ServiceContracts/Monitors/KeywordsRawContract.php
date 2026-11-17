@@ -75,16 +75,16 @@ interface KeywordsRawContract
     /**
      * @api
      *
-     * @param array<string,mixed>|KeywordListParams $params
      * @param RequestOpts|null $requestOptions
+     * @param array<string,mixed>|KeywordListParams $params
      *
      * @return BaseResponse<KeywordListResponse>
      *
      * @throws APIException
      */
     public function list(
-        array|KeywordListParams $params = [],
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        array|KeywordListParams $params = []
     ): BaseResponse;
 
     /**

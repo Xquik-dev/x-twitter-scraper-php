@@ -45,6 +45,7 @@ interface ListsContract
      * @param string $usernameContains match a username substring, ignoring case
      * @param bool $verifiedOnly only return verified profiles
      * @param string $verifiedType match the verification type exactly, ignoring case
+     * @param RequestOpts|null $requestOptions
      * @param Mode|value-of<Mode>|null $mode Omit mode for resumable maximum coverage. Standard keeps legacy pagination. Coverage returns diagnostics once and rejects cursors.
      * @param string|null $after Legacy cursor alias. Prefer cursor.
      * @param int|null $maxScan Most profiles 1 request reads, kept or dropped by the filters. The request then answers the profiles it kept, the count it dropped & the cursor to read on. Each request of a cursor may send its own value. Without it, a filtered read scans at most 100,000 profiles of the list across all its pages, & the page that reaches them ends the list with `scanLimit`. An unfiltered read has no scan limit. Automatic mode only.
@@ -54,7 +55,6 @@ interface ListsContract
      * @param string|null $emailDomains Only return profiles with an email at one of these domains. Separate domains with commas. Subdomains match.
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -76,6 +76,7 @@ interface ListsContract
         ?string $usernameContains = null,
         ?bool $verifiedOnly = null,
         ?string $verifiedType = null,
+        RequestOptions|array|null $requestOptions = null,
         Mode|string|null $mode = null,
         ?string $after = null,
         ?int $maxScan = null,
@@ -85,7 +86,6 @@ interface ListsContract
         ?string $emailDomains = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers;
 
     /**
@@ -108,6 +108,7 @@ interface ListsContract
      * @param string $usernameContains match a username substring, ignoring case
      * @param bool $verifiedOnly only return verified profiles
      * @param string $verifiedType match the verification type exactly, ignoring case
+     * @param RequestOpts|null $requestOptions
      * @param \XTwitterScraper\X\Lists\ListRetrieveMembersParams\Mode|value-of<\XTwitterScraper\X\Lists\ListRetrieveMembersParams\Mode>|null $mode Omit mode for resumable maximum coverage. Standard keeps legacy pagination. Coverage returns diagnostics once and rejects cursors.
      * @param string|null $after Legacy cursor alias. Prefer cursor.
      * @param int|null $maxScan Most profiles 1 request reads, kept or dropped by the filters. The request then answers the profiles it kept, the count it dropped & the cursor to read on. Each request of a cursor may send its own value. Without it, a filtered read scans at most 100,000 profiles of the list across all its pages, & the page that reaches them ends the list with `scanLimit`. An unfiltered read has no scan limit. Automatic mode only.
@@ -117,7 +118,6 @@ interface ListsContract
      * @param string|null $emailDomains Only return profiles with an email at one of these domains. Separate domains with commas. Subdomains match.
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -139,6 +139,7 @@ interface ListsContract
         ?string $usernameContains = null,
         ?bool $verifiedOnly = null,
         ?string $verifiedType = null,
+        RequestOptions|array|null $requestOptions = null,
         \XTwitterScraper\X\Lists\ListRetrieveMembersParams\Mode|string|null $mode = null,
         ?string $after = null,
         ?int $maxScan = null,
@@ -148,7 +149,6 @@ interface ListsContract
         ?string $emailDomains = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers;
 
     /**
@@ -160,6 +160,7 @@ interface ListsContract
      * @param int $pageSize Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
      * @param string $sinceTime Unix timestamp - filter after
      * @param string $untilTime Unix timestamp - filter before
+     * @param RequestOpts|null $requestOptions
      * @param string|null $after Legacy cursor alias. Prefer cursor.
      * @param \XTwitterScraper\X\Lists\ListRetrieveTweetsParams\Mode|value-of<\XTwitterScraper\X\Lists\ListRetrieveTweetsParams\Mode>|null $mode Omit mode for resumable maximum coverage. Standard keeps legacy pagination. Coverage returns diagnostics once and rejects cursors.
      * @param string|null $fromUser Filter by author username. Account searches include all of the account's posts & reposts.
@@ -214,7 +215,6 @@ interface ListsContract
      * @param string|null $retweetsOfTweetID only retweets of this tweet ID
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -225,6 +225,7 @@ interface ListsContract
         int $pageSize = 20,
         ?string $sinceTime = null,
         ?string $untilTime = null,
+        RequestOptions|array|null $requestOptions = null,
         ?string $after = null,
         \XTwitterScraper\X\Lists\ListRetrieveTweetsParams\Mode|string|null $mode = null,
         ?string $fromUser = null,
@@ -279,7 +280,6 @@ interface ListsContract
         ?string $retweetsOfTweetID = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 
     /**

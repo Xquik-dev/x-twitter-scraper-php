@@ -23,28 +23,28 @@ interface BookmarksContract
      *
      * @param string $cursor Pagination cursor for bookmarks
      * @param string $folderID Optional bookmark folder ID
-     * @param int $pageSize Items per page, 1 to 100, default 20. Follow the next cursor for more.
      * @param RequestOpts|null $requestOptions
+     * @param int $pageSize Items per page, 1 to 100, default 20. Follow the next cursor for more.
      *
      * @throws APIException
      */
     public function list(
         ?string $cursor = null,
         ?string $folderID = null,
-        ?int $pageSize = null,
         RequestOptions|array|null $requestOptions = null,
+        ?int $pageSize = null,
     ): PaginatedTweets;
 
     /**
      * @api
      *
-     * @param string|null $cursor Pagination cursor for collection results. Also read as next_cursor, next_token, pagination_token or continuation_token.
      * @param RequestOpts|null $requestOptions
+     * @param string|null $cursor Pagination cursor for collection results. Also read as next_cursor, next_token, pagination_token or continuation_token.
      *
      * @throws APIException
      */
     public function retrieveFolders(
-        ?string $cursor = null,
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        ?string $cursor = null
     ): BookmarkGetFoldersResponse;
 }

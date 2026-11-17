@@ -48,8 +48,8 @@ interface ProfileContract
      * @param string $account Body param: X account (@username or ID) receiving avatar from URL
      * @param string $url Body param: HTTPS URL to the avatar image to download
      * @param string $idempotencyKey Header param: Generate one unique value for each intended write. Reuse it only when retrying the exact same account, action, target, and payload. A reused key returns the original action. Reusing it with different input returns 409. Replay protection remains active for at least 90 days.
-     * @param string|null $file Avatar image (max 95 MiB)
      * @param RequestOpts|null $requestOptions
+     * @param string|null $file Avatar image (max 95 MiB)
      *
      * @throws APIException
      */
@@ -57,8 +57,8 @@ interface ProfileContract
         string $account,
         string $url,
         string $idempotencyKey,
-        ?string $file = null,
         RequestOptions|array|null $requestOptions = null,
+        ?string $file = null,
     ): ProfileUpdateAvatarResponse;
 
     /**
@@ -67,8 +67,8 @@ interface ProfileContract
      * @param string $account Body param: X account (@username or ID) receiving banner from URL
      * @param string $url Body param: HTTPS URL to the banner image to download
      * @param string $idempotencyKey Header param: Generate one unique value for each intended write. Reuse it only when retrying the exact same account, action, target, and payload. A reused key returns the original action. Reusing it with different input returns 409. Replay protection remains active for at least 90 days.
-     * @param string|null $file Banner image (max 95 MiB)
      * @param RequestOpts|null $requestOptions
+     * @param string|null $file Banner image (max 95 MiB)
      *
      * @throws APIException
      */
@@ -76,7 +76,7 @@ interface ProfileContract
         string $account,
         string $url,
         string $idempotencyKey,
-        ?string $file = null,
         RequestOptions|array|null $requestOptions = null,
+        ?string $file = null,
     ): ProfileUpdateBannerResponse;
 }

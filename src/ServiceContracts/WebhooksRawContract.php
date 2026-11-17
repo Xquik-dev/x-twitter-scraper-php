@@ -65,16 +65,16 @@ interface WebhooksRawContract
     /**
      * @api
      *
-     * @param array<string,mixed>|WebhookListParams $params
      * @param RequestOpts|null $requestOptions
+     * @param array<string,mixed>|WebhookListParams $params
      *
      * @return BaseResponse<WebhookListResponse>
      *
      * @throws APIException
      */
     public function list(
-        array|WebhookListParams $params = [],
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        array|WebhookListParams $params = []
     ): BaseResponse;
 
     /**
@@ -96,8 +96,8 @@ interface WebhooksRawContract
      * @api
      *
      * @param string $id resource ID returned by the matching create or list endpoint
-     * @param array<string,mixed>|WebhookListDeliveriesParams $params
      * @param RequestOpts|null $requestOptions
+     * @param array<string,mixed>|WebhookListDeliveriesParams $params
      *
      * @return BaseResponse<WebhookListDeliveriesResponse>
      *
@@ -105,8 +105,8 @@ interface WebhooksRawContract
      */
     public function listDeliveries(
         string $id,
-        array|WebhookListDeliveriesParams $params = [],
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        array|WebhookListDeliveriesParams $params = []
     ): BaseResponse;
 
     /**

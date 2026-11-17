@@ -41,8 +41,8 @@ interface XRawContract
      * @api
      *
      * @param string $tweetID Numeric tweet ID of the article, 15-20 digits. If you have a tweet URL, use the final status ID.
-     * @param array<string,mixed>|XGetArticleParams $params
      * @param RequestOpts|null $requestOptions
+     * @param array<string,mixed>|XGetArticleParams $params
      *
      * @return BaseResponse<XGetArticleResponse>
      *
@@ -50,8 +50,8 @@ interface XRawContract
      */
     public function getArticle(
         string $tweetID,
-        array|XGetArticleParams $params = [],
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        array|XGetArticleParams $params = []
     ): BaseResponse;
 
     /**

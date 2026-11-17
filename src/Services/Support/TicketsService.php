@@ -48,8 +48,8 @@ final class TicketsService implements TicketsContract
      * @param string $body Body param
      * @param string $subject Body param
      * @param string $idempotencyKey Header param: Generate one random value per ticket or reply. Reuse it only when retrying identical text and attachments. Never log this value.
-     * @param list<string>|null $attachments 1 to 4 support image or video uploads
      * @param RequestOpts|null $requestOptions
+     * @param list<string>|null $attachments 1 to 4 support image or video uploads
      *
      * @throws APIException
      */
@@ -57,8 +57,8 @@ final class TicketsService implements TicketsContract
         string $body,
         string $subject,
         ?string $idempotencyKey = null,
-        ?array $attachments = null,
         RequestOptions|array|null $requestOptions = null,
+        ?array $attachments = null,
     ): TicketNewResponse {
         $params = Util::removeNulls(
             ['attachments' => $attachments,
@@ -123,16 +123,16 @@ final class TicketsService implements TicketsContract
      *
      * List user's support tickets
      *
+     * @param RequestOpts|null $requestOptions
      * @param int|null $limit Maximum items per page, from 1 to 10,000. Default 200. Pass nextCursor as cursor for the next page.
      * @param string|null $cursor Previous nextCursor. The after alias also works. Offset pagination is not supported.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function list(
+        RequestOptions|array|null $requestOptions = null,
         ?int $limit = null,
-        ?string $cursor = null,
-        RequestOptions|array|null $requestOptions = null
+        ?string $cursor = null
     ): TicketListResponse {
         $params = Util::removeNulls(
             [
@@ -155,8 +155,8 @@ final class TicketsService implements TicketsContract
      * @param string $id Path param: Support ticket public ID for the reply
      * @param string $body Body param
      * @param string $idempotencyKey Header param: Generate one random value per ticket or reply. Reuse it only when retrying identical text and attachments. Never log this value.
-     * @param list<string>|null $attachments 1 to 4 support image or video uploads
      * @param RequestOpts|null $requestOptions
+     * @param list<string>|null $attachments 1 to 4 support image or video uploads
      *
      * @throws APIException
      */
@@ -164,8 +164,8 @@ final class TicketsService implements TicketsContract
         string $id,
         string $body,
         ?string $idempotencyKey = null,
-        ?array $attachments = null,
         RequestOptions|array|null $requestOptions = null,
+        ?array $attachments = null,
     ): TicketReplyResponse {
         $params = Util::removeNulls(
             ['attachments' => $attachments, 'body' => $body, 'idempotencyKey' => $idempotencyKey]

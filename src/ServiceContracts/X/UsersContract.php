@@ -42,17 +42,17 @@ interface UsersContract
      * @api
      *
      * @param string $id X username (without @) or user ID
+     * @param RequestOpts|null $requestOptions
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function retrieve(
         string $id,
+        RequestOptions|array|null $requestOptions = null,
         ?string $fields = null,
-        ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null
+        ?string $omit = null
     ): UserProfile;
 
     /**
@@ -76,6 +76,7 @@ interface UsersContract
      * @api
      *
      * @param string $ids Comma-separated numeric user IDs (1-100 values). Duplicate IDs are ignored while preserving first-seen order.
+     * @param RequestOpts|null $requestOptions
      * @param string|null $usernames Comma-separated X usernames, with or without @, or profile links such as x.com/nasa (1-100 values), in place of ids. A name in another case is the same account. A longer URL fails at the edge before Xquik reads it.
      * @param int|null $minFollowers Minimum follower count. Profiles the filter drops cost nothing.
      * @param int|null $maxFollowers Maximum follower count. A profile without a count passes.
@@ -97,12 +98,12 @@ interface UsersContract
      * @param string|null $usernameContains match a username substring, ignoring case
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function retrieveBatch(
         string $ids,
+        RequestOptions|array|null $requestOptions = null,
         ?string $usernames = null,
         ?int $minFollowers = null,
         ?int $maxFollowers = null,
@@ -123,8 +124,7 @@ interface UsersContract
         ?string $locationContains = null,
         ?string $usernameContains = null,
         ?string $fields = null,
-        ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null
+        ?string $omit = null
     ): UserGetBatchResponse;
 
     /**
@@ -150,6 +150,7 @@ interface UsersContract
      * @param string $usernameContains match a username substring, ignoring case
      * @param bool $verifiedOnly only return verified profiles
      * @param string $verifiedType match the verification type exactly, ignoring case
+     * @param RequestOpts|null $requestOptions
      * @param int|null $maxScan Most profiles 1 request reads, kept or dropped by the filters. The request then answers the profiles it kept, the count it dropped & the cursor to read on. Each request of a cursor may send its own value. Without it, a filtered read scans at most 100,000 profiles of the list across all its pages, & the page that reaches them ends the list with `scanLimit`. An unfiltered read has no scan limit. Automatic mode only.
      * @param bool|null $blueVerifiedOnly Only return profiles X marks as blue verified. X marks many business & government accounts blue too. Use verifiedType for 1 badge type.
      * @param bool|null $hasEmail only return profiles that publish an email
@@ -158,7 +159,6 @@ interface UsersContract
      * @param bool|null $enrichProfiles Add each row's full profile, as GET /x/users/{id} returns it. Pages take several seconds longer.
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -183,6 +183,7 @@ interface UsersContract
         ?string $usernameContains = null,
         ?bool $verifiedOnly = null,
         ?string $verifiedType = null,
+        RequestOptions|array|null $requestOptions = null,
         ?int $maxScan = null,
         ?bool $blueVerifiedOnly = null,
         ?bool $hasEmail = null,
@@ -191,7 +192,6 @@ interface UsersContract
         ?bool $enrichProfiles = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers|UserListCoverageResponse;
 
     /**
@@ -214,13 +214,13 @@ interface UsersContract
      * @param string $usernameContains match a username substring, ignoring case
      * @param bool $verifiedOnly only return verified profiles
      * @param string $verifiedType match the verification type exactly, ignoring case
+     * @param RequestOpts|null $requestOptions
      * @param bool|null $blueVerifiedOnly Only return profiles X marks as blue verified. X marks many business & government accounts blue too. Use verifiedType for 1 badge type.
      * @param bool|null $hasEmail only return profiles that publish an email
      * @param bool|null $businessEmailOnly only return profiles that publish an email outside free webmail, such as Gmail
      * @param string|null $emailDomains Only return profiles with an email at one of these domains. Separate domains with commas. Subdomains match.
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -242,13 +242,13 @@ interface UsersContract
         ?string $usernameContains = null,
         ?bool $verifiedOnly = null,
         ?string $verifiedType = null,
+        RequestOptions|array|null $requestOptions = null,
         ?bool $blueVerifiedOnly = null,
         ?bool $hasEmail = null,
         ?bool $businessEmailOnly = null,
         ?string $emailDomains = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers;
 
     /**
@@ -274,6 +274,7 @@ interface UsersContract
      * @param string $usernameContains match a username substring, ignoring case
      * @param bool $verifiedOnly only return verified profiles
      * @param string $verifiedType match the verification type exactly, ignoring case
+     * @param RequestOpts|null $requestOptions
      * @param int|null $maxScan Most profiles 1 request reads, kept or dropped by the filters. The request then answers the profiles it kept, the count it dropped & the cursor to read on. Each request of a cursor may send its own value. Without it, a filtered read scans at most 100,000 profiles of the list across all its pages, & the page that reaches them ends the list with `scanLimit`. An unfiltered read has no scan limit. Automatic mode only.
      * @param bool|null $blueVerifiedOnly Only return profiles X marks as blue verified. X marks many business & government accounts blue too. Use verifiedType for 1 badge type.
      * @param bool|null $hasEmail only return profiles that publish an email
@@ -282,7 +283,6 @@ interface UsersContract
      * @param bool|null $enrichProfiles Add each row's full profile, as GET /x/users/{id} returns it. Pages take several seconds longer.
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -307,6 +307,7 @@ interface UsersContract
         ?string $usernameContains = null,
         ?bool $verifiedOnly = null,
         ?string $verifiedType = null,
+        RequestOptions|array|null $requestOptions = null,
         ?int $maxScan = null,
         ?bool $blueVerifiedOnly = null,
         ?bool $hasEmail = null,
@@ -315,7 +316,6 @@ interface UsersContract
         ?bool $enrichProfiles = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers|\XTwitterScraper\X\Users\UserGetFollowingResponse\UserListCoverageResponse;
 
     /**
@@ -368,10 +368,10 @@ interface UsersContract
      * @param bool $verifiedOnly only return tweets from verified authors
      * @param string $within set the radius for the near filter
      * @param string $withinTime match Tweets inside a recent time window
+     * @param RequestOpts|null $requestOptions
      * @param int|null $minLikes Minimum likes. Its aliases are minFaves, min_likes & min_faves.
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -423,10 +423,10 @@ interface UsersContract
         ?bool $verifiedOnly = null,
         ?string $within = null,
         ?string $withinTime = null,
+        RequestOptions|array|null $requestOptions = null,
         ?int $minLikes = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 
     /**
@@ -445,7 +445,6 @@ interface UsersContract
      * @param string $fromUser filter by author username
      * @param string $geocode match latitude, longitude, and radius
      * @param string $hashtags hashtags separated by spaces, commas, or lines
-     * @param string $imageShows Keep only posts whose photos show this. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Other posts stay out at no charge. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. imageFilter states the cutoff & counts.
      * @param string $inReplyToTweetID only replies to this tweet ID
      * @param string $language Language code filter, e.g. en or tr.
      * @param int $maxFaves Maximum likes threshold. maxLikes is also accepted.
@@ -474,17 +473,18 @@ interface UsersContract
      * @param string $sinceDate start date in YYYY-MM-DD format
      * @param string $sinceID return Tweets newer than this Tweet ID
      * @param string $source match the source application
-     * @param string $topic Keep only posts about this topic. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. It reads post text & safe photos. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. limit counts checked posts, & only kept posts come back. topicFilter states the cutoff & counts.
      * @param string $toUser filter replies sent to a username
      * @param string $untilDate end date in YYYY-MM-DD format
      * @param string $url URL substring or domain filter
      * @param bool $verifiedOnly only return tweets from verified authors
      * @param string $within set the radius for the near filter
      * @param string $withinTime match Tweets inside a recent time window
+     * @param RequestOpts|null $requestOptions
+     * @param string $imageShows Keep only posts whose photos show this. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Other posts stay out at no charge. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. imageFilter states the cutoff & counts.
+     * @param string $topic Keep only posts about this topic. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. It reads post text & safe photos. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. limit counts checked posts, & only kept posts come back. topicFilter states the cutoff & counts.
      * @param int|null $minLikes Minimum likes. Its aliases are minFaves, min_likes & min_faves.
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -502,7 +502,6 @@ interface UsersContract
         ?string $fromUser = null,
         ?string $geocode = null,
         ?string $hashtags = null,
-        ?string $imageShows = null,
         ?string $inReplyToTweetID = null,
         ?string $language = null,
         ?int $maxFaves = null,
@@ -531,17 +530,18 @@ interface UsersContract
         ?string $sinceDate = null,
         ?string $sinceID = null,
         ?string $source = null,
-        ?string $topic = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         ?string $url = null,
         ?bool $verifiedOnly = null,
         ?string $within = null,
         ?string $withinTime = null,
+        RequestOptions|array|null $requestOptions = null,
+        ?string $imageShows = null,
+        ?string $topic = null,
         ?int $minLikes = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 
     /**
@@ -596,11 +596,11 @@ interface UsersContract
      * @param bool $verifiedOnly only return tweets from verified authors
      * @param string $within set the radius for the near filter
      * @param string $withinTime match Tweets inside a recent time window
+     * @param RequestOpts|null $requestOptions
      * @param int|null $minLikes Minimum likes. Its aliases are minFaves, min_likes & min_faves.
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
      * @param OwnThreads|value-of<OwnThreads>|null $ownThreads with replies=exclude, also leaves out replies to the author's own posts, so the search skips every reply
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -654,11 +654,11 @@ interface UsersContract
         ?bool $verifiedOnly = null,
         ?string $within = null,
         ?string $withinTime = null,
+        RequestOptions|array|null $requestOptions = null,
         ?int $minLikes = null,
         ?string $fields = null,
         ?string $omit = null,
         OwnThreads|string|null $ownThreads = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 
     /**
@@ -677,7 +677,6 @@ interface UsersContract
      * @param string $fromUser filter by author username
      * @param string $geocode match latitude, longitude, and radius
      * @param string $hashtags hashtags separated by spaces, commas, or lines
-     * @param string $imageShows Keep only posts whose photos show this. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Other posts stay out at no charge. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. imageFilter states the cutoff & counts.
      * @param bool $includeParentTweet include each reply's parent tweet
      * @param string $inReplyToTweetID only replies to this tweet ID
      * @param string $language Language code filter, e.g. en or tr.
@@ -707,13 +706,15 @@ interface UsersContract
      * @param string $sinceDate start date in YYYY-MM-DD format
      * @param string $sinceID return Tweets newer than this Tweet ID
      * @param string $source match the source application
-     * @param string $topic Keep only posts about this topic. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. It reads post text & safe photos. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. limit counts checked posts, & only kept posts come back. topicFilter states the cutoff & counts.
      * @param string $toUser filter replies sent to a username
      * @param string $untilDate end date in YYYY-MM-DD format
      * @param string $url URL substring or domain filter
      * @param bool $verifiedOnly only return tweets from verified authors
      * @param string $within set the radius for the near filter
      * @param string $withinTime match Tweets inside a recent time window
+     * @param RequestOpts|null $requestOptions
+     * @param string $imageShows Keep only posts whose photos show this. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Other posts stay out at no charge. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. imageFilter states the cutoff & counts.
+     * @param string $topic Keep only posts about this topic. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. It reads post text & safe photos. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. limit counts checked posts, & only kept posts come back. topicFilter states the cutoff & counts.
      * @param \XTwitterScraper\X\Users\UserRetrieveRepliesParams\Mode|value-of<\XTwitterScraper\X\Users\UserRetrieveRepliesParams\Mode>|null $mode Optional legacy pagination override. Filters such as keywords don't apply with it.
      * @param string|null $sinceTime Inclusive ISO bound for Tweet creation time, such as 2026-09-25T19:20:41Z. Unix seconds also work. A time without an offset is UTC.
      * @param string|null $untilTime Exclusive ISO bound for Tweet creation time. Unix seconds also work. A time without an offset is UTC.
@@ -727,7 +728,6 @@ interface UsersContract
      * @param string|null $advancedQuery raw advanced search query appended as-is
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -745,7 +745,6 @@ interface UsersContract
         ?string $fromUser = null,
         ?string $geocode = null,
         ?string $hashtags = null,
-        ?string $imageShows = null,
         bool $includeParentTweet = false,
         ?string $inReplyToTweetID = null,
         ?string $language = null,
@@ -775,13 +774,15 @@ interface UsersContract
         ?string $sinceDate = null,
         ?string $sinceID = null,
         ?string $source = null,
-        ?string $topic = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         ?string $url = null,
         ?bool $verifiedOnly = null,
         ?string $within = null,
         ?string $withinTime = null,
+        RequestOptions|array|null $requestOptions = null,
+        ?string $imageShows = null,
+        ?string $topic = null,
         \XTwitterScraper\X\Users\UserRetrieveRepliesParams\Mode|string|null $mode = null,
         ?string $sinceTime = null,
         ?string $untilTime = null,
@@ -795,7 +796,6 @@ interface UsersContract
         ?string $advancedQuery = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 
     /**
@@ -817,6 +817,7 @@ interface UsersContract
      * @param string $usernameContains match a username substring, ignoring case
      * @param bool $verifiedOnly only return verified profiles
      * @param string $verifiedType match the verification type exactly, ignoring case
+     * @param RequestOpts|null $requestOptions
      * @param int|null $pageSize Items per page (1-100, default 20). Source, filters or credits can return fewer. Follow next_cursor for more pages. Its aliases are limit, count, max_results, maxItems, max_items & per_page.
      * @param bool|null $blueVerifiedOnly Only return profiles X marks as blue verified. X marks many business & government accounts blue too. Use verifiedType for 1 badge type.
      * @param bool|null $hasEmail only return profiles that publish an email
@@ -825,7 +826,6 @@ interface UsersContract
      * @param bool|null $enrichProfiles Add each row's full profile, as GET /x/users/{id} returns it. Pages take several seconds longer.
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -846,6 +846,7 @@ interface UsersContract
         ?string $usernameContains = null,
         ?bool $verifiedOnly = null,
         ?string $verifiedType = null,
+        RequestOptions|array|null $requestOptions = null,
         ?int $pageSize = null,
         ?bool $blueVerifiedOnly = null,
         ?bool $hasEmail = null,
@@ -854,7 +855,6 @@ interface UsersContract
         ?bool $enrichProfiles = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers;
 
     /**
@@ -873,7 +873,6 @@ interface UsersContract
      * @param string $fromUser filter by author username
      * @param string $geocode match latitude, longitude, and radius
      * @param string $hashtags hashtags separated by spaces, commas, or lines
-     * @param string $imageShows Keep only posts whose photos show this. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Other posts stay out at no charge. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. imageFilter states the cutoff & counts.
      * @param bool $includeParentTweet Include parent tweet for replies
      * @param bool $includeReplies Include reply tweets
      * @param string $inReplyToTweetID only replies to this tweet ID
@@ -904,13 +903,15 @@ interface UsersContract
      * @param string $sinceDate start date in YYYY-MM-DD format
      * @param string $sinceID return Tweets newer than this Tweet ID
      * @param string $source match the source application
-     * @param string $topic Keep only posts about this topic. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. It reads post text & safe photos. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. limit counts checked posts, & only kept posts come back. topicFilter states the cutoff & counts.
      * @param string $toUser filter replies sent to a username
      * @param string $untilDate end date in YYYY-MM-DD format
      * @param string $url URL substring or domain filter
      * @param bool $verifiedOnly only return tweets from verified authors
      * @param string $within set the radius for the near filter
      * @param string $withinTime match Tweets inside a recent time window
+     * @param RequestOpts|null $requestOptions
+     * @param string $imageShows Keep only posts whose photos show this. Send charts, screenshots, product_photos, memes or people, or describe it in words, such as a rocket. AI-powered analysis checks posts with photos X doesn't mark sensitive & keeps scores of 0.5 or more. Other posts stay out at no charge. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. imageFilter states the cutoff & counts.
+     * @param string $topic Keep only posts about this topic. AI-powered analysis asks "Is this post about <topic>?" of each post & keeps scores of 0.5 or more. It reads post text & safe photos. Each kept post costs 2 credits, the AI analysis price, instead of the read price, & a post the filter drops costs nothing. limit counts checked posts, & only kept posts come back. topicFilter states the cutoff & counts.
      * @param \XTwitterScraper\X\Users\UserRetrieveTweetsParams\Mode|value-of<\XTwitterScraper\X\Users\UserRetrieveTweetsParams\Mode>|null $mode Optional legacy pagination override. Filters such as keywords don't apply with it.
      * @param string|null $sinceTime Inclusive ISO bound for Tweet creation time, such as 2026-09-25T19:20:41Z. Unix seconds also work. A time without an offset is UTC.
      * @param string|null $untilTime Exclusive ISO bound for Tweet creation time. Unix seconds also work. A time without an offset is UTC.
@@ -924,7 +925,6 @@ interface UsersContract
      * @param string|null $advancedQuery raw advanced search query appended as-is
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -942,7 +942,6 @@ interface UsersContract
         ?string $fromUser = null,
         ?string $geocode = null,
         ?string $hashtags = null,
-        ?string $imageShows = null,
         bool $includeParentTweet = false,
         bool $includeReplies = false,
         ?string $inReplyToTweetID = null,
@@ -973,13 +972,15 @@ interface UsersContract
         ?string $sinceDate = null,
         ?string $sinceID = null,
         ?string $source = null,
-        ?string $topic = null,
         ?string $toUser = null,
         ?string $untilDate = null,
         ?string $url = null,
         ?bool $verifiedOnly = null,
         ?string $within = null,
         ?string $withinTime = null,
+        RequestOptions|array|null $requestOptions = null,
+        ?string $imageShows = null,
+        ?string $topic = null,
         \XTwitterScraper\X\Users\UserRetrieveTweetsParams\Mode|string|null $mode = null,
         ?string $sinceTime = null,
         ?string $untilTime = null,
@@ -993,7 +994,6 @@ interface UsersContract
         ?string $advancedQuery = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 
     /**
@@ -1019,6 +1019,7 @@ interface UsersContract
      * @param string $usernameContains match a username substring, ignoring case
      * @param bool $verifiedOnly only return verified profiles
      * @param string $verifiedType match the verification type exactly, ignoring case
+     * @param RequestOpts|null $requestOptions
      * @param int|null $maxScan Most profiles 1 request reads, kept or dropped by the filters. The request then answers the profiles it kept, the count it dropped & the cursor to read on. Each request of a cursor may send its own value. Without it, a filtered read scans at most 100,000 profiles of the list across all its pages, & the page that reaches them ends the list with `scanLimit`. An unfiltered read has no scan limit. Automatic mode only.
      * @param bool|null $blueVerifiedOnly Only return profiles X marks as blue verified. X marks many business & government accounts blue too. Use verifiedType for 1 badge type.
      * @param bool|null $hasEmail only return profiles that publish an email
@@ -1027,7 +1028,6 @@ interface UsersContract
      * @param bool|null $enrichProfiles Add each row's full profile, as GET /x/users/{id} returns it. Pages take several seconds longer.
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -1052,6 +1052,7 @@ interface UsersContract
         ?string $usernameContains = null,
         ?bool $verifiedOnly = null,
         ?string $verifiedType = null,
+        RequestOptions|array|null $requestOptions = null,
         ?int $maxScan = null,
         ?bool $blueVerifiedOnly = null,
         ?bool $hasEmail = null,
@@ -1060,7 +1061,6 @@ interface UsersContract
         ?bool $enrichProfiles = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedUsers|\XTwitterScraper\X\Users\UserGetVerifiedFollowersResponse\UserListCoverageResponse;
 
     /**

@@ -30,6 +30,7 @@ interface TweetsContract
      * @param string $cursor Pagination cursor for community results
      * @param int $pageSize Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
      * @param QueryType|value-of<QueryType> $queryType Sort order for community results (Latest or Top)
+     * @param RequestOpts|null $requestOptions
      * @param string|null $language Filter by language. Its alias is `lang`. Language filters work for every language X tags.
      * @param string|null $fromUser Filter by author username. Account searches include all of the account's posts & reposts.
      * @param string|null $toUser filter replies sent to a username
@@ -68,7 +69,6 @@ interface TweetsContract
      * @param string|null $retweetsOfTweetID only retweets of this tweet ID
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -78,6 +78,7 @@ interface TweetsContract
         ?string $cursor = null,
         int $pageSize = 20,
         QueryType|string $queryType = 'Latest',
+        RequestOptions|array|null $requestOptions = null,
         ?string $language = null,
         ?string $fromUser = null,
         ?string $toUser = null,
@@ -116,7 +117,6 @@ interface TweetsContract
         ?string $retweetsOfTweetID = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 
     /**
@@ -125,6 +125,7 @@ interface TweetsContract
      * @param string $id Community ID for tweet lookup
      * @param string $cursor Pagination cursor for community tweets
      * @param int $pageSize Maximum page items (1-100, default 20). Source, filters, or credits can reduce results. Continue while has_next_page is true. Deprecated limit and count aliases remain accepted.
+     * @param RequestOpts|null $requestOptions
      * @param \XTwitterScraper\X\Communities\Tweets\TweetListByCommunityParams\QueryType|value-of<\XTwitterScraper\X\Communities\Tweets\TweetListByCommunityParams\QueryType>|null $queryType Latest for newest first, or Top for the posts X ranks highest. Any case works. Aliases ranking & sort, which also take Recency & Relevance. Send the same value with each cursor.
      * @param string|null $fromUser Filter by author username. Account searches include all of the account's posts & reposts.
      * @param string|null $toUser filter replies sent to a username
@@ -164,7 +165,6 @@ interface TweetsContract
      * @param string|null $retweetsOfTweetID only retweets of this tweet ID
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
@@ -172,6 +172,7 @@ interface TweetsContract
         string $id,
         ?string $cursor = null,
         int $pageSize = 20,
+        RequestOptions|array|null $requestOptions = null,
         \XTwitterScraper\X\Communities\Tweets\TweetListByCommunityParams\QueryType|string|null $queryType = null,
         ?string $fromUser = null,
         ?string $toUser = null,
@@ -211,6 +212,5 @@ interface TweetsContract
         ?string $retweetsOfTweetID = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): PaginatedTweets;
 }

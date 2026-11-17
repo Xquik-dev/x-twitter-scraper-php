@@ -32,17 +32,17 @@ interface XContract
      * @api
      *
      * @param string $tweetID Numeric tweet ID of the article, 15-20 digits. If you have a tweet URL, use the final status ID.
+     * @param RequestOpts|null $requestOptions
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function getArticle(
         string $tweetID,
+        RequestOptions|array|null $requestOptions = null,
         ?string $fields = null,
-        ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null
+        ?string $omit = null
     ): XGetArticleResponse;
 
     /**
@@ -50,16 +50,16 @@ interface XContract
      *
      * @param string $cursor Pagination cursor for timeline
      * @param string $seenTweetIDs Comma-separated tweet IDs to exclude from results. Empty entries are ignored.
-     * @param int $pageSize Items per page, 1 to 100, default 20. Follow the next cursor for more.
      * @param RequestOpts|null $requestOptions
+     * @param int $pageSize Items per page, 1 to 100, default 20. Follow the next cursor for more.
      *
      * @throws APIException
      */
     public function getHomeTimeline(
         ?string $cursor = null,
         ?string $seenTweetIDs = null,
-        ?int $pageSize = null,
         RequestOptions|array|null $requestOptions = null,
+        ?int $pageSize = null,
     ): PaginatedTweets;
 
     /**
@@ -82,24 +82,24 @@ interface XContract
      *
      * @param int $count Number of trending topics to return (1-50, default 30)
      * @param int $woeid Region WOEID (1=Worldwide, 23424977=US, 23424975=UK, 23424969=Turkey)
+     * @param RequestOpts|null $requestOptions
      * @param string|null $country Country to read trends for, by name or 2-letter code, such as Turkey or TR. Case insensitive. X can add places, so Xquik takes up to 280 characters, the most a post holds.
      * @param string|null $location Town or country to read trends for, by name, such as Istanbul. Case insensitive. Add country when 2 towns share a name. /x/trends/locations lists every name. X can add places, so Xquik takes up to 280 characters, the most a post holds.
      * @param string|null $at A past time, to read what was trending on Twitter then. Takes an ISO 8601 time, a date such as 2026-10-13, or Unix seconds. A time without a zone reads as UTC. It also takes a span back from now, as a number & s, m, h or d. So at=24h reads what was trending on Twitter yesterday at this hour, on every run of a schedule. The answer is the stored list nearest that time, with its own time in capturedAt. History starts 2026-10-13 02:20 UTC. A time over 24 hours from every stored list answers 400 at no charge.
      * @param string|null $fields Fields to keep in each row, comma-separated. Use dots for nested fields, such as author.username. A list keeps the field in each item. Case & underscores do not matter. A row that lacks a field leaves it out. Cursors, counts & diagnostics always stay. An unknown name answers 400 unknown_field with the valid names, before any read. The price stays the same. SDK row types then hold only the named fields. A longer URL fails at the edge before Xquik reads it. Pick only the fields you need with `fields` & `omit`.
      * @param string|null $omit Fields to drop from each row, comma-separated. It takes the same names as fields. With fields, it drops from the kept fields. A longer URL fails at the edge before Xquik reads it.
-     * @param RequestOpts|null $requestOptions
      *
      * @throws APIException
      */
     public function getTrends(
         int $count = 30,
         int $woeid = 1,
+        RequestOptions|array|null $requestOptions = null,
         ?string $country = null,
         ?string $location = null,
         ?string $at = null,
         ?string $fields = null,
         ?string $omit = null,
-        RequestOptions|array|null $requestOptions = null,
     ): XGetTrendsResponse;
 
     /**

@@ -138,8 +138,8 @@ final class CommunitiesRawService implements CommunitiesRawContract
      * Get community name, description and member count
      *
      * @param string $id Community ID
-     * @param array<string,mixed>|CommunityRetrieveInfoParams $params
      * @param RequestOpts|null $requestOptions
+     * @param array<string,mixed>|CommunityRetrieveInfoParams $params
      *
      * @return BaseResponse<CommunityGetInfoResponse>
      *
@@ -147,8 +147,8 @@ final class CommunitiesRawService implements CommunitiesRawContract
      */
     public function retrieveInfo(
         string $id,
-        array|CommunityRetrieveInfoParams $params = [],
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        array|CommunityRetrieveInfoParams $params = []
     ): BaseResponse {
         [$parsed, $options] = CommunityRetrieveInfoParams::parseRequest(
             $params,

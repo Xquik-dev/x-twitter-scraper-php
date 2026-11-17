@@ -62,16 +62,16 @@ interface AccountsRawContract
     /**
      * @api
      *
-     * @param array<string,mixed>|AccountListParams $params
      * @param RequestOpts|null $requestOptions
+     * @param array<string,mixed>|AccountListParams $params
      *
      * @return BaseResponse<AccountListResponse>
      *
      * @throws APIException
      */
     public function list(
-        array|AccountListParams $params = [],
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        array|AccountListParams $params = []
     ): BaseResponse;
 
     /**
@@ -92,16 +92,16 @@ interface AccountsRawContract
     /**
      * @api
      *
-     * @param array<string,mixed>|AccountBulkRetryParams $params
      * @param RequestOpts|null $requestOptions
+     * @param array<string,mixed>|AccountBulkRetryParams $params
      *
      * @return BaseResponse<AccountBulkRetryResponse>
      *
      * @throws APIException
      */
     public function bulkRetry(
-        array|AccountBulkRetryParams $params = [],
-        RequestOptions|array|null $requestOptions = null
+        RequestOptions|array|null $requestOptions = null,
+        array|AccountBulkRetryParams $params = []
     ): BaseResponse;
 
     /**
