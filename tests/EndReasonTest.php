@@ -43,26 +43,6 @@ final class EndReasonTest extends TestCase
     }
 
     /**
-     * @return array<string, array{array<string,mixed>, \Closure(Client): (PaginatedTweets|PaginatedTweets2|PaginatedUsers|SportsGamePosts|TweetGetRepliesResponse)}>
-     */
-    public static function pages(): array
-    {
-        return [
-            'bookmarks' => [self::TWEETS, static fn (Client $client): PaginatedTweets => $client->x->bookmarks->list()],
-            'top posts' => [self::TWEETS, static fn (Client $client): PaginatedTweets2 => $client->x->tweets->listTop()],
-            'community members' => [
-                ['users' => [], 'has_next_page' => false, 'next_cursor' => ''],
-                static fn (Client $client): PaginatedUsers => $client->x->communities->retrieveMembers('1'),
-            ],
-            'game posts' => [
-                self::TWEETS + ['query' => null],
-                static fn (Client $client): SportsGamePosts => $client->x->sports->listPosts('nfl', '1'),
-            ],
-            'replies' => [self::TWEETS, static fn (Client $client): TweetGetRepliesResponse => $client->x->tweets->getReplies('1')],
-        ];
-    }
-
-    /**
      * @param array<string,mixed> $page
      * @param \Closure(Client): (PaginatedTweets|PaginatedTweets2|PaginatedUsers|SportsGamePosts|TweetGetRepliesResponse) $read
      */
@@ -86,6 +66,26 @@ final class EndReasonTest extends TestCase
         $this->respond($page);
 
         $this->assertNull($read($this->client)->endReason);
+    }
+
+    /**
+     * @return array<string, array{array<string,mixed>, \Closure(Client): (PaginatedTweets|PaginatedTweets2|PaginatedUsers|SportsGamePosts|TweetGetRepliesResponse)}>
+     */
+    public static function pages(): array
+    {
+        return [
+            'bookmarks' => [self::TWEETS, static fn (Client $client): PaginatedTweets => $client->x->bookmarks->list()],
+            'top posts' => [self::TWEETS, static fn (Client $client): PaginatedTweets2 => $client->x->tweets->listTop()],
+            'community members' => [
+                ['users' => [], 'has_next_page' => false, 'next_cursor' => ''],
+                static fn (Client $client): PaginatedUsers => $client->x->communities->retrieveMembers('1'),
+            ],
+            'game posts' => [
+                self::TWEETS + ['query' => null],
+                static fn (Client $client): SportsGamePosts => $client->x->sports->listPosts('nfl', '1'),
+            ],
+            'replies' => [self::TWEETS, static fn (Client $client): TweetGetRepliesResponse => $client->x->tweets->getReplies('1')],
+        ];
     }
 
     #[Test]
