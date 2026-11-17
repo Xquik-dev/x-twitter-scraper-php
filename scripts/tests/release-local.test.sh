@@ -41,10 +41,14 @@ prepare_release() {
   fi
   copy_file bin/release-local
   copy_file scripts/package-listing
-  stub bin/check-local <<'EOF'
+  if [[ -n "${FIXTURE_REAL_CHECK_LOCAL:-}" ]]; then
+    copy_file bin/check-local
+  else
+    stub bin/check-local <<'EOF'
 #!/bin/sh
 echo "ran" >>"$FAKE_LOGS/check-local"
 EOF
+  fi
   stub scripts/audit <<'EOF'
 #!/bin/sh
 echo "ran" >>"$FAKE_LOGS/audit"
@@ -513,6 +517,22 @@ test_an_unknown_option_stops_with_the_usage_line() {
 
   assert_equal 2 "$run_status" "the exit code"
   assert_equal "Unknown option --force. Run bin/release-local or bin/release-local --dry-run." "$run_stderr" "stderr"
+}
+
+test_a_dry_run_hands_its_checks_to_the_configured_runner() {
+  FIXTURE_REAL_CHECK_LOCAL=1 prepare_release
+  fake runner <<'EOF'
+#!/bin/sh
+echo "$*" >>"$FAKE_LOGS/runner"
+EOF
+  sandbox_git config checklocal.runner "$sandbox_bin/runner"
+
+  run_in_repo bin/release-local --dry-run
+
+  assert_equal 0 "$run_status" "the exit code"
+  assert_equal "$sandbox_repo" "$(log_of runner)" "the runner call"
+  assert_ends_with "$run_stdout" "Dry run finished. Nothing was published, tagged or released." "stdout"
+  assert_nothing_released
 }
 
 run_tests
