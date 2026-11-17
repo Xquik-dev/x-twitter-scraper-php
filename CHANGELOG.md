@@ -4,7 +4,7 @@
 
 [Full changelog from v0.13.5 to v0.14.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.13.5...v0.14.0)
 
-This release adds connect links, which you can create, read, revoke and list, each naming the API key that made it. It also adds the 82 operations the SDK lacked, the analysis sources and filters, and the fields the API added since 0.13.5. Calls written for 0.13.5 keep working, positional arguments included. `x->accounts->reauth` can now also return the 2 in-progress answers `create` gives, so check the answer's type before you read the account.
+This release adds connect links, which you can create, read, revoke and list. Each one names the API key that made it, or null when a dashboard session made it. It also adds the 82 operations the SDK lacked, the analysis sources and filters, and the fields the API added since 0.13.5. Calls written for 0.13.5 keep working, positional arguments included. Extraction `ToolType` enums gain `USER_AFFILIATES`, so a `match` that lists every tool type needs an arm for it. `x->accounts->reauth` can now also return the 2 in-progress answers `create` gives, so check the answer's type before you read the account.
 
 ### Features
 
@@ -30,8 +30,12 @@ This release adds connect links, which you can create, read, revoke and list, ea
 
 ### Bug Fixes
 
-* Each method keeps the parameters it took in 0.13.5, `requestOptions` included, at their 0.13.5 positions and takes its new parameters after them. A 0.13.5 call that passes arguments by position, such as `x->media->download($tweetID)` or `x->tweets->retrieve($id, $requestOptions)`, sends the same request again.
 * Reading an optional response field the API left out returns null instead of throwing an `Error`.
+
+### Documentation
+
+* The README leads with the install, the first call and live trust and usage numbers, names X (Twitter) in its title and prose, and says why Xquik costs less.
+* `CITATION.cff` gives the metadata to cite the SDK.
 
 ### Chores
 
