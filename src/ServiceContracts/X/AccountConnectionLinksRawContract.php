@@ -13,6 +13,8 @@ use XTwitterScraper\Core\Exceptions\APIException;
 use XTwitterScraper\RequestOptions;
 use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkCreateParams;
 use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkDeleteResponse;
+use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkListParams;
+use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkListResponse;
 use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkNewResponse;
 use XTwitterScraper\X\AccountConnectionLinks\XAccountConnectionLink;
 
@@ -50,6 +52,23 @@ interface AccountConnectionLinksRawContract
      */
     public function retrieve(
         string $id,
+        RequestOptions|array|null $requestOptions = null
+    ): BaseResponse;
+
+    /**
+     * @api
+     *
+     * @param array{
+     *   limit?: int, cursor?: string
+     * }|AccountConnectionLinkListParams $params
+     * @param RequestOpts|null $requestOptions
+     *
+     * @return BaseResponse<AccountConnectionLinkListResponse>
+     *
+     * @throws APIException
+     */
+    public function list(
+        array|AccountConnectionLinkListParams $params = [],
         RequestOptions|array|null $requestOptions = null
     ): BaseResponse;
 

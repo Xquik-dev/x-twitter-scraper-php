@@ -4,6 +4,7 @@
 
 ### Features
 
+* `x->accountConnectionLinks->list` pages through your connect links, newest first, as `AccountConnectionLinkListResponse`. Pass `nextCursor` back as `cursor` while `hasMore` is true.
 * Every request sends `X-Xquik-SDK: php` beside the existing headers, so Xquik can count PHP SDK requests.
 * The 6 `x->analysis` methods and their params take `queries`, `usernames` and `listIDs`, which join several searches, accounts or Lists into 1 search, and `threadOf`, `repliesBy`, `mediaBy` and `likedBy`, which analyze 1 post's thread or 1 account's replies, media or likes.
 * The 6 `x->analysis` methods take `topic` and `imageShows`, and a filtered `TweetAnalysisPage` carries `topicFilter` or `imageFilter`. Send 1 of the 2, not both.

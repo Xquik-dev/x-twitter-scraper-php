@@ -14,6 +14,7 @@ use Psr\Http\Message\RequestInterface;
 use XTwitterScraper\ActivityLogRow;
 use XTwitterScraper\Client;
 use XTwitterScraper\X\AccountConnectionAttempts\AccountConnectionAttemptGetResponse\XAccountConnectionAttemptSuccess;
+use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkListParams;
 use XTwitterScraper\X\Accounts\AccountNewResponse\XAccountConnectionAttemptPending;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
 use XTwitterScraper\X\Users\UserRetrieveMentionsParams;
@@ -191,6 +192,58 @@ final class ApiCatchUpTest extends TestCase
             $this->lastRequest()->getUri()->getPath(),
         );
         $this->assertTrue($result->success);
+    }
+
+    #[Test]
+    public function testConnectLinksAreListedNewestFirstWithLimitAndCursor(): void
+    {
+        $dashboardLink = ['id' => 'xlink_BBBBBBBBBBBBBBBB', 'purpose' => 'reconnect', 'accountId' => '42'] + self::CONNECT_LINK;
+        $this->respond(
+            'application/json',
+            json_encode(
+                ['links' => [self::CONNECT_LINK, $dashboardLink], 'hasMore' => true, 'nextCursor' => 'abc123'],
+                JSON_THROW_ON_ERROR,
+            ),
+        );
+
+        $page = $this->client->x->accountConnectionLinks->list(limit: 2, cursor: 'prev');
+
+        $this->assertSame('GET', $this->lastRequest()->getMethod());
+        $this->assertStringEndsWith('/x/account-connection-links', $this->lastRequest()->getUri()->getPath());
+        parse_str($this->lastRequest()->getUri()->getQuery(), $query);
+        $this->assertSame(['limit' => '2', 'cursor' => 'prev'], $query);
+        $this->assertTrue($page->hasMore);
+        $this->assertSame('abc123', $page->nextCursor);
+        $this->assertCount(2, $page->links);
+        $this->assertSame('xlink_AAAAAAAAAAAAAAAA', $page->links[0]->id);
+        $this->assertSame('42', $page->links[1]->accountID);
+    }
+
+    #[Test]
+    public function testTheLastPageOfConnectLinksSendsNoQueryAndHasNoCursor(): void
+    {
+        $this->respond('application/json', '{"links":[],"hasMore":false}');
+
+        $page = $this->client->x->accountConnectionLinks->list();
+
+        $this->assertSame('', $this->lastRequest()->getUri()->getQuery());
+        $this->assertSame([], $page->links);
+        $this->assertFalse($page->hasMore);
+        $this->assertNull($page->nextCursor);
+    }
+
+    #[Test]
+    public function testTheRawConnectLinkListTakesItsParams(): void
+    {
+        $this->respond('application/json', '{"links":[],"hasMore":false}');
+
+        $response = $this->client->x->accountConnectionLinks->raw->list(
+            AccountConnectionLinkListParams::with(limit: 1, cursor: 'prev'),
+        );
+
+        parse_str($this->lastRequest()->getUri()->getQuery(), $query);
+        $this->assertSame(['limit' => '1', 'cursor' => 'prev'], $query);
+        $this->assertFalse($response->parse()->hasMore);
     }
 
     #[Test]
