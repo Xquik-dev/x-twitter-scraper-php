@@ -237,6 +237,7 @@ final class ImageAndTopicFiltersTest extends TestCase
             analysisSummary: ['schemaVersion' => 1, 'rows' => ['analyzed' => 0, 'failed' => 0, 'skipped' => 0], 'engagement' => 0, 'questions' => []],
             hasNextPage: false,
             nextCursor: '',
+            unprocessedIDs: [],
         );
 
         $this->assertNull($page->topicFilter);

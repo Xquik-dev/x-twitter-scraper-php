@@ -21,6 +21,7 @@ use XTwitterScraper\X\AccountConnectionLinks\XAccountConnectionLink\Status;
  * @phpstan-type XAccountConnectionLinkShape = array{
  *   id: string,
  *   accountID: string|null,
+ *   apiKeyID: string|null,
  *   completedAt: \DateTimeInterface|null,
  *   createdAt: \DateTimeInterface,
  *   expiresAt: \DateTimeInterface,
@@ -33,7 +34,6 @@ use XTwitterScraper\X\AccountConnectionLinks\XAccountConnectionLink\Status;
  *   status: Status|value-of<Status>,
  *   xUserID: string|null,
  *   xUsername: string|null,
- *   apiKeyID?: string|null,
  *   url?: string|null,
  * }
  */
@@ -51,6 +51,12 @@ final class XAccountConnectionLink implements BaseModel
 
     #[Required('accountId')]
     public ?string $accountID;
+
+    /**
+     * The ID of the API key that made the link, or null when a dashboard session made it.
+     */
+    #[Required('apiKeyId')]
+    public ?string $apiKeyID;
 
     #[Required]
     public ?\DateTimeInterface $completedAt;
@@ -95,12 +101,6 @@ final class XAccountConnectionLink implements BaseModel
     public ?string $xUsername;
 
     /**
-     * The ID of the API key that made the link, or null when a dashboard session made it.
-     */
-    #[Optional('apiKeyId', nullable: true)]
-    public ?string $apiKeyID;
-
-    /**
      * Present only in the response that creates the link.
      */
     #[Optional]
@@ -125,6 +125,7 @@ final class XAccountConnectionLink implements BaseModel
      *   status: ...,
      *   xUserID: ...,
      *   xUsername: ...,
+     *   apiKeyID: ...,
      * )
      * ```
      *
@@ -145,6 +146,7 @@ final class XAccountConnectionLink implements BaseModel
      *   ->withStatus(...)
      *   ->withXUserID(...)
      *   ->withXUsername(...)
+     *   ->withApiKeyID(...)
      * ```
      */
     public function __construct()
@@ -174,8 +176,8 @@ final class XAccountConnectionLink implements BaseModel
         Status|string $status,
         ?string $xUserID,
         ?string $xUsername,
-        ?string $url = null,
-        ?string $apiKeyID = null
+        ?string $apiKeyID,
+        ?string $url = null
     ): self {
         $self = new self;
 
@@ -192,9 +194,9 @@ final class XAccountConnectionLink implements BaseModel
         $self['status'] = $status;
         $self['xUserID'] = $xUserID;
         $self['xUsername'] = $xUsername;
+        $self['apiKeyID'] = $apiKeyID;
 
         null !== $url && $self['url'] = $url;
-        null !== $apiKeyID && $self['apiKeyID'] = $apiKeyID;
 
         return $self;
     }

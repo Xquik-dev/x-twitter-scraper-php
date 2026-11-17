@@ -265,9 +265,9 @@ final class ApiCatchUpTest extends TestCase
     }
 
     #[Test]
-    public function testAConnectLinkFromBeforeTheFieldReadsNoKey(): void
+    public function testALinkADashboardSessionMadeReadsANullKey(): void
     {
-        $this->respond('application/json', json_encode(self::CONNECT_LINK, JSON_THROW_ON_ERROR));
+        $this->respond('application/json', json_encode(['apiKeyId' => null] + self::CONNECT_LINK, JSON_THROW_ON_ERROR));
 
         $link = $this->client->x->accountConnectionLinks->retrieve('xlink_AAAAAAAAAAAAAAAA');
 

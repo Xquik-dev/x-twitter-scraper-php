@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\AccountConnectionLinks;
 
-use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
@@ -21,6 +20,7 @@ use XTwitterScraper\X\AccountConnectionLinks\XAccountConnectionLink\Status;
  * @phpstan-type AccountConnectionLinkNewResponseShape = array{
  *   id: string,
  *   accountID: string|null,
+ *   apiKeyID: string|null,
  *   completedAt: \DateTimeInterface|null,
  *   createdAt: \DateTimeInterface,
  *   expiresAt: \DateTimeInterface,
@@ -34,7 +34,6 @@ use XTwitterScraper\X\AccountConnectionLinks\XAccountConnectionLink\Status;
  *   url: string,
  *   xUserID: string|null,
  *   xUsername: string|null,
- *   apiKeyID?: string|null,
  * }
  */
 final class AccountConnectionLinkNewResponse implements BaseModel
@@ -51,6 +50,12 @@ final class AccountConnectionLinkNewResponse implements BaseModel
 
     #[Required('accountId')]
     public ?string $accountID;
+
+    /**
+     * The ID of the API key that made the link, or null when a dashboard session made it.
+     */
+    #[Required('apiKeyId')]
+    public ?string $apiKeyID;
 
     #[Required]
     public ?\DateTimeInterface $completedAt;
@@ -101,12 +106,6 @@ final class AccountConnectionLinkNewResponse implements BaseModel
     public ?string $xUsername;
 
     /**
-     * The ID of the API key that made the link, or null when a dashboard session made it.
-     */
-    #[Optional('apiKeyId', nullable: true)]
-    public ?string $apiKeyID;
-
-    /**
      * `new AccountConnectionLinkNewResponse()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -126,6 +125,7 @@ final class AccountConnectionLinkNewResponse implements BaseModel
      *   url: ...,
      *   xUserID: ...,
      *   xUsername: ...,
+     *   apiKeyID: ...,
      * )
      * ```
      *
@@ -147,6 +147,7 @@ final class AccountConnectionLinkNewResponse implements BaseModel
      *   ->withUrl(...)
      *   ->withXUserID(...)
      *   ->withXUsername(...)
+     *   ->withApiKeyID(...)
      * ```
      */
     public function __construct()
@@ -177,7 +178,7 @@ final class AccountConnectionLinkNewResponse implements BaseModel
         string $url,
         ?string $xUserID,
         ?string $xUsername,
-        ?string $apiKeyID = null
+        ?string $apiKeyID
     ): self {
         $self = new self;
 
@@ -195,8 +196,7 @@ final class AccountConnectionLinkNewResponse implements BaseModel
         $self['url'] = $url;
         $self['xUserID'] = $xUserID;
         $self['xUsername'] = $xUsername;
-
-        null !== $apiKeyID && $self['apiKeyID'] = $apiKeyID;
+        $self['apiKeyID'] = $apiKeyID;
 
         return $self;
     }
