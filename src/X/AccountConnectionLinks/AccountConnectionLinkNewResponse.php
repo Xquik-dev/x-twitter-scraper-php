@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper\X\AccountConnectionLinks;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
@@ -33,6 +34,7 @@ use XTwitterScraper\X\AccountConnectionLinks\XAccountConnectionLink\Status;
  *   url: string,
  *   xUserID: string|null,
  *   xUsername: string|null,
+ *   apiKeyID?: string|null,
  * }
  */
 final class AccountConnectionLinkNewResponse implements BaseModel
@@ -97,6 +99,12 @@ final class AccountConnectionLinkNewResponse implements BaseModel
 
     #[Required]
     public ?string $xUsername;
+
+    /**
+     * The ID of the API key that made the link, or null when a dashboard session made it.
+     */
+    #[Optional('apiKeyId', nullable: true)]
+    public ?string $apiKeyID;
 
     /**
      * `new AccountConnectionLinkNewResponse()` is missing required properties by the API.
@@ -168,7 +176,8 @@ final class AccountConnectionLinkNewResponse implements BaseModel
         Status|string $status,
         string $url,
         ?string $xUserID,
-        ?string $xUsername
+        ?string $xUsername,
+        ?string $apiKeyID = null
     ): self {
         $self = new self;
 
@@ -187,6 +196,8 @@ final class AccountConnectionLinkNewResponse implements BaseModel
         $self['xUserID'] = $xUserID;
         $self['xUsername'] = $xUsername;
 
+        null !== $apiKeyID && $self['apiKeyID'] = $apiKeyID;
+
         return $self;
     }
 
@@ -202,6 +213,17 @@ final class AccountConnectionLinkNewResponse implements BaseModel
     {
         $self = clone $this;
         $self['accountID'] = $accountID;
+
+        return $self;
+    }
+
+    /**
+     * The ID of the API key that made the link, or null when a dashboard session made it.
+     */
+    public function withApiKeyID(?string $apiKeyID): self
+    {
+        $self = clone $this;
+        $self['apiKeyID'] = $apiKeyID;
 
         return $self;
     }

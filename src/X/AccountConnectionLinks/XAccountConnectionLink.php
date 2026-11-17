@@ -33,6 +33,7 @@ use XTwitterScraper\X\AccountConnectionLinks\XAccountConnectionLink\Status;
  *   status: Status|value-of<Status>,
  *   xUserID: string|null,
  *   xUsername: string|null,
+ *   apiKeyID?: string|null,
  *   url?: string|null,
  * }
  */
@@ -92,6 +93,12 @@ final class XAccountConnectionLink implements BaseModel
 
     #[Required]
     public ?string $xUsername;
+
+    /**
+     * The ID of the API key that made the link, or null when a dashboard session made it.
+     */
+    #[Optional('apiKeyId', nullable: true)]
+    public ?string $apiKeyID;
 
     /**
      * Present only in the response that creates the link.
@@ -167,7 +174,8 @@ final class XAccountConnectionLink implements BaseModel
         Status|string $status,
         ?string $xUserID,
         ?string $xUsername,
-        ?string $url = null
+        ?string $url = null,
+        ?string $apiKeyID = null
     ): self {
         $self = new self;
 
@@ -186,6 +194,7 @@ final class XAccountConnectionLink implements BaseModel
         $self['xUsername'] = $xUsername;
 
         null !== $url && $self['url'] = $url;
+        null !== $apiKeyID && $self['apiKeyID'] = $apiKeyID;
 
         return $self;
     }
@@ -202,6 +211,17 @@ final class XAccountConnectionLink implements BaseModel
     {
         $self = clone $this;
         $self['accountID'] = $accountID;
+
+        return $self;
+    }
+
+    /**
+     * The ID of the API key that made the link, or null when a dashboard session made it.
+     */
+    public function withApiKeyID(?string $apiKeyID): self
+    {
+        $self = clone $this;
+        $self['apiKeyID'] = $apiKeyID;
 
         return $self;
     }
