@@ -1,6 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.14.0 (2026-11-17)
+
+[Full changelog from v0.13.5 to v0.14.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.13.5...v0.14.0)
+
+This release adds connect links, which you can create, read, revoke and list, each naming the API key that made it. It also adds the 82 operations the SDK lacked, the analysis sources and filters, and the fields the API added since 0.13.5. Calls written for 0.13.5 keep working, positional arguments included. `x->accounts->reauth` can now also return the 2 in-progress answers `create` gives, so check the answer's type before you read the account.
 
 ### Features
 
