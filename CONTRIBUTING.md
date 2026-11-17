@@ -62,6 +62,10 @@ Semgrep 1.180 cannot parse a named argument called `list`, which PHP 8 allows. T
 For a clean tree whose commit is on GitHub, it posts the `xquik-local-checks` commit status.
 Pull requests need that status to merge. Pass `--no-status` to skip posting.
 
+When `git config checklocal.runner` names a command, `bin/check-local` runs that command with the checkout's path and its own arguments instead.
+A maintainer can use it to run the checks on another machine, and `bin/release-local` runs its checks the same way.
+Set `CHECK_LOCAL_HERE=1` to run them here anyway.
+
 The dependency audit blocks every advisory in a package the SDK ships and every abandoned package.
 Severity never excuses a finding, and a Composer ignore rule blocks too.
 It also blocks development-only advisories unless `audit-exceptions.json` lists them.

@@ -92,6 +92,11 @@ for argument in "$@"; do
 done
 echo "$endpoint $state $description" >>"$FAKE_LOGS/gh"
 EOF
+  fake runner <<'EOF'
+#!/bin/sh
+echo "$*" >>"$FAKE_LOGS/runner"
+EOF
+  run_env+=("CHECK_LOCAL_HERE=1")
   commit_repo
 }
 
@@ -325,6 +330,29 @@ test_an_unknown_option_stops_with_the_usage_line() {
   assert_equal 2 "$run_status" "the exit code"
   assert_equal "Unknown option --fast. Run bin/check-local or bin/check-local --no-status." "$run_stderr" "stderr"
   assert_equal "" "$(log_of order)" "the checks that ran"
+}
+
+test_a_configured_runner_gets_the_checkout_and_the_arguments_instead() {
+  prepare_checks
+  sandbox_git config checklocal.runner "$sandbox_bin/runner"
+  run_env=("CHECK_LOCAL_HERE=")
+
+  run_in_repo bin/check-local --no-status
+
+  assert_equal 0 "$run_status" "the exit code"
+  assert_equal "$sandbox_repo --no-status" "$(log_of runner)" "the runner call"
+  assert_equal "" "$(log_of order)" "the checks that ran here"
+}
+
+test_check_local_here_runs_the_checks_here_despite_a_runner() {
+  prepare_checks
+  sandbox_git config checklocal.runner "$sandbox_bin/runner"
+
+  run_in_repo bin/check-local --no-status
+
+  assert_equal 0 "$run_status" "the exit code"
+  assert_equal "" "$(log_of runner)" "the runner call"
+  assert_equal "$check_order" "$(log_of order)" "the order of the checks"
 }
 
 run_tests
