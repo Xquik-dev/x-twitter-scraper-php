@@ -15,6 +15,8 @@ use XTwitterScraper\ActivityLogRow;
 use XTwitterScraper\Client;
 use XTwitterScraper\X\AccountConnectionAttempts\AccountConnectionAttemptGetResponse\XAccountConnectionAttemptSuccess;
 use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkListParams;
+use XTwitterScraper\X\AccountConnectionLinks\AccountConnectionLinkNewResponse;
+use XTwitterScraper\X\AccountConnectionLinks\XAccountConnectionLink;
 use XTwitterScraper\X\Accounts\AccountNewResponse\XAccountConnectionAttemptPending;
 use XTwitterScraper\X\Accounts\AccountReauthResponse;
 use XTwitterScraper\X\Users\UserRetrieveMentionsParams;
@@ -197,11 +199,12 @@ final class ApiCatchUpTest extends TestCase
     #[Test]
     public function testConnectLinksAreListedNewestFirstWithLimitAndCursor(): void
     {
-        $dashboardLink = ['id' => 'xlink_BBBBBBBBBBBBBBBB', 'purpose' => 'reconnect', 'accountId' => '42'] + self::CONNECT_LINK;
+        $keyLink = ['apiKeyId' => '17'] + self::CONNECT_LINK;
+        $dashboardLink = ['id' => 'xlink_BBBBBBBBBBBBBBBB', 'purpose' => 'reconnect', 'accountId' => '42', 'apiKeyId' => null] + self::CONNECT_LINK;
         $this->respond(
             'application/json',
             json_encode(
-                ['links' => [self::CONNECT_LINK, $dashboardLink], 'hasMore' => true, 'nextCursor' => 'abc123'],
+                ['links' => [$keyLink, $dashboardLink], 'hasMore' => true, 'nextCursor' => 'abc123'],
                 JSON_THROW_ON_ERROR,
             ),
         );
@@ -216,7 +219,9 @@ final class ApiCatchUpTest extends TestCase
         $this->assertSame('abc123', $page->nextCursor);
         $this->assertCount(2, $page->links);
         $this->assertSame('xlink_AAAAAAAAAAAAAAAA', $page->links[0]->id);
+        $this->assertSame('17', $page->links[0]->apiKeyID);
         $this->assertSame('42', $page->links[1]->accountID);
+        $this->assertNull($page->links[1]->apiKeyID);
     }
 
     #[Test]
@@ -244,6 +249,77 @@ final class ApiCatchUpTest extends TestCase
         parse_str($this->lastRequest()->getUri()->getQuery(), $query);
         $this->assertSame(['limit' => '1', 'cursor' => 'prev'], $query);
         $this->assertFalse($response->parse()->hasMore);
+    }
+
+    #[Test]
+    public function testANewConnectLinkNamesTheKeyThatMadeIt(): void
+    {
+        $this->respond(
+            'application/json',
+            json_encode(self::CONNECT_LINK + ['apiKeyId' => '17', 'url' => 'https://example.com/connect#token'], JSON_THROW_ON_ERROR),
+        );
+
+        $link = $this->client->x->accountConnectionLinks->create();
+
+        $this->assertSame('17', $link->apiKeyID);
+    }
+
+    #[Test]
+    public function testAConnectLinkFromBeforeTheFieldReadsNoKey(): void
+    {
+        $this->respond('application/json', json_encode(self::CONNECT_LINK, JSON_THROW_ON_ERROR));
+
+        $link = $this->client->x->accountConnectionLinks->retrieve('xlink_AAAAAAAAAAAAAAAA');
+
+        $this->assertNull($link->apiKeyID);
+    }
+
+    #[Test]
+    public function testAConnectLinkWritesANullKeyAndBuildsWithOne(): void
+    {
+        $dashboard = json_decode(json_encode((new XAccountConnectionLink)->withApiKeyID(null), JSON_THROW_ON_ERROR), true);
+        $this->assertIsArray($dashboard);
+        $this->assertArrayHasKey('apiKeyId', $dashboard);
+        $this->assertNull($dashboard['apiKeyId']);
+
+        $link = XAccountConnectionLink::with(
+            id: 'xlink_AAAAAAAAAAAAAAAA',
+            accountID: null,
+            completedAt: null,
+            createdAt: new \DateTimeImmutable('2025-01-15T12:00:00Z'),
+            expiresAt: new \DateTimeImmutable('2025-01-15T12:30:00Z'),
+            failure: null,
+            health: null,
+            purpose: 'connect',
+            reference: null,
+            returnURL: null,
+            status: 'pending',
+            xUserID: null,
+            xUsername: null,
+            apiKeyID: '17',
+        );
+        $created = AccountConnectionLinkNewResponse::with(
+            id: 'xlink_AAAAAAAAAAAAAAAA',
+            accountID: null,
+            completedAt: null,
+            createdAt: new \DateTimeImmutable('2025-01-15T12:00:00Z'),
+            expiresAt: new \DateTimeImmutable('2025-01-15T12:30:00Z'),
+            failure: null,
+            health: null,
+            purpose: 'connect',
+            reference: null,
+            returnURL: null,
+            status: 'pending',
+            url: 'https://example.com/connect#token',
+            xUserID: null,
+            xUsername: null,
+            apiKeyID: '17',
+        );
+
+        $this->assertSame('17', $link->apiKeyID);
+        $this->assertSame('17', $created->apiKeyID);
+        $this->assertSame('18', $created->withApiKeyID('18')->apiKeyID);
+        $this->assertSame('17', $created->apiKeyID);
     }
 
     #[Test]
