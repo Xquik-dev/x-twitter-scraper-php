@@ -77,14 +77,6 @@ final class AnalysisUnprocessedIDsTest extends TestCase
     }
 
     #[Test]
-    public function testAPageFromBeforeTheFieldReadsNull(): void
-    {
-        $this->respond(self::PAGE);
-
-        $this->assertNull($this->client->x->analysis->sentiment(tweetIDs: ['1'])->unprocessedIDs);
-    }
-
-    #[Test]
     public function testAPageBuildsWithUnprocessedIDs(): void
     {
         $page = TweetAnalysisPage::with(
@@ -98,7 +90,8 @@ final class AnalysisUnprocessedIDsTest extends TestCase
 
         $this->assertSame(['2'], $page->unprocessedIDs);
         $this->assertSame(['4'], $page->withUnprocessedIDs(['4'])->unprocessedIDs);
-        $this->assertNull($page->withUnprocessedIDs(null)->unprocessedIDs);
+        $this->assertSame([], $page->withUnprocessedIDs([])->unprocessedIDs);
+        $this->assertSame(['2'], $page->unprocessedIDs);
     }
 
     /**
