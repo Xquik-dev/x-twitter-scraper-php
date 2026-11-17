@@ -352,6 +352,12 @@
       "POST /api/v1/x/account-connection-challenges/{id}/submit response required xUserId",
       "POST /api/v1/x/account-connection-challenges/{id}/submit response required xUsername",
       "POST /api/v1/x/account-connection-links response required apiKeyId",
+      "POST /api/v1/x/analysis/brand response required unprocessed_ids",
+      "POST /api/v1/x/analysis/classify response required unprocessed_ids",
+      "POST /api/v1/x/analysis/market-signals response required unprocessed_ids",
+      "POST /api/v1/x/analysis/news response required unprocessed_ids",
+      "POST /api/v1/x/analysis/sentiment response required unprocessed_ids",
+      "POST /api/v1/x/analysis/viral-score response required unprocessed_ids",
       "POST /api/v1/x/media request required url",
       "PUT /api/v1/styles/{id} request required label"
     ]

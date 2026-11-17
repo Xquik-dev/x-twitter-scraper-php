@@ -25,6 +25,7 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   nextCursor: string,
  *   imageFilter?: null|ImageFilterSummary|ImageFilterSummaryShape,
  *   topicFilter?: null|TopicFilterSummary|TopicFilterSummaryShape,
+ *   unprocessedIDs?: list<string>|null,
  * }
  */
 final class TweetAnalysisPage implements BaseModel
@@ -79,6 +80,14 @@ final class TweetAnalysisPage implements BaseModel
     public ?TopicFilterSummary $topicFilter;
 
     /**
+     * IDs of the posts or texts the time ran out for. Send them again in tweetIds, or those texts in texts. They cost nothing.
+     *
+     * @var list<string>|null $unprocessedIDs
+     */
+    #[Optional('unprocessed_ids', list: 'string')]
+    public ?array $unprocessedIDs;
+
+    /**
      * `new TweetAnalysisPage()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -107,6 +116,7 @@ final class TweetAnalysisPage implements BaseModel
      * @param TweetAnalysisSummary|array<string,mixed> $analysisSummary
      * @param ImageFilterSummary|ImageFilterSummaryShape|null $imageFilter
      * @param TopicFilterSummary|TopicFilterSummaryShape|null $topicFilter
+     * @param list<string>|null $unprocessedIDs
      */
     public static function with(
         array $results,
@@ -116,6 +126,7 @@ final class TweetAnalysisPage implements BaseModel
         string $nextCursor,
         ImageFilterSummary|array|null $imageFilter = null,
         TopicFilterSummary|array|null $topicFilter = null,
+        ?array $unprocessedIDs = null,
     ): self {
         $self = new self;
 
@@ -127,6 +138,7 @@ final class TweetAnalysisPage implements BaseModel
 
         null !== $imageFilter && $self['imageFilter'] = $imageFilter;
         null !== $topicFilter && $self['topicFilter'] = $topicFilter;
+        null !== $unprocessedIDs && $self['unprocessedIDs'] = $unprocessedIDs;
 
         return $self;
     }
@@ -153,6 +165,19 @@ final class TweetAnalysisPage implements BaseModel
     {
         $self = clone $this;
         $self['unanalyzed'] = $unanalyzed;
+
+        return $self;
+    }
+
+    /**
+     * IDs of the posts or texts the time ran out for. Send them again in tweetIds, or those texts in texts. They cost nothing.
+     *
+     * @param list<string>|null $unprocessedIDs
+     */
+    public function withUnprocessedIDs(?array $unprocessedIDs): self
+    {
+        $self = clone $this;
+        $self['unprocessedIDs'] = $unprocessedIDs;
 
         return $self;
     }
