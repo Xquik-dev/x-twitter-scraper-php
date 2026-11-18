@@ -30,6 +30,8 @@ use XTwitterScraper\UserProfile;
  *   users: list<UserProfile|UserProfileShape>,
  *   filteredCount?: int|null,
  *   failedIDs?: list<string>|null,
+ *   notFoundIDs?: list<string>|null,
+ *   suspendedIDs?: list<string>|null,
  * }
  */
 final class UserGetBatchResponse implements BaseModel
@@ -68,7 +70,7 @@ final class UserGetBatchResponse implements BaseModel
     public int $returnedCount;
 
     /**
-     * Processed IDs with no returned profile, in first-seen request order.
+     * Processed IDs with no returned profile, in first-seen request order. notFoundIDs and suspendedIDs split them by X's answer.
      *
      * @var list<string> $unavailableIDs
      */
@@ -100,6 +102,22 @@ final class UserGetBatchResponse implements BaseModel
      */
     #[Optional('failed_ids', list: 'string')]
     public ?array $failedIDs;
+
+    /**
+     * The unavailable IDs no account holds, as X answers for an account that was deactivated or deleted, in first-seen request order.
+     *
+     * @var list<string>|null $notFoundIDs
+     */
+    #[Optional('not_found_ids', list: 'string')]
+    public ?array $notFoundIDs;
+
+    /**
+     * The unavailable IDs of accounts X suspended, in first-seen request order.
+     *
+     * @var list<string>|null $suspendedIDs
+     */
+    #[Optional('suspended_ids', list: 'string')]
+    public ?array $suspendedIDs;
 
     /**
      * `new UserGetBatchResponse()` is missing required properties by the API.
@@ -144,6 +162,8 @@ final class UserGetBatchResponse implements BaseModel
      * @param list<string> $unprocessedIDs
      * @param list<UserProfile|UserProfileShape> $users
      * @param list<string>|null $failedIDs
+     * @param list<string>|null $notFoundIDs
+     * @param list<string>|null $suspendedIDs
      */
     public static function with(
         string $nextCursor,
@@ -154,7 +174,9 @@ final class UserGetBatchResponse implements BaseModel
         array $unprocessedIDs,
         array $users,
         ?int $filteredCount = null,
-        ?array $failedIDs = null
+        ?array $failedIDs = null,
+        ?array $notFoundIDs = null,
+        ?array $suspendedIDs = null
     ): self {
         $self = new self;
 
@@ -169,6 +191,10 @@ final class UserGetBatchResponse implements BaseModel
         null !== $filteredCount && $self['filteredCount'] = $filteredCount;
 
         null !== $failedIDs && $self['failedIDs'] = $failedIDs;
+
+        null !== $notFoundIDs && $self['notFoundIDs'] = $notFoundIDs;
+
+        null !== $suspendedIDs && $self['suspendedIDs'] = $suspendedIDs;
 
         return $self;
     }
@@ -229,7 +255,7 @@ final class UserGetBatchResponse implements BaseModel
     }
 
     /**
-     * Processed IDs with no returned profile, in first-seen request order.
+     * Processed IDs with no returned profile, in first-seen request order. notFoundIDs and suspendedIDs split them by X's answer.
      *
      * @param list<string> $unavailableIDs
      */
@@ -285,6 +311,32 @@ final class UserGetBatchResponse implements BaseModel
     {
         $self = clone $this;
         $self['failedIDs'] = $failedIDs;
+
+        return $self;
+    }
+
+    /**
+     * The unavailable IDs no account holds, as X answers for an account that was deactivated or deleted, in first-seen request order.
+     *
+     * @param list<string>|null $notFoundIDs
+     */
+    public function withNotFoundIDs(?array $notFoundIDs): self
+    {
+        $self = clone $this;
+        $self['notFoundIDs'] = $notFoundIDs;
+
+        return $self;
+    }
+
+    /**
+     * The unavailable IDs of accounts X suspended, in first-seen request order.
+     *
+     * @param list<string>|null $suspendedIDs
+     */
+    public function withSuspendedIDs(?array $suspendedIDs): self
+    {
+        $self = clone $this;
+        $self['suspendedIDs'] = $suspendedIDs;
 
         return $self;
     }
