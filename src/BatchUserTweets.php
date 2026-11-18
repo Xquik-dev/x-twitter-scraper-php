@@ -18,6 +18,9 @@ use XTwitterScraper\Core\Contracts\BaseModel;
  *   hasNextPage: bool,
  *   nextCursor: string,
  *   unavailableIDs: list<string>,
+ *   notFoundIDs: list<string>,
+ *   suspendedIDs: list<string>,
+ *   protectedIDs: list<string>,
  *   unprocessedIDs: list<string>,
  * }
  */
@@ -45,12 +48,36 @@ final class BatchUserTweets implements BaseModel
     public string $nextCursor;
 
     /**
-     * Users with no account on X or with protected posts, in first-seen request order. They cost nothing.
+     * Users with no account on X or with protected posts, in first-seen request order. They cost nothing. notFoundIDs, suspendedIDs and protectedIDs split them by X's answer.
      *
      * @var list<string> $unavailableIDs
      */
     #[Required('unavailable_ids', list: 'string')]
     public array $unavailableIDs;
+
+    /**
+     * The unavailable users no account holds, as X answers for an account that was deactivated or deleted, in first-seen request order.
+     *
+     * @var list<string> $notFoundIDs
+     */
+    #[Required('not_found_ids', list: 'string')]
+    public array $notFoundIDs;
+
+    /**
+     * The unavailable users X suspended, in first-seen request order.
+     *
+     * @var list<string> $suspendedIDs
+     */
+    #[Required('suspended_ids', list: 'string')]
+    public array $suspendedIDs;
+
+    /**
+     * The unavailable users whose posts only approved followers see, in first-seen request order.
+     *
+     * @var list<string> $protectedIDs
+     */
+    #[Required('protected_ids', list: 'string')]
+    public array $protectedIDs;
 
     /**
      * Users the call did not read, in first-seen request order. Their read failed, the call ran out of time or credits ran out. They cost nothing. Send them again.
@@ -65,13 +92,13 @@ final class BatchUserTweets implements BaseModel
      *
      * To enforce required parameters use
      * ```
-     * BatchUserTweets::with(tweets: ..., hasNextPage: ..., nextCursor: ..., unavailableIDs: ..., unprocessedIDs: ...)
+     * BatchUserTweets::with(tweets: ..., hasNextPage: ..., nextCursor: ..., unavailableIDs: ..., notFoundIDs: ..., suspendedIDs: ..., protectedIDs: ..., unprocessedIDs: ...)
      * ```
      *
      * Otherwise ensure the following setters are called
      *
      * ```
-     * (new BatchUserTweets)->withTweets(...)->withHasNextPage(...)->withNextCursor(...)->withUnavailableIDs(...)->withUnprocessedIDs(...)
+     * (new BatchUserTweets)->withTweets(...)->withHasNextPage(...)->withNextCursor(...)->withUnavailableIDs(...)->withNotFoundIDs(...)->withSuspendedIDs(...)->withProtectedIDs(...)->withUnprocessedIDs(...)
      * ```
      */
     public function __construct()
@@ -86,9 +113,12 @@ final class BatchUserTweets implements BaseModel
      *
      * @param list<SearchTweet2|array<string,mixed>> $tweets
      * @param list<string> $unavailableIDs
+     * @param list<string> $notFoundIDs
+     * @param list<string> $suspendedIDs
+     * @param list<string> $protectedIDs
      * @param list<string> $unprocessedIDs
      */
-    public static function with(array $tweets, bool $hasNextPage, string $nextCursor, array $unavailableIDs, array $unprocessedIDs): self
+    public static function with(array $tweets, bool $hasNextPage, string $nextCursor, array $unavailableIDs, array $notFoundIDs, array $suspendedIDs, array $protectedIDs, array $unprocessedIDs): self
     {
         $self = new self;
 
@@ -96,6 +126,9 @@ final class BatchUserTweets implements BaseModel
         $self['hasNextPage'] = $hasNextPage;
         $self['nextCursor'] = $nextCursor;
         $self['unavailableIDs'] = $unavailableIDs;
+        $self['notFoundIDs'] = $notFoundIDs;
+        $self['suspendedIDs'] = $suspendedIDs;
+        $self['protectedIDs'] = $protectedIDs;
         $self['unprocessedIDs'] = $unprocessedIDs;
 
         return $self;
@@ -135,7 +168,7 @@ final class BatchUserTweets implements BaseModel
     }
 
     /**
-     * Users with no account on X or with protected posts, in first-seen request order. They cost nothing.
+     * Users with no account on X or with protected posts, in first-seen request order. They cost nothing. notFoundIDs, suspendedIDs and protectedIDs split them by X's answer.
      *
      * @param list<string> $unavailableIDs
      */
@@ -143,6 +176,45 @@ final class BatchUserTweets implements BaseModel
     {
         $self = clone $this;
         $self['unavailableIDs'] = $unavailableIDs;
+
+        return $self;
+    }
+
+    /**
+     * The unavailable users no account holds, as X answers for an account that was deactivated or deleted, in first-seen request order.
+     *
+     * @param list<string> $notFoundIDs
+     */
+    public function withNotFoundIDs(array $notFoundIDs): self
+    {
+        $self = clone $this;
+        $self['notFoundIDs'] = $notFoundIDs;
+
+        return $self;
+    }
+
+    /**
+     * The unavailable users X suspended, in first-seen request order.
+     *
+     * @param list<string> $suspendedIDs
+     */
+    public function withSuspendedIDs(array $suspendedIDs): self
+    {
+        $self = clone $this;
+        $self['suspendedIDs'] = $suspendedIDs;
+
+        return $self;
+    }
+
+    /**
+     * The unavailable users whose posts only approved followers see, in first-seen request order.
+     *
+     * @param list<string> $protectedIDs
+     */
+    public function withProtectedIDs(array $protectedIDs): self
+    {
+        $self = clone $this;
+        $self['protectedIDs'] = $protectedIDs;
 
         return $self;
     }
