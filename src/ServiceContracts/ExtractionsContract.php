@@ -56,7 +56,7 @@ interface ExtractionsContract
      * @param string $cursor previous nextCursor
      * @param FieldStyle|value-of<FieldStyle> $fieldStyle preserve source keys or convert result field names
      * @param bool $includeRaw use outputMode=raw instead
-     * @param int $limit Maximum number of results to return (1-1000, default 100)
+     * @param int $limit Maximum number of results to return (1-10000, default 100)
      * @param OutputMode|value-of<OutputMode> $outputMode select compact, full, or raw-compatible result fields
      * @param OutputPreset|value-of<OutputPreset> $outputPreset keep enrichment nested or merge it into each result
      * @param RequestOpts|null $requestOptions
