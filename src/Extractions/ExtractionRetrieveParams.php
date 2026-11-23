@@ -58,7 +58,7 @@ final class ExtractionRetrieveParams implements BaseModel
     public ?bool $includeRaw;
 
     /**
-     * Maximum number of results to return (1-1000, default 100).
+     * Maximum number of results to return (1-10000, default 100).
      */
     #[Optional]
     public ?int $limit;
@@ -158,7 +158,7 @@ final class ExtractionRetrieveParams implements BaseModel
     }
 
     /**
-     * Maximum number of results to return (1-1000, default 100).
+     * Maximum number of results to return (1-10000, default 100).
      */
     public function withLimit(int $limit): self
     {
