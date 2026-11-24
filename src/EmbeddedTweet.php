@@ -99,6 +99,7 @@ use XTwitterScraper\EmbeddedTweet\UnknownFields;
  *   cashtagAttachments?: list<CashtagAttachments|array<string,mixed>>|null,
  *   communityID?: string|null,
  *   communityName?: string|null,
+ *   communityUnavailable?: TweetCommunityUnavailable|array<string,mixed>|null,
  *   hasCommunityNotes?: bool|null,
  *   exclusiveContent?: TweetExclusiveContent|array<string,mixed>|null,
  *   grokShareAttachment?: array<string,mixed>|null,
@@ -358,6 +359,12 @@ final class EmbeddedTweet implements BaseModel
     public ?string $communityName;
 
     /**
+     * Why X shows no Community for the post. Omitted when X names no reason.
+     */
+    #[Optional]
+    public ?TweetCommunityUnavailable $communityUnavailable;
+
+    /**
      * Whether X holds Community Notes on the post, shown or not.
      */
     #[Optional]
@@ -550,6 +557,7 @@ final class EmbeddedTweet implements BaseModel
      * @param PreviousCounts|PreviousCountsShape|null $previousCounts
      * @param QuotedTweetPermalink|array<string,mixed>|null $quotedTweetPermalink
      * @param QuotedTweetUnavailable|array<string,mixed>|null $quotedTweetUnavailable
+     * @param TweetCommunityUnavailable|array<string,mixed>|null $communityUnavailable
      * @param ConversationControl|array<string,mixed>|null $conversationControl
      * @param list<LimitedActions|array<string,mixed>>|null $limitedActions
      * @param list<TextHighlights|array<string,mixed>>|null $textHighlights
@@ -647,7 +655,8 @@ final class EmbeddedTweet implements BaseModel
         ?array $scopes = null,
         ?array $unknownFields = null,
         ?array $unknownCounts = null,
-        ?array $parentTweet = null
+        ?array $parentTweet = null,
+        TweetCommunityUnavailable|array|null $communityUnavailable = null
     ): self {
         $self = new self;
 
@@ -718,6 +727,8 @@ final class EmbeddedTweet implements BaseModel
         null !== $communityID && $self['communityID'] = $communityID;
 
         null !== $communityName && $self['communityName'] = $communityName;
+
+        null !== $communityUnavailable && $self['communityUnavailable'] = $communityUnavailable;
 
         null !== $hasCommunityNotes && $self['hasCommunityNotes'] = $hasCommunityNotes;
 
@@ -1283,6 +1294,19 @@ final class EmbeddedTweet implements BaseModel
     {
         $self = clone $this;
         $self['communityName'] = $communityName;
+
+        return $self;
+    }
+
+    /**
+     * Why X shows no Community for the post. Omitted when X names no reason.
+     *
+     * @param TweetCommunityUnavailable|array<string,mixed>|null $communityUnavailable
+     */
+    public function withCommunityUnavailable(TweetCommunityUnavailable|array|null $communityUnavailable): self
+    {
+        $self = clone $this;
+        $self['communityUnavailable'] = $communityUnavailable;
 
         return $self;
     }

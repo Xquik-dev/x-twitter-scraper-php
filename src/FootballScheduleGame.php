@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace XTwitterScraper;
 
+use XTwitterScraper\Core\Attributes\Optional;
 use XTwitterScraper\Core\Attributes\Required;
 use XTwitterScraper\Core\Concerns\SdkModel;
 use XTwitterScraper\Core\Contracts\BaseModel;
@@ -27,6 +28,7 @@ use XTwitterScraper\FootballScheduleGame\Odds;
  *   teamIDs: list<string>,
  *   periods: list<FootballSchedulePeriod|array<string,mixed>>,
  *   odds: Odds|array<string,mixed>|null,
+ *   rankings?: list<FootballPollRanking|array<string,mixed>>|null,
  * }
  */
 final class FootballScheduleGame implements BaseModel
@@ -111,6 +113,14 @@ final class FootballScheduleGame implements BaseModel
     public ?Odds $odds;
 
     /**
+     * Each team X ranks in its college football poll, with its rank. Empty when X ranks neither team, and for the NFL.
+     *
+     * @var list<FootballPollRanking>|null $rankings
+     */
+    #[Optional(list: FootballPollRanking::class)]
+    public ?array $rankings;
+
+    /**
      * `new FootballScheduleGame()` is missing required properties by the API.
      *
      * To enforce required parameters use
@@ -139,8 +149,9 @@ final class FootballScheduleGame implements BaseModel
      * @param list<string> $teamIDs
      * @param list<FootballSchedulePeriod|array<string,mixed>> $periods
      * @param Odds|array<string,mixed>|null $odds
+     * @param list<FootballPollRanking|array<string,mixed>>|null $rankings
      */
-    public static function with(string $id, ?string $seasonType, ?int $week, ?\DateTimeInterface $startsAt, ?string $status, ?string $clock, ?int $quarter, FootballTeamScore|array $home, FootballTeamScore|array $away, array $teamIDs, array $periods, Odds|array|null $odds): self
+    public static function with(string $id, ?string $seasonType, ?int $week, ?\DateTimeInterface $startsAt, ?string $status, ?string $clock, ?int $quarter, FootballTeamScore|array $home, FootballTeamScore|array $away, array $teamIDs, array $periods, Odds|array|null $odds, ?array $rankings = null): self
     {
         $self = new self;
 
@@ -156,6 +167,8 @@ final class FootballScheduleGame implements BaseModel
         $self['teamIDs'] = $teamIDs;
         $self['periods'] = $periods;
         $self['odds'] = $odds;
+
+        null !== $rankings && $self['rankings'] = $rankings;
 
         return $self;
     }
@@ -298,6 +311,19 @@ final class FootballScheduleGame implements BaseModel
     {
         $self = clone $this;
         $self['odds'] = $odds;
+
+        return $self;
+    }
+
+    /**
+     * Each team X ranks in its college football poll, with its rank. Empty when X ranks neither team, and for the NFL.
+     *
+     * @param list<FootballPollRanking|array<string,mixed>>|null $rankings
+     */
+    public function withRankings(?array $rankings): self
+    {
+        $self = clone $this;
+        $self['rankings'] = $rankings;
 
         return $self;
     }
