@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- The `timeout` request option now defaults to 80 seconds, up from 60, since some API reads take longer than a minute to answer. A `timeout` you pass works as before.
+
 ## 0.14.0 (2026-11-17)
 
 [Full changelog from v0.13.5 to v0.14.0](https://github.com/Xquik-dev/x-twitter-scraper-php/compare/v0.13.5...v0.14.0)

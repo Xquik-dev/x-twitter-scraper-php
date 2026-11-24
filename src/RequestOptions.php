@@ -40,7 +40,7 @@ final class RequestOptions implements BaseModel
     use SdkModel;
 
     #[Property]
-    public float $timeout = 60;
+    public float $timeout = 80;
 
     #[Property]
     public int $maxRetries = 2;

@@ -29,7 +29,7 @@ final class RequestOptionsTest extends TestCase
         $requestFactory = Psr17FactoryDiscovery::findRequestFactory();
 
         $defaults = new RequestOptions;
-        $this->assertSame(60.0, $defaults->timeout);
+        $this->assertSame(80.0, $defaults->timeout);
         $this->assertSame(2, $defaults->maxRetries);
         $this->assertSame(0.5, $defaults->initialRetryDelay);
         $this->assertSame(8.0, $defaults->maxRetryDelay);
@@ -90,7 +90,7 @@ final class RequestOptionsTest extends TestCase
         ;
 
         $this->assertNotSame($source, $options);
-        $this->assertSame(60.0, $source->timeout);
+        $this->assertSame(80.0, $source->timeout);
         $this->assertSame(30.0, $options->timeout);
         $this->assertSame(4, $options->maxRetries);
         $this->assertSame(1.0, $options->initialRetryDelay);
