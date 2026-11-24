@@ -66,6 +66,7 @@ use XTwitterScraper\SearchTweet2\UnknownFields;
  *   cashtagAttachments?: list<CashtagAttachments|array<string,mixed>>|null,
  *   communityID?: string|null,
  *   communityName?: string|null,
+ *   communityUnavailable?: TweetCommunityUnavailable|array<string,mixed>|null,
  *   communityNote?: TweetCommunityNote|array<string,mixed>|null,
  *   hasCommunityNotes?: bool|null,
  *   edit?: TweetEdit|array<string,mixed>|null,
@@ -276,6 +277,12 @@ final class SearchTweet2 implements BaseModel
      */
     #[Optional]
     public ?string $communityName;
+
+    /**
+     * Why X shows no Community for the post. Omitted when X names no reason.
+     */
+    #[Optional]
+    public ?TweetCommunityUnavailable $communityUnavailable;
 
     /**
      * Community Note presentation metadata returned by X.
@@ -510,6 +517,7 @@ final class SearchTweet2 implements BaseModel
      *
      * @param QuotedTweetPermalink|array<string,mixed>|null $quotedTweetPermalink
      * @param QuotedTweetUnavailable|array<string,mixed>|null $quotedTweetUnavailable
+     * @param TweetCommunityUnavailable|array<string,mixed>|null $communityUnavailable
      * @param ConversationControl|array<string,mixed>|null $conversationControl
      * @param list<LimitedActions|array<string,mixed>>|null $limitedActions
      * @param list<int>|null $displayTextRange
@@ -549,7 +557,7 @@ final class SearchTweet2 implements BaseModel
      * @param EmbeddedTweet|array<string,mixed>|null $retweetedTweet
      * @param UserProfile|array<string,mixed>|null $author
      */
-    public static function with(string $id, string $text, int $retweetCount, int $replyCount, int $likeCount, int $quoteCount, int $viewCount, int $bookmarkCount, ?string $type = null, ?string $createdAt = null, ?string $url = null, ?string $lang = null, ?bool $isReply = null, ?bool $isLimitedReply = null, ?bool $isNoteTweet = null, ?bool $isPinned = null, ?bool $isQuoteStatus = null, ?bool $isRetweet = null, ?string $quotedTweetID = null, QuotedTweetPermalink|array|null $quotedTweetPermalink = null, QuotedTweetUnavailable|array|null $quotedTweetUnavailable = null, ?\DateTimeInterface $retweetedAt = null, ?string $inReplyToID = null, ?string $inReplyToUserID = null, ?string $inReplyToUsername = null, ?string $conversationID = null, ConversationControl|array|null $conversationControl = null, ?array $limitedActions = null, ?string $source = null, ?array $displayTextRange = null, ?array $textHighlights = null, ContentDisclosure|array|null $contentDisclosure = null, TweetArticleMetadata|array|null $article = null, TweetAuthorUnavailable|array|null $authorUnavailable = null, ?string $unavailableAuthorID = null, TweetCard|array|null $card = null, ?array $cashtagAttachments = null, ?string $communityID = null, ?string $communityName = null, TweetCommunityNote|array|null $communityNote = null, ?bool $hasCommunityNotes = null, TweetEdit|array|null $edit = null, TweetExclusiveContent|array|null $exclusiveContent = null, ?bool $isTranslatable = null, ?array $grokShareAttachment = null, ?array $grokTranslatedPost = null, ?array $jetfuelAttachment = null, TweetNote|array|null $noteTweet = null, TweetPlace|array|null $place = null, TweetPoint|array|null $coordinates = null, TweetPoint|array|null $geo = null, ?array $postCta = null, ?bool $possiblySensitive = null, TweetPreviousCounts|array|null $previousCounts = null, ReactionContext|array|null $reactionContext = null, SportsContext|array|null $sportsContext = null, LiveEventContext|array|null $liveEventContext = null, TweetSubscriberBadge|array|null $subscriberBadge = null, TweetTombstone|array|null $tombstone = null, TweetInterstitial|array|null $interstitial = null, SoftIntervention|array|null $softIntervention = null, ?array $unmentionedUserIDs = null, ?string $viewState = null, TweetEntities|array|null $entities = null, ?array $scopes = null, ?array $media = null, ?array $unknownFields = null, ?array $unknownCounts = null, EmbeddedTweet|array|null $parentTweet = null, EmbeddedTweet|array|null $quotedTweet = null, EmbeddedTweet|array|null $retweetedTweet = null, UserProfile|array|null $author = null): self
+    public static function with(string $id, string $text, int $retweetCount, int $replyCount, int $likeCount, int $quoteCount, int $viewCount, int $bookmarkCount, ?string $type = null, ?string $createdAt = null, ?string $url = null, ?string $lang = null, ?bool $isReply = null, ?bool $isLimitedReply = null, ?bool $isNoteTweet = null, ?bool $isPinned = null, ?bool $isQuoteStatus = null, ?bool $isRetweet = null, ?string $quotedTweetID = null, QuotedTweetPermalink|array|null $quotedTweetPermalink = null, QuotedTweetUnavailable|array|null $quotedTweetUnavailable = null, ?\DateTimeInterface $retweetedAt = null, ?string $inReplyToID = null, ?string $inReplyToUserID = null, ?string $inReplyToUsername = null, ?string $conversationID = null, ConversationControl|array|null $conversationControl = null, ?array $limitedActions = null, ?string $source = null, ?array $displayTextRange = null, ?array $textHighlights = null, ContentDisclosure|array|null $contentDisclosure = null, TweetArticleMetadata|array|null $article = null, TweetAuthorUnavailable|array|null $authorUnavailable = null, ?string $unavailableAuthorID = null, TweetCard|array|null $card = null, ?array $cashtagAttachments = null, ?string $communityID = null, ?string $communityName = null, TweetCommunityNote|array|null $communityNote = null, ?bool $hasCommunityNotes = null, TweetEdit|array|null $edit = null, TweetExclusiveContent|array|null $exclusiveContent = null, ?bool $isTranslatable = null, ?array $grokShareAttachment = null, ?array $grokTranslatedPost = null, ?array $jetfuelAttachment = null, TweetNote|array|null $noteTweet = null, TweetPlace|array|null $place = null, TweetPoint|array|null $coordinates = null, TweetPoint|array|null $geo = null, ?array $postCta = null, ?bool $possiblySensitive = null, TweetPreviousCounts|array|null $previousCounts = null, ReactionContext|array|null $reactionContext = null, SportsContext|array|null $sportsContext = null, LiveEventContext|array|null $liveEventContext = null, TweetSubscriberBadge|array|null $subscriberBadge = null, TweetTombstone|array|null $tombstone = null, TweetInterstitial|array|null $interstitial = null, SoftIntervention|array|null $softIntervention = null, ?array $unmentionedUserIDs = null, ?string $viewState = null, TweetEntities|array|null $entities = null, ?array $scopes = null, ?array $media = null, ?array $unknownFields = null, ?array $unknownCounts = null, EmbeddedTweet|array|null $parentTweet = null, EmbeddedTweet|array|null $quotedTweet = null, EmbeddedTweet|array|null $retweetedTweet = null, UserProfile|array|null $author = null, TweetCommunityUnavailable|array|null $communityUnavailable = null): self
     {
         $self = new self;
 
@@ -593,6 +601,8 @@ final class SearchTweet2 implements BaseModel
         null !== $cashtagAttachments && $self['cashtagAttachments'] = $cashtagAttachments;
         null !== $communityID && $self['communityID'] = $communityID;
         null !== $communityName && $self['communityName'] = $communityName;
+
+        null !== $communityUnavailable && $self['communityUnavailable'] = $communityUnavailable;
         null !== $communityNote && $self['communityNote'] = $communityNote;
         null !== $hasCommunityNotes && $self['hasCommunityNotes'] = $hasCommunityNotes;
         null !== $edit && $self['edit'] = $edit;
@@ -1006,6 +1016,19 @@ final class SearchTweet2 implements BaseModel
     {
         $self = clone $this;
         $self['communityName'] = $communityName;
+
+        return $self;
+    }
+
+    /**
+     * Why X shows no Community for the post. Omitted when X names no reason.
+     *
+     * @param TweetCommunityUnavailable|array<string,mixed>|null $communityUnavailable
+     */
+    public function withCommunityUnavailable(TweetCommunityUnavailable|array|null $communityUnavailable): self
+    {
+        $self = clone $this;
+        $self['communityUnavailable'] = $communityUnavailable;
 
         return $self;
     }
