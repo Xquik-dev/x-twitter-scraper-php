@@ -77,7 +77,9 @@ final class CommunityAndPollRanksTest extends TestCase
         $this->assertSame('NotFound', $detail->quotedTweet?->communityUnavailable?->reason);
 
         $this->respond(['tweets' => [self::POST + self::HIDDEN], 'has_next_page' => false, 'next_cursor' => '']);
-        $this->assertSame('NotFound', $this->client->x->bookmarks->list()->tweets[0]->communityUnavailable?->reason);
+        $bookmark = $this->client->x->bookmarks->list()->tweets[0];
+        $this->assertInstanceOf(SearchTweet::class, $bookmark);
+        $this->assertSame('NotFound', $bookmark->communityUnavailable?->reason);
 
         $this->respond(['tweets' => [self::POST + self::HIDDEN], 'has_next_page' => false, 'next_cursor' => '']);
         $this->assertSame('NotFound', $this->client->x->tweets->listTop()->tweets[0]->communityUnavailable?->reason);
