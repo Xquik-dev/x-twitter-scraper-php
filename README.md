@@ -22,7 +22,7 @@ The SDK requires PHP 8.1.0 or later.
 Install the [Packagist package `xquik/x-twitter-scraper`](https://packagist.org/packages/xquik/x-twitter-scraper) with Composer.
 
 ```sh
-composer require xquik/x-twitter-scraper:^0.14.0
+composer require xquik/x-twitter-scraper:^0.15.0
 ```
 
 ## Scrape tweets with the Twitter PHP client

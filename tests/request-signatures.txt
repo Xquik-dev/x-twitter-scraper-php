@@ -1,4 +1,4 @@
-release 0.14.0
+release 0.15.0
 Client::__construct(?string $apiKey = ..., ?string $bearerToken = ..., ?string $baseUrl = ..., RequestOptions|array|null $requestOptions = ...)
 ServiceContracts\AccountContract::retrieve(RequestOptions|array|null $requestOptions = ...)
 ServiceContracts\AccountContract::setXUsername(string $username, RequestOptions|array|null $requestOptions = ...)
